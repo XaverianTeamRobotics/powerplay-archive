@@ -50,6 +50,7 @@ public class Motor {
         RADIUS = radius;
         COUNTS_PER_INCH = (COUNTS_PER_REV * GEAR_REDUCTION) / (RADIUS * 2 * Math.PI);
         MOTOR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        MOTOR.setPower(0);
         MOTOR.setDirection(offset);
         MOTOR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         TYPE = MotorType.COMPLEX;
@@ -75,6 +76,7 @@ public class Motor {
         COUNTS_PER_INCH = 0;
         MOTOR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         MOTOR.setDirection(offset);
+        MOTOR.setPower(0);
         MOTOR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         TYPE = MotorType.SIMPLE;
         TELEMETRY.addLine("Motor " + getName() + " is ready.");

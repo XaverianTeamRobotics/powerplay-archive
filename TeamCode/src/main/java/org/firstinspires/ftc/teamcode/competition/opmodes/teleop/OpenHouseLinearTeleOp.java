@@ -12,23 +12,24 @@ public class OpenHouseLinearTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Motor r = new Motor(telemetry, hardwareMap, "Right_Drive", DcMotorSimple.Direction.FORWARD);
-        Motor l = new Motor(telemetry, hardwareMap, "Left_Drive", DcMotorSimple.Direction.REVERSE);
-        Motor intake = new Motor(telemetry, hardwareMap, "Intake_Spinner", DcMotorSimple.Direction.FORWARD);
+        Motor r = new Motor(telemetry, hardwareMap, "Right_Motor", DcMotorSimple.Direction.FORWARD);
+        Motor l = new Motor(telemetry, hardwareMap, "Left_Motor", DcMotorSimple.Direction.REVERSE);
+//        Motor intake = new Motor(telemetry, hardwareMap, "Intake_Spinner", DcMotorSimple.Direction.FORWARD);
         waitForStart();
         while(opModeIsActive()) {
             if(isStopRequested()) {
+                r.stop();
+                l.stop();
                 break;
             }else{
                 r.driveWithEncoder((int) Range.clip((-gamepad1.left_stick_y + gamepad1.right_stick_x) * 100, -100, 100));
                 l.driveWithEncoder((int) Range.clip((-gamepad1.left_stick_y - gamepad1.right_stick_x) * 100, -100, 100));
-                intake.driveWithEncoder((int) Range.clip(gamepad1.left_trigger * 100, -100, 100));
+//                intake.driveWithEncoder((int) Range.clip(gamepad1.left_trigger * 100, -100, 100));
             }
         }
         r.stop();
         l.stop();
-        intake.stop();
-        stop();
+//        intake.stop();
     }
 
 }
