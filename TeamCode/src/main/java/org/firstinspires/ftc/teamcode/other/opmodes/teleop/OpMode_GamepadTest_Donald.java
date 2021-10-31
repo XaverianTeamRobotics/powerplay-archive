@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.other.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -57,9 +56,10 @@ public class OpMode_GamepadTest_Donald extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        leftMotor = hardwareMap.dcMotor.get("Left_Motor");
-        rightMotor = hardwareMap.dcMotor.get("Right_Motor");
+        leftMotor = hardwareMap.get(DcMotor.class, "ld1");
+        rightMotor = hardwareMap.get(DcMotor.class, "rd1");
 
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
@@ -74,13 +74,8 @@ public class OpMode_GamepadTest_Donald extends LinearOpMode {
             double turn  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-
             leftMotor.setPower(leftPower);
             rightMotor.setPower( rightPower);
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftMotor, rightMotor);
-            telemetry.update();
         }
     }
 }
