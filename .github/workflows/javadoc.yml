@@ -54,6 +54,8 @@ jobs:
         mv ./FtcRobotController/build/reports/* ../sdk-reports/
 
         # Checkout gh-pages branch
+        git reset --hard HEAD
+        git clean -f -d -x
         git remote set-branches origin '*'
         git fetch -v
         git checkout gh-pages
@@ -73,7 +75,7 @@ jobs:
         mv ./reports/${BRANCH_NAME}/sdk-reports/lint-results-debug.html ./reports/${BRANCH_NAME}/sdk-reports/index.html || true
 
         # Commit and push changes
-        git add .
+        git add -A
         git commit -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
         Information:
             Repository: $GITHUB_REPOSITORY
