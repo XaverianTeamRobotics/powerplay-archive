@@ -77,6 +77,7 @@ jobs:
         # Commit and push changes
         git add -A
         git commit -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
+
         Information:
             Repository: $GITHUB_REPOSITORY
             Branch: $GITHUB_REF
