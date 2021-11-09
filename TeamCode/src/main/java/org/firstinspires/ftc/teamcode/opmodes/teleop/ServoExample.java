@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ServoExample", group="Iterative")
-public class ServoExample extends LinearOpMode {
+public class servoExample extends LinearOpMode {
 
     boolean aKeyDown, bKeyDown, xKeyDown, yKeyDown;
     boolean forceStop;

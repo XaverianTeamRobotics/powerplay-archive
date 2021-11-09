@@ -15,7 +15,7 @@ public class ColinCode extends LinearOpMode {
     private boolean forceStop, holdOpen;
     private Servo servo1;
     private double servo1power, servo1speed;
-    private double[] joystick_L = {0, 0};
+    private double[] joystick_L= {0, 0};
     private DistanceSensor distance;
 
     private void addControllerTelemetry() {
@@ -88,6 +88,7 @@ public class ColinCode extends LinearOpMode {
         bKeyDown = false;
         xKeyDown = false;
         yKeyDown = false;
+
         servo1speed = 1.0 / 100;
         servo1 = hardwareMap.get(Servo.class, "servo1");
         distance = hardwareMap.get(DistanceSensor.class, "distance");
@@ -122,7 +123,7 @@ public class ColinCode extends LinearOpMode {
             servo1speed = 0.01;
         }
 
-        if (distance.getDistance(DistanceUnit.CM) < 7) {
+        if (distance.getDistance(DistanceUnit.CM) < 7 && !gamepad1.a) {
             servo1power = 0.4;
         }
 
@@ -133,6 +134,7 @@ public class ColinCode extends LinearOpMode {
             servo1.setPosition(0);
             servo1power = 0;
         }
+
         telemetry.addData("Servo 1 Position", servo1power);
         telemetry.addData("Servo 1 Speed", servo1speed);
         telemetry.addData("Distance (cm)", distance.getDistance(DistanceUnit.CM));

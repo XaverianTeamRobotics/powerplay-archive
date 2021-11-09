@@ -10,17 +10,6 @@ public class manualDropper extends LinearOpMode {
     private Servo servo1;
     private boolean aToggled;
 
-    public boolean toogleBool(boolean toggler) {
-        boolean toReturn = false;
-        if (toggler) {
-            toReturn = false;
-        }
-        else if (!toggler) {
-            toReturn = true;
-        }
-        return toReturn;
-    }
-
     public void initialize() {
         aToggled = false;
 
@@ -30,7 +19,7 @@ public class manualDropper extends LinearOpMode {
 
     public void forever() {
         if (gamepad1.a) {
-            aToggled = toogleBool(aToggled);
+            aToggled = !aToggled;
             sleep(125);
         }
 
@@ -42,7 +31,6 @@ public class manualDropper extends LinearOpMode {
         else {
             servo1.setPosition(0.4);
         }
-
     }
 
     @Override
