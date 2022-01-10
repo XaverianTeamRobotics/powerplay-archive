@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate documentation with Javadoc
         run: |
-          echo '-classpath "./FtcRobotController/' >> ./jdtclsp.txt
+          echo '-classpath "./FtcRobotController/:' >> ./jdtclsp.txt
           carray=( $(find ~/.gradle/caches/ -name "classes.jar"  -not -type d) )
           rarray=( $(find ~/.gradle/caches/ -name "res" -type d -links 2) )
           marray=( $(find ~/.gradle/caches/ -name "AndroidManifest.xml"  -not -type d) )
