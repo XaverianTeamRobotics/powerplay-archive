@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServo;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeLiftingServoLocation;
@@ -17,6 +19,7 @@ public class ServoExample extends LinearOpMode {
     boolean forceStop;
     private InputSpace servo1;
     int servo1power;
+    double lastTime = 0;
     double[] joystick_L = {0, 0};
 
     private int minMax(int var, int min, int max) {
@@ -111,9 +114,12 @@ public class ServoExample extends LinearOpMode {
         }
         telemetry.addData("Force Stop", forceStop);
 
-        servo1power += joystick_L[1];
+        if(lastTime + 0.25 < time) {
+            lastTime = time;
+            servo1power += joystick_L[1];
+        }
 
-        //servo1power = minMax(servo1power, 0, 1);
+        servo1power = Range.clip(servo1power, 40, 80);
 
         servo1.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, servo1power);
 
