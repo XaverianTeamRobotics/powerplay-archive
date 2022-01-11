@@ -71,7 +71,7 @@ jobs:
           mv ./7.0.0/RobotCore ./tempgit/FtcRobotController/javadocs/ftc/robotcore
           cd ./tempgit/FtcRobotController
           git add -A
-          git commit -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
+          git commit --allow-empty -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
           Information:
             Repository: $GITHUB_REPOSITORY
             Branch: $GITHUB_REF
@@ -176,7 +176,7 @@ jobs:
           mv ./reports/${BRANCH_NAME}/sdk-reports/lint-results-debug.html ./reports/${BRANCH_NAME}/sdk-reports/index.html || true
           # Commit and push changes
           git add -A
-          git commit -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
+          git commit --allow-empty -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
           Information:
             Repository: $GITHUB_REPOSITORY
             Branch: $GITHUB_REF
