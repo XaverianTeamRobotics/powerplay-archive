@@ -113,7 +113,7 @@ public class ServoExample extends LinearOpMode {
 
         servo1power += joystick_L[1];
 
-        //servo1power = minMax(servo1power, 0, 1);
+        servo1power = minMax(servo1power, 10, 30);
 
         servo1.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, servo1power);
 
