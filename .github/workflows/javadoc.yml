@@ -60,7 +60,7 @@ jobs:
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
-          echo '$ANDROID_HOME/platforms/android-29/android.jar:$ANDROID_HOME/platforms/android-29/android-stubs-src.jar"' >> ./jdtclsp.txt
+          echo '$ANDROID_HOME/platforms/android-29/android.jar:$ANDROID_HOME/platforms/android-29/android-stubs-src.jar:$ANDROID_HOME/platforms/android-29/uiautomator.jar"' >> ./jdtclsp.txt
           STR=$( cat ./jdtclsp.txt )
           STR=${STR//$'\n'/}
           echo "String"
