@@ -43,24 +43,21 @@ jobs:
         run: |
           echo '-classpath "./FtcRobotController/:' >> ./jdtclsp.txt
           carray=( $(find ~/.gradle/caches/ -name "classes.jar"  -not -type d) )
-          rarray=( $(find ~/.gradle/caches/ -name "res" -type d -links 2) )
+          rarray=( $(find ~/.gradle/caches/ -name "res" -type d) )
           marray=( $(find ~/.gradle/caches/ -name "AndroidManifest.xml"  -not -type d) )
           # COPY OUT ALL THE PATHS IN THIS CLASSPATH TO OUR OWN PATH - IF NEEDED
           for i in ${carray[@]}
           do
-              echo "~/.gradle/caches/" >> ./jdtclsp.txt
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
           for i in ${rarray[@]}
           do
-              echo "~/.gradle/caches/" >> ./jdtclsp.txt
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
           for i in ${marray[@]}
           do
-              echo "~/.gradle/caches/" >> ./jdtclsp.txt
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
