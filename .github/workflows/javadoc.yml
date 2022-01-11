@@ -20,21 +20,13 @@ jobs:
           java-version: 16
           distribution: "temurin"
           cache: gradle
-          
-      - name: Test
-        run: |
-          echo $ANDROID_HOME
-          ls $ANDROID_HOME
-          ls $ANDROID_HOME/platforms
-          ls $ANDROID_HOME/platforms/android-29/
       
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - name: Debug Gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --version
 
-      - name: Gradle version
-        run: ./gradlew --version
-
-      - name: Build with Gradle
+      - name: Import dependencies with Gradle
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
@@ -46,7 +38,6 @@ jobs:
           jarray=( $(find ~/.gradle/caches/module*/ -name "*.jar"  -not -type d) )
           rarray=( $(find ~/.gradle/caches/ -name "res" -type d) )
           marray=( $(find ~/.gradle/caches/ -name "AndroidManifest.xml"  -not -type d) )
-          # COPY OUT ALL THE PATHS IN THIS CLASSPATH TO OUR OWN PATH - IF NEEDED
           for i in ${aarray[@]}
           do
               echo $i >> ./jdtclsp.txt
@@ -67,22 +58,31 @@ jobs:
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
-          echo '$ANDROID_HOME/platforms/android-29/android.jar:$ANDROID_HOME/platforms/android-29/android-stubs-src.jar:$ANDROID_HOME/platforms/android-29/uiautomator.jar:$ANDROID_HOME/platforms/android-29/android.jar"' >> ./jdtclsp.txt
+          echo '$ANDROID_HOME/platforms/android-29/android.jar"' >> ./jdtclsp.txt
           STR=$( cat ./jdtclsp.txt )
           STR=${STR//$'\n'/}
-          echo "String"
-          echo $STR
           rm -rf ./jdtclsp.txt
           echo $STR >> ./jdtclsp.txt
-          javadoc -Xdoclint:none -public -splitindex -use -author -version -sourcepath $ANDROID_HOME/platforms/android-29/android.jar -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
+          rm -rf ./javadoc-output/
+          mkdir ./javadoc-output/
+          # -Xdoclint:none
+          javadoc -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
+          echo -e "\n\n\n\n------------------------------\nDEBUG LOGS START\n------------------------------\n\n\n\n"
+          echo -e "CLASSPATH:\n\n"
+          cat ./jdtclsp.txt
+          echo -e "\n\n\nINPUT:\n\n"
+          find ./TeamCode/ -name "*.java" -not -type d
+          echo -e "\n\n\nOUTPUT:\n\n"
+          ls ./javadoc-output/
+          echo -e "\n\n\n\n------------------------------\nDEBUG LOGS END\n------------------------------\n\n\n\n"
 
-      - name: Upload the Javadoc output
+      - name: Upload generated Javadoc to Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Javadoc-output
           path: ./javadoc-output/
 
-      - name: Commit and push the new Javadoc folder
+      - name: Upload generated Javadoc to Pages
         run: |
           # Set up Git and environment variables
           git config user.name "GitHub Actions Bot"
