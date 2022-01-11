@@ -35,11 +35,17 @@ jobs:
       - name: Generate documentation with Javadoc
         run: |
           echo '-classpath "./FtcRobotController/:' >> ./jdtclsp.txt
-          carray=( $(find ~/.gradle/caches/ -name "classes.jar"  -not -type d) )
+          aarray=( $(find ~/.gradle/caches/transform*/ -name "classes.jar"  -not -type d) )
+          jarray=( $(find ~/.gradle/caches/module*/ -name "*.jar"  -not -type d) )
           rarray=( $(find ~/.gradle/caches/ -name "res" -type d) )
           marray=( $(find ~/.gradle/caches/ -name "AndroidManifest.xml"  -not -type d) )
           # COPY OUT ALL THE PATHS IN THIS CLASSPATH TO OUR OWN PATH - IF NEEDED
-          for i in ${carray[@]}
+          for i in ${aarray[@]}
+          do
+              echo $i >> ./jdtclsp.txt
+              echo ":" >> ./jdtclsp.txt
+          done
+          for i in ${jarray[@]}
           do
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
@@ -61,7 +67,7 @@ jobs:
           echo $STR
           rm -rf ./jdtclsp.txt
           echo $STR >> ./jdtclsp.txt
-          javadoc -Xdoclint:none -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/package-list @./jdtclsp.txt -tag "apiNote:a:API Note:" -tag "implSpec:a:Implementation Requirements:" -tag "implNote:a:Implementation Note:" $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
+          javadoc -Xdoclint:none -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
 
       - name: Upload the Javadoc output
         uses: actions/upload-artifact@v2
