@@ -16,7 +16,7 @@ public class Resources {
                         new StandardDistanceSensor(hardwareMap, Distance.East),
                         new StandardDistanceSensor(hardwareMap, Distance.West),
                         new StandardIMU(hardwareMap),
-                        90
+                        180
                 ));
             }
 
