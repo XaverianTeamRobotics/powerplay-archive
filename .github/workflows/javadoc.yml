@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
+      # Set up our environment
+  
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -21,15 +24,21 @@ jobs:
           distribution: "temurin"
           cache: gradle
       
+      # Make gradle wrapper executable and check it's working properly
+      
       - name: Debug Gradle
         run: |
           chmod +x ./gradlew
           ./gradlew --version
 
+      # Install our dependencies by building the app, then discarding the build. The cached deps will still be there, and we can use them for the Javadoc
+
       - name: Import dependencies with Gradle
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
+
+      # Locate our dependencies, build a classpath using them, append Android itself to said classpath, and run the Javadoc command with our flags. All of this, especially the dependendy preperation, is critical to the Javadoc command succeeding. It will fail due to a JDK bug affecting all versions <18, which sadly includes us due to FTC's reliance on Gradle 7. Talk to @tom-ricci amd @MatthewL246 before editing anything to do with this step
 
       - name: Generate documentation with Javadoc
         run: |
@@ -65,8 +74,7 @@ jobs:
           echo $STR >> ./jdtclsp.txt
           rm -rf ./javadoc-output/
           mkdir ./javadoc-output/
-          # -Xdoclint:none
-          javadoc -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
+          javadoc -Xdoclint:none -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/libs/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
           echo -e "\n\n\n\n------------------------------\nDEBUG LOGS START\n------------------------------\n\n\n\n"
           echo -e "CLASSPATH:\n\n"
           cat ./jdtclsp.txt
@@ -76,11 +84,15 @@ jobs:
           ls ./javadoc-output/
           echo -e "\n\n\n\n------------------------------\nDEBUG LOGS END\n------------------------------\n\n\n\n"
 
+      # Upload an Artifact of the Javadoc if for whatever reason one might need to download one
+
       - name: Upload generated Javadoc to Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Javadoc-output
           path: ./javadoc-output/
+          
+      # Format & Upload to Pages to access
 
       - name: Upload generated Javadoc to Pages
         run: |
