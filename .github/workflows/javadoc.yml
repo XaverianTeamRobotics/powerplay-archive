@@ -78,7 +78,7 @@ jobs:
             Commit: $GITHUB_SHA
             Who triggered action: $GITHUB_ACTOR"
           git push
-          cd ../../
+          cd ../../../
           rm -rf ./docs/
           
       # Since our Javadocs are on GitHub Pages, we need to wait for GitHub Pages to update before continuing. This should, at most, take about 12 minutes between queue and build time and another 12 for the cache to update.
