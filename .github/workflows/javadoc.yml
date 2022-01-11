@@ -24,24 +24,13 @@ jobs:
           distribution: "temurin"
           cache: gradle
       
-      # Make gradle wrapper executable and check it's working properly
+      # # Install our dependencies by building the app, discarding the build, extracting and uploading external Javadocs. The external Javadocs can then be linked and the dependencies given to the CLASSPATH to be used
       
-      - name: Debug Gradle
+      - name: Import dependencies with Gradle
         run: |
           chmod +x ./gradlew
           ./gradlew --version
-
-      # Install our dependencies by building the app, then discarding the build. The cached deps will still be there, and we can use them for the Javadoc
-
-      - name: Import dependencies with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
-      
-      # We host our own Javadoc of the SDK to allow for easier linking of external Javadocs, so we update the Javadocs on each run
-      
-      - name: Update SDK Javadoc
-        run: |
+          ./gradlew build
           rm -rf ./docs
           ./gradlew extractJavadoc
           ls ./docs/7.0.0/
