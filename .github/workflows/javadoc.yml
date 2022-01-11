@@ -27,6 +27,7 @@ jobs:
           POGGERS=$( cat poggers.txt )
           POGGERS=${POGGERS//$'\n'/}
           echo $POGGERS
+          echo $ANDROID_HOME
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
