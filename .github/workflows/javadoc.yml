@@ -48,15 +48,22 @@ jobs:
           mkdir tempgit
           cd tempgit
           git clone https://github.com/XaverianTeamRobotics/FtcRobotController.git
+          cd ./FtcRobotController
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          cd ../
-          mv ./7.0.0/FtcCommon ./tempgit/javadocs/ftc/ftccommon
-          mv ./7.0.0/Hardware ./tempgit/javadocs/ftc/hardware
-          mv ./7.0.0/Inspection ./tempgit/javadocs/ftc/inspection
-          mv ./7.0.0/OnBotJava ./tempgit/javadocs/ftc/onbotjava
-          mv ./7.0.0/RobotCore ./tempgit/javadocs/ftc/robotcore
-          cd ./tempgit/
+          cd ../../
+          rm -rf ./tempgit/FtcRobotController/javadocs/ftc/
+          mkdir ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
+          mkdir ./tempgit/FtcRobotController/javadocs/ftc/hardware
+          mkdir ./tempgit/FtcRobotController/javadocs/ftc/inspection
+          mkdir ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
+          mkdir ./tempgit/FtcRobotController/javadocs/ftc/robotcore
+          mv ./7.0.0/FtcCommon ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
+          mv ./7.0.0/Hardware ./tempgit/FtcRobotController/javadocs/ftc/hardware
+          mv ./7.0.0/Inspection ./tempgit/FtcRobotController/javadocs/ftc/inspection
+          mv ./7.0.0/OnBotJava ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
+          mv ./7.0.0/RobotCore ./tempgit/FtcRobotController/javadocs/ftc/robotcore
+          cd ./tempgit/FtcRobotController
           git add -A
           git commit -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
           Information:
