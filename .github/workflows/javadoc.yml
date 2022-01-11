@@ -71,7 +71,7 @@ jobs:
             Branch: $GITHUB_REF
             Commit: $GITHUB_SHA
             Who triggered action: $GITHUB_ACTOR"
-          git push
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/XaverianTeamRobotics/FtcRobotController.git gh-pages
           cd ../../
           rm -rf ./docs/
           
