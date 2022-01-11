@@ -30,6 +30,7 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew --version
+        
       # Install our dependencies by building the app, then discarding the build. The cached deps will still be there, and we can use them for the Javadoc
 
       - name: Import dependencies with Gradle
@@ -37,13 +38,44 @@ jobs:
         with:
           arguments: build
       
-      # We host our own Javadoc of the SDK to allow for easier linking of external Javadocs, so we update the Javadocs on each run
+      # We host our own Javadoc of the FTC SDK to allow for easier linking of external Javadocs, so we update the Javadocs on each run
       
-      - name: Update SDK Javadoc
+      - name: Update links with Gradle
         run: |
           rm -rf ./docs
           ./gradlew extractJavadoc
-          ls ./docs/7.0.0/
+          cd ./docs/
+          mkdir tempgit
+          cd tempgit
+          git clone https://github.com/XaverianTeamRobotics/FtcRobotController.git
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          cd ../
+          mv ./7.0.0/FtcCommon ./tempgit/javadocs/ftc/ftccommon
+          mv ./7.0.0/Hardware ./tempgit/javadocs/ftc/hardware
+          mv ./7.0.0/Inspection ./tempgit/javadocs/ftc/inspection
+          mv ./7.0.0/OnBotJava ./tempgit/javadocs/ftc/onbotjava
+          mv ./7.0.0/RobotCore ./tempgit/javadocs/ftc/robotcore
+          cd ./tempgit/
+          git add -A
+          git commit -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
+          Information:
+            Repository: $GITHUB_REPOSITORY
+            Branch: $GITHUB_REF
+            Commit: $GITHUB_SHA
+            Who triggered action: $GITHUB_ACTOR"
+          git push
+          cd ../../
+          rm -rf ./docs/
+          
+      # Since our Javadocs are on GitHub Pages, we need to force GitHub Pages to update before continuing
+          
+      - name: Upload updated links
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+        
       # Locate our dependencies, build a classpath using them, append Android itself to said classpath, and run the Javadoc command with our flags. All of this, especially the dependendy preperation, is critical to the Javadoc command succeeding. It will fail due to a JDK bug affecting all versions <18, which sadly includes us due to FTC's reliance on Gradle 7. Talk to @tom-ricci amd @MatthewL246 before editing anything to do with this step
 
       - name: Generate documentation with Javadoc
