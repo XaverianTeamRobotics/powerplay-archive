@@ -52,13 +52,9 @@ jobs:
       
       - name: Update links
         run: |
-          rm -rf ./docs
           ./gradlew extractJavadoc
           cd ./docs/
-          mkdir tempgit
-          cd tempgit
-          git clone https://github.com/XaverianTeamRobotics/FtcRobotController.git
-          cd ./FtcRobotController
+          cd tempgit/FtcRobotController
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           cd ../../
