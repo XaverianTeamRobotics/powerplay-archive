@@ -1,8 +1,25 @@
 package org.firstinspires.ftc.teamcode.main.utils.resources;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.sensors.NavigationSensorCollection;
+import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardDistanceSensor;
+import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardIMU;
+
 public class Resources {
     public static final class Navigation {
         public static final class Sensors {
+            public static PositionSystem getPositionSystem(HardwareMap hardwareMap) {
+                return new PositionSystem(new NavigationSensorCollection(
+                        new StandardDistanceSensor(hardwareMap, Distance.North),
+                        new StandardDistanceSensor(hardwareMap, Distance.East),
+                        new StandardDistanceSensor(hardwareMap, Distance.West),
+                        new StandardIMU(hardwareMap),
+                        90
+                ));
+            }
+
             public static final class Distance {
                 public static final String North = "distN";
                 public static final String East = "distE";

@@ -15,6 +15,10 @@ public class PositionSystem {
     public Axis leftToRight;
     public Axis upAndDown;
 
+    public int rawNorthReading;
+    public int rawEastReading;
+    public int rawWestReading;
+
     public float northOffset = 0;
 
     public CoordinateSystem coordinateSystem;
@@ -53,6 +57,10 @@ public class PositionSystem {
     private void evalReadings(@NotNull AxisReading eastWest, @NotNull AxisReading northSouth) {
         boolean eastWestValid = true;
         boolean northSouthValid = true;
+
+        rawNorthReading = (int) northSouth.sensor1;
+        rawEastReading = (int) eastWest.sensor1;
+        rawWestReading = (int) eastWest.sensor2;
 
         // Check which axes are valid
         if (eastWest.sensor1 + eastWest.interSensorDistance + eastWest.sensor2 + 10 > CoordinateSystem.maxWidthInCM)
