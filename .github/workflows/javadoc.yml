@@ -22,7 +22,13 @@ jobs:
           cache: gradle
           
       - name: Test
-        run: echo $ANDROID_HOME
+        run: |
+          echo $ANDROID_HOME
+          ls $ANDROID_HOME
+          ls $ANDROID_HOME/Sdk
+          ls $ANDROID_HOME/sdk
+          ls $ANDROID_HOME/platforms
+          ls $ANDROID_HOME/platforms/android-29/
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
