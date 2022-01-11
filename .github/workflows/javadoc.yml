@@ -26,8 +26,10 @@ jobs:
       
       # Make gradle wrapper executable and check it's working properly
       
-      - name: Debug Gradle
+      - name: Prepare Gradle
         run: |
+          rm -rf ./docs/
+          mkdir -p ./docs/tempgit/FtcRobotController/
           chmod +x ./gradlew
           ./gradlew --version
         
@@ -37,10 +39,18 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
+          
+      # Checkout repository to place FTC SDK into
+          
+      - name: Prepare link update
+        uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+          path: './docs/tempgit/FtcRobotController/'
       
       # We host our own Javadoc of the FTC SDK to allow for easier linking of external Javadocs, so we update the Javadocs on each run
       
-      - name: Update links with Gradle
+      - name: Update links
         run: |
           rm -rf ./docs
           ./gradlew extractJavadoc
@@ -71,13 +81,13 @@ jobs:
             Branch: $GITHUB_REF
             Commit: $GITHUB_SHA
             Who triggered action: $GITHUB_ACTOR"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/XaverianTeamRobotics/FtcRobotController.git gh-pages
+          git push
           cd ../../
           rm -rf ./docs/
           
       # Since our Javadocs are on GitHub Pages, we need to force GitHub Pages to update before continuing
           
-      - name: Upload updated links
+      - name: Publish updated links
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
