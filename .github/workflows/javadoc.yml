@@ -21,6 +21,13 @@ jobs:
           distribution: "temurin"
           cache: gradle
       
+      - name: Test
+        run: |
+          echo "i am so cool \n and poggers" >> poggers.txt
+          POGGERS=$( cat poggers.txt )
+          POGGERS=${POGGERS//$'\n'/}
+          echo $POGGERS
+      
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
