@@ -71,14 +71,14 @@ jobs:
           mv ./7.0.0/RobotCore ./tempgit/FtcRobotController/javadocs/ftc/robotcore
           cd ./tempgit/FtcRobotController
           git add -A
-          git commit -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
+          git commit --allow-empty -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
           Information:
             Repository: $GITHUB_REPOSITORY
             Branch: $GITHUB_REF
             Commit: $GITHUB_SHA
             Who triggered action: $GITHUB_ACTOR"
           git push
-          cd ../../
+          cd ../../../
           rm -rf ./docs/
           
       # Since our Javadocs are on GitHub Pages, we need to wait for GitHub Pages to update before continuing. This should, at most, take about 12 minutes between queue and build time and another 12 for the cache to update.
@@ -143,7 +143,7 @@ jobs:
           
       # Upload build reports and the Javadoc to Pages to access online.
 
-      - name: Upload generated Javadoc to Pages
+      - name: Prepare Javadoc upload to Pages
         run: |
           # Set up Git and environment variables
           git config user.name "GitHub Actions Bot"
@@ -156,12 +156,16 @@ jobs:
           mv ./TeamCode/build/reports/*  ../team-reports/
           mkdir ../sdk-reports/
           mv ./FtcRobotController/build/reports/* ../sdk-reports/
-          # Checkout gh-pages branch
-          git reset --hard HEAD
-          git clean -f -d -x
-          git remote set-branches origin --add 'gh-pages'
-          git fetch -a -v
-          git checkout gh-pages
+          cd ../
+          rm -rf ~/*
+      
+      - name: Checkout Pages in Action Workspace
+        uses: actions/checkout@v2
+        with:
+          ref: 'gh-pages'
+      
+      - name: Upload generated Javadoc to Pages
+        run: |
           # Copy Javadoc docs to gh-pages
           rm -rf ./javadocs/${BRANCH_NAME}/ || true
           mkdir -p ./javadocs/${BRANCH_NAME}/
@@ -176,7 +180,7 @@ jobs:
           mv ./reports/${BRANCH_NAME}/sdk-reports/lint-results-debug.html ./reports/${BRANCH_NAME}/sdk-reports/index.html || true
           # Commit and push changes
           git add -A
-          git commit -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
+          git commit --allow-empty -a -m "Javadoc documentation update ($GITHUB_RUN_NUMBER)
           Information:
             Repository: $GITHUB_REPOSITORY
             Branch: $GITHUB_REF
