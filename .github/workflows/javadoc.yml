@@ -24,17 +24,26 @@ jobs:
           distribution: "temurin"
           cache: gradle
       
-      # # Install our dependencies by building the app, discarding the build, extracting and uploading external Javadocs. The external Javadocs can then be linked and the dependencies given to the CLASSPATH to be used
+      # Make gradle wrapper executable and check it's working properly
       
-      - name: Import dependencies with Gradle
+      - name: Debug Gradle
         run: |
           chmod +x ./gradlew
           ./gradlew --version
-          ./gradlew build
+      # Install our dependencies by building the app, then discarding the build. The cached deps will still be there, and we can use them for the Javadoc
+
+      - name: Import dependencies with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+      
+      # We host our own Javadoc of the SDK to allow for easier linking of external Javadocs, so we update the Javadocs on each run
+      
+      - name: Update SDK Javadoc
+        run: |
           rm -rf ./docs
           ./gradlew extractJavadoc
           ls ./docs/7.0.0/
-
       # Locate our dependencies, build a classpath using them, append Android itself to said classpath, and run the Javadoc command with our flags. All of this, especially the dependendy preperation, is critical to the Javadoc command succeeding. It will fail due to a JDK bug affecting all versions <18, which sadly includes us due to FTC's reliance on Gradle 7. Talk to @tom-ricci amd @MatthewL246 before editing anything to do with this step
 
       - name: Generate documentation with Javadoc
@@ -80,7 +89,6 @@ jobs:
           echo -e "\n\n\nOUTPUT:\n\n"
           ls ./javadoc-output/
           echo -e "\n\n\n\n------------------------------\nDEBUG LOGS END\n------------------------------\n\n\n\n"
-
       # Upload an Artifact of the Javadoc if for whatever reason one might need to download one
 
       - name: Upload generated Javadoc to Artifacts
