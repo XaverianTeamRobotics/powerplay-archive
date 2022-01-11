@@ -67,7 +67,7 @@ jobs:
               echo $i >> ./jdtclsp.txt
               echo ":" >> ./jdtclsp.txt
           done
-          echo '$ANDROID_HOME/platforms/android-29/android.jar"' >> ./jdtclsp.txt
+          echo '/usr/local/lib/android/sdk/platforms/android-29/android.jar"' >> ./jdtclsp.txt
           STR=$( cat ./jdtclsp.txt )
           STR=${STR//$'\n'/}
           rm -rf ./jdtclsp.txt
