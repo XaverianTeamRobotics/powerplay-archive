@@ -53,11 +53,11 @@ jobs:
           git config user.email "actions@github.com"
           cd ../../
           rm -rf ./tempgit/FtcRobotController/javadocs/ftc/
-          mkdir ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
-          mkdir ./tempgit/FtcRobotController/javadocs/ftc/hardware
-          mkdir ./tempgit/FtcRobotController/javadocs/ftc/inspection
-          mkdir ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
-          mkdir ./tempgit/FtcRobotController/javadocs/ftc/robotcore
+          mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
+          mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/hardware
+          mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/inspection
+          mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
+          mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/robotcore
           mv ./7.0.0/FtcCommon ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
           mv ./7.0.0/Hardware ./tempgit/FtcRobotController/javadocs/ftc/hardware
           mv ./7.0.0/Inspection ./tempgit/FtcRobotController/javadocs/ftc/inspection
