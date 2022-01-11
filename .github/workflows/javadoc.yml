@@ -20,6 +20,9 @@ jobs:
           java-version: 16
           distribution: "temurin"
           cache: gradle
+          
+      - name: Test
+        run: echo $ANDROID_HOME
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
