@@ -25,8 +25,6 @@ jobs:
         run: |
           echo $ANDROID_HOME
           ls $ANDROID_HOME
-          ls $ANDROID_HOME/Sdk
-          ls $ANDROID_HOME/sdk
           ls $ANDROID_HOME/platforms
           ls $ANDROID_HOME/platforms/android-29/
       
