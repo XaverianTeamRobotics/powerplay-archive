@@ -60,7 +60,7 @@ jobs:
           sed -i '$ s/.$//' ./jdtclsp.txt
           echo '"' >> ./jdtclsp.txt
           STR=$( cat ./jdtclsp.txt )
-          STR=${$STR//$'\n'/}
+          STR=${STR//$'\n'/}
           echo "String"
           echo $STR
           rm -rf ./jdtclsp.txt
