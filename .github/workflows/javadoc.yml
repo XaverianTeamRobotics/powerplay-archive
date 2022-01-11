@@ -23,12 +23,12 @@ jobs:
           java-version: 16
           distribution: "temurin"
           cache: gradle
-      - run: chmod +x ./gradlew
       
       # Make gradle wrapper executable and check it's working properly
       
       - name: Debug Gradle
         run: |
+          chmod +x ./gradlew
           ./gradlew --version
 
       # Install our dependencies by building the app, then discarding the build. The cached deps will still be there, and we can use them for the Javadoc
