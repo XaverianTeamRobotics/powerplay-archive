@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.main.utils.scripting;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * A Script represents the code running inside of a LinearOpMode. The reason for using scripts and not writing code directly in the LinearOpMode is to be able to swap and use code between LinearOpModes without keeping multiple copies in each LinearOpMode.
- * @implSpec Scripts should run all code meant to run before the start button is pressed in their constructor, like setting up devices. They should run their main loop in the main() method. They should gracefully stop when the stop() method is called. For example, inside stop(), a Script with an InputSpace should call InputSpace.stop() to shut down the devices attached to the InputSpace.
+ * <p>A Script represents the code running inside of a LinearOpMode. The reason for using scripts and not writing code directly in the LinearOpMode is to be able to swap and use code between LinearOpModes without keeping multiple copies in each LinearOpMode.</p>
+ * <p>Scripts should run all code meant to run before the start button is pressed in their constructor, like setting up devices. They should run their main loop in the main() method. They should gracefully stop when the stop() method is called. For example, inside stop(), a Script with an InputSpace should call InputSpace.stop() to shut down the devices attached to the InputSpace.</p>
  */
 public abstract class Script {
 
