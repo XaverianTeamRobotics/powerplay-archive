@@ -78,7 +78,7 @@ public class PositionSystem {
         double y = northSouth.sensor1;
 
         // do some geometry-I honors level math
-        int angleDegrees = (int) coordinateSystem.angle.asDegree();
+        int angleDegrees = coordinateSystem.angle.asDegree();
         double angleRadians = Math.toRadians(angleDegrees);
 
         x = x * Math.sin(angleRadians);

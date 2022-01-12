@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.main.utils.autonomous;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -33,6 +35,13 @@ public class PipelineTest extends LinearOpMode {
             telemetry.addData("    East", positionSystem.rawEastReading);
             telemetry.addData("    West", positionSystem.rawWestReading);
             telemetry.update();
+
+            if (gamepad1.dpad_right) { positionSystem.turnDegree((int) (positionSystem.imuData.getHeading() + 90), Path.Direction.CW); }
+            if (gamepad1.dpad_left) { positionSystem.turnDegree((int) (positionSystem.imuData.getHeading() - 90), Path.Direction.CCW); }
+            if (gamepad1.dpad_up) { positionSystem.encoderDrive(6); }
+            if (gamepad1.dpad_down) { positionSystem.encoderDrive(-6); }
+            if (gamepad1.left_bumper) { positionSystem.imuOffset = 90; }
+            if (gamepad1.right_bumper) { positionSystem.imuOffset = 270; }
         }
     }
 }
