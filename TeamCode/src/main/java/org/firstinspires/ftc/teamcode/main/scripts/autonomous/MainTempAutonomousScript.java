@@ -6,11 +6,6 @@ import org.firstinspires.ftc.teamcode.main.utils.scripting.AutonomousScript;
 
 public class MainTempAutonomousScript extends AutonomousScript {
 
-    /**
-     * Makes a new Script.
-     *
-     * @param opMode The OpMode the Script is being run in.
-     */
     public MainTempAutonomousScript(LinearOpMode opMode) {
         super(opMode);
     }
