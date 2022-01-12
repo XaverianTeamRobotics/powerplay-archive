@@ -126,7 +126,7 @@ jobs:
           echo $STR >> ./jdtclsp.txt
           rm -rf ./javadoc-output/
           mkdir ./javadoc-output/
-          javadoc -Xdoclint:none -public -splitindex -use -author -version -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
+          javadoc -Xdoclint:none -public -splitindex -use -author -version -sourcepath /usr/local/lib/android/sdk/platforms/android-29/android.jar -d ./javadoc-output -link https://docs.oracle.com/en/java/javase/11/docs/api/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/ftccommon/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/hardware/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/inspection/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/onbotjava/ -link https://xaverianteamrobotics.github.io/FtcRobotController/javadocs/ftc/robotcore/ @./jdtclsp.txt $(find ./TeamCode/ -name "*.java" -not -type d) --ignore-source-errors
           echo -e "\n\n\n\n------------------------------\nDEBUG LOGS START\n------------------------------\n\n\n\n"
           echo -e "CLASSPATH:\n\n"
           cat ./jdtclsp.txt
