@@ -38,7 +38,6 @@ public class StandardServo extends InteractionItem {
 
     /**
      * <p>Gets the degree of the servo's set position.</p>
-     * <br>
      * <p>Note that this does not return the physical degree of rotation of the servo, only the position the servo is commanded to be in, as no API returning the true position is exposed by the servo.</p>
      * @return The position of the servo between 0 and 100
      */

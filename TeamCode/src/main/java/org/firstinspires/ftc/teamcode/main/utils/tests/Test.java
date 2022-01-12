@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * <p>A Test is a piece of code that can be ran to test other code. Tests will be ran automatically by the Tester unless they have an @Skippable annotation.</p>
- * <br>
  * <p>Tests should be able to be fully autonomous. A Test's environment should be fully controlled by the Test. Tests should set up their environments in their constructor.</p>
  */
 public abstract class Test {

@@ -12,9 +12,7 @@ import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeLimitSwitchLoca
 
 /**
  * <p>This class can be used to receive output from locations. Locations get data from the interaction surfaces they handle, and then return that to this space.</p>
- * <br>
  * <p>For example, if the location of touch sensor $y finds out $y is being touched, the location will send that data to the space on request. If something fails, it will consume any exceptions and act like nothing happened, returning an arbitrary value. When creating an OutputSpace, the OutputSpace attempts to create locations for every output location on the robot. For example, if the team decides to build a robot with 4 motors, locations for all 4 will be created and able to receive data from. The possible locations are defined inside this class.</p>
- * <br>
  * <p>Since the OutputSpace is designed to handle output from the current robot, it should be built with the current robot and only the current robot in mind. Location classes are where all used locations should go. Remove any unused Locations from the OutputSpace's methods, and potentially delete the Location entirely if needed.</p>
  */
 public class OutputSpace {
