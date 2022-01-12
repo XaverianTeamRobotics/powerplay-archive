@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.InteractionSurface
 
 /**
  * Represents a motor attached to the robot.
- * @author Thomas Ricci, Mickael Lachut
+ * @author Thomas Ricci, Michael Lachut
  * */
 public class StandardMotor extends InteractionItem {
 

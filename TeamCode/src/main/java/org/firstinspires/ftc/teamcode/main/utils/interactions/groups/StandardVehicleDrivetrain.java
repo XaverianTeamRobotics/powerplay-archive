@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.main.utils.interactions.groups;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
 
 /**
- * A StandardVehicleDrivetrain represents the motors which control movement of the robot in a way similar to a real-life vehicle, controlling each side of the motors on its own.
+ * <p>A StandardVehicleDrivetrain represents the motors which control movement of the robot in a way similar to a real-life vehicle, controlling each side on its own.</p>
+ * <p>For example, a carfax drivetrain would be a StandardVehicleDrivetrain because a carfax drives each side of itself differently. For example, the right sie of a carfax is controlled differently than the left side, as opposed to each wheel on each side being controlled differently than each other wheel.</p>
  */
 public abstract class StandardVehicleDrivetrain extends StandardDrivetrain {
 
