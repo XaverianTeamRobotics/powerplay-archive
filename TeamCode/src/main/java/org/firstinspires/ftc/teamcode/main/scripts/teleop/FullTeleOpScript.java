@@ -104,10 +104,12 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     private void controlIntakeLifter() {
-        if(gamepadManager.functionOneGamepad().dpad_right) {
+        if(gamepadManager.functionOneGamepad().dpad_left && timeAsOfLastIntakeMovement + 0.25 < getOpMode().time) {
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 80);
-        }else if(gamepadManager.functionOneGamepad().dpad_left) {
+            timeAsOfLastIntakeMovement = getOpMode().time;
+        }else if(gamepadManager.functionOneGamepad().dpad_right && timeAsOfLastIntakeMovement + 0.25 < getOpMode().time) {
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 40);
+            timeAsOfLastIntakeMovement = getOpMode().time;
         }
     }
 
@@ -176,14 +178,16 @@ public class FullTeleOpScript extends TeleOpScript {
             bWasDown = false;
         }
         if(handShouldBeDown) {
+            // REMOTE - this is the high value, change this to change the orientation when its down
             inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 36);
         }else{
+            // REMOTE - this is the low value, change this to change the orientation when its down
             inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 21);
         }
     }
 
     private void controlDuck() {
-        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, getOpMode().gamepad1.a ? 50 : 0);
+        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, getOpMode().gamepad1.a ? -50 : 0);
     }
 
     private void debug() {
