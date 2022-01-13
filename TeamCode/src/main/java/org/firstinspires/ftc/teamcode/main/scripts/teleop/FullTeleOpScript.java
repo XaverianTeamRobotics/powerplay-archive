@@ -150,12 +150,10 @@ public class FullTeleOpScript extends TeleOpScript {
 //    }
 
     private void controlIntake() {
-        if(intakeShouldBeDown && intakeIsAtPosition) {
-            int intakeGas = (int) Range.clip(gamepadManager.functionOneGamepad().left_trigger * 100, 0, 100);
-            int intakeBrake = (int) Range.clip(gamepadManager.functionOneGamepad().right_trigger * 100, 0, 100);
-            int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
-            inputSpace.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, intakeSpeed);
-        }
+        int intakeGas = (int) Range.clip(gamepadManager.functionOneGamepad().left_trigger * 100, 0, 100);
+        int intakeBrake = (int) Range.clip(gamepadManager.functionOneGamepad().right_trigger * 100, 0, 100);
+        int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
+        inputSpace.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, intakeSpeed);
     }
 
     private void controlElevator() {
