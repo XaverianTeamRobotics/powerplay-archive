@@ -1,9 +1,9 @@
 name: Javadoc Generation
 on:
-  push:
-    branches-ignore:
-      - "gh-pages"
-      - "docs"
+#   push:
+#     branches-ignore:
+#       - "gh-pages"
+#       - "docs"
   workflow_dispatch:
 
 jobs:
