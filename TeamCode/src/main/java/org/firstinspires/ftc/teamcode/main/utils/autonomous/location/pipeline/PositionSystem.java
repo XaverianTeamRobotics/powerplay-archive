@@ -152,7 +152,7 @@ public class PositionSystem {
     }
     public void encoderDrive(double distance) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distance, 100);
+            encoderDrive((int) distance, (int) -distance);
 
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
@@ -160,12 +160,25 @@ public class PositionSystem {
     public void encoderDrive(int distanceLeft, int distanceRight) {
         if (drivetrain != null) {
             drivetrain.driveDistance(distanceLeft, distanceRight, 100);
-
-            getAndEvalReadings();
         }
     }
+
+    public boolean areMotorsBusy() {
+        return drivetrain.getRightTop().getDcMotor().isBusy() &&
+                drivetrain.getRightBottom().getDcMotor().isBusy() &&
+                drivetrain.getLeftTop().getDcMotor().isBusy() &&
+                drivetrain.getLeftBottom().getDcMotor().isBusy();
+    }
+
+    public void motorHold() {
+        while (areMotorsBusy()) {}
+    }
+
     public void turnDegree(int absoluteDegree, Path.Direction turnDirection) {
         if (drivetrain != null) {
+
+            updateAngle();
+
             int leftInches = 2;
             int rightInches = 2;
 
