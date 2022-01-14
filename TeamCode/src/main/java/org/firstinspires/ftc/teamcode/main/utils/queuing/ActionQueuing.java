@@ -8,12 +8,12 @@ import java.util.Hashtable;
  */
 public class ActionQueuing {
     public Hashtable<Action.Runner, Action.BusyChecker> busyChecker;
-    public Hashtable<Action.Runner, String> requiredResources;
+    public Hashtable<Action.Runner, Resources> requiredResources;
     public ArrayList<Action.Runner> actions;
-    public ArrayList<String> resourcesUsed;
-    public Hashtable<String, Action.Runner> activeActions;
+    public ArrayList<Resources> resourcesUsed;
+    public Hashtable<Resources, Action.Runner> activeActions;
 
-    public void queueAction(Action.Runner runner, Action.BusyChecker busyChecker, String resource) {
+    public void queueAction(Action.Runner runner, Action.BusyChecker busyChecker, Resources resource) {
         this.busyChecker.put(runner, busyChecker);
         requiredResources.put(runner, resource);
         actions.add(runner);
@@ -33,12 +33,31 @@ public class ActionQueuing {
 
         for (Action.Runner action :
                 actions) {
-            String resource = requiredResources.get(action);
+            Resources resource = requiredResources.get(action);
             if (!resourcesUsed.contains(resource)) {
                 resourcesUsed.add(resource);
                 activeActions.put(resource, action);
                 action.run();
             }
+        }
+    }
+
+    public static enum Resources {
+        DRIVETRAIN("Drivetrain"),
+        SENSORS("Sensors"),
+        SPINNER("Spinner"),
+        LIFT("Lift");
+
+        public String resID;
+
+        Resources(String resID) {
+            this.resID = resID;
+        }
+
+        public static Resources make(String resID) {
+            Resources temp = DRIVETRAIN;
+            temp.resID = resID;
+            return temp;
         }
     }
 }
