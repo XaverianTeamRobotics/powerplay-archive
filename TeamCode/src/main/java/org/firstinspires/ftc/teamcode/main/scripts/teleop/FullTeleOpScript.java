@@ -39,7 +39,7 @@ public class FullTeleOpScript extends TeleOpScript {
     public void main() {
         // control robot
         controlDrivetrain();
-//        controlIntakeLifter();
+        //controlIntakeLifter();
         // debug
         intakeShouldBeDown = true; intakeIsAtPosition = true;
         controlIntake();
@@ -164,9 +164,9 @@ public class FullTeleOpScript extends TeleOpScript {
             bWasDown = false;
         }
         if(handShouldBeDown) {
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 36);
+            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38); //36 originally
         }else{
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 21);
+            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23); // 21 originally
         }
     }
 
