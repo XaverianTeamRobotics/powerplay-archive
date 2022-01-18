@@ -94,8 +94,8 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     private void controlDrivetrain() {
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().right_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 75, -75, 75);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().right_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 75, -75, 75);
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
 
