@@ -31,17 +31,17 @@ public class FullTeleOpScript extends TeleOpScript {
         super(opMode);
         // set fields and calibrate robot
         assignValues();
-        calibrateElevator();
-        calibrateIntake();
+        //calibrateElevator();
+        //calibrateIntake();
     }
 
     @Override
     public void main() {
         // control robot
         controlDrivetrain();
-        controlIntakeLifter();
+        //controlIntakeLifter();
         // debug
-//        intakeShouldBeDown = true; intakeIsAtPosition = true;
+        intakeShouldBeDown = true; intakeIsAtPosition = true;
         controlIntake();
         controlElevator();
         controlHand();
@@ -65,13 +65,13 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void calibrateElevator() {
         int timeAsOfLastElevatorCalibrationBegin = (int) getOpMode().time;
-        while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0 && timeAsOfLastElevatorCalibrationBegin > (int) getOpMode().time - 2) {
+        while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0 && timeAsOfLastElevatorCalibrationBegin > (int) getOpMode().time - 1) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 100);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 100);
         }
         while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, -10);
-            inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, -10);
+            inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 10);
         }
         ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).reset();
         ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
@@ -98,8 +98,8 @@ public class FullTeleOpScript extends TeleOpScript {
 //    }
 
     private void controlDrivetrain() {
-        int left = (int) Range.clip(gamepadManager.functionOneGamepad().left_stick_y * 75, -75, 75);
-        int right = (int) Range.clip(gamepadManager.functionOneGamepad().right_stick_y * 75, -75, 75);
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
 
@@ -178,11 +178,11 @@ public class FullTeleOpScript extends TeleOpScript {
             bWasDown = false;
         }
         if(handShouldBeDown) {
+            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38); //36 originally
             // REMOTE - this is the high value, change this to change the orientation when its down
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 36);
         }else{
+            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23); // 21 originally
             // REMOTE - this is the low value, change this to change the orientation when its down
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 21);
         }
     }
 
