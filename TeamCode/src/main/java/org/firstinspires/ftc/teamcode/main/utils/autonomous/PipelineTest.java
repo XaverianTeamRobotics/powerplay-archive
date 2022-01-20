@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
+import org.firstinspires.ftc.teamcode.main.utils.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTankVehicleDrivetrain;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
-import org.firstinspires.ftc.teamcode.main.utils.queuing.ActionQueuing;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 @TeleOp(name = "Pipeline Test")
@@ -35,19 +35,23 @@ public class PipelineTest extends LinearOpMode {
             telemetry.addData("    West", positionSystem.rawWestReading);
             telemetry.update();
 
-            if (gamepad1.dpad_right) { positionSystem.turnDegree((int) (positionSystem.imuData.getHeading() + 90), Path.Direction.CW); }
-            if (gamepad1.dpad_left) { positionSystem.turnDegree((int) (positionSystem.imuData.getHeading() - 90), Path.Direction.CCW); }
-            if (gamepad1.dpad_up) { positionSystem.encoderDrive(24); }
-            if (gamepad1.dpad_down) { positionSystem.encoderDrive(-24); }
-            if (gamepad1.left_bumper) { positionSystem.imuOffset = 90; }
-            if (gamepad1.right_bumper) { positionSystem.imuOffset = 270; }
+            EncoderTimeoutManager encoderTimeout = new EncoderTimeoutManager(0);
 
-            EncoderTimeoutManager encoderTimeout = new EncoderTimeoutManager(5000);
+            if (gamepad1.dpad_right) { positionSystem.turn(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.dpad_left) { positionSystem.turn(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.dpad_up) { positionSystem.encoderDrive(24); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.dpad_down) { positionSystem.encoderDrive(-24); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.left_bumper) { positionSystem.imuOffset = 90; }
+            if (gamepad1.right_bumper) { positionSystem.imuOffset = 270;   }
+
+            encoderTimeout.restart();
 
             while (positionSystem.areMotorsBusy() && !encoderTimeout.hasTimedOut()) {
                 telemetry.addData("Motors busy for", encoderTimeout.getOperationTime());
                 telemetry.update();
             }
+
+            positionSystem.getDrivetrain().brake();
         }
     }
 }
