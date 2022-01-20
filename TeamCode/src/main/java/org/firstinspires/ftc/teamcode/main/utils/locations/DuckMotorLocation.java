@@ -12,7 +12,8 @@ public class DuckMotorLocation extends Location {
     public enum Action {
         SET_SPEED,
         SET_VOLTAGE,
-        MOVE_DISTANCE_IN_INCHES
+        MOVE_DISTANCE_IN_INCHES,
+        SET_POSITION
     }
 
     private StandardMotor MOTOR;
@@ -36,6 +37,9 @@ public class DuckMotorLocation extends Location {
                 break;
             case MOVE_DISTANCE_IN_INCHES:
                 MOTOR.driveDistance(input, 50);
+                break;
+            case SET_POSITION:
+                MOTOR.driveToPosition(input, 50);
                 break;
         }
     }
