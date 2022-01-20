@@ -30,7 +30,7 @@ public class FullTeleOpScript extends TeleOpScript {
     private double timeAsOfLastIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0;
     private int intakeLowerPos = 50, intakeUpperPos = 80, step = 0;
     private boolean intakeShouldBeDown = false, intakeIsAtPosition = false, manualMode = false;
-    private boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false;
+    private boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
 
     public FullTeleOpScript(LinearOpMode opMode) {
         super(opMode);
@@ -121,12 +121,46 @@ public class FullTeleOpScript extends TeleOpScript {
     This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. It also has a step counter for routines with multiple steps. All of the steps are inside the statement checking if the routine is enabled.
      */
     private void controlEntireLiftAutonomously() {
-        // enables base pos routine if requested
-        if(gamepadManager.functionOneGamepad().a && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock) {
-            isMovingToBasePos = true;
+        // enables intake pos routine if requested
+        if(gamepadManager.functionOneGamepad().a && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+            isMovingToIntakePos = true;
             step = 0;
         }
-        // moves to base pos
+        if(isMovingToIntakePos) {
+            // sets the hand to base position
+            if(step == 0) {
+                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
+                timeAsOfLastFullLiftMovement = getOpMode().time;
+                step++;
+            }
+            // after moving the hand, move the elevator to the base position
+            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                step++;
+            }
+            // once the elevator is at the bottom, reset it
+            if(step == 2 && outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 0);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 0);
+                ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).reset();
+                ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
+                step++;
+            }
+            // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
+            // TODO: distance sensor stuff
+            if(step == 3) {
+                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                timeAsOfLastFullLiftMovement = getOpMode().time;
+            }
+            // once ball is in place, move to base position
+            if(step == 4 && timeAsOfLastFullLiftMovement + 10 <= getOpMode().time) {
+                step = 0;
+                isMovingToIntakePos = false;
+                isMovingToBasePos = true;
+            }
+        }
+        // moves to base pos - this is not a routine that can be enabled by user input, but rather enabled by other routines to reset them after use
         if(isMovingToBasePos) {
             // sets the hand to base position
             if(step == 0) {
@@ -135,10 +169,9 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            // TODO: switch this to power instead of position because 0 might not be close enough to the limit switch
             if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, 0);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, 0);
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
                 step++;
             }
             // once the elevator is at the bottom, reset it
@@ -152,7 +185,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables lower level ball routine if requested
-        if(gamepadManager.functionOneGamepad().b && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock) {
+        if(gamepadManager.functionOneGamepad().b && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToLBall = true;
             step = 0;
         }
@@ -198,7 +231,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables middle level ball routine routine if requested
-        if(gamepadManager.functionOneGamepad().y && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock) {
+        if(gamepadManager.functionOneGamepad().y && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToMBall = true;
             step = 0;
         }
@@ -244,7 +277,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables top level ball routine if requested
-        if(gamepadManager.functionOneGamepad().x && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock) {
+        if(gamepadManager.functionOneGamepad().x && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBall = true;
             step = 0;
         }
