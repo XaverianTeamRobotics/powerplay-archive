@@ -152,39 +152,73 @@ public class PositionSystem {
     }
     public void encoderDrive(double distance) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distance, 100);
+            encoderDrive((int) distance, (int) -distance);
 
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
     }
-    public void encoderDrive(int distanceLeft, int distanceRight) {
+    public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance(distanceLeft, distanceRight, 100);
-
-            getAndEvalReadings();
+            drivetrain.driveDistance((int) distanceLeft, (int) distanceRight, 50);
         }
     }
-    public void turnDegree(int absoluteDegree, Path.Direction turnDirection) {
+
+    public boolean areMotorsBusy() {
+        return drivetrain.getRightTop().getDcMotor().isBusy() &&
+                drivetrain.getRightBottom().getDcMotor().isBusy() &&
+                drivetrain.getLeftTop().getDcMotor().isBusy() &&
+                drivetrain.getLeftBottom().getDcMotor().isBusy();
+    }
+
+    public void motorHold() {
+        while (areMotorsBusy()) {}
+    }
+
+    public void turnByIMU(int absoluteDegree, Path.Direction turnDirection) {
         if (drivetrain != null) {
-            int leftInches = 2;
-            int rightInches = 2;
+
+            updateAngle();
+
+            int leftInches = 1;
+            int rightInches = -1;
 
             switch (turnDirection) {
                 case CW:
                     rightInches = -rightInches;
-                    while (normalizeDegrees(imu.getData().get(imuDirection)) <= normalizeDegrees((float) absoluteDegree)) {
+                    while (normalizeDegrees((float) coordinateSystem.angle.asDegree()) <= normalizeDegrees((float) absoluteDegree)) {
                         encoderDrive(leftInches, rightInches);
                         while (drivetrain.getRightTop().getDcMotor().isBusy() || drivetrain.getLeftTop().getDcMotor().isBusy() || drivetrain.getLeftBottom().getDcMotor().isBusy() || drivetrain.getRightBottom().getDcMotor().isBusy()) {}
                     }
                     break;
                 case CCW:
                     leftInches = -leftInches;
-                    while (normalizeDegrees(imu.getData().get(imuDirection)) >= normalizeDegrees((float) absoluteDegree)) {
+                    while (normalizeDegrees((float) coordinateSystem.angle.asDegree()) >= normalizeDegrees((float) absoluteDegree)) {
                         encoderDrive(leftInches, rightInches);
                         while (drivetrain.getRightTop().getDcMotor().isBusy() || drivetrain.getLeftTop().getDcMotor().isBusy() || drivetrain.getLeftBottom().getDcMotor().isBusy() || drivetrain.getRightBottom().getDcMotor().isBusy()) {}
                     }
                     break;
             }
+        }
+    }
+    public void turn(Angle a) {
+        float left = 0.5F;
+        float right = 0.5F;
+
+        double angle = a.asRadian();
+
+        if (angle > Math.PI) {
+            angle = angle - Math.PI;
+            angle = -angle;
+        }
+
+        // s = arc length
+        // r = radius
+
+        // FORMULA: s = r*a
+        int r = 9;
+        float s = (float) (angle * r);
+        if (drivetrain != null) {
+            drivetrain.driveDistance((int) (right*s), (int) (left*s), 30);
         }
     }
     public void runToPosition(CoordinateSystem.FieldCoordinates target) {
@@ -195,9 +229,9 @@ public class PositionSystem {
             Angle angle = new Angle(Math.atan2(target.y - current.y, target.x - current.y), Angle.AngleUnit.RADIAN);
 
             if (coordinateSystem.angle.lessThan(angle)) {
-                turnDegree(angle.asDegree(), Path.Direction.CW);
+                turnByIMU(angle.asDegree(), Path.Direction.CW);
             } else if (coordinateSystem.angle.greaterThan(angle)) {
-                turnDegree(angle.asDegree(), Path.Direction.CCW);
+                turnByIMU(angle.asDegree(), Path.Direction.CCW);
             }
 
             encoderDrive(Math.sqrt(Math.pow(target.y - current.y, 2) + Math.pow(target.x - current.x, 2)));

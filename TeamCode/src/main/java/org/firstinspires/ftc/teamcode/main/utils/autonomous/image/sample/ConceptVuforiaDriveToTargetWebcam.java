@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 /**
  * This OpMode illustrates using a webcam to locate and drive towards ANY Vuforia target.
@@ -39,7 +40,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Disabled
 @TeleOp(name="Drive To Target Vuforia", group = "Concept")
 public class ConceptVuforiaDriveToTargetWebcam extends LinearOpMode
 {
@@ -92,7 +92,7 @@ public class ConceptVuforiaDriveToTargetWebcam extends LinearOpMode
         parameters.useExtendedTracking = false;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "C1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Load the trackable objects from the Assets file, and give them meaningful names
