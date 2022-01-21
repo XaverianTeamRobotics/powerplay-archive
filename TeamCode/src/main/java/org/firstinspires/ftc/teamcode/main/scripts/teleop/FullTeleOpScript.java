@@ -109,16 +109,6 @@ public class FullTeleOpScript extends TeleOpScript {
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         }
-        // uncomment this for manual control. For some reason it's buggy, I'll reimplement this later
-//        if(gamepadManager.functionOneGamepad().dpad_left && timeAsOfLastIntakeMovement + 0.25 <= getOpMode().time) {
-//            int pos = ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition();
-//            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, Range.clip(pos + 1, 40, 80));
-//            timeAsOfLastIntakeMovement = getOpMode().time;
-//        }else if(gamepadManager.functionOneGamepad().dpad_right && timeAsOfLastIntakeMovement + 0.25 <= getOpMode().time) {
-//            int pos = ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition();
-//            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, Range.clip(pos - 1, 40, 80));
-//            timeAsOfLastIntakeMovement = getOpMode().time;
-//        }
     }
 
     private void controlIntake() {
