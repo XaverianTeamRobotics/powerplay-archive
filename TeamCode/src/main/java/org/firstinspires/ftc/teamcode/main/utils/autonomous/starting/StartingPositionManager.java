@@ -28,7 +28,7 @@ public class StartingPositionManager {
     int ballDropHeight;
     double timeAsOfLastManualIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0, timeAsOfLastManualHandMovement = 0;
     int step = 0, manualHandPos = 23;
-    boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false;
+    boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false, liftAutoMovementIsDone = false;
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     TFLITE_Wrapper imgProc;
 
@@ -84,7 +84,9 @@ public class StartingPositionManager {
             drivetrainHold();
 
             // Do lift
-            controlEntireLiftAutonomously(ballDropHeight);
+            while(!liftAutoMovementIsDone) {
+                controlEntireLiftAutonomously(ballDropHeight);
+            }
             opMode.sleep(7000);
 
             // Turn clockwise 90 degrees
@@ -241,6 +243,7 @@ public class StartingPositionManager {
                 ((StandardMotor) input.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 isMovingToBasePos = false;
                 step = 0;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables lower level ball routine if requested
