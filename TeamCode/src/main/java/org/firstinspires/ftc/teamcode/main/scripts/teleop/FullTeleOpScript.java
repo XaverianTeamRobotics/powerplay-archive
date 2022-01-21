@@ -22,14 +22,19 @@ import java.util.HashMap;
 
 public class FullTeleOpScript extends TeleOpScript {
 
-    // TODO: Full manual control. This includes toggling between manual and automatic control, and the ability to escape automatic routines once manual mode is activated. This is needed on the elevator, hand, and intake.
+    /* TODO: Full manual control.
+     *  Toggling between manual and automatic control
+     *  and the ability to escape automatic routines once manual mode is activated
+     *  Elevator support, hand support, intake support
+     *  For the elevator and hand, use the right stick
+     */
 
     private GamepadManager gamepadManager;
     private InputSpace inputSpace;
     private OutputSpace outputSpace;
-    private double timeAsOfLastIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0;
-    private int intakeLowerPos = 50, intakeUpperPos = 80, step = 0;
-    private boolean intakeShouldBeDown = false, intakeIsAtPosition = false, manualMode = false;
+    private double timeAsOfLastManualIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0, timeAsOfLastManualHandMovement = 0;
+    private int step = 0, manualHandPos = 23;
+    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false;
     private boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
 
     public FullTeleOpScript(LinearOpMode opMode) {
@@ -48,7 +53,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlDrivetrain();
         controlIntakeLifter();
         // debug
-        intakeShouldBeDown = true; intakeIsAtPosition = true;
         controlIntake();
         // these methods are for manual control of the lift. currently, they do not work with the controlEntireLiftAutonomously() method that well. they technically function but it's not idea. for now, comment that method out if you uncomment these two
 //        controlElevator();
@@ -79,7 +83,7 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void calibrateIntake() {
         // move the intake to the *UPPER* position
-        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 80);
+        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
     }
 
     private void controlDrivetrain() {
@@ -91,11 +95,19 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     private void controlIntakeLifter() {
-        // move the intake based on the right stick's movement
-        if(gamepadManager.functionOneGamepad().right_stick_y >= 1.0) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 80);
-        }else if(gamepadManager.functionOneGamepad().right_stick_y <= -1.0) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 40);
+        // move the intake based on the left bumper's state
+        if(gamepadManager.functionOneGamepad().left_bumper) {
+            if(!intakeButtonWasDown) {
+                intakeShouldBeDown = !intakeShouldBeDown;
+            }
+            intakeButtonWasDown = true;
+        }else{
+            intakeButtonWasDown = false;
+        }
+        if(intakeShouldBeDown) {
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 35);
+        }else{
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         }
         // uncomment this for manual control. For some reason it's buggy, I'll reimplement this later
 //        if(gamepadManager.functionOneGamepad().dpad_left && timeAsOfLastIntakeMovement + 0.25 <= getOpMode().time) {
@@ -118,7 +130,7 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     /**
-    This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. It also has a step counter for routines with multiple steps. All of the steps are inside the statement checking if the routine is enabled.
+     * This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. It also has a step counter for routines with multiple steps. All of the steps are inside the statement checking if the routine is enabled.
      */
     private void controlEntireLiftAutonomously() {
         // enables intake pos routine if requested
@@ -152,6 +164,7 @@ public class FullTeleOpScript extends TeleOpScript {
             if(step == 3) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
+                step++;
             }
             // once ball is in place, move to base position
             if(step == 4 && timeAsOfLastFullLiftMovement + 10 <= getOpMode().time) {
@@ -251,13 +264,13 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // move hand down to dispensing position
-            if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -300);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -300);
+            if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -350);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -350);
                 step++;
             }
             // turn hand to dispensing position
-            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -300) {
+            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -350) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 36);
                 step++;
@@ -297,7 +310,7 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after ball is dispensed, reset hand because its in a safe position
-            if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+            if(step == 2 && timeAsOfLastFullLiftMovement + 3 <= getOpMode().time) {
                 step = 0;
                 isMovingToTBall = false;
                 isMovingToBasePos = true;
@@ -307,12 +320,12 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     /**
-    This controls the elevator manually. This should only be used when manual mode is enabled.
+     * This controls the elevator manually. This should only be used when manual mode is enabled.
      */
     private void controlElevator() {
         // take input from user and map to elevator power
-        int elevatorInput = (gamepadManager.functionOneGamepad().right_bumper ? 0 : 1) + (gamepadManager.functionOneGamepad().left_bumper ? 0 : -1);
-        int inputVal = Math.abs(((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition()) < 500 ? Range.clip(elevatorInput * 75, -75, 25) : Range.clip(elevatorInput * 75, -75, 75);
+        double elevatorInput = gamepadManager.functionOneGamepad().right_stick_y;
+        int inputVal = (int) (Math.abs(((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition()) < 500 ? Range.clip(elevatorInput * 75, -75, 25) : Range.clip(elevatorInput * 75, -75, 75));
         // set elevator power, capping it when the elevator is at the bottom
         if(inputVal < 0 || outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, inputVal);
@@ -331,26 +344,29 @@ public class FullTeleOpScript extends TeleOpScript {
      */
     private void controlHand() {
         // set the hand to its allowed positions
-        if(gamepadManager.functionOneGamepad().a) {
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
-        }else if(gamepadManager.functionOneGamepad().b) {
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 34);
-        }else if(gamepadManager.functionOneGamepad().y) {
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 36);
-        }else if(gamepadManager.functionOneGamepad().x) {
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+        if(timeAsOfLastManualHandMovement + 0.25 <= getOpMode().time) {
+            double handInput = gamepadManager.functionOneGamepad().right_stick_x;
+            if(handInput > 0.5) {
+                manualHandPos += 1;
+                manualHandPos = Range.clip(manualHandPos, 0, 100);
+            }else if(handInput < -0.5) {
+                manualHandPos -= 1;
+                manualHandPos = Range.clip(manualHandPos, 0, 100);
+            }
+            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, manualHandPos);
+            timeAsOfLastManualHandMovement = getOpMode().time;
         }
     }
 
     private void controlDuck() {
         // turn duck motor slowly in the correct direction
-        // TODO: use a different button for this
-        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, getOpMode().gamepad1.right_stick_button ? -50 : 0);
+        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, getOpMode().gamepad1.right_bumper ? -50 : 0);
     }
 
     private void debug() {
-        getOpMode().telemetry.addData("Elevator:", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
-        getOpMode().telemetry.addData("Intake Lift:", ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition());
+        getOpMode().telemetry.addData("Elevator Encoder Position:", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
+        getOpMode().telemetry.addData("Intake Lift %:", ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition());
+        getOpMode().telemetry.addData("Hand %:", ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition());
         getOpMode().telemetry.update();
     }
 
