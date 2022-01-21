@@ -315,7 +315,8 @@ public class FullTeleOpScript extends TeleOpScript {
     private void controlElevator() {
         // take input from user and map to elevator power
         double elevatorInput = gamepadManager.functionOneGamepad().right_stick_y;
-        int inputVal = (int) (Math.abs(((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition()) < 500 ? Range.clip(elevatorInput * 75, -75, 25) : Range.clip(elevatorInput * 75, -75, 75));
+        int finalElevatorInput = elevatorInput > 0.5 ? 1 : (elevatorInput < -0.5 ? -1 : 0);
+        int inputVal = Math.abs(((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition()) < 500 ? Range.clip(finalElevatorInput * 75, -75, 25) : Range.clip(finalElevatorInput * 75, -75, 75);
         // set elevator power, capping it when the elevator is at the bottom
         if(inputVal < 0 || outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, inputVal);
