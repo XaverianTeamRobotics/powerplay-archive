@@ -122,7 +122,7 @@ public class StartingPositionManager {
             opMode.sleep(1000);
 
             // Drop the intake
-            // toggleIntakeLifter();
+            toggleIntakeLifter();
             opMode.sleep(5000);
 
             // Drive One Tile
@@ -245,6 +245,7 @@ public class StartingPositionManager {
                 isMovingToBasePos = false;
                 step = 0;
                 liftAutoMovementIsDone = true;
+                h = -1;
             }
         }
         // enables lower level ball routine if requested
