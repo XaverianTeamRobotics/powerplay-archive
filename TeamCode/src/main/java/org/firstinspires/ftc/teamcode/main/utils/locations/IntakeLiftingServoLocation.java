@@ -36,10 +36,10 @@ public class IntakeLiftingServoLocation extends Location {
                 SERVO.setPosition(position);
                 break;
             case START:
-                SERVO.getController().pwmDisable();
+                SERVO.getController().pwmEnable();
                 break;
             case STOP:
-                SERVO.getController().pwmEnable();
+                SERVO.getController().pwmDisable();
                 break;
         }
     }
