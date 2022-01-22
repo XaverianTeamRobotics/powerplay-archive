@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.main.utils.autonomous;
 
-import android.graphics.Path;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -37,8 +35,8 @@ public class PipelineTest extends LinearOpMode {
 
             EncoderTimeoutManager encoderTimeout = new EncoderTimeoutManager(0);
 
-            if (gamepad1.dpad_right) { positionSystem.turn(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
-            if (gamepad1.dpad_left) { positionSystem.turn(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.dpad_right) { positionSystem.turnNoCorrection(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
+            if (gamepad1.dpad_left) { positionSystem.turnNoCorrection(new Angle(90, Angle.AngleUnit.DEGREE)); encoderTimeout.durationMillis = 5000; }
             if (gamepad1.dpad_up) { positionSystem.encoderDrive(24); encoderTimeout.durationMillis = 5000; }
             if (gamepad1.dpad_down) { positionSystem.encoderDrive(-24); encoderTimeout.durationMillis = 5000; }
             if (gamepad1.left_bumper) { positionSystem.imuOffset = 90; }

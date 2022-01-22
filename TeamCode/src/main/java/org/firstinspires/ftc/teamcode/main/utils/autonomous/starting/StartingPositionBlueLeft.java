@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTan
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
-@Autonomous(name = "Starting Position Test")
-public class StartingPositionTest extends LinearOpMode {
+@Autonomous(name = "Starting Position Blue Left")
+public class StartingPositionBlueLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         new StartingPositionManager(this, true, false, 3);

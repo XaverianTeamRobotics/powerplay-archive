@@ -4,6 +4,7 @@ import android.graphics.Path;
 
 import androidx.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.Axis.AxisReading;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.sensors.NavigationSensorCollection;
@@ -134,7 +135,7 @@ public class PositionSystem {
                 break;
         }
         coordinateSystem.angle.convert(Angle.AngleUnit.DEGREE);
-        coordinateSystem.angle.value = imu.getData().get(imuDirection);
+        coordinateSystem.angle.value = imu.getCompassData().get(imuDirection);
     }
 
     public float normalizeDegrees(Float input) {
@@ -200,7 +201,36 @@ public class PositionSystem {
             }
         }
     }
-    public void turn(Angle a) {
+
+    public void turnWithCorrection(Angle a) {
+        int left = 30;
+        int right = 30;
+
+        double angle = a.asDegree();
+
+        if (angle > 180) {
+            angle = angle - 180;
+        }
+
+        if (angle < 0) {
+            left = -left;
+            right = -right;
+        }
+
+        updateAngle();
+        angle = imuData.getHeading() + angle;
+
+        EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(5000);
+
+        drivetrain.driveWithEncoder(right, left);
+
+        while (!timeoutManager.hasTimedOut() || areMotorsBusy()) {
+            updateAngle();
+            if (imuData.getHeading() < angle + 5 && imuData.getHeading() > angle - 5);
+        }
+    }
+
+    public void turnNoCorrection(Angle a) {
         float left = 0.5F;
         float right = 0.5F;
 

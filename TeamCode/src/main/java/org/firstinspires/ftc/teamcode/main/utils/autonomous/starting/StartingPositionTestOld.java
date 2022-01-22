@@ -34,7 +34,7 @@ public class StartingPositionTestOld extends LinearOpMode {
             this.sleep(1000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-85, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
@@ -46,13 +46,13 @@ public class StartingPositionTestOld extends LinearOpMode {
             this.sleep(1000);
 
             // Turn counter-clockwise 90 degrees
-            positionSystem.turn(new Angle(95, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(95, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(2000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-85, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
@@ -64,12 +64,12 @@ public class StartingPositionTestOld extends LinearOpMode {
             this.sleep(1000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-50, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-50, Angle.AngleUnit.DEGREE));
             motorHold();
 
             //TODO: Check if spot is busy
 
-            positionSystem.turn(new Angle(-45, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-45, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
@@ -81,7 +81,7 @@ public class StartingPositionTestOld extends LinearOpMode {
             this.sleep(1000);
 
             // Turn counter-clockwise 90 degrees
-            positionSystem.turn(new Angle(85, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
