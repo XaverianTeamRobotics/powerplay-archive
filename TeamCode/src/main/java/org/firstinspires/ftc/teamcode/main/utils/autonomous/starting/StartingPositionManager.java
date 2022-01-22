@@ -58,74 +58,48 @@ public class StartingPositionManager {
         opMode.sleep(2000);
 
         if (isBlueSide && !isCloseToParking) {
-
-            // Move Forward 1.5 tiles
-            positionSystem.encoderDrive(24);
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
             // Move Forward 1 Tile
-            positionSystem.encoderDrive(12);
+            positionSystem.encoderDrive(15);
             drivetrainHold();
 
             opMode.sleep(1000);
 
             // Turn counter-clockwise 90 degrees
-            positionSystem.turnNoCorrection(new Angle(95, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(90, Angle.AngleUnit.DEGREE));
             drivetrainHold();
+
+            opMode.sleep(1000);
 
             // Do lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
-            // Turn clockwise 90 degrees
-            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
-            // Move Forward 1 Tile
-            positionSystem.encoderDrive(12);
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnNoCorrection(new Angle(-50, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            //TODO: Check if spot is busy
-
-            positionSystem.turnNoCorrection(new Angle(-45, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
-            // Move Forward 1 Tile
-            positionSystem.encoderDrive(13);
-            drivetrainHold();
-
-            opMode.sleep(1000);
-
-            // Turn counter-clockwise 90 degrees
-            positionSystem.turnNoCorrection(new Angle(80, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
             // Raise the intake
             toggleIntakeLifter();
             opMode.sleep(2000);
 
-            // Move Forward 1 Tile
-/*            positionSystem.encoderDrive(12);
-            motorHold();*/
+            // Turn clockwise 90 degrees
+            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
+
+            opMode.sleep(1000);
+
+            // Move a touch back
+            positionSystem.encoderDrive(-3);
+            drivetrainHold();
+
+            opMode.sleep(1000);
+
+            // Turn clockwise 90 degrees
+            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
+
+            opMode.sleep(1000);
+
+            // Go backward 1.5 tiles
+            positionSystem.encoderDrive(-18);
+            drivetrainHold();
         }
         else if (isBlueSide) {
             // Move Forward 1 Tile
@@ -135,27 +109,25 @@ public class StartingPositionManager {
             opMode.sleep(1000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(90, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
             opMode.sleep(1000);
 
             // Do Lift
-            /* DISABLED FOR SAFETY REASONS (uses log4j)
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
             opMode.sleep(1000);
-            */
 
             // Drop the intake
-            toggleIntakeLifter();
+            // toggleIntakeLifter();
             opMode.sleep(5000);
 
             // Drive One Tile
-            positionSystem.encoderDrive(15);
-            opMode.sleep(1000);
+            positionSystem.encoderDrive(13);
+            drivetrainHold();
         }
     }
 
