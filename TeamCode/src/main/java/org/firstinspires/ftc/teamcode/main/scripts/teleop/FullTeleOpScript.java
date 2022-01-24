@@ -39,7 +39,7 @@ public class FullTeleOpScript extends TeleOpScript {
     private OutputSpace outputSpace;
     private double timeAsOfLastManualIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0, timeAsOfLastManualHandMovement = 0;
     private int step = 0, manualHandPos = 23;
-    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false;
+    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false, isAllowedToControl = false, noControlIntakeLifter = false;
     private boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
 
     public FullTeleOpScript(LinearOpMode opMode) {
@@ -80,6 +80,7 @@ public class FullTeleOpScript extends TeleOpScript {
 //        controlHand();
         controlEntireLiftAutonomously();
         controlDuck();
+        updateLiftControlPermissions();
         // debug
         debug();
     }
@@ -109,6 +110,7 @@ public class FullTeleOpScript extends TeleOpScript {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, -100);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, -100);
         }
+        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
         // move elevator down until it reaches the bottom
         while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 30);
@@ -130,7 +132,7 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlIntakeLifter() {
         // move the intake based on the left bumper's state
-        if(gamepadManager.functionTwoGamepad().left_bumper) {
+        if(gamepadManager.functionTwoGamepad().left_bumper && !noControlIntakeLifter) {
             if(!intakeButtonWasDown) {
                 intakeShouldBeDown = !intakeShouldBeDown;
             }
@@ -142,6 +144,15 @@ public class FullTeleOpScript extends TeleOpScript {
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
+        }
+    }
+
+    public void updateLiftControlPermissions() {
+        isAllowedToControl = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 70;
+        if(isMovingToBasePos || isMovingToLBall || isMovingToMBall || isMovingToTBall || isMovingToLBlock || isMovingToMBlock || isMovingToTBlock || isMovingToIntakePos) {
+            noControlIntakeLifter = true;
+            intakeShouldBeDown = true;
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         }
     }
 
@@ -158,7 +169,7 @@ public class FullTeleOpScript extends TeleOpScript {
      */
     private void controlEntireLiftAutonomously() {
         // enables intake pos routine if requested
-        if(gamepadManager.functionThreeGamepad().a && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().a && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToIntakePos = true;
             step = 0;
         }
@@ -221,11 +232,12 @@ public class FullTeleOpScript extends TeleOpScript {
                 ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 isMovingToBasePos = false;
                 step = 0;
+                noControlIntakeLifter = false;
                 derumbleAllControllers();
             }
         }
         // enables lower level ball routine if requested
-        if(gamepadManager.functionThreeGamepad().b && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().b && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToLBall = true;
             step = 0;
         }
@@ -272,7 +284,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables middle level ball routine routine if requested
-        if(gamepadManager.functionThreeGamepad().y && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().y && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToMBall = true;
             step = 0;
         }
@@ -319,7 +331,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables top level ball routine if requested
-        if(gamepadManager.functionThreeGamepad().x && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().x && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToTBall = true;
             step = 0;
         }
@@ -347,7 +359,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables bottom level block routine if requested
-        if(gamepadManager.functionThreeGamepad().b && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().b && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToLBlock = true;
             step = 0;
         }
@@ -376,7 +388,7 @@ public class FullTeleOpScript extends TeleOpScript {
             // turn hand to the position to dispense the ball
             if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -300) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
-                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 40);
+                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
                 step++;
             }
             // turn hand back to a safe position and move elevator to turning point position
@@ -394,7 +406,7 @@ public class FullTeleOpScript extends TeleOpScript {
             }
         }
         // enables middle level block routine if requested
-        if(gamepadManager.functionThreeGamepad().y && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().y && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToMBlock = true;
             step = 0;
         }
@@ -410,19 +422,19 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // turn hand to down position once elevator reaches its position
             if(step == 1 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -575) {
-                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 40);
+                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
             // tell hand/elevator to reset after block is dispensed
-            if(step == 5 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+            if(step == 2 && timeAsOfLastFullLiftMovement + 4 <= getOpMode().time) {
                 step = 0;
                 isMovingToMBlock = false;
                 isMovingToBasePos = true;
             }
         }
         // enables top level block routine if requested
-        if(gamepadManager.functionThreeGamepad().x && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(gamepadManager.functionThreeGamepad().x && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos && isAllowedToControl) {
             isMovingToTBlock = true;
             step = 0;
         }
@@ -438,12 +450,12 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // turn hand to down position once elevator reaches its position
             if(step == 1 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -1000) {
-                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 40);
+                inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
             // tell hand/elevator to reset after block is dispensed
-            if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+            if(step == 2 && timeAsOfLastFullLiftMovement + 4 <= getOpMode().time) {
                 step = 0;
                 isMovingToTBlock = false;
                 isMovingToBasePos = true;
