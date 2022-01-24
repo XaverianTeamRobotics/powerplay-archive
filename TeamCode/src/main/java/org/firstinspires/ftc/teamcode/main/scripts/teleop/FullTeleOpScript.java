@@ -84,12 +84,12 @@ public class FullTeleOpScript extends TeleOpScript {
     }
     
     private void rumbleAllControllers() {
-        gamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        gamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        gamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        gamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        gamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        gamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionOneGamepad().rumble(1000000);
+        gamepadManager.functionTwoGamepad().rumble(1000000);
+        gamepadManager.functionThreeGamepad().rumble(1000000);
+        gamepadManager.functionFourGamepad().rumble(1000000);
+        gamepadManager.functionFiveGamepad().rumble(1000000);
+        gamepadManager.functionSixGamepad().rumble(1000000);
     }
     
     private void derumbleAllControllers() {
@@ -160,9 +160,9 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().a && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToIntakePos = true;
             step = 0;
-            rumbleAllControllers();
         }
         if(isMovingToIntakePos) {
+            rumbleAllControllers();
             // sets the hand to base position
             if(step == 0) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
@@ -199,6 +199,7 @@ public class FullTeleOpScript extends TeleOpScript {
         }
         // moves to base pos - this is not a routine that can be enabled by user input, but rather enabled by other routines to reset them after use
         if(isMovingToBasePos) {
+            rumbleAllControllers();
             // sets the hand to base position
             if(step == 0) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
@@ -226,10 +227,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().b && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToLBall = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses ball at lower level
         if(isMovingToLBall) {
+            rumbleAllControllers();
             // move the elevator to allow hand room to turn
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
@@ -273,10 +274,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().y && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToMBall = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses ball at middle level
         if(isMovingToMBall) {
+            rumbleAllControllers();
             // moves hand to safe turning position
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
@@ -320,10 +321,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().x && !gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBall = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses ball at top level
         if(isMovingToTBall) {
+            rumbleAllControllers();
             // move to dispensing position, doesnt need to worry about safe position because its higher up
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -700);
@@ -348,10 +349,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().b && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToLBlock = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses block at bottom
         if(isMovingToLBlock) {
+            rumbleAllControllers();
             // move the elevator to allow hand room to turn
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
@@ -395,10 +396,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().y && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToMBlock = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses block at middle
         if(isMovingToMBlock) {
+            rumbleAllControllers();
             // move the elevator to dropping position
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -575);
@@ -413,7 +414,7 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // tell hand/elevator to reset after block is dispensed
-            if(step == 5 && timeAsOfLastFullLiftMovement + 2 == getOpMode().time) {
+            if(step == 5 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
                 step = 0;
                 isMovingToMBlock = false;
                 isMovingToBasePos = true;
@@ -423,10 +424,10 @@ public class FullTeleOpScript extends TeleOpScript {
         if(gamepadManager.functionThreeGamepad().x && gamepadManager.functionThreeGamepad().touchpad && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBlock = true;
             step = 0;
-            rumbleAllControllers();
         }
         // dispenses block at top
         if(isMovingToTBlock) {
+            rumbleAllControllers();
             // move the elevator to dropping position
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -1000);
@@ -441,13 +442,12 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // tell hand/elevator to reset after block is dispensed
-            if(step == 5 && timeAsOfLastFullLiftMovement + 2 == getOpMode().time) {
+            if(step == 5 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
                 step = 0;
                 isMovingToTBlock = false;
                 isMovingToBasePos = true;
             }
         }
-        // TODO: block. block rot%: 38-40
     }
 
     /**
