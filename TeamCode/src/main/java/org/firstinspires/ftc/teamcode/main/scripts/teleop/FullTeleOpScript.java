@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.main.utils.locations.TankDrivetrainLocatio
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 import org.firstinspires.ftc.teamcode.main.utils.scripting.TeleOpScript;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 public class FullTeleOpScript extends TeleOpScript {
@@ -442,7 +443,7 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // tell hand/elevator to reset after block is dispensed
-            if(step == 5 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+            if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
                 step = 0;
                 isMovingToTBlock = false;
                 isMovingToBasePos = true;
