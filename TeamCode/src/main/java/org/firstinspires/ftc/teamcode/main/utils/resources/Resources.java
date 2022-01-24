@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.main.utils.resources;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.sensors.NavigationSensorCollection;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardDistanceSensor;
@@ -65,6 +67,7 @@ public class Resources {
     public static final class Hand {
         public static final class Servos {
             public static final String Spinning = "hfS";
+            public static final String Grabbing = "hgS";
         }
         public static final class Sensors {
             public static final String HandDistance = "diD";
@@ -80,5 +83,7 @@ public class Resources {
     public static final class Misc {
         public static final String VuforiaKey = "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS";
         public static final String Webcam = "webcam";
+        public static final Gamepad.RumbleEffect CalibratedRumble = new Gamepad.RumbleEffect.Builder().addStep(0, 0, 5000).addStep(1, 1, 150).addStep(0, 0, 50).addStep(1, 1, 200).addStep(0, 0, 500).build();
     }
+
 }

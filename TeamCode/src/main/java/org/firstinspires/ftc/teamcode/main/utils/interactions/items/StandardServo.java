@@ -42,7 +42,7 @@ public class StandardServo extends InteractionItem {
      * @return The position of the servo between 0 and 100
      */
     public int getPosition() {
-        return (int) SERVO.getPosition() * 100;
+        return (int) (SERVO.getPosition() * 100);
     }
 
     public void setDirection(Servo.Direction direction) {

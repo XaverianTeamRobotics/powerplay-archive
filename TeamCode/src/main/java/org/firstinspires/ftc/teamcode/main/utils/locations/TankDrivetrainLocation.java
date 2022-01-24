@@ -20,10 +20,10 @@ public class TankDrivetrainLocation extends Location {
 
     public TankDrivetrainLocation(HardwareMap hardware) {
         try {
-            StandardMotor rt = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.RightTop, DcMotorSimple.Direction.FORWARD, 28, 20, 1);
-            StandardMotor rb = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.RightBottom, DcMotorSimple.Direction.FORWARD, 28, 20, 1);
-            StandardMotor lt = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.LeftTop, DcMotorSimple.Direction.FORWARD, 28, 20, 1);
-            StandardMotor lb = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.LeftBottom, DcMotorSimple.Direction.FORWARD, 28, 20, 1);
+            StandardMotor rt = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.RightTop, DcMotorSimple.Direction.FORWARD, 28, 20, 0.75);
+            StandardMotor rb = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.RightBottom, DcMotorSimple.Direction.FORWARD, 28, 20, 0.75);
+            StandardMotor lt = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.LeftTop, DcMotorSimple.Direction.FORWARD, 28, 20, 0.75);
+            StandardMotor lb = new StandardMotor(hardware, Resources.Drivetrain.Motors.Driving.LeftBottom, DcMotorSimple.Direction.FORWARD, 28, 20, 0.75);
             DRIVETRAIN = new StandardTankVehicleDrivetrain(rt, rb, lt, lb);
         } catch(Exception ignored) {}
     }

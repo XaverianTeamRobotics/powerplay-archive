@@ -106,6 +106,25 @@ public class StandardMotor extends InteractionItem {
     }
 
     /**
+     * Drives the motor to a specified position, or encoder value. This method does not exist in groups, as encoder values might not be precise between groups of motors and therefore each motor will work against each other motor, causing the motors to physically break apart in some conditions.
+     * @param position The encoder value, or position, the motor should attempt to drive to.
+     * @param speed The maximum speed of the motor. The speed may be anywhere between -100 and 100.
+     * @throws IllegalArgumentException The error to throw when the maximum speed is not between -100 and 100.
+     * @throws IllegalStateException The error to throw when the motor's TYPE != MotorType.COMPLEX.
+     */
+    public void driveToPosition(int position, int speed) throws IllegalArgumentException, IllegalStateException {
+        if(speed < -100 || speed > 100) {
+            throw new IllegalArgumentException("Speed is out of bounds!");
+        }else if(TYPE == MotorType.SIMPLE) {
+            throw new IllegalStateException("Motor type " + TYPE + " is simple, but must be complex for this method!");
+        }
+        MOTOR.setTargetPosition(position);
+        MOTOR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double realSpeed = speed / 100.0;
+        MOTOR.setPower(realSpeed);
+    }
+
+    /**
      * Drives the motor at a certain speed.
      * @param speed The speed to set the motor to.
      * @throws IllegalArgumentException The error thrown when the speed is not between -100 and 100.
