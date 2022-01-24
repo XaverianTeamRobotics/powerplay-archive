@@ -84,12 +84,12 @@ public class FullTeleOpScript extends TeleOpScript {
     }
     
     private void rumbleAllControllers() {
-        gamepadManager.functionOneGamepad().rumble(1000000);
-        gamepadManager.functionTwoGamepad().rumble(1000000);
-        gamepadManager.functionThreeGamepad().rumble(1000000);
-        gamepadManager.functionFourGamepad().rumble(1000000);
-        gamepadManager.functionFiveGamepad().rumble(1000000);
-        gamepadManager.functionSixGamepad().rumble(1000000);
+        gamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        gamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
     }
     
     private void derumbleAllControllers() {
