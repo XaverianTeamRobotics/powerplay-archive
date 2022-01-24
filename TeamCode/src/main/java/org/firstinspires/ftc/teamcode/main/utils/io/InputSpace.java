@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.main.utils.locations.DuckMotorLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorLeftLiftMotorLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorRightLiftMotorLocation;
+import org.firstinspires.ftc.teamcode.main.utils.locations.HandGrabbingServoLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.HandSpinningServoLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeLiftingServoLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeSpinningMotorLocation;
@@ -25,6 +26,7 @@ public class InputSpace {
     private final IntakeLiftingServoLocation INTAKE_LIFTING_SERVO;
     private final IntakeSpinningMotorLocation INTAKE_SPINNING_MOTOR;
     private final HandSpinningServoLocation HAND_SPINNING_SERVO;
+    private final HandGrabbingServoLocation HAND_GRABBER_SERVO;
 
     public InputSpace(HardwareMap hardware) {
         HARDWARE = hardware;
@@ -35,6 +37,7 @@ public class InputSpace {
         INTAKE_LIFTING_SERVO = new IntakeLiftingServoLocation(HARDWARE);
         INTAKE_SPINNING_MOTOR = new IntakeSpinningMotorLocation(HARDWARE);
         HAND_SPINNING_SERVO = new HandSpinningServoLocation(HARDWARE);
+        HAND_GRABBER_SERVO = new HandGrabbingServoLocation(HARDWARE);
     }
 
     public void sendInputToTank(TankDrivetrainLocation.Action action, int rightInput, int leftInput) {
@@ -63,6 +66,10 @@ public class InputSpace {
 
     public void sendInputToHandSpinner(HandSpinningServoLocation.Action action, int input) {
         HAND_SPINNING_SERVO.handleInput(action, input);
+    }
+
+    public void sendInputToHandGrabber(HandGrabbingServoLocation.Action action, int input) {
+        HAND_GRABBER_SERVO.handleInput(action, input);
     }
 
     public HardwareMap getHardwareMap() {
@@ -95,6 +102,10 @@ public class InputSpace {
 
     public HandSpinningServoLocation getHandSpinner() {
         return HAND_SPINNING_SERVO;
+    }
+
+    public HandGrabbingServoLocation getHandGrabber() {
+        return HAND_GRABBER_SERVO;
     }
 
     public void stop() {

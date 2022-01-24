@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.InteractionSurface
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServo;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
-public class HandSpinningServoLocation extends Location {
+public class HandGrabbingServoLocation extends Location {
 
     public enum Action {
         SET_POSITION,
@@ -16,9 +16,9 @@ public class HandSpinningServoLocation extends Location {
 
     private StandardServo SERVO;
 
-    public HandSpinningServoLocation(HardwareMap hardware) {
+    public HandGrabbingServoLocation(HardwareMap hardware) {
         try {
-            SERVO = new StandardServo(hardware, Resources.Hand.Servos.Spinning);
+            SERVO = new StandardServo(hardware, Resources.Hand.Servos.Grabbing);
         } catch(Exception ignored) {}
     }
 
@@ -36,10 +36,10 @@ public class HandSpinningServoLocation extends Location {
                 SERVO.setPosition(position);
                 break;
             case START:
-                SERVO.getController().pwmEnable();
+                SERVO.getController().pwmDisable();
                 break;
             case STOP:
-                SERVO.getController().pwmDisable();
+                SERVO.getController().pwmEnable();
                 break;
         }
     }
