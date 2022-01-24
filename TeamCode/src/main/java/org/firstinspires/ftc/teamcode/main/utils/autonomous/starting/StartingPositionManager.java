@@ -51,6 +51,8 @@ public class StartingPositionManager {
 
         opMode.waitForStart();
 
+        opMode.telemetry.addAction(() -> opMode.telemetry.addData("github.com/michaell4438", " "));
+
         encoderTimeout = new EncoderTimeoutManager(0);
 
         // Drop the intake
