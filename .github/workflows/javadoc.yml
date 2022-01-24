@@ -67,11 +67,11 @@ jobs:
           mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/inspection
           mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
           mkdir -p ./tempgit/FtcRobotController/javadocs/ftc/robotcore
-          mv ./7.0.0/FtcCommon/* ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
-          mv ./7.0.0/Hardware/* ./tempgit/FtcRobotController/javadocs/ftc/hardware
-          mv ./7.0.0/Inspection/* ./tempgit/FtcRobotController/javadocs/ftc/inspection
-          mv ./7.0.0/OnBotJava/* ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
-          mv ./7.0.0/RobotCore/* ./tempgit/FtcRobotController/javadocs/ftc/robotcore
+          mv ./7.1.0/FtcCommon/* ./tempgit/FtcRobotController/javadocs/ftc/ftccommon
+          mv ./7.1.0/Hardware/* ./tempgit/FtcRobotController/javadocs/ftc/hardware
+          mv ./7.1.0/Inspection/* ./tempgit/FtcRobotController/javadocs/ftc/inspection
+          mv ./7.1.0/OnBotJava/* ./tempgit/FtcRobotController/javadocs/ftc/onbotjava
+          mv ./7.1.0/RobotCore/* ./tempgit/FtcRobotController/javadocs/ftc/robotcore
           cd ./tempgit/FtcRobotController
           git add -A
           git commit --allow-empty -a -m "Update external link sources ($GITHUB_RUN_NUMBER)
