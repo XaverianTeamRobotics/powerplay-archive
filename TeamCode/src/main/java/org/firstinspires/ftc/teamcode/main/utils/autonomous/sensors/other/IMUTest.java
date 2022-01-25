@@ -15,7 +15,7 @@ public class IMUTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            StandardIMU.ReturnData<StandardIMU.DataPoint, Float> data = imu.getData();
+            StandardIMU.ReturnData<StandardIMU.DataPoint, Float> data = imu.getCompassData();
             data.put(StandardIMU.DataPoint.HEADING, -data.getHeading());
 
             telemetry.addData("Heading", data.getHeading());

@@ -71,7 +71,7 @@ public class StandardIMU extends InteractionItem {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
-    public ReturnData<DataPoint, Float> getData() {
+    public ReturnData<DataPoint, Float> getCompassData() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         float heading = -angles.firstAngle + headingOffset;
@@ -95,6 +95,11 @@ public class StandardIMU extends InteractionItem {
         toReturn.put(DataPoint.PITCH, pitch);
 
         return toReturn;
+    }
+
+    public ReturnData<DataPoint, Float> getAcceleration() {
+        Velocity velocity = imu.getVelocity();
+        return null;
     }
 
     @Override
