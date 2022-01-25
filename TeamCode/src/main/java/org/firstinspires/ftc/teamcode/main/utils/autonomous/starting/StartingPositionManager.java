@@ -56,12 +56,15 @@ public class StartingPositionManager {
         this.ballDropHeight = h;
         ballDropHeight = h;
 
+        int finalH = h;
+        opMode.telemetry.addAction(() -> opMode.telemetry.addData("Detected Position", finalH));
+
         int turnModifier = 1;
         if (!isBlueSide) turnModifier = -turnModifier;
 
         opMode.waitForStart();
 
-        opMode.telemetry.addAction(() -> opMode.telemetry.addData("github.com/michaell4438", " "));
+        opMode.telemetry.addAction(() -> opMode.telemetry.addLine("github.com/michaell4438"));
 
         encoderTimeout = new EncoderTimeoutManager(0);
 
