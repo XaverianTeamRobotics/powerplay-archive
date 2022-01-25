@@ -248,7 +248,7 @@ public class ImgProc {
 
         int t = 0;
 
-        if (!initialObjectIdent) {
+        if (initialObjectIdent) {
             switch (PossiblePositions.get(0)) {
                 case POS1:
                     t = 1;
