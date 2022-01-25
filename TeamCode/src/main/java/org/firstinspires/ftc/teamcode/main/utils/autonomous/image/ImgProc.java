@@ -246,20 +246,23 @@ public class ImgProc {
             }
         }
 
+        int t = 0;
+
         if (!initialObjectIdent) {
-            return 0;
-        } else {
             switch (PossiblePositions.get(0)) {
                 case POS1:
-                    return 1;
+                    t = 1;
+                    break;
                 case POS2:
-                    return 2;
+                    t = 2;
+                    break;
                 case POS3:
-                    return 3;
+                    t = 3;
+                    break;
             }
         }
 
-        return 0;
+        return t;
     }
 
     void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
