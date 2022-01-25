@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.main.utils.autonomous.starting;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
-import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.TFLITE_Wrapper;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
 import org.firstinspires.ftc.teamcode.main.utils.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTankVehicleDrivetrain;
@@ -26,11 +26,11 @@ public class StartingPositionManager {
     InputSpace input;
     OutputSpace output;
     int ballDropHeight;
-    double timeAsOfLastManualIntakeMovement = 0, timeAsOfLastFullLiftMovement = 0, timeAsOfLastManualHandMovement = 0;
-    int step = 0, manualHandPos = 23;
-    boolean intakeShouldBeDown = false, intakeButtonWasDown = false, manualMode = false, liftAutoMovementIsDone = false;
+    double timeAsOfLastFullLiftMovement = 0;
+    int step = 0;
+    boolean intakeShouldBeDown = false, liftAutoMovementIsDone = false;
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
-    TFLITE_Wrapper imgProc;
+    ImgProc imgProc;
 
     boolean isBlueSide, isCloseToParking;
 
@@ -47,85 +47,83 @@ public class StartingPositionManager {
         tank = (StandardTankVehicleDrivetrain) input.getTank().getInternalInteractionSurface();
         positionSystem.setDrivetrain(tank);
 
-        imgProc = new TFLITE_Wrapper(opMode.hardwareMap);
+        imgProc = new ImgProc(opMode.hardwareMap);
+
+        int h = 0;
+        while (h == 0) {
+            h = imgProc.identifyStartingPos();
+        }
+        this.ballDropHeight = h;
+        ballDropHeight = h;
+
+        int finalH = h;
+        opMode.telemetry.addAction(() -> opMode.telemetry.addData("Detected Position", finalH));
+
+        int turnModifier = 1;
+        if (!isBlueSide) turnModifier = -turnModifier;
 
         opMode.waitForStart();
 
-        opMode.telemetry.addAction(() -> opMode.telemetry.addData("github.com/michaell4438", " "));
+        opMode.telemetry.addAction(() -> opMode.telemetry.addLine("github.com/michaell4438"));
 
         encoderTimeout = new EncoderTimeoutManager(0);
 
         // Drop the intake
         toggleIntakeLifter();
-        opMode.sleep(2000);
 
-        if (isBlueSide && !isCloseToParking) {
+        if (!isCloseToParking) {
             // Move Forward 1 Tile
             positionSystem.encoderDrive(15);
             drivetrainHold();
 
-            opMode.sleep(1000);
-
-            // Turn counter-clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(90, Angle.AngleUnit.DEGREE));
+            // Turn counter-clockwise 135 degrees
+            positionSystem.turnWithCorrection(new Angle(135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-
-            opMode.sleep(1000);
 
             // Do lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
-            // Raise the intake
-            toggleIntakeLifter();
-            opMode.sleep(2000);
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
+            // Turn clockwise 135 degrees
+            positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
-            opMode.sleep(1000);
+            // Raise the intake
+            toggleIntakeLifter();
 
             // Move a touch back
             positionSystem.encoderDrive(-3);
             drivetrainHold();
 
-            opMode.sleep(1000);
-
             // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-
-            opMode.sleep(1000);
 
             // Go backward 1.5 tiles
             positionSystem.encoderDrive(-18);
             drivetrainHold();
         }
-        else if (isBlueSide) {
+        else {
             // Move Forward 1 Tile
             positionSystem.encoderDrive(15);
             drivetrainHold();
 
-            opMode.sleep(1000);
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(-90, Angle.AngleUnit.DEGREE));
+            // Turn clockwise 1350 degrees
+            positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-
-            opMode.sleep(1000);
-
             // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
-            opMode.sleep(1000);
+            // Turn counter-clockwise 45 degrees
+            positionSystem.turnWithCorrection(new Angle(45 * turnModifier, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
 
             // Drop the intake
             toggleIntakeLifter();
-            opMode.sleep(5000);
+            opMode.sleep(4000);
 
             // Drive One Tile
             positionSystem.encoderDrive(13);

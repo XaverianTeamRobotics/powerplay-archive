@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode.main.utils.autonomous.image.sample;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.TFLITE_Wrapper;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
 
 @TeleOp(name = "Identify Image Sample")
 public class IdentifyTargetSample extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        TFLITE_Wrapper tflite_wrapper = new TFLITE_Wrapper(hardwareMap);
+        ImgProc imgProc = new ImgProc(hardwareMap);
 
-        tflite_wrapper.init();
-        tflite_wrapper.activate();
+        imgProc.init();
+        imgProc.activate();
 
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("Visible Target", tflite_wrapper.getVisibleVuforiaTarget().trackableName);
+            telemetry.addData("Visible Target", imgProc.getVisibleVuforiaTarget().trackableName);
             telemetry.update();
             sleep(100);
         }

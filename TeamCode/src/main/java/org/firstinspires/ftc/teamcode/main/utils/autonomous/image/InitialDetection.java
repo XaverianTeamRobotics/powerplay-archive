@@ -27,7 +27,7 @@ public class InitialDetection extends LinearOpMode {
 
     private String VUFORIA_KEY;
 
-    private TFLITE_Wrapper tflite;
+    private ImgProc tflite;
 
     private ArrayList<InitialPositions> PossiblePositions;
 
@@ -44,7 +44,7 @@ public class InitialDetection extends LinearOpMode {
 
         VUFORIA_KEY = Resources.Misc.VuforiaKey;
 
-        tflite = new TFLITE_Wrapper(hardwareMap);
+        tflite = new ImgProc(hardwareMap);
         tflite.TFOD_MODEL_ASSET = TFOD_MODEL_ASSET;
         tflite.LABELS = LABELS;
 
