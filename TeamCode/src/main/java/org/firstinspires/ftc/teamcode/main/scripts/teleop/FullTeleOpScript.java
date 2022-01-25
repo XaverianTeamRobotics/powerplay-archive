@@ -190,14 +190,16 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
-            // TODO: distance sensor stuff
             if(step == 3) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                step++;
+            }
+            if(step == 4 && outputSpace.receiveOutputFromHandDistanceSensor() <= 80) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
             // once ball is in place, move to base position
-            if(step == 4 && timeAsOfLastFullLiftMovement + 10 <= getOpMode().time) {
+            if(step == 5 && timeAsOfLastFullLiftMovement + 0.5 <= getOpMode().time) {
                 step = 0;
                 isMovingToIntakePos = false;
                 isMovingToBasePos = true;
