@@ -182,10 +182,14 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
+                    inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
@@ -219,10 +223,14 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
+                    inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
