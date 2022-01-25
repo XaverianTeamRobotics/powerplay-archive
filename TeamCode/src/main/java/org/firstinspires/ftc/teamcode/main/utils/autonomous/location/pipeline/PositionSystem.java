@@ -4,6 +4,7 @@ import android.graphics.Path;
 
 import androidx.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.Axis.AxisReading;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.sensors.NavigationSensorCollection;
@@ -26,7 +27,7 @@ public class PositionSystem {
     private StandardVehicleDrivetrain drivetrain = null;
     public StandardIMU imu;
     public StandardIMU.DataPoint imuDirection = StandardIMU.DataPoint.HEADING;
-    public StandardIMU.ReturnData imuData;
+    public StandardIMU.ReturnData<StandardIMU.DataPoint, Float> imuData;
     public int imuOffset = 0;
 
     public PositionSystem(@NonNull NavigationSensorCollection sensors) {
@@ -133,8 +134,11 @@ public class PositionSystem {
                 imu.setRollOffset(imuOffset);
                 break;
         }
+
+        imuData = imu.getCompassData();
+
         coordinateSystem.angle.convert(Angle.AngleUnit.DEGREE);
-        coordinateSystem.angle.value = imu.getData().get(imuDirection);
+        coordinateSystem.angle.value = imuData.get(imuDirection);
     }
 
     public float normalizeDegrees(Float input) {
@@ -159,7 +163,7 @@ public class PositionSystem {
     }
     public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distanceLeft, (int) distanceRight, 50);
+            drivetrain.driveDistance((int) distanceLeft, (int) distanceRight, 30);
         }
     }
 
@@ -170,10 +174,12 @@ public class PositionSystem {
                 drivetrain.getLeftBottom().getDcMotor().isBusy();
     }
 
-    public void motorHold() {
-        while (areMotorsBusy()) {}
+    public void motorHold(int timeout) {
+        EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(timeout);
+        while (areMotorsBusy() || !timeoutManager.hasTimedOut()) {}
     }
 
+    @Deprecated
     public void turnByIMU(int absoluteDegree, Path.Direction turnDirection) {
         if (drivetrain != null) {
 
@@ -200,7 +206,38 @@ public class PositionSystem {
             }
         }
     }
-    public void turn(Angle a) {
+
+    public void turnWithCorrection(Angle a) {
+        int left = 10;
+        int right = 10;
+
+        double angle = a.asDegree();
+
+        if (angle > 180) {
+            angle = angle - 180;
+        }
+
+        if (angle < 0) {
+            left = -left;
+            right = -right;
+        }
+
+        updateAngle();
+        angle = imuData.getHeading() - angle;
+
+        EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(5000);
+
+        drivetrain.driveWithEncoder(right, left);
+
+        while (!timeoutManager.hasTimedOut() || areMotorsBusy()) {
+            updateAngle();
+            if (imuData.getHeading() < angle + 5 && imuData.getHeading() > angle - 5) {
+                break;
+            }
+        }
+    }
+
+    public void turnNoCorrection(Angle a) {
         float left = 0.5F;
         float right = 0.5F;
 

@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTan
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
-@Autonomous(name = "Starting Position Test")
-public class StartingPositionTest extends LinearOpMode {
+@Autonomous(name = "Starting Position Test (OLD)")
+public class StartingPositionTestOld extends LinearOpMode {
     PositionSystem positionSystem;
     EncoderTimeoutManager encoderTimeout;
     @Override
@@ -34,7 +34,7 @@ public class StartingPositionTest extends LinearOpMode {
             this.sleep(1000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-85, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
@@ -46,13 +46,13 @@ public class StartingPositionTest extends LinearOpMode {
             this.sleep(1000);
 
             // Turn counter-clockwise 90 degrees
-            positionSystem.turn(new Angle(95, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(95, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(2000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-85, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
@@ -64,29 +64,31 @@ public class StartingPositionTest extends LinearOpMode {
             this.sleep(1000);
 
             // Turn clockwise 90 degrees
-            positionSystem.turn(new Angle(-50, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(-50, Angle.AngleUnit.DEGREE));
+            motorHold();
+
+            //TODO: Check if spot is busy
+
+            positionSystem.turnNoCorrection(new Angle(-45, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
 
-            positionSystem.turn(new Angle(-45, Angle.AngleUnit.DEGREE));
-            motorHold();
-
             // Move Forward 1 Tile
-            positionSystem.encoderDrive(12);
+            positionSystem.encoderDrive(13);
             motorHold();
 
             this.sleep(1000);
 
             // Turn counter-clockwise 90 degrees
-            positionSystem.turn(new Angle(95, Angle.AngleUnit.DEGREE));
+            positionSystem.turnNoCorrection(new Angle(85, Angle.AngleUnit.DEGREE));
             motorHold();
 
             this.sleep(1000);
 
             // Move Forward 1 Tile
-            positionSystem.encoderDrive(12);
-            motorHold();
+/*            positionSystem.encoderDrive(12);
+            motorHold();*/
 
             break;
         }
