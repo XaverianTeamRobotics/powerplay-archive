@@ -38,19 +38,22 @@ public class FullTeleOpScript extends TeleOpScript {
     public FullTeleOpScript(LinearOpMode opMode) {
         super(opMode);
         // set fields and calibrate robot
+        /*
+         * GamepadManager Functions:
+         *  F1: Driving
+         *  F2: Intake Motor Control, Intake Lift Control, Intake Lift Manual Control
+         *  F3: Lift Control, Elevator/Hand Manual Positioning
+         *  F4: Duck Spinner Control
+         *  F5: Unassigned
+         *  F6: Unassigned
+         * Users:
+         *  U1: F1, F2, F3, F4
+         *  U2: Unassigned
+         * */
         gamepadManager = new GamepadManager(getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad1);
         gamepadManager.functionOneGamepad().reset();
         inputSpace = new InputSpace(getOpMode().hardwareMap);
         outputSpace = new OutputSpace(getOpMode().hardwareMap);
-        /*
-        * GamepadManager Functions:
-        *   F1: Driving
-        *   F2: Intake Motor Control, Intake Lift Control, Intake Lift Manual Control
-        *   F3: Lift Control, Elevator/Hand Manual Positioning
-        *   F4: Duck Spinner Control
-        *   F5: Unassigned
-        *   F6: Unassigned
-        * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         calibrateElevator();
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
@@ -381,12 +384,12 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -250);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -250);
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -150);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -150);
                 step++;
             }
             // turn hand to the position to dispense the ball
-            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -250) {
+            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -150) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
                 step++;
