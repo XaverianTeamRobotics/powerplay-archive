@@ -46,12 +46,21 @@ public class ImgProc {
     private static final float oneAndHalfTile   = 36 * mmPerInch;
 
     public List<VuforiaTrackable> allTrackables;
-    private ArrayList<InitialPositions> PossiblePositions;
+    private ArrayList<InitialPositions> possibleStartingPositions = new ArrayList();;
 
     public ImgProc(HardwareMap hardwareMap) {
         this(   "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS",
                 "FreightFrenzy_BC.tflite",
                 new String[]{"Ball", "Cube"},
+                hardwareMap,
+                Resources.Misc.Webcam
+        );
+    }
+
+    public ImgProc(HardwareMap hardwareMap, String[] objectsToDetect, String file) {
+        this(   "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS",
+                file,
+                objectsToDetect,
                 hardwareMap,
                 Resources.Misc.Webcam
         );
@@ -128,6 +137,10 @@ public class ImgProc {
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+
+        possibleStartingPositions.add(InitialPositions.POS1);
+        possibleStartingPositions.add(InitialPositions.POS2);
+        possibleStartingPositions.add(InitialPositions.POS3);
     }
 
     public ArrayList<Detection> getDetections() {
@@ -215,32 +228,26 @@ public class ImgProc {
                     if (!initialObjectIdent || !initialObjectIdentSTRICT) {
                         if (InitialPositions.POS1.evalPos((int) recognition.getLeft())) {
                             if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
-                                PossiblePositions = new ArrayList();
-                                PossiblePositions.add(InitialPositions.POS1);
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS1);
                                 initialObjectIdentSTRICT = true;
-                            } else if (PossiblePositions.contains(InitialPositions.POS1)) {
-                                PossiblePositions.remove(InitialPositions.POS1);
-                            }
+                            } else possibleStartingPositions.remove(InitialPositions.POS1);
                         } else if (InitialPositions.POS2.evalPos((int) recognition.getLeft())) {
                             if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
-                                PossiblePositions = new ArrayList();
-                                PossiblePositions.add(InitialPositions.POS2);
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS2);
                                 initialObjectIdentSTRICT = true;
-                            } else if (PossiblePositions.contains(InitialPositions.POS1)) {
-                                PossiblePositions.remove(InitialPositions.POS2);
-                            }
+                            } else possibleStartingPositions.remove(InitialPositions.POS2);
                         } else if (InitialPositions.POS3.evalPos((int) recognition.getLeft())) {
                             if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
-                                PossiblePositions = new ArrayList();
-                                PossiblePositions.add(InitialPositions.POS3);
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS3);
                                 initialObjectIdentSTRICT = true;
-                            } else if (PossiblePositions.contains(InitialPositions.POS1)) {
-                                PossiblePositions.remove(InitialPositions.POS3);
-                            }
+                            } else possibleStartingPositions.remove(InitialPositions.POS3);
                         }
                     }
                 }
-                if (PossiblePositions.size() == 1) {
+                if (possibleStartingPositions.size() == 1) {
                     initialObjectIdent = true;
                 } else initialObjectIdent = false;
             }
@@ -248,8 +255,8 @@ public class ImgProc {
 
         int t = 0;
 
-        if (initialObjectIdent) {
-            switch (PossiblePositions.get(0)) {
+        if (initialObjectIdent || initialObjectIdentSTRICT) {
+            switch (possibleStartingPositions.get(0)) {
                 case POS1:
                     t = 1;
                     break;
