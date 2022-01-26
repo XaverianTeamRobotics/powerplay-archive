@@ -27,13 +27,6 @@ import java.util.HashMap;
 
 public class FullTeleOpScript extends TeleOpScript {
 
-    /* TODO: Full manual control.
-     *  Toggling between manual and automatic control
-     *  and the ability to escape automatic routines once manual mode is activated
-     *  Elevator support, hand support, intake support
-     *  For the elevator and hand, use the right stick
-     */
-
     private GamepadManager gamepadManager;
     private InputSpace inputSpace;
     private OutputSpace outputSpace;
@@ -75,9 +68,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlDrivetrain();
         controlIntakeLifter();
         controlIntake();
-        // these methods are for manual control of the lift. currently, they do not work with the controlEntireLiftAutonomously() method that well. they technically function but it's not idea. for now, comment that method out if you uncomment these two
-//        controlElevator();
-//        controlHand();
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
@@ -182,10 +172,14 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
+                    inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
@@ -196,14 +190,16 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
-            // TODO: distance sensor stuff
             if(step == 3) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                step++;
+            }
+            if(step == 4 && outputSpace.receiveOutputFromHandDistanceSensor() <= 80) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
             // once ball is in place, move to base position
-            if(step == 4 && timeAsOfLastFullLiftMovement + 10 <= getOpMode().time) {
+            if(step == 5 && timeAsOfLastFullLiftMovement + 0.5 <= getOpMode().time) {
                 step = 0;
                 isMovingToIntakePos = false;
                 isMovingToBasePos = true;
@@ -219,10 +215,14 @@ public class FullTeleOpScript extends TeleOpScript {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= getOpMode().time) {
+                    inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
@@ -381,12 +381,12 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= getOpMode().time) {
-                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -300);
-                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -300);
+                inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -250);
+                inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -250);
                 step++;
             }
             // turn hand to the position to dispense the ball
-            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -300) {
+            if(step == 3 && ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -250) {
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
                 step++;
@@ -460,46 +460,6 @@ public class FullTeleOpScript extends TeleOpScript {
                 isMovingToTBlock = false;
                 isMovingToBasePos = true;
             }
-        }
-    }
-
-    /**
-     * This controls the elevator manually. This should only be used when manual mode is enabled.
-     */
-    private void controlElevator() {
-        // take input from user and map to elevator power
-        double elevatorInput = gamepadManager.functionThreeGamepad().right_stick_y;
-        int finalElevatorInput = elevatorInput > 0.5 ? 1 : (elevatorInput < -0.5 ? -1 : 0);
-        int inputVal = Math.abs(((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition()) < 500 ? Range.clip(finalElevatorInput * 75, -75, 25) : Range.clip(finalElevatorInput * 75, -75, 75);
-        // set elevator power, capping it when the elevator is at the bottom
-        if(inputVal < 0 || outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
-            inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, inputVal);
-            inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, inputVal);
-        }else{
-            inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 0);
-            inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 0);
-            // reset encoders every time the bottom is reached to minimize error
-            ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).reset();
-            ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
-        }
-    }
-
-    /**
-     * This controls the hand manually. This should only be used when manual mode is enabled.
-     */
-    private void controlHand() {
-        // set the hand to its allowed positions
-        if(timeAsOfLastManualHandMovement + 0.25 <= getOpMode().time) {
-            double handInput = gamepadManager.functionThreeGamepad().right_stick_x;
-            if(handInput > 0.5) {
-                manualHandPos += 1;
-                manualHandPos = Range.clip(manualHandPos, 0, 100);
-            }else if(handInput < -0.5) {
-                manualHandPos -= 1;
-                manualHandPos = Range.clip(manualHandPos, 0, 100);
-            }
-            inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, manualHandPos);
-            timeAsOfLastManualHandMovement = getOpMode().time;
         }
     }
 

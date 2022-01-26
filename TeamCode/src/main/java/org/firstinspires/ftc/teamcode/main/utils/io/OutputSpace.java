@@ -21,12 +21,14 @@ public class OutputSpace {
     private final IntakeLimitSwitchLocation INTAKE_LIMIT_SWITCH;
     private final ElevatorBottomLimitSwitchLocation ELEVATOR_BOTTOM_LIMIT_SWITCH;
     private final IntakeLiftingDistanceSensorLocation INTAKE_DISTANCE_SENSOR;
+    private final HandDistanceSensorLocation HAND_DISTANCE_SENSOR;
 
     public OutputSpace(HardwareMap hardware) {
         HARDWARE = hardware;
         INTAKE_LIMIT_SWITCH = new IntakeLimitSwitchLocation(HARDWARE);
         ELEVATOR_BOTTOM_LIMIT_SWITCH = new ElevatorBottomLimitSwitchLocation(HARDWARE);
         INTAKE_DISTANCE_SENSOR = new IntakeLiftingDistanceSensorLocation(HARDWARE);
+        HAND_DISTANCE_SENSOR = new HandDistanceSensorLocation(HARDWARE);
     }
 
     public double receiveOutputFromIntakeLiftingDistanceSensor() {
@@ -39,6 +41,10 @@ public class OutputSpace {
 
     public double receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values type) {
         return ELEVATOR_BOTTOM_LIMIT_SWITCH.returnOutput(type);
+    }
+
+    public double receiveOutputFromHandDistanceSensor() {
+        return HAND_DISTANCE_SENSOR.returnOutput();
     }
 
     public HardwareMap getHardware() {
@@ -55,6 +61,10 @@ public class OutputSpace {
 
     public ElevatorBottomLimitSwitchLocation getElevatorBottomLimitSwitch() {
         return ELEVATOR_BOTTOM_LIMIT_SWITCH;
+    }
+
+    public HandDistanceSensorLocation getHandDistanceSensor() {
+        return HAND_DISTANCE_SENSOR;
     }
 
     public void stop() {

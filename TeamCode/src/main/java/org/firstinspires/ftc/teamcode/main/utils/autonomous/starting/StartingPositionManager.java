@@ -49,10 +49,10 @@ public class StartingPositionManager {
 
         imgProc = new ImgProc(opMode.hardwareMap);
 
-        int h = 0;
-        while (h == 0) {
-            h = imgProc.identifyStartingPos();
-        }
+        int h = 1;
+//        while (h == 0) {
+//            h = imgProc.identifyStartingPos();
+//        }
         this.ballDropHeight = h;
         ballDropHeight = h;
 
@@ -112,18 +112,25 @@ public class StartingPositionManager {
             // Turn clockwise 1350 degrees
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
+
+            positionSystem.encoderDrive(-2);
+            drivetrainHold();
+
             // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
+            positionSystem.encoderDrive(4);
+            drivetrainHold();
+
             // Turn counter-clockwise 45 degrees
-            positionSystem.turnWithCorrection(new Angle(45 * turnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
             // Drop the intake
             toggleIntakeLifter();
-            opMode.sleep(4000);
+            opMode.sleep(3000);
 
             // Drive One Tile
             positionSystem.encoderDrive(13);
