@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.main.utils.autonomous.starting;
 
+import android.util.Range;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
@@ -32,6 +34,8 @@ public class StartingPositionManager {
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
 
+    boolean isCameraUpsideDown = true;
+
     boolean isBlueSide, isCloseToParking;
 
     public StartingPositionManager(LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight) {
@@ -54,7 +58,7 @@ public class StartingPositionManager {
 
         int h = 0;
         while (h == 0) {
-            h = imgProc.identifyStartingPos();
+            h = initialPositionsOrientation(imgProc.identifyStartingPos());
         }
         this.ballDropHeight = h;
         ballDropHeight = h;
@@ -384,5 +388,16 @@ public class StartingPositionManager {
             }
         }
         // TODO: block. block rot%: 38-40
+    }
+
+    private int initialPositionsOrientation(int raw) {
+        if (isCameraUpsideDown) {
+            if (raw == 1) {
+                raw = 3;
+            } else if (raw == 3) {
+                raw = 1;
+            }
+        }
+        return raw;
     }
 }
