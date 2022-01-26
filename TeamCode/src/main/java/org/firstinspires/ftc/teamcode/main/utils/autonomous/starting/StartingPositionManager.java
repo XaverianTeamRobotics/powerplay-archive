@@ -47,12 +47,15 @@ public class StartingPositionManager {
         tank = (StandardTankVehicleDrivetrain) input.getTank().getInternalInteractionSurface();
         positionSystem.setDrivetrain(tank);
 
-        imgProc = new ImgProc(opMode.hardwareMap);
+        imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
+        imgProc.init();
+        imgProc.activate();
+        imgProc.setZoom(1, 16/9);
 
-        int h = 1;
-//        while (h == 0) {
-//            h = imgProc.identifyStartingPos();
-//        }
+        int h = 0;
+        while (h == 0) {
+            h = imgProc.identifyStartingPos();
+        }
         this.ballDropHeight = h;
         ballDropHeight = h;
 
@@ -80,10 +83,22 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
-            // Do lift
+            // Drive Back two inches
+            positionSystem.encoderDrive(-2);
+            drivetrainHold();
+
+            // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
+
+            // Drive forward 4 inches
+            positionSystem.encoderDrive(3);
+            drivetrainHold();
+
+            // Turn counter-clockwise 33 degrees
+            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
 
             // Turn clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
@@ -92,16 +107,8 @@ public class StartingPositionManager {
             // Raise the intake
             toggleIntakeLifter();
 
-            // Move a touch back
-            positionSystem.encoderDrive(-3);
-            drivetrainHold();
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            // Go backward 1.5 tiles
-            positionSystem.encoderDrive(-18);
+            // Go backward 1 tile
+            positionSystem.encoderDrive(-15);
             drivetrainHold();
         }
         else {
@@ -113,6 +120,7 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
+            // Drive Back two inches
             positionSystem.encoderDrive(-2);
             drivetrainHold();
 
@@ -121,10 +129,11 @@ public class StartingPositionManager {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
 
-            positionSystem.encoderDrive(4);
+            // Drive forward 4 inches
+            positionSystem.encoderDrive(3);
             drivetrainHold();
 
-            // Turn counter-clockwise 45 degrees
+            // Turn counter-clockwise 33 degrees
             positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 

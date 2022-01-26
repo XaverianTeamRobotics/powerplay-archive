@@ -57,6 +57,15 @@ public class ImgProc {
         );
     }
 
+    public ImgProc(HardwareMap hardwareMap, String[] objectsToDetect, String file) {
+        this(   "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS",
+                file,
+                objectsToDetect,
+                hardwareMap,
+                Resources.Misc.Webcam
+        );
+    }
+
     public ImgProc(String VUFORIA_KEY, String TFOD_MODEL_ASSET, String[] LABELS, HardwareMap hardwareMap, String cameraName) {
         this.VUFORIA_KEY = VUFORIA_KEY;
         this.TFOD_MODEL_ASSET = TFOD_MODEL_ASSET;
@@ -246,7 +255,7 @@ public class ImgProc {
 
         int t = 0;
 
-        if (initialObjectIdent) {
+        if (initialObjectIdent || initialObjectIdentSTRICT) {
             switch (possibleStartingPositions.get(0)) {
                 case POS1:
                     t = 1;
