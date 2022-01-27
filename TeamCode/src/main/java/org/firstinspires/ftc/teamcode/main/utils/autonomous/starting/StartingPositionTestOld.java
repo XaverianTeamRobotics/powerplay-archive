@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 @Autonomous(name = "Starting Position Test (OLD)")
+@Deprecated
 public class StartingPositionTestOld extends LinearOpMode {
     PositionSystem positionSystem;
     EncoderTimeoutManager encoderTimeout;
