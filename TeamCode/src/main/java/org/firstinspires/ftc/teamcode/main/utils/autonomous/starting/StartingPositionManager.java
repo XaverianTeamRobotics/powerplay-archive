@@ -30,11 +30,11 @@ public class StartingPositionManager {
     int ballDropHeight;
     double timeAsOfLastFullLiftMovement = 0;
     int step = 0;
-    boolean intakeShouldBeDown = false, liftAutoMovementIsDone = false;
+    boolean intakeShouldBeDown = false, liftAutoMovementIsDone = false, liftIsMovingDown = false, robotIsMovingBackToTurningPositionAfterLiftMovement = false;
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
 
-    boolean isCameraUpsideDown = true;
+    boolean isCameraUpsideDown = false;
 
     boolean isBlueSide, isCloseToParking;
 
@@ -124,14 +124,17 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
-            // Drive Back two inches
+            // Do lift
             positionSystem.encoderDrive(-2);
-            drivetrainHold();
-
-            // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
+                if(liftIsMovingDown) {
+                    positionSystem.encoderDrive(3);
+                    liftIsMovingDown = false;
+                    robotIsMovingBackToTurningPositionAfterLiftMovement = true;
+                }
             }
+            drivetrainHold();
 
             // Drive forward 4 inches
             positionSystem.encoderDrive(3);
