@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.main.utils.locations;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.main.utils.interactions.InteractionSurface;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServo;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
-public class HandGrabbingServoLocation extends Location {
+public class RightHandGrabbingServoLocation extends Location {
 
     public enum Action {
         SET_POSITION,
@@ -16,9 +15,9 @@ public class HandGrabbingServoLocation extends Location {
 
     private StandardServo SERVO;
 
-    public HandGrabbingServoLocation(HardwareMap hardware) {
+    public RightHandGrabbingServoLocation(HardwareMap hardware) {
         try {
-            SERVO = new StandardServo(hardware, Resources.Hand.Servos.Grabbing);
+            SERVO = new StandardServo(hardware, Resources.Hand.Servos.RightGrabbing);
         } catch(Exception ignored) {}
     }
 
