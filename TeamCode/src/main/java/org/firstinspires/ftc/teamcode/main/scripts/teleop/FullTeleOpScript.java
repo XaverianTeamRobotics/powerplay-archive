@@ -47,9 +47,6 @@ public class FullTeleOpScript extends TeleOpScript {
         gamepadManager.functionOneGamepad().reset();
         inputSpace = new InputSpace(getOpMode().hardwareMap);
         outputSpace = new OutputSpace(getOpMode().hardwareMap);
-        inputSpace.sendInputToHandGrabber(HandGrabbingServoLocation.Action.SET_POSITION, 45);
-        opMode.sleep(3000);
-        inputSpace.sendInputToHandGrabber(HandGrabbingServoLocation.Action.SET_POSITION, 0);
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
         calibrateElevator();
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
@@ -464,7 +461,9 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDuck() {
         // turn duck motor slowly in the correct direction
-        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, gamepadManager.functionFourGamepad().right_bumper ? -50 : 0);
+        int speed = gamepadManager.functionFourGamepad().right_bumper ? -50 : 0;
+        speed += gamepadManager.functionFourGamepad().left_bumper ? 50 : 0;
+        inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, speed);
     }
 
     private void debug() {
