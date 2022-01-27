@@ -34,7 +34,7 @@ public class StartingPositionManager {
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
 
-    boolean isCameraUpsideDown = true;
+    boolean isCameraUpsideDown = false;
 
     boolean isBlueSide, isCloseToParking;
 
