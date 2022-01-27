@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.main.utils.autonomous.starting;
 
+import android.util.Range;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
@@ -28,9 +30,11 @@ public class StartingPositionManager {
     int ballDropHeight;
     double timeAsOfLastFullLiftMovement = 0;
     int step = 0;
-    boolean intakeShouldBeDown = false, liftAutoMovementIsDone = false;
+    boolean intakeShouldBeDown = false, liftAutoMovementIsDone = false, liftIsMovingDown = false, robotIsMovingBackToTurningPositionAfterLiftMovement = false;
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
+
+    boolean isCameraUpsideDown = true;
 
     boolean isBlueSide, isCloseToParking;
 
@@ -47,12 +51,15 @@ public class StartingPositionManager {
         tank = (StandardTankVehicleDrivetrain) input.getTank().getInternalInteractionSurface();
         positionSystem.setDrivetrain(tank);
 
-        imgProc = new ImgProc(opMode.hardwareMap);
+        imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
+        imgProc.init();
+        imgProc.activate();
+        imgProc.setZoom(1, 16/9);
 
-        int h = 1;
-//        while (h == 0) {
-//            h = imgProc.identifyStartingPos();
-//        }
+        int h = 0;
+        while (h == 0) {
+            h = initialPositionsOrientation(imgProc.identifyStartingPos());
+        }
         this.ballDropHeight = h;
         ballDropHeight = h;
 
@@ -80,10 +87,22 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
-            // Do lift
+            // Drive Back two inches
+            positionSystem.encoderDrive(-2);
+            drivetrainHold();
+
+            // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
             }
+
+            // Drive forward 4 inches
+            positionSystem.encoderDrive(3);
+            drivetrainHold();
+
+            // Turn counter-clockwise 33 degrees
+            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
 
             // Turn clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
@@ -92,16 +111,8 @@ public class StartingPositionManager {
             // Raise the intake
             toggleIntakeLifter();
 
-            // Move a touch back
-            positionSystem.encoderDrive(-3);
-            drivetrainHold();
-
-            // Turn clockwise 90 degrees
-            positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            // Go backward 1.5 tiles
-            positionSystem.encoderDrive(-18);
+            // Go backward 1 tile
+            positionSystem.encoderDrive(-15);
             drivetrainHold();
         }
         else {
@@ -113,18 +124,19 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
+            // Do lift
             positionSystem.encoderDrive(-2);
-            drivetrainHold();
-
-            // Do Lift
             while(!liftAutoMovementIsDone) {
                 controlEntireLiftAutonomously(ballDropHeight);
+                if(liftIsMovingDown) {
+                    positionSystem.encoderDrive(3);
+                    liftIsMovingDown = false;
+                    robotIsMovingBackToTurningPositionAfterLiftMovement = true;
+                }
             }
-
-            positionSystem.encoderDrive(4);
             drivetrainHold();
 
-            // Turn counter-clockwise 45 degrees
+            // Turn counter-clockwise 33 degrees
             positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
 
@@ -235,6 +247,7 @@ public class StartingPositionManager {
             if(step == 0) {
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
                 timeAsOfLastFullLiftMovement = opMode.time;
+                liftIsMovingDown = true;
                 step++;
             }
             // after moving the hand, move the elevator to the base position
@@ -375,5 +388,16 @@ public class StartingPositionManager {
             }
         }
         // TODO: block. block rot%: 38-40
+    }
+
+    private int initialPositionsOrientation(int raw) {
+        if (isCameraUpsideDown) {
+            if (raw == 1) {
+                raw = 3;
+            } else if (raw == 3) {
+                raw = 1;
+            }
+        }
+        return raw;
     }
 }
