@@ -34,7 +34,11 @@ public class StartingPositionManager {
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
 
+    // this should be true if the camera is upside down in real life (it wont work as well upside down, but this provides some functionality)
     boolean isCameraUpsideDown = false;
+
+    // this should be true if a block is loaded, false if a ball
+    boolean isBlock = true;
 
     boolean isBlueSide, isCloseToParking;
 
@@ -60,6 +64,7 @@ public class StartingPositionManager {
         while (h == 0) {
             h = initialPositionsOrientation(imgProc.identifyStartingPos());
         }
+        h = isBlock ? h + 3 : h;
         this.ballDropHeight = h;
         ballDropHeight = h;
 
@@ -201,12 +206,12 @@ public class StartingPositionManager {
     }
 
     private void controlEntireLiftAutonomously(int h) {
-        // enables intake pos routine if requested
-        if(h == 0 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(h == 1 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToIntakePos = true;
             step = 0;
         }
         if(isMovingToIntakePos) {
+            
             // sets the hand to base position
             if(step == 0) {
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
@@ -214,10 +219,14 @@ public class StartingPositionManager {
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= opMode.time) {
-                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(output.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= opMode.time) {
+                    input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && output.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
@@ -228,14 +237,16 @@ public class StartingPositionManager {
                 step++;
             }
             // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
-            // TODO: distance sensor stuff
             if(step == 3) {
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                step++;
+            }
+            if(step == 4 && output.receiveOutputFromHandDistanceSensor() <= 120) {
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
             }
             // once ball is in place, move to base position
-            if(step == 4 && timeAsOfLastFullLiftMovement + 10 <= opMode.time) {
+            if(step == 5 && timeAsOfLastFullLiftMovement + 0.5 <= opMode.time) {
                 step = 0;
                 isMovingToIntakePos = false;
                 isMovingToBasePos = true;
@@ -243,18 +254,22 @@ public class StartingPositionManager {
         }
         // moves to base pos - this is not a routine that can be enabled by user input, but rather enabled by other routines to reset them after use
         if(isMovingToBasePos) {
+            
             // sets the hand to base position
             if(step == 0) {
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
                 timeAsOfLastFullLiftMovement = opMode.time;
-                liftIsMovingDown = true;
                 step++;
             }
             // after moving the hand, move the elevator to the base position
-            if(step == 1 && timeAsOfLastFullLiftMovement + 1.5 <= opMode.time) {
-                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
-                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
-                step++;
+            if(step == 1) {
+                if(output.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
+                    step++;
+                }else if(timeAsOfLastFullLiftMovement + 1.5 <= opMode.time) {
+                    input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 40);
+                    input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 40);
+                    step++;
+                }
             }
             // once the elevator is at the bottom, reset it
             if(step == 2 && output.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) != 0) {
@@ -264,17 +279,16 @@ public class StartingPositionManager {
                 ((StandardMotor) input.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 isMovingToBasePos = false;
                 step = 0;
-                liftAutoMovementIsDone = true;
-                h = -1;
             }
         }
         // enables lower level ball routine if requested
-        if(h == 1 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(h == 2 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToLBall = true;
             step = 0;
         }
         // dispenses ball at lower level
         if(isMovingToLBall) {
+            
             // move the elevator to allow hand room to turn
             if(step == 0) {
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
@@ -315,12 +329,13 @@ public class StartingPositionManager {
             }
         }
         // enables middle level ball routine routine if requested
-        if(h == 2 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(h == 3 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToMBall = true;
             step = 0;
         }
         // dispenses ball at middle level
         if(isMovingToMBall) {
+            
             // moves hand to safe turning position
             if(step == 0) {
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
@@ -361,12 +376,13 @@ public class StartingPositionManager {
             }
         }
         // enables top level ball routine if requested
-        if(h == 3 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(h == 4 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBall = true;
             step = 0;
         }
         // dispenses ball at top level
         if(isMovingToTBall) {
+            
             // move to dispensing position, doesnt need to worry about safe position because its higher up
             if(step == 0) {
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -700);
@@ -387,7 +403,109 @@ public class StartingPositionManager {
                 isMovingToBasePos = true;
             }
         }
-        // TODO: block. block rot%: 38-40
+        // enables bottom level block routine if requested
+        if(h == 5 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+            isMovingToLBlock = true;
+            step = 0;
+        }
+        // dispenses block at bottom
+        if(isMovingToLBlock) {
+            
+            // move the elevator to allow hand room to turn
+            if(step == 0) {
+                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
+                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -500);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // turn hand to safest position once elevator reaches its position
+            if(step == 1 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -500) {
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 33);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // move elevator down to position
+            if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= opMode.time) {
+                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -150);
+                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -150);
+                step++;
+            }
+            // turn hand to the position to dispense the ball
+            if(step == 3 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() >= -150) {
+                timeAsOfLastFullLiftMovement = opMode.time;
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+                step++;
+            }
+            // turn hand back to a safe position and move elevator to turning point position
+            if(step == 4 && timeAsOfLastFullLiftMovement + 2 <= opMode.time) {
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 31);
+                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -500);
+                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -500);
+                step++;
+            }
+            // tell hand/elevator to reset once in a safe position to do so
+            if(step == 5 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -500) {
+                step = 0;
+                isMovingToLBlock = false;
+                isMovingToBasePos = true;
+            }
+        }
+        // enables middle level block routine if requested
+        if(h == 6 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+            isMovingToMBlock = true;
+            step = 0;
+        }
+        // dispenses block at middle
+        if(isMovingToMBlock) {
+            
+            // move the elevator to dropping position
+            if(step == 0) {
+                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -575);
+                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -575);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // turn hand to down position once elevator reaches its position
+            if(step == 1 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -575) {
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // tell hand/elevator to reset after block is dispensed
+            if(step == 2 && timeAsOfLastFullLiftMovement + 4 <= opMode.time) {
+                step = 0;
+                isMovingToMBlock = false;
+                isMovingToBasePos = true;
+            }
+        }
+        // enables top level block routine if requested
+        if(h == 7 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+            isMovingToTBlock = true;
+            step = 0;
+        }
+        // dispenses block at top
+        if(isMovingToTBlock) {
+            
+            // move the elevator to dropping position
+            if(step == 0) {
+                input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -1000);
+                input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -1000);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // turn hand to down position once elevator reaches its position
+            if(step == 1 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -1000) {
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+                timeAsOfLastFullLiftMovement = opMode.time;
+                step++;
+            }
+            // tell hand/elevator to reset after block is dispensed
+            if(step == 2 && timeAsOfLastFullLiftMovement + 4 <= opMode.time) {
+                step = 0;
+                isMovingToTBlock = false;
+                isMovingToBasePos = true;
+            }
+        }
     }
 
     private int initialPositionsOrientation(int raw) {
