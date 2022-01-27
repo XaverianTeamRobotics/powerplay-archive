@@ -51,12 +51,8 @@ public class FullTeleOpScript extends TeleOpScript {
         calibrateElevator();
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         // alert drivers robot is ready
-        gamepadManager.functionOneGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
-        gamepadManager.functionTwoGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
-        gamepadManager.functionThreeGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
-        gamepadManager.functionFourGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
-        gamepadManager.functionFiveGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
-        gamepadManager.functionSixGamepad().runRumbleEffect(Resources.Misc.CalibratedRumble);
+        getOpMode().gamepad1.runRumbleEffect(Resources.Misc.CalibratedRumble);
+        getOpMode().gamepad2.runRumbleEffect(Resources.Misc.CalibratedRumble);
     }
 
     @Override
