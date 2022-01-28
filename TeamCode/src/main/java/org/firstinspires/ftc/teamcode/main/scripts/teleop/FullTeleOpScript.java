@@ -57,7 +57,7 @@ public class FullTeleOpScript extends TeleOpScript {
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 30);
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
         calibrateElevator();
-        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
+        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 67);
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -137,12 +137,12 @@ public class FullTeleOpScript extends TeleOpScript {
         if(intakeShouldBeDown) {
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
         }else{
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 67);
         }
     }
 
     public void updateLiftControlPermissions() {
-        isAllowedToControl = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 70;
+        isAllowedToControl = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 67;
         if(isMovingToBasePos || isMovingToLBall || isMovingToMBall || isMovingToTBall || isMovingToLBlock || isMovingToMBlock || isMovingToTBlock || isMovingToIntakePos) {
             noControlIntakeLifter = true;
             intakeShouldBeDown = true;
