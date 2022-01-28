@@ -189,9 +189,11 @@ public class FullTeleOpScript extends TeleOpScript {
                 ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 step++;
             }
-            // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
+            // once at base, move the hand to the intake position
             if(step == 3) {
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 step++;
             }
             if(step == 4 && outputSpace.receiveOutputFromHandDistanceSensor() <= 120) {
@@ -210,6 +212,8 @@ public class FullTeleOpScript extends TeleOpScript {
             rumbleAllControllers();
             // sets the hand to base position
             if(step == 0) {
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 55);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 30);
                 inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
@@ -259,6 +263,8 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= getOpMode().time) {
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, 0);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, 0);
                 step++;
@@ -306,6 +312,8 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // move hand down to dispensing position
             if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= getOpMode().time) {
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -350);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -350);
                 step++;
@@ -340,6 +348,8 @@ public class FullTeleOpScript extends TeleOpScript {
             rumbleAllControllers();
             // move to dispensing position, doesnt need to worry about safe position because its higher up
             if(step == 0) {
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -700);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -700);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
@@ -381,6 +391,8 @@ public class FullTeleOpScript extends TeleOpScript {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= getOpMode().time) {
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -150);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -150);
                 step++;
@@ -417,6 +429,8 @@ public class FullTeleOpScript extends TeleOpScript {
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -575);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -575);
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
@@ -445,6 +459,8 @@ public class FullTeleOpScript extends TeleOpScript {
             if(step == 0) {
                 inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -1000);
                 inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -1000);
+                inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 timeAsOfLastFullLiftMovement = getOpMode().time;
                 step++;
             }
