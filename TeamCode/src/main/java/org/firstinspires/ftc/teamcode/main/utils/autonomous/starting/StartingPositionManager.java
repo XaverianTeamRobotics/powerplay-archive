@@ -12,12 +12,7 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTan
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
-import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorBottomLimitSwitchLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorLeftLiftMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorRightLiftMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.HandSpinningServoLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeLiftingServoLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeSpinningMotorLocation;
+import org.firstinspires.ftc.teamcode.main.utils.locations.*;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 public class StartingPositionManager {
@@ -206,7 +201,8 @@ public class StartingPositionManager {
     }
 
     private void controlEntireLiftAutonomously(int h) {
-        if(h == -1 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        // enables intake pos routine if requested
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToIntakePos = true;
             step = 0;
         }
@@ -236,9 +232,11 @@ public class StartingPositionManager {
                 ((StandardMotor) input.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 step++;
             }
-            // once at base, move the hand to the intake position, currently only does this for 10 seconds but will eventually do this until the ball is in place
+            // once at base, move the hand to the intake position
             if(step == 3) {
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 20);
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 step++;
             }
             if(step == 4 && output.receiveOutputFromHandDistanceSensor() <= 120) {
@@ -257,6 +255,8 @@ public class StartingPositionManager {
             
             // sets the hand to base position
             if(step == 0) {
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 55);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 30);
                 input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
@@ -279,10 +279,11 @@ public class StartingPositionManager {
                 ((StandardMotor) input.getElevatorRightLift().getInternalInteractionSurface()).reset();
                 isMovingToBasePos = false;
                 step = 0;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables lower level ball routine if requested
-        if(h == 1 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToLBall = true;
             step = 0;
         }
@@ -304,6 +305,8 @@ public class StartingPositionManager {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= opMode.time) {
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, 0);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, 0);
                 step++;
@@ -326,10 +329,11 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToLBall = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables middle level ball routine routine if requested
-        if(h == 2 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock  && !isMovingToIntakePos) {
             isMovingToMBall = true;
             step = 0;
         }
@@ -351,6 +355,8 @@ public class StartingPositionManager {
             }
             // move hand down to dispensing position
             if(step == 2 && timeAsOfLastFullLiftMovement + 2 <= opMode.time) {
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -350);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -350);
                 step++;
@@ -373,10 +379,11 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToMBall = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables top level ball routine if requested
-        if(h == 3 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBall = true;
             step = 0;
         }
@@ -385,6 +392,8 @@ public class StartingPositionManager {
             
             // move to dispensing position, doesnt need to worry about safe position because its higher up
             if(step == 0) {
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -700);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -700);
                 timeAsOfLastFullLiftMovement = opMode.time;
@@ -401,10 +410,11 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToTBall = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables bottom level block routine if requested
-        if(h == 4 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToLBlock = true;
             step = 0;
         }
@@ -426,6 +436,8 @@ public class StartingPositionManager {
             }
             // move elevator down to position
             if(step == 2 && timeAsOfLastFullLiftMovement + 0.25 <= opMode.time) {
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -150);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -150);
                 step++;
@@ -448,10 +460,11 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToLBlock = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables middle level block routine if requested
-        if(h == 5 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToMBlock = true;
             step = 0;
         }
@@ -462,6 +475,8 @@ public class StartingPositionManager {
             if(step == 0) {
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -575);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -575);
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
             }
@@ -476,10 +491,11 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToMBlock = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
         // enables top level block routine if requested
-        if(h == 6 && !isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
+        if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
             isMovingToTBlock = true;
             step = 0;
         }
@@ -490,6 +506,8 @@ public class StartingPositionManager {
             if(step == 0) {
                 input.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_POSITION, -1000);
                 input.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_POSITION, -1000);
+                input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
+                input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
             }
@@ -504,6 +522,7 @@ public class StartingPositionManager {
                 step = 0;
                 isMovingToTBlock = false;
                 isMovingToBasePos = true;
+                liftAutoMovementIsDone = true;
             }
         }
     }
