@@ -136,13 +136,10 @@ public class StartingPositionManager {
             }
             drivetrainHold();
 
-            // Turn counter-clockwise 33 degrees
+            // Turn counter-clockwise 33 degrees and raise intake
             positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-
-            // Drop the intake
             toggleIntakeLifter();
-            opMode.sleep(3000);
+            drivetrainHold();
 
             // Drive One Tile
             positionSystem.encoderDrive(13);
