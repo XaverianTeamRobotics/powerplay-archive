@@ -160,6 +160,7 @@ public class StartingPositionManager {
         encoderTimeout.restart();
     }
 
+    @Deprecated
     private void calibrateElevator() {
         // move elevator up for a second
         int timeAsOfLastElevatorCalibrationBegin = (int) opMode.time;
@@ -178,6 +179,7 @@ public class StartingPositionManager {
         input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
     }
 
+    @Deprecated
     private void calibrateIntake() {
         // move the intake to the *UPPER* position
         input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
@@ -189,7 +191,7 @@ public class StartingPositionManager {
         if(intakeShouldBeDown) {
             input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 35);
         }else{
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 67);
         }
     }
 
