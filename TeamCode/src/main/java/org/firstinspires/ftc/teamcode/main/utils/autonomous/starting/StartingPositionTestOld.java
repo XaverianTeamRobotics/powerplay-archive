@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 @Autonomous(name = "Starting Position Test (OLD)")
+@Deprecated
 public class StartingPositionTestOld extends LinearOpMode {
     PositionSystem positionSystem;
     EncoderTimeoutManager encoderTimeout;
@@ -66,8 +67,6 @@ public class StartingPositionTestOld extends LinearOpMode {
             // Turn clockwise 90 degrees
             positionSystem.turnNoCorrection(new Angle(-50, Angle.AngleUnit.DEGREE));
             motorHold();
-
-            //TODO: Check if spot is busy
 
             positionSystem.turnNoCorrection(new Angle(-45, Angle.AngleUnit.DEGREE));
             motorHold();

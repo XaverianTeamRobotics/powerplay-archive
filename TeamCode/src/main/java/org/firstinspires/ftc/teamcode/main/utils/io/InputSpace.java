@@ -2,14 +2,7 @@ package org.firstinspires.ftc.teamcode.main.utils.io;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.main.utils.locations.DuckMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorLeftLiftMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.ElevatorRightLiftMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.HandGrabbingServoLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.HandSpinningServoLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeLiftingServoLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.IntakeSpinningMotorLocation;
-import org.firstinspires.ftc.teamcode.main.utils.locations.TankDrivetrainLocation;
+import org.firstinspires.ftc.teamcode.main.utils.locations.*;
 
 /**
  * <p>This class can be used to send input to locations. Locations then attempt to handle the input.</p>
@@ -26,7 +19,8 @@ public class InputSpace {
     private final IntakeLiftingServoLocation INTAKE_LIFTING_SERVO;
     private final IntakeSpinningMotorLocation INTAKE_SPINNING_MOTOR;
     private final HandSpinningServoLocation HAND_SPINNING_SERVO;
-    private final HandGrabbingServoLocation HAND_GRABBER_SERVO;
+    private final LeftHandGrabbingServoLocation HAND_LEFT_GRABBER_SERVO;
+    private final RightHandGrabbingServoLocation HAND_RIGHT_GRABBER_SERVO;
 
     public InputSpace(HardwareMap hardware) {
         HARDWARE = hardware;
@@ -37,7 +31,8 @@ public class InputSpace {
         INTAKE_LIFTING_SERVO = new IntakeLiftingServoLocation(HARDWARE);
         INTAKE_SPINNING_MOTOR = new IntakeSpinningMotorLocation(HARDWARE);
         HAND_SPINNING_SERVO = new HandSpinningServoLocation(HARDWARE);
-        HAND_GRABBER_SERVO = new HandGrabbingServoLocation(HARDWARE);
+        HAND_LEFT_GRABBER_SERVO = new LeftHandGrabbingServoLocation(HARDWARE);
+        HAND_RIGHT_GRABBER_SERVO = new RightHandGrabbingServoLocation(HARDWARE);
     }
 
     public void sendInputToTank(TankDrivetrainLocation.Action action, int rightInput, int leftInput) {
@@ -68,8 +63,12 @@ public class InputSpace {
         HAND_SPINNING_SERVO.handleInput(action, input);
     }
 
-    public void sendInputToHandGrabber(HandGrabbingServoLocation.Action action, int input) {
-        HAND_GRABBER_SERVO.handleInput(action, input);
+    public void sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action action, int input) {
+        HAND_LEFT_GRABBER_SERVO.handleInput(action, input);
+    }
+
+    public void sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action action, int input) {
+        HAND_RIGHT_GRABBER_SERVO.handleInput(action, input);
     }
 
     public HardwareMap getHardwareMap() {
@@ -104,8 +103,12 @@ public class InputSpace {
         return HAND_SPINNING_SERVO;
     }
 
-    public HandGrabbingServoLocation getHandGrabber() {
-        return HAND_GRABBER_SERVO;
+    public LeftHandGrabbingServoLocation getLeftHandGrabber() {
+        return HAND_LEFT_GRABBER_SERVO;
+    }
+
+    public RightHandGrabbingServoLocation getRightHandGrabber() {
+        return HAND_RIGHT_GRABBER_SERVO;
     }
 
     public void stop() {
