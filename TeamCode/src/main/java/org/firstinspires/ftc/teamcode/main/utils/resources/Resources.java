@@ -67,7 +67,8 @@ public class Resources {
     public static final class Hand {
         public static final class Servos {
             public static final String Spinning = "hfS";
-            public static final String Grabbing = "hgS";
+            public static final String LeftGrabbing = "hglS";
+            public static final String RightGrabbing = "hgrS";
         }
         public static final class Sensors {
             public static final String HandDistance = "diD";
