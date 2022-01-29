@@ -23,7 +23,8 @@ import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TFLITE_Wrapper {
+public class ImgProc {
+    private static final String OBJECT_TO_IDENT = "Duck";
     private final String VUFORIA_KEY;
     private final String CAMERA_NAME;
     private ArrayList<Detection> Detections;
@@ -33,6 +34,8 @@ public class TFLITE_Wrapper {
     public String[] LABELS;
     public HardwareMap hardwareMap;
     public float confidence = 0.5f;
+    boolean initialObjectIdent = false;
+    boolean initialObjectIdentSTRICT = false;
 
     private VuforiaTrackables vuforiaTrackables = null;
 
@@ -43,8 +46,9 @@ public class TFLITE_Wrapper {
     private static final float oneAndHalfTile   = 36 * mmPerInch;
 
     public List<VuforiaTrackable> allTrackables;
+    private ArrayList<InitialPositions> possibleStartingPositions = new ArrayList();;
 
-    public TFLITE_Wrapper(HardwareMap hardwareMap) {
+    public ImgProc(HardwareMap hardwareMap) {
         this(   "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS",
                 "FreightFrenzy_BC.tflite",
                 new String[]{"Ball", "Cube"},
@@ -53,7 +57,16 @@ public class TFLITE_Wrapper {
         );
     }
 
-    public TFLITE_Wrapper(String VUFORIA_KEY, String TFOD_MODEL_ASSET, String[] LABELS, HardwareMap hardwareMap, String cameraName) {
+    public ImgProc(HardwareMap hardwareMap, String[] objectsToDetect, String file) {
+        this(   "AcQbfNb/////AAABmUoZxvy9bUCeksf5rYATLidV6rQS+xwgakOfD4C+LPj4FmsvqtRDFihtnTBZUUxxFbyM7CJMfiYTUEwcDMJERl938oY8iVD43E/SxeO64bOSBfLC0prrE1H4E5SS/IzsVcQCa9GsNaWrTEushMhdoXA3VSaW6R9KrrwvKYdNN/SbaN4TPslQkTqSUr63K60pkE5GqpeadAQuIm8V6LK63JD1TlF665EgpfsDZeVUBeAiJE86iGlT1/vNJ9kisAqKpBHsRyokaVClRnjlp28lmodjVRqeSk8cjCuYryn74tClfxfHQpkDDIsJO+7IYwJQCZQZZ+U9KJaMUeben4HOj0JTnQaEE6MZLaLQzY+C/6MS",
+                file,
+                objectsToDetect,
+                hardwareMap,
+                Resources.Misc.Webcam
+        );
+    }
+
+    public ImgProc(String VUFORIA_KEY, String TFOD_MODEL_ASSET, String[] LABELS, HardwareMap hardwareMap, String cameraName) {
         this.VUFORIA_KEY = VUFORIA_KEY;
         this.TFOD_MODEL_ASSET = TFOD_MODEL_ASSET;
         this.LABELS = LABELS;
@@ -124,6 +137,10 @@ public class TFLITE_Wrapper {
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+
+        possibleStartingPositions.add(InitialPositions.POS1);
+        possibleStartingPositions.add(InitialPositions.POS2);
+        possibleStartingPositions.add(InitialPositions.POS3);
     }
 
     public ArrayList<Detection> getDetections() {
@@ -197,6 +214,62 @@ public class TFLITE_Wrapper {
             }
         }
         return toReturn;
+    }
+
+    public int identifyStartingPos() {
+        if (this.tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = this.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions) {
+                    i++;
+                    if (!initialObjectIdent || !initialObjectIdentSTRICT) {
+                        if (InitialPositions.POS1.evalPos((int) recognition.getLeft())) {
+                            if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS1);
+                                initialObjectIdentSTRICT = true;
+                            } else possibleStartingPositions.remove(InitialPositions.POS1);
+                        } else if (InitialPositions.POS2.evalPos((int) recognition.getLeft())) {
+                            if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS2);
+                                initialObjectIdentSTRICT = true;
+                            } else possibleStartingPositions.remove(InitialPositions.POS2);
+                        } else if (InitialPositions.POS3.evalPos((int) recognition.getLeft())) {
+                            if (recognition.getLabel().equals(OBJECT_TO_IDENT)) {
+                                possibleStartingPositions = new ArrayList();
+                                possibleStartingPositions.add(InitialPositions.POS3);
+                                initialObjectIdentSTRICT = true;
+                            } else possibleStartingPositions.remove(InitialPositions.POS3);
+                        }
+                    }
+                }
+                if (possibleStartingPositions.size() == 1) {
+                    initialObjectIdent = true;
+                } else initialObjectIdent = false;
+            }
+        }
+
+        int t = 0;
+
+        if (initialObjectIdent || initialObjectIdentSTRICT) {
+            switch (possibleStartingPositions.get(0)) {
+                case POS1:
+                    t = 1;
+                    break;
+                case POS2:
+                    t = 2;
+                    break;
+                case POS3:
+                    t = 3;
+                    break;
+            }
+        }
+
+        return t;
     }
 
     void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
