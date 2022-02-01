@@ -1,0 +1,23 @@
+name: Update branches from master
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          depth: 0
+
+      - name: Update testing branches from master
+        run: |
+          # Configure Git user info
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+          # Merge master into all branches
+          branches=$(git for-each-ref --shell --format='%(refname)' refs/remotes/origin/testing-* | tr -d "'" | sed s/"refs\/remotes\/origin\/"//g)
+          git fetch origin $branches
