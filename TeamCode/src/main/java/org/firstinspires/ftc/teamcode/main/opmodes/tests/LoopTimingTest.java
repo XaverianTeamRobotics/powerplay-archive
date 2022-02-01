@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.main.opmodes.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.main.utils.scripting.AutonomousStubScript;
-import org.firstinspires.ftc.teamcode.main.utils.scripting.Script;
-import org.firstinspires.ftc.teamcode.main.utils.scripting.ScriptRunner;
 
 import java.util.concurrent.TimeUnit;
 
