@@ -185,9 +185,9 @@ public class StartingPositionManager {
         // move the intake based on the left bumper's state
         intakeShouldBeDown = !intakeShouldBeDown;
         if(intakeShouldBeDown) {
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 35);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
         }else{
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 67);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
     }
 
@@ -477,7 +477,7 @@ public class StartingPositionManager {
             }
             // turn hand to down position once elevator reaches its position
             if(step == 1 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -575) {
-                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 40);
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
             }
@@ -508,7 +508,7 @@ public class StartingPositionManager {
             }
             // turn hand to down position once elevator reaches its position
             if(step == 1 && ((StandardMotor) input.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition() <= -1000) {
-                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 38);
+                input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 40);
                 timeAsOfLastFullLiftMovement = opMode.time;
                 step++;
             }
