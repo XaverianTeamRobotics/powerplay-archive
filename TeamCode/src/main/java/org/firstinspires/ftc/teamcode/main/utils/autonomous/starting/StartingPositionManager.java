@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
-import org.firstinspires.ftc.teamcode.main.utils.geometry.Angle;
+import org.firstinspires.ftc.teamcode.main.utils.helpers.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTankVehicleDrivetrain;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;

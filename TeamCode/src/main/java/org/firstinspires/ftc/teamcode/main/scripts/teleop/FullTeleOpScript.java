@@ -49,7 +49,7 @@ public class FullTeleOpScript extends TeleOpScript {
         inputSpace = new InputSpace(getOpMode().hardwareMap);
         outputSpace = new OutputSpace(getOpMode().hardwareMap);
         // these are the upper values
-        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
+        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 25);
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 30);
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 60);
         getOpMode().sleep(500);
@@ -120,8 +120,8 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDrivetrain() {
         // calculate the x and y speeds
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().left_stick_x) * 75, -75, 75);
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 75, -75, 75);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 75, -75, 75);
         // set the defined speeds
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
@@ -137,7 +137,7 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 25);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
@@ -148,7 +148,7 @@ public class FullTeleOpScript extends TeleOpScript {
         if(isMovingToBasePos || isMovingToLBall || isMovingToMBall || isMovingToTBall || isMovingToLBlock || isMovingToMBlock || isMovingToTBlock || isMovingToIntakePos) {
             noControlIntakeLifter = true;
             intakeShouldBeDown = true;
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 25);
         }
     }
 
