@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardTouc
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
 
+import java.util.HashMap;
+
 public class ElevatorDriver {
 
     /*
@@ -22,6 +24,10 @@ public class ElevatorDriver {
     private final StandardDistanceSensor DISTANCE;
     private final StandardTouchSensor LIMIT;
 
+    /*
+    * CONFIG VALUES
+    * */
+    
     private final int handGrabbingPositionRight = 30;
     private final int handGrabbingPositionLeft = 55;
     private final int handReleasingPositionRight = 60;
@@ -82,18 +88,11 @@ public class ElevatorDriver {
     }
 
     /**
-     * Enables the elevator driver to give feedback to drivers during TeleOps via gamepad vibration. This is optional, although recommended in TeleOps.
-     * @param gamepadManager The manager of the gamepads
+     * Tells the driver to send feedback to the specified destination. This is recommended in TeleOps. To tell the driver to stop sending feedback, simply pass null into the method. Since null is null, feedback has no where to go, and thus will be disabled.
+     * @param gamepadManager The manager of the gamepads to send feedback to
      */
-    public void enableFeedback(GamepadManager gamepadManager) {
+    public void setFeedbackDestination(GamepadManager gamepadManager) {
         optionalGamepadManager = gamepadManager;
-    }
-
-    /**
-     * Disables the elevator driver to give feedback to drivers during TeleOps via gamepad vibration.
-     */
-    public void disableFeedback() {
-        optionalGamepadManager = null;
     }
 
     /*
@@ -304,168 +303,42 @@ public class ElevatorDriver {
         return isStable && step == 0 && !isPosIntake && !isPosLowBall && ! isPosMedBall && !isPosTopBall && !isPosLowBlock && !isPosMedBlock && !isPosTopBlock;
     }
 
-    public StandardMotor getRightMotor() {
-        return RIGHT_MOTOR;
-    }
-
-    public StandardMotor getLeftMotor() {
-        return LEFT_MOTOR;
-    }
-
-    public StandardServo getRightServo() {
-        return RIGHT_SERVO;
-    }
-
-    public StandardServo getLeftServo() {
-        return LEFT_SERVO;
-    }
-
-    public StandardServo getHandSpinner() {
-        return HAND_SPINNER;
-    }
-
-    public StandardDistanceSensor getDistance() {
-        return DISTANCE;
-    }
-
-    public int getHandGrabbingPositionRight() {
-        return handGrabbingPositionRight;
-    }
-
-    public int getHandGrabbingPositionLeft() {
-        return handGrabbingPositionLeft;
-    }
-
-    public int getHandReleasingPositionRight() {
-        return handReleasingPositionRight;
-    }
-
-    public int getHandReleasingPositionLeft() {
-        return handReleasingPositionLeft;
-    }
-
-    public int getDistanceSensorDistance() {
-        return distanceSensorDistance;
-    }
-
-    public int getHandTurningGrabbingPosition() {
-        return handTurningGrabbingPosition;
-    }
-
-    public int getHandTurningDefaultPosition() {
-        return handTurningDefaultPosition;
-    }
-
-    public int getHandTurningBottomBallPosition() {
-        return handTurningBottomBallPosition;
-    }
-
-    public int getHandTurningMiddleBallPosition() {
-        return handTurningMiddleBallPosition;
-    }
-
-    public int getHandTurningTopBallPosition() {
-        return handTurningTopBallPosition;
-    }
-
-    public int getHandTurningBottomBlockPosition() {
-        return handTurningBottomBlockPosition;
-    }
-
-    public int getHandTurningMediumBlockPosition() {
-        return handTurningMediumBlockPosition;
-    }
-
-    public int getHandTurningTopBlockPosition() {
-        return handTurningTopBlockPosition;
-    }
-
-    public int getHandTurningSafePosition() {
-        return handTurningSafePosition;
-    }
-
-    public int getElevatorSafePosition() {
-        return elevatorSafePosition;
-    }
-
-    public int getElevatorLowerBallPosition() {
-        return elevatorLowerBallPosition;
-    }
-
-    public int getElevatorMiddleBallPosition() {
-        return elevatorMiddleBallPosition;
-    }
-
-    public int getElevatorTopBallPosition() {
-        return elevatorTopBallPosition;
-    }
-
-    public int getElevatorLowerBlockPosition() {
-        return elevatorLowerBlockPosition;
-    }
-
-    public int getElevatorMiddleBlockPosition() {
-        return elevatorMiddleBlockPosition;
-    }
-
-    public int getElevatorTopBlockPosition() {
-        return elevatorTopBlockPosition;
-    }
-
     public int getStep() {
         return step;
-    }
-
-    public boolean isPosIntake() {
-        return isPosIntake;
-    }
-
-    public boolean isPosLowBall() {
-        return isPosLowBall;
-    }
-
-    public boolean isPosMedBall() {
-        return isPosMedBall;
-    }
-
-    public boolean isPosTopBall() {
-        return isPosTopBall;
-    }
-
-    public boolean isPosLowBlock() {
-        return isPosLowBlock;
-    }
-
-    public boolean isPosMedBlock() {
-        return isPosMedBlock;
-    }
-
-    public boolean isPosTopBlock() {
-        return isPosTopBlock;
-    }
-
-    public LinearOpMode getOpMode() {
-        return OP_MODE;
     }
 
     public double getOpModeTime() {
         return OP_MODE.time;
     }
 
-    public double getInternalTime() {
-        return time;
-    }
-
-    public double getTimeOfLastRumble() {
-        return rumbleTracker;
-    }
-
-    public GamepadManager getOptionalGamepadManager() {
-        return optionalGamepadManager;
-    }
-
-    public boolean isFeedbackEnabled() {
-        return optionalGamepadManager != null;
+    /**
+     * This returns a {@link HashMap} containing all calibration values. The reason for returning a hash map instead of a bunch of getters is to reduce the amount of god-awful lines in this file.
+     * @return A hash map of all the values
+     */
+    public HashMap<String, Integer> getCalibration() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("handGrabbingPositionRight", handGrabbingPositionRight);
+        map.put("handGrabbingPositionLeft", handGrabbingPositionLeft);
+        map.put("handReleasingPositionRight", handReleasingPositionRight);
+        map.put("handReleasingPositionLeft", handReleasingPositionLeft);
+        map.put("distanceSensorDistance", distanceSensorDistance);
+        map.put("handTurningGrabbingPosition", handTurningGrabbingPosition);
+        map.put("handTurningDefaultPosition", handTurningDefaultPosition);
+        map.put("handTurningBottomBallPosition", handTurningBottomBallPosition);
+        map.put("handTurningMiddleBallPosition", handTurningMiddleBallPosition);
+        map.put("handTurningTopBallPosition", handTurningTopBallPosition);
+        map.put("handTurningBottomBlockPosition", handTurningBottomBlockPosition);
+        map.put("handTurningMediumBlockPosition", handTurningMediumBlockPosition);
+        map.put("handTurningTopBlockPosition", handTurningTopBlockPosition);
+        map.put("handTurningSafePosition", handTurningSafePosition);
+        map.put("elevatorSafePosition", elevatorSafePosition);
+        map.put("elevatorLowerBallPosition", elevatorLowerBallPosition);
+        map.put("elevatorMiddleBallPosition", elevatorMiddleBallPosition);
+        map.put("elevatorTopBallPosition", elevatorTopBallPosition);
+        map.put("elevatorLowerBlockPosition", elevatorLowerBlockPosition);
+        map.put("elevatorMiddleBlockPosition", elevatorMiddleBlockPosition);
+        map.put("elevatorTopBlockPosition", elevatorTopBlockPosition);
+        return map;
     }
 
     /*
@@ -710,7 +583,7 @@ public class ElevatorDriver {
             step++;
         }
         // turn hand back to a safe position and move elevator to turning point position
-        if(step == 4 && time + 2 <= getOpMode().time) {
+        if(step == 4 && time + 2 <= getOpModeTime()) {
             HAND_SPINNER.setPosition(handTurningSafePosition);
             LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
@@ -823,7 +696,5 @@ public class ElevatorDriver {
             unsetFromTopBlockPosition();
         }
     }
-
-    // TODO: replace hardcoded values with fields
 
 }
