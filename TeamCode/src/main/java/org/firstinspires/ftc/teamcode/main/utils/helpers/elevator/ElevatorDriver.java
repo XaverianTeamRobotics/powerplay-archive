@@ -22,27 +22,27 @@ public class ElevatorDriver {
     private final StandardDistanceSensor DISTANCE;
     private final StandardTouchSensor LIMIT;
 
-    private int handGrabbingPositionRight = 30;
-    private int handGrabbingPositionLeft = 55;
-    private int handReleasingPositionRight = 60;
-    private int handReleasingPositionLeft = 30;
-    private int distanceSensorDistance = 120;
-    private int handTurningGrabbingPosition = 20;
-    private int handTurningDefaultPosition = 23;
-    private int handTurningBottomBallPosition = 36;
-    private int handTurningMiddleBallPosition = 36;
-    private int handTurningTopBallPosition = 36;
-    private int handTurningBottomBlockPosition = 38;
-    private int handTurningMediumBlockPosition = 38;
-    private int handTurningTopBlockPosition = 38;
-    private int handTurningSafePosition = 33;
-    private int elevatorSafePosition = -500;
-    private int elevatorLowerBallPosition = -20;
-    private int elevatorMiddleBallPosition = -350;
-    private int elevatorTopBallPosition = -700;
-    private int elevatorLowerBlockPosition = -150;
-    private int elevatorMiddleBlockPosition = -575;
-    private int elevatorTopBlockPosition = -1000;
+    private final int handGrabbingPositionRight = 30;
+    private final int handGrabbingPositionLeft = 55;
+    private final int handReleasingPositionRight = 60;
+    private final int handReleasingPositionLeft = 30;
+    private final int distanceSensorDistance = 120;
+    private final int handTurningGrabbingPosition = 20;
+    private final int handTurningDefaultPosition = 23;
+    private final int handTurningBottomBallPosition = 36;
+    private final int handTurningMiddleBallPosition = 36;
+    private final int handTurningTopBallPosition = 36;
+    private final int handTurningBottomBlockPosition = 38;
+    private final int handTurningMediumBlockPosition = 40;
+    private final int handTurningTopBlockPosition = 40;
+    private final int handTurningSafePosition = 33;
+    private final int elevatorSafePosition = -500;
+    private final int elevatorLowerBallPosition = -20;
+    private final int elevatorMiddleBallPosition = -350;
+    private final int elevatorTopBallPosition = -700;
+    private final int elevatorLowerBlockPosition = -150;
+    private final int elevatorMiddleBlockPosition = -575;
+    private final int elevatorTopBlockPosition = -1000;
 
     private int step = 0;
     private final LinearOpMode OP_MODE;
@@ -474,7 +474,7 @@ public class ElevatorDriver {
 
     private void doPosIntake() {
         if(step == 0) {
-            HAND_SPINNER.setPosition(23);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             updateTime();
             step++;
         }
@@ -500,19 +500,19 @@ public class ElevatorDriver {
         }
         // once at base, move the hand to the intake position
         if(step == 3) {
-            HAND_SPINNER.setPosition(20);
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(60);
+            HAND_SPINNER.setPosition(handTurningGrabbingPosition);
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
             step++;
         }
-        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= 120) {
+        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
             updateTime();
             step++;
         }
         if(step == 5 && time + 0.5 <= getOpModeTime()) {
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             updateTime();
             step++;
         }
@@ -523,43 +523,43 @@ public class ElevatorDriver {
 
     private void doPosLowBall() {
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             updateTime();
             step++;
         }
         // turn hand to safest position once elevator reaches its position
-        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
-            HAND_SPINNER.setPosition(33);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            HAND_SPINNER.setPosition(handTurningSafePosition);
             updateTime();
             step++;
         }
         // move elevator down to position
         if(step == 2 && time + 0.25 <= getOpModeTime()) {
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(30);
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
             LEFT_MOTOR.driveToPosition(0, 50);
             RIGHT_MOTOR.driveToPosition(0, 50);
             step++;
         }
         // turn hand to the position to dispense the ball
-        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -20) {
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= elevatorLowerBallPosition) {
             updateTime();
-            HAND_SPINNER.setPosition(36);
+            HAND_SPINNER.setPosition(handTurningBottomBallPosition);
             step++;
         }
         // turn hand back to a safe position and move elevator to turning point position
         if(step == 4 && time + 2 <= getOpModeTime()) {
-            HAND_SPINNER.setPosition(31);
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            HAND_SPINNER.setPosition(handTurningSafePosition);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             step++;
         }
         // tell hand/elevator to reset once in a safe position to do so
-        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
         }
         if(step == 6) {
@@ -583,43 +583,43 @@ public class ElevatorDriver {
 
     private void doPosMedBall() {
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             updateTime();
             step++;
         }
         // once at that position, turn hand to safe position
-        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
-            HAND_SPINNER.setPosition(33);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            HAND_SPINNER.setPosition(handTurningSafePosition);
             updateTime();
             step++;
         }
         // move hand down to dispensing position
         if(step == 2 && time <= getOpModeTime()) {
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(60);
-            LEFT_MOTOR.driveToPosition(-350, 50);
-            RIGHT_MOTOR.driveToPosition(-350, 50);
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            LEFT_MOTOR.driveToPosition(elevatorMiddleBallPosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorMiddleBallPosition, 50);
             step++;
         }
         // turn hand to dispensing position
-        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -350) {
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= elevatorMiddleBallPosition) {
             updateTime();
-            HAND_SPINNER.setPosition(36);
+            HAND_SPINNER.setPosition(handTurningMiddleBallPosition);
             step++;
         }
         // after ball rolls out, move to safe turning position
         if(step == 4 && time + 2 <= getOpModeTime()) {
-            HAND_SPINNER.setPosition(31);
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            HAND_SPINNER.setPosition(handTurningSafePosition);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             step++;
         }
         // reset once safe to do so
-        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
         }
         if(step == 6) {
@@ -644,19 +644,26 @@ public class ElevatorDriver {
     private void doPosTopBall() {
         // move to dispensing position, doesnt need to worry about safe position because its higher up
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-700, 50);
-            RIGHT_MOTOR.driveToPosition(-700, 50);
+            LEFT_MOTOR.driveToPosition(elevatorTopBallPosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorTopBallPosition, 50);
             updateTime();
             step++;
         }
+        // TODO: fix this
         // turn to dispensing position once position reached
-        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -700) {
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorTopBallPosition) {
+            HAND_SPINNER.setPosition(handTurningTopBallPosition);
+            updateTime();
             step++;
         }
-        if(step == 6) {
+        // after ball is dispensed, reset hand because its in a safe position
+        if(step == 2 && time + 4 <= getOpModeTime()) {
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
+            step++;
+        }
+        if(step == 3) {
             if(time + 1.5 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
@@ -666,7 +673,7 @@ public class ElevatorDriver {
             }
         }
         // once the elevator is at the bottom, reset it
-        if(step == 7 && LIMIT.isPressed()) {
+        if(step == 4 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
             LEFT_MOTOR.reset();
@@ -677,43 +684,43 @@ public class ElevatorDriver {
 
     private void doPosLowBlock() {
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             updateTime();
             step++;
         }
         // turn hand to safest position once elevator reaches its position
-        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
-            HAND_SPINNER.setPosition(33);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            HAND_SPINNER.setPosition(handTurningSafePosition);
             updateTime();
             step++;
         }
         // move elevator down to position
         if(step == 2 && time + 0.25 <= getOpModeTime()) {
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(60);
-            LEFT_MOTOR.driveToPosition(-150, 50);
-            RIGHT_MOTOR.driveToPosition(-150, 50);
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            LEFT_MOTOR.driveToPosition(elevatorLowerBlockPosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorLowerBlockPosition, 50);
             step++;
         }
         // turn hand to the position to dispense the ball
-        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -150) {
-            HAND_SPINNER.setPosition(38);
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= elevatorLowerBlockPosition) {
+            HAND_SPINNER.setPosition(handTurningBottomBlockPosition);
             updateTime();
             step++;
         }
         // turn hand back to a safe position and move elevator to turning point position
         if(step == 4 && time + 2 <= getOpMode().time) {
-            HAND_SPINNER.setPosition(31);
-            LEFT_MOTOR.driveToPosition(-500, 50);
-            RIGHT_MOTOR.driveToPosition(-500, 50);
+            HAND_SPINNER.setPosition(handTurningSafePosition);
+            LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             step++;
         }
         // tell hand/elevator to reset once in a safe position to do so
-        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -700) {
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
         }
         if(step == 6) {
@@ -737,25 +744,24 @@ public class ElevatorDriver {
 
     private void doPosMedBlock() {
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-575, 50);
-            RIGHT_MOTOR.driveToPosition(-575, 50);
+            LEFT_MOTOR.driveToPosition(elevatorMiddleBlockPosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorMiddleBlockPosition, 50);
             updateTime();
             step++;
         }
         // turn hand to down position once elevator reaches its position
-        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -575) {
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(60);
-            HAND_SPINNER.setPosition(40);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorMiddleBlockPosition) {
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            HAND_SPINNER.setPosition(handTurningMediumBlockPosition);
             updateTime();
             step++;
         }
         // tell hand/elevator to reset after block is dispensed
         if(step == 2 && time + 4 <= getOpModeTime()) {
-            step = 0;
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
         }
         if(step == 3) {
@@ -780,24 +786,23 @@ public class ElevatorDriver {
     private void doPosTopBlock() {
         // move the elevator to dropping position
         if(step == 0) {
-            LEFT_MOTOR.driveToPosition(-1000, 50);
-            RIGHT_MOTOR.driveToPosition(-1000, 50);
+            LEFT_MOTOR.driveToPosition(elevatorTopBlockPosition, 50);
+            RIGHT_MOTOR.driveToPosition(elevatorTopBlockPosition, 50);
             step++;
         }
         // turn hand to down position once elevator reaches its position
-        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -1000) {
-            LEFT_SERVO.setPosition(30);
-            RIGHT_SERVO.setPosition(60);
-            HAND_SPINNER.setPosition(40);
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorTopBlockPosition) {
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            HAND_SPINNER.setPosition(handTurningTopBlockPosition);
             updateTime();
             step++;
         }
         // tell hand/elevator to reset after block is dispensed
         if(step == 2 && time + 4 <= getOpModeTime()) {
-            step = 0;
-            LEFT_SERVO.setPosition(55);
-            RIGHT_SERVO.setPosition(30);
-            HAND_SPINNER.setPosition(23);
+            LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
         }
         if(step == 3) {
