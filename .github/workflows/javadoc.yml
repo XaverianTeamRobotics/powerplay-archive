@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - "testing-*"
+      - "master"
   workflow_dispatch:
 
 jobs:
