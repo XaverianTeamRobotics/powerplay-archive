@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.main.utils.helpers.elevator;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardDistanceSensor;
@@ -11,7 +10,6 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServ
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardTouchSensor;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
-import org.firstinspires.ftc.teamcode.main.utils.locations.*;
 
 public class ElevatorDriver {
 
@@ -524,27 +522,303 @@ public class ElevatorDriver {
     }
 
     private void doPosLowBall() {
-
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            updateTime();
+            step++;
+        }
+        // turn hand to safest position once elevator reaches its position
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
+            HAND_SPINNER.setPosition(33);
+            updateTime();
+            step++;
+        }
+        // move elevator down to position
+        if(step == 2 && time + 0.25 <= getOpModeTime()) {
+            LEFT_SERVO.setPosition(30);
+            RIGHT_SERVO.setPosition(30);
+            LEFT_MOTOR.driveToPosition(0, 50);
+            RIGHT_MOTOR.driveToPosition(0, 50);
+            step++;
+        }
+        // turn hand to the position to dispense the ball
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -20) {
+            updateTime();
+            HAND_SPINNER.setPosition(36);
+            step++;
+        }
+        // turn hand back to a safe position and move elevator to turning point position
+        if(step == 4 && time + 2 <= getOpModeTime()) {
+            HAND_SPINNER.setPosition(31);
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            step++;
+        }
+        // tell hand/elevator to reset once in a safe position to do so
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 6) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 7 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromLowerBallPosition();
+        }
     }
 
     private void doPosMedBall() {
-
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            updateTime();
+            step++;
+        }
+        // once at that position, turn hand to safe position
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
+            HAND_SPINNER.setPosition(33);
+            updateTime();
+            step++;
+        }
+        // move hand down to dispensing position
+        if(step == 2 && time <= getOpModeTime()) {
+            LEFT_SERVO.setPosition(30);
+            RIGHT_SERVO.setPosition(60);
+            LEFT_MOTOR.driveToPosition(-350, 50);
+            RIGHT_MOTOR.driveToPosition(-350, 50);
+            step++;
+        }
+        // turn hand to dispensing position
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -350) {
+            updateTime();
+            HAND_SPINNER.setPosition(36);
+            step++;
+        }
+        // after ball rolls out, move to safe turning position
+        if(step == 4 && time + 2 <= getOpModeTime()) {
+            HAND_SPINNER.setPosition(31);
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            step++;
+        }
+        // reset once safe to do so
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 6) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 7 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromMediumBallPosition();
+        }
     }
 
     private void doPosTopBall() {
-
+        // move to dispensing position, doesnt need to worry about safe position because its higher up
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-700, 50);
+            RIGHT_MOTOR.driveToPosition(-700, 50);
+            updateTime();
+            step++;
+        }
+        // turn to dispensing position once position reached
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -700) {
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 6) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 7 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromTopBallPosition();
+        }
     }
 
     private void doPosLowBlock() {
-
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            updateTime();
+            step++;
+        }
+        // turn hand to safest position once elevator reaches its position
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -500) {
+            HAND_SPINNER.setPosition(33);
+            updateTime();
+            step++;
+        }
+        // move elevator down to position
+        if(step == 2 && time + 0.25 <= getOpModeTime()) {
+            LEFT_SERVO.setPosition(30);
+            RIGHT_SERVO.setPosition(60);
+            LEFT_MOTOR.driveToPosition(-150, 50);
+            RIGHT_MOTOR.driveToPosition(-150, 50);
+            step++;
+        }
+        // turn hand to the position to dispense the ball
+        if(step == 3 && LEFT_MOTOR.getDcMotor().getCurrentPosition() >= -150) {
+            HAND_SPINNER.setPosition(38);
+            updateTime();
+            step++;
+        }
+        // turn hand back to a safe position and move elevator to turning point position
+        if(step == 4 && time + 2 <= getOpMode().time) {
+            HAND_SPINNER.setPosition(31);
+            LEFT_MOTOR.driveToPosition(-500, 50);
+            RIGHT_MOTOR.driveToPosition(-500, 50);
+            step++;
+        }
+        // tell hand/elevator to reset once in a safe position to do so
+        if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -700) {
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 6) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 7 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromLowerBlockPosition();
+        }
     }
 
     private void doPosMedBlock() {
-
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-575, 50);
+            RIGHT_MOTOR.driveToPosition(-575, 50);
+            updateTime();
+            step++;
+        }
+        // turn hand to down position once elevator reaches its position
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -575) {
+            LEFT_SERVO.setPosition(30);
+            RIGHT_SERVO.setPosition(60);
+            HAND_SPINNER.setPosition(40);
+            updateTime();
+            step++;
+        }
+        // tell hand/elevator to reset after block is dispensed
+        if(step == 2 && time + 4 <= getOpModeTime()) {
+            step = 0;
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 3) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 4 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromMediumBlockPosition();
+        }
     }
 
     private void doPosTopBlock() {
-
+        // move the elevator to dropping position
+        if(step == 0) {
+            LEFT_MOTOR.driveToPosition(-1000, 50);
+            RIGHT_MOTOR.driveToPosition(-1000, 50);
+            step++;
+        }
+        // turn hand to down position once elevator reaches its position
+        if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= -1000) {
+            LEFT_SERVO.setPosition(30);
+            RIGHT_SERVO.setPosition(60);
+            HAND_SPINNER.setPosition(40);
+            updateTime();
+            step++;
+        }
+        // tell hand/elevator to reset after block is dispensed
+        if(step == 2 && time + 4 <= getOpModeTime()) {
+            step = 0;
+            LEFT_SERVO.setPosition(55);
+            RIGHT_SERVO.setPosition(30);
+            HAND_SPINNER.setPosition(23);
+            step++;
+        }
+        if(step == 3) {
+            if(time + 1.5 <= getOpModeTime()) {
+                if(!LIMIT.isPressed()) {
+                    LEFT_MOTOR.driveWithEncoder(40);
+                    RIGHT_MOTOR.driveWithEncoder(40);
+                }
+                step++;
+            }
+        }
+        // once the elevator is at the bottom, reset it
+        if(step == 4 && LIMIT.isPressed()) {
+            LEFT_MOTOR.driveWithEncoder(0);
+            RIGHT_MOTOR.driveWithEncoder(0);
+            LEFT_MOTOR.reset();
+            RIGHT_MOTOR.reset();
+            unsetFromTopBlockPosition();
+        }
     }
+
+    // TODO: replace hardcoded values with fields
 
 }
