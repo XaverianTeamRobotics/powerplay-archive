@@ -126,7 +126,18 @@ public class ElevatorDriver {
         }
     }
 
-    public void runToHeight(int h, boolean isBlock) {
+    /**
+     * Tells the driver to attempt to drive to a position determined by the h paramater if possible. The paramater isBlock determines whether the item being transported to position h is a block or ball. This method is not recommended unless needed due to simplier methods being available.
+     * <ul>
+     *     <li>h = 0 - Intake Position</li>
+     *     <li>h = 1 - Lower Position</li>
+     *     <li>h = 2 - Medium Position</li>
+     *     <li>h = 3 - Top Position</li>
+     * </ul>
+     * @param h The position to transport to
+     * @param isBlock Whether the driver should account for a block being transported or a ball
+     */
+    public void setPosition(int h, boolean isBlock) {
         if(!isStable()) {
             rumble();
             if(h == 0) {
