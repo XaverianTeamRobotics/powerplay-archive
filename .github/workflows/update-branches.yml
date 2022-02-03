@@ -18,7 +18,8 @@ jobs:
           echo "Branches found! - $(cat b.txt)"
           for i in `cat b.txt`;
           do
-            if [ $i == testing-* ]; then
+            if [[ $i == testing-* ]]
+            then
               echo "Queueing merge into $i"
               rm -rf cb.txt
               echo $(date +%s%N) > cb.txt
