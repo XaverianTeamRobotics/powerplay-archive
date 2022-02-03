@@ -138,7 +138,7 @@ public class StartingPositionManager {
             if (readyForElevator.get()) {
                 // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
                 //                                                   ElevatorDriver.runToHeight
-                elevatorDriver.runToHeight(h, isBlock);
+                elevatorDriver.setPosition(h, isBlock);
                 if (elevatorDriver.isStable()) {
                     readyForElevator.set(false);
                 }
