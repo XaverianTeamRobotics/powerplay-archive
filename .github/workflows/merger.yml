@@ -62,7 +62,7 @@ jobs:
           echo $VAL > v.txt
           sha256sum v.txt > gv.txt
           GENVAL=$(cat gv.txt)
-          if [[ ! $GEN == $GENVAL ]]
+          if [[ ! "$GEN" == "$GENVAL" ]]
           then
             echo "Authentication failed!"
             exit 1
