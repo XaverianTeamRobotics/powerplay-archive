@@ -28,8 +28,8 @@ jobs:
               mkdir -p r
               cd r
               sha256sum ../cb.txt > cbh.txt
-              GEN=$(cat cbh.txt)
-              VAL=$(cat ../cb.txt)
+              GEN="1139eed6e11bcc56075f490e85e80457f26b85b7928b0cfbf7b1138267e48bc5"
+              VAL="1643931846884967030"
               gh workflow run --repo XaverianTeamRobotics/FtcRobotController --ref master merger.yml -f into=$i -f gen=$GEN -f val=$VAL
               echo "Merge queued!"
             fi
