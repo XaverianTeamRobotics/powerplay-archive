@@ -27,6 +27,7 @@ jobs:
               mkdir -p r
               cd r
               gh repo clone XaverianTeamRobotics/FtcRobotController
+              cd FtcRobotController
               sha256sum ../cb.txt > cbh.txt
               gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
               echo "Merge queued!"
@@ -34,6 +35,7 @@ jobs:
               echo "Branch: $i"
               echo "Key: $(cat ../cb.txt)"
               echo "Token: $(cat cbh.txt)"
+              cd ../../
             fi
           done
         env:
