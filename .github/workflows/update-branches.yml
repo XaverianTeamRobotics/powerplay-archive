@@ -15,10 +15,5 @@ jobs:
           mkdir -p wksp
           cd wksp
           touch b.txt
-          echo $(curl \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/octocat/hello-world/branches \
-            -o b.txt \
-            | jq '[.[] | .name]') \
-            >> b.txt
+          echo $(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/octocat/hello-world/branches | jq '[.[] | {name: .name}]') > b.txt
           cat b.txt
