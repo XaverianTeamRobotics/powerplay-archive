@@ -16,9 +16,8 @@ jobs:
           echo $(jq -r .[].name b.txt) > b.txt
           echo $(cat b.txt | tr " " "\n") > b.txt
           branches=()
-          mapfile -t branches < b.txt
-          echo "Branches found! - ${branches[*]}"
-          foreach i (branches)
+          echo "Branches found! - $(cat b.txt)"
+          foreach i in `cat b.txt`;
           do
             echo "Queueing merge into $i"
             rm -rf cb.txt
