@@ -52,6 +52,17 @@ jobs:
           if [[ ! " ${branches[*]} " =~ " ${value} " ]]; then
             exit 1
           fi
+      - name: Authenticate
+        run: |
+          GEN=${{ github.event.inputs.gen }}
+          VAL=${{ github.event.inputs.val }}
+          echo $VAL > v.txt
+          sha256sum v.txt > gv.txt
+          GENVAL=$(cat gv.txt)
+          if [[ ! $GEN == $GENVAL ]]
+          then
+            exit 1
+          fi
       - name: Branch Merge
         uses: everlytic/branch-merge@1.1.2
         with:
