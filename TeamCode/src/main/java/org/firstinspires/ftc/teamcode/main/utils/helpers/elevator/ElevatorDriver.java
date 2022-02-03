@@ -58,7 +58,7 @@ public class ElevatorDriver {
     /**
      * Whether the robot is stable or not. This should only be true if the robot is not moving and in its default position, {@link #step} is 0, and/or when all the "isPos*" boolean values are false besides.
      */
-    private boolean isStable = false;
+    private boolean isStable = true;
     private boolean resettingToOriginalPos = false;
 
     private boolean isPosIntake = false;
@@ -128,7 +128,8 @@ public class ElevatorDriver {
     }
 
     /**
-     * Tells the driver to attempt to drive to a position determined by the h paramater if possible. The paramater isBlock determines whether the item being transported to position h is a block or ball. This method is not recommended unless needed due to simplier methods being available.
+     * Tells the driver to attempt to drive to a position determined by the h paramater if possible.
+     * The paramater isBlock determines whether the item being transported to position h is a block or ball This method is not recommended unless needed due to simplier methods being available.
      * <ul>
      *     <li>h = 0 - Intake Position</li>
      *     <li>h = 1 - Lower Position</li>
@@ -139,32 +140,22 @@ public class ElevatorDriver {
      * @param isBlock Whether the driver should account for a block being transported or a ball
      */
     public void setPosition(int h, boolean isBlock) {
-        if(!isStable()) {
-            rumble();
+        if(isStable()) {
             if(h == 0) {
                 setToIntakePosition();
-                doPosIntake();
             }else if(h == 1 && !isBlock) {
                 setToLowerBallPosition();
-                doPosLowBall();
             }else if(h == 2 && !isBlock) {
                 setToMediumBallPosition();
-                doPosMedBall();
             }else if(h == 3 && !isBlock) {
                 setToTopBallPosition();
-                doPosTopBall();
             }else if(h == 1) {
                 setToLowerBlockPosition();
-                doPosLowBlock();
             }else if(h == 2) {
                 setToMediumBlockPosition();
-                doPosMedBlock();
             }else if(h == 3) {
                 setToTopBlockPosition();
-                doPosTopBlock();
             }
-        }else{
-            derumble();
         }
     }
 

@@ -57,7 +57,7 @@ public class StartingPositionManager {
         imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
         imgProc.init();
         imgProc.activate();
-        imgProc.setZoom(1, 16/9);
+        imgProc.setZoom(1, 16.0/9);
 
         int h = 0;
         while (h == 0) {
@@ -65,11 +65,6 @@ public class StartingPositionManager {
         }
         h = isBlock ? h + 3 : h;
         this.ballDropHeight = h;
-
-        int finalH = h;
-        opMode.telemetry.addAction(() -> opMode.telemetry.addData("Detected Position", finalH));
-
-        ArrayList<Movement> movements = new ArrayList<>();
 
         int turnModifier = 1;
         if (!isBlueSide) turnModifier = -turnModifier;
@@ -97,7 +92,7 @@ public class StartingPositionManager {
 
             elevatorDriver.setPosition(h, isBlock);
 
-            while (readyForElevator.get()) {
+            while (true) {
                 // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
                 //                                                   ElevatorDriver.runToHeight
                 elevatorDriver.run();
@@ -107,9 +102,10 @@ public class StartingPositionManager {
                     resetTimer();
                 }
                 if (elevatorDriver.isStable()) {
-                    readyForElevator.set(false);
+                    break;
                 }
             }
+            drivetrainHold();
 
             // Drive forward 4 inches
             positionSystem.encoderDrive(3);
@@ -135,12 +131,12 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
             // Move Back 2 Inches & ready elevator
-            encoderDriveAndReadyElevator(-2);
+            positionSystem.encoderDrive(-2);
             drivetrainHold();
 
             elevatorDriver.setPosition(h, isBlock);
 
-            while (readyForElevator.get()) {
+            while (true) {
                 // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
                 //                                                   ElevatorDriver.runToHeight
                 elevatorDriver.run();
@@ -150,7 +146,7 @@ public class StartingPositionManager {
                     resetTimer();
                 }
                 if (elevatorDriver.isStable()) {
-                    readyForElevator.set(false);
+                    break;
                 }
             }
             drivetrainHold();
