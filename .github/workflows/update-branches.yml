@@ -18,7 +18,8 @@ jobs:
           branches=()
           mapfile -t branches < b.txt
           echo "Branches found! - ${branches[*]}"
-          foreach i (branches[*])
+          foreach i (branches)
+          do
             echo "Queueing merge into $i"
             rm -rf cb.txt
             echo $(date +%s%N) > cb.txt
