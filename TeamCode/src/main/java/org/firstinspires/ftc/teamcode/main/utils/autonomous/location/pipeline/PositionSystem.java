@@ -156,7 +156,7 @@ public class PositionSystem {
     }
     public void encoderDrive(double distance) {
         if (drivetrain != null) {
-            encoderDrive((int) distance + 2, (int) -distance);
+            encoderDrive((int) distance + 1, (int) -distance);
 
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
