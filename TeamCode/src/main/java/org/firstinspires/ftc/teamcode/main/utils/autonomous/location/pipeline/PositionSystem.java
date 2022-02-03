@@ -156,14 +156,14 @@ public class PositionSystem {
     }
     public void encoderDrive(double distance) {
         if (drivetrain != null) {
-            encoderDrive((int) distance + 1, (int) -distance);
+            encoderDrive((int) distance, (int) -distance);
 
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
     }
     public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distanceLeft, (int) distanceRight, 30);
+            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 30);
         }
     }
 

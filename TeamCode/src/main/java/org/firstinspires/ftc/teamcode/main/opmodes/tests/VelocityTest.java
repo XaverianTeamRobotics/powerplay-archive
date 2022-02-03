@@ -21,6 +21,13 @@ public class VelocityTest extends LinearOpMode {
             telemetry.addData("  Y", vel.getY());
             telemetry.addData("  Z", vel.getZ());
 
+            StandardIMU.VelocityReturnData acc = imu.getAcceleration();
+            telemetry.addData("ACCELERATION", "");
+            telemetry.addData("  X", acc.getX());
+            telemetry.addData("  Y", acc.getY());
+            telemetry.addData("  Z", acc.getZ());
+
+
             StandardIMU.VelocityReturnData ang = imu.getAngularVelocity();
             telemetry.addData("ANGULAR VELOCITY", "");
             telemetry.addData("  X", ang.getX());

@@ -39,6 +39,8 @@ public class StartingPositionManager {
     // this should be true if a block is loaded, false if a ball
     boolean isBlock = true;
 
+    int h = 0;
+
     boolean isBlueSide, isCloseToParking;
 
     public StartingPositionManager(LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight) {
@@ -59,11 +61,9 @@ public class StartingPositionManager {
         imgProc.activate();
         imgProc.setZoom(1, 16.0/9);
 
-        int h = 0;
         while (h == 0) {
             h = initialPositionsOrientation(imgProc.identifyStartingPos());
         }
-        h = isBlock ? h + 3 : h;
         this.ballDropHeight = h;
 
         int turnModifier = 1;
@@ -86,25 +86,11 @@ public class StartingPositionManager {
             // Turn counter-clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-            // Drive Back two inches & ready elevator
-            encoderDriveAndReadyElevator(-2);
+            // Drive Back two inches
+            positionSystem.encoderDrive(-1.5);
             drivetrainHold();
 
-            elevatorDriver.setPosition(h, isBlock);
-
-            while (true) {
-                // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
-                //                                                   ElevatorDriver.runToHeight
-                elevatorDriver.run();
-                if (elevatorDriver.isResettingToOriginalPos()) {
-                    // Go forward 3 if we are ready to move
-                    positionSystem.encoderDrive(3);
-                    resetTimer();
-                }
-                if (elevatorDriver.isStable()) {
-                    break;
-                }
-            }
+            runElevator();
             drivetrainHold();
 
             // Drive forward 4 inches
@@ -130,25 +116,11 @@ public class StartingPositionManager {
             // Turn clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-            // Move Back 2 Inches & ready elevator
-            positionSystem.encoderDrive(-2);
+            // Move Back 2 Inches
+            positionSystem.encoderDrive(-1.5);
             drivetrainHold();
 
-            elevatorDriver.setPosition(h, isBlock);
-
-            while (true) {
-                // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
-                //                                                   ElevatorDriver.runToHeight
-                elevatorDriver.run();
-                if (elevatorDriver.isResettingToOriginalPos()) {
-                    // Go forward 3 if we are ready to move
-                    positionSystem.encoderDrive(3);
-                    resetTimer();
-                }
-                if (elevatorDriver.isStable()) {
-                    break;
-                }
-            }
+            runElevator();
             drivetrainHold();
 
             // Turn counter-clockwise 33 degrees and raise intake
@@ -159,6 +131,29 @@ public class StartingPositionManager {
             // Drive One Tile
             positionSystem.encoderDrive(13);
             drivetrainHold();
+        }
+    }
+
+    private void runElevator() {
+        boolean hasDriven = false;
+
+        elevatorDriver.setPosition(h, isBlock);
+
+        while (true) {
+            // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
+            //                                                   ElevatorDriver.runToHeight
+            elevatorDriver.run();
+            if (elevatorDriver.isResettingToOriginalPos() && !hasDriven) {
+                elevatorDriver.setPosition(h, isBlock);
+
+                // Go forward 3 if we are ready to move
+                positionSystem.encoderDrive(3);
+                resetTimer();
+                hasDriven = true;
+            }
+            if (elevatorDriver.isStable()) {
+                return;
+            }
         }
     }
 
