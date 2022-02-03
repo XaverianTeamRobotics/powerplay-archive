@@ -125,6 +125,36 @@ public class ElevatorDriver {
         }
     }
 
+    public void runToHeight(int h, boolean isBlock) {
+        if(!isStable()) {
+            rumble();
+            if(h == 0) {
+                isPosIntake = true;
+                doPosIntake();
+            }else if(h == 1 && !isBlock) {
+                isPosLowBall = true;
+                doPosLowBall();
+            }else if(h == 2 && !isBlock) {
+                isPosMedBall = true;
+                doPosMedBall();
+            }else if(h == 3 && !isBlock) {
+                isPosTopBall = true;
+                doPosTopBall();
+            }else if(h == 1) {
+                isPosLowBlock = true;
+                doPosLowBlock();
+            }else if(h == 2) {
+                isPosMedBlock = true;
+                doPosMedBlock();
+            }else if(h == 3) {
+                isPosTopBlock = true;
+                doPosTopBlock();
+            }
+        }else{
+            derumble();
+        }
+    }
+
     /*
     * CONTROLLERS
     * */
