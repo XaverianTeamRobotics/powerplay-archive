@@ -39,6 +39,7 @@ jobs:
     steps:
       - name: Sanatize
         run: |
+          ehco "Sanatizing input..."
           rm -rf wksp
           mkdir -p wksp
           cd wksp
@@ -50,8 +51,23 @@ jobs:
           mapfile -t branches < b.txt
           value=${{ github.event.inputs.into }}
           if [[ ! " ${branches[*]} " =~ " ${value} " ]]; then
+            echo "Input could not be sanatized!"
             exit 1
           fi
+          echo "Input sanatized."
+      - name: Authenticate
+        run: |
+          GEN=${{ github.event.inputs.gen }}
+          VAL=${{ github.event.inputs.val }}
+          echo $VAL > v.txt
+          sha256sum v.txt > gv.txt
+          GENVAL=$(cat gv.txt)
+          if [[ ! $GEN == $GENVAL ]]
+          then
+            echo "Authentication failed!"
+            exit 1
+          fi
+          echo "Authentication successful, attempting to merge..."
       - name: Branch Merge
         uses: everlytic/branch-merge@1.1.2
         with:
