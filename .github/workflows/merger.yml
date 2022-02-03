@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Sanatize
         run: |
-          ehco "Sanatizing input..."
+          echo "Sanatizing input..."
           rm -rf wksp
           mkdir -p wksp
           cd wksp
