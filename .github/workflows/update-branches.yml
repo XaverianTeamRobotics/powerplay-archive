@@ -22,6 +22,7 @@ jobs:
             then
               echo "Queueing merge into $i"
               rm -rf cb.txt
+              touch cb.txt
               echo $(date +%s%N) > cb.txt
               rm -rf r
               mkdir -p r
@@ -35,7 +36,6 @@ jobs:
               echo "Branch: $i"
               echo "Key: $(cat ../cb.txt)"
               echo "Token: $(cat cbh.txt)"
-              cd ../../
             fi
           done
         env:
