@@ -15,7 +15,7 @@ jobs:
           echo $(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/XaverianTeamRobotics/FtcRobotController/branches | jq '[.[] | {name: .name}]') > b.txt
           echo $(jq -r .[].name b.txt) > b.txt
           echo $(cat b.txt | tr " " "\n") > b.txt
-          branches=()
+          grep -e '^testing-' b.txt
           echo "Branches found! - $(cat b.txt)"
           for i in `cat b.txt`;
           do
@@ -25,7 +25,7 @@ jobs:
             rm -rf r
             mkdir -p r
             cd r
-            gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
+            # gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
             gh repo clone XaverianTeamRobotics/FtcRobotController
             sha256sum ../cb.txt > cbh.txt
             gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
