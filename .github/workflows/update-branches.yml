@@ -8,8 +8,8 @@ jobs:
       - name: Update testing branches from master
         run: |
           # Configure Git user info
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
+          # git config user.name "GitHub Actions Bot"
+          # git config user.email "actions@github.com"
           # Get all branches
           rm -rf wksp
           mkdir -p wksp
