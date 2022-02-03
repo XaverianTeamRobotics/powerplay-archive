@@ -33,4 +33,4 @@ jobs:
             echo "Branch: $i"
             echo "Key: $(cat ../cb.txt)"
             echo "Token: $(cat cbh.txt)"
-          end
+          done
