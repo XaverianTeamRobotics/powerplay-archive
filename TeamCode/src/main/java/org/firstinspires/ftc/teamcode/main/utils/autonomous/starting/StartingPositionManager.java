@@ -121,12 +121,7 @@ public class StartingPositionManager {
 
         resetTimer();
 
-        movements.get(0).run();
-        movements.remove(0);
-
         while (opMode.opModeIsActive() && movements.size() > 0) {
-            opMode.sleep(500);
-
             boolean isElevatorBlocking = elevatorDriver.isStable() || elevatorDriver.isResettingToOriginalPos();
 
             if (isElevatorBlocking && isDrivetrainReady()) {

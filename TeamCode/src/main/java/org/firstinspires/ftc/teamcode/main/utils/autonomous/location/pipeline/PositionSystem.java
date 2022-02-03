@@ -26,8 +26,8 @@ public class PositionSystem {
 
     private StandardVehicleDrivetrain drivetrain = null;
     public StandardIMU imu;
-    public StandardIMU.DataPoint imuDirection = StandardIMU.DataPoint.HEADING;
-    public StandardIMU.ReturnData<StandardIMU.DataPoint, Float> imuData;
+    public StandardIMU.HeadingDataPoint imuDirection = StandardIMU.HeadingDataPoint.HEADING;
+    public StandardIMU.CompassReturnData<StandardIMU.HeadingDataPoint, Float> imuData;
     public int imuOffset = 0;
 
     public PositionSystem(@NonNull NavigationSensorCollection sensors) {
