@@ -7,10 +7,7 @@ jobs:
     steps:
       - name: Find branches to fetch upstream from
         run: |
-          # Configure Git user info
-          # git config user.name "GitHub Actions Bot"
-          # git config user.email "actions@github.com"
-          # Get all branches
+          echo "Finding branches..."
           rm -rf wksp
           mkdir -p wksp
           cd wksp
@@ -20,4 +17,20 @@ jobs:
           echo $(cat b.txt | tr " " "\n") > b.txt
           branches=()
           mapfile -t branches < b.txt
-          echo ${branches[*]}
+          echo "Branches found! - ${branches[*]}"
+          foreach i (branches[*])
+            echo "Queueing merge into $i"
+            rm -rf cb.txt
+            echo $(date +%s%N) > cb.txt
+            rm -rf r
+            mkdir -p r
+            cd r
+            gh repo clone XaverianTeamRobotics/FtcRobotController
+            sha256sum ../cb.txt > cbh.txt
+            gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
+            echo "Merge queued!"
+            echo -e "----\nDebug Logs\n---"
+            echo "Branch: $i"
+            echo "Key: $(cat ../cb.txt)"
+            echo "Token: $(cat cbh.txt)"
+          end
