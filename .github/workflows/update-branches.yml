@@ -15,23 +15,24 @@ jobs:
           echo $(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/XaverianTeamRobotics/FtcRobotController/branches | jq '[.[] | {name: .name}]') > b.txt
           echo $(jq -r .[].name b.txt) > b.txt
           echo $(cat b.txt | tr " " "\n") > b.txt
-          grep -e '^testing-' b.txt
           echo "Branches found! - $(cat b.txt)"
           for i in `cat b.txt`;
           do
-            echo "Queueing merge into $i"
-            rm -rf cb.txt
-            echo $(date +%s%N) > cb.txt
-            rm -rf r
-            mkdir -p r
-            cd r
-            # gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
-            gh repo clone XaverianTeamRobotics/FtcRobotController
-            sha256sum ../cb.txt > cbh.txt
-            gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
-            echo "Merge queued!"
-            echo -e "----\nDebug Logs\n---"
-            echo "Branch: $i"
-            echo "Key: $(cat ../cb.txt)"
-            echo "Token: $(cat cbh.txt)"
+            if [ $i == testing-* ]; then
+              echo "Queueing merge into $i"
+              rm -rf cb.txt
+              echo $(date +%s%N) > cb.txt
+              rm -rf r
+              mkdir -p r
+              cd r
+              gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
+              gh repo clone XaverianTeamRobotics/FtcRobotController
+              sha256sum ../cb.txt > cbh.txt
+              gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
+              echo "Merge queued!"
+              echo -e "----\nDebug Logs\n---"
+              echo "Branch: $i"
+              echo "Key: $(cat ../cb.txt)"
+              echo "Token: $(cat cbh.txt)"
+            fi
           done
