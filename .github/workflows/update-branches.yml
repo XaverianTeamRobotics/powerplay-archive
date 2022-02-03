@@ -29,7 +29,7 @@ jobs:
               sha256sum ../cb.txt > cbh.txt
               GEN=$(cat cbh.txt)
               VAL=$(cat ../cb.txt)
-              gh workflow run --repo XaverianTeamRobotics/FtcRobotController merger.yml -f into=$i -f gen=$GEN val=$VAL
+              gh workflow run --repo XaverianTeamRobotics/FtcRobotController merger.yml -f into=$i -f gen=$GEN -f val=$VAL
               echo "Merge queued!"
               echo -e "----\nDebug Logs\n---"
               echo "Branch: $i"
