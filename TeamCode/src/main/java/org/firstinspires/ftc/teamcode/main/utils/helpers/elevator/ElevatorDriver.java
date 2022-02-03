@@ -86,6 +86,7 @@ public class ElevatorDriver {
         HAND_SPINNER = ((StandardServo) input.getHandSpinner().getInternalInteractionSurface());
         LIMIT = ((StandardTouchSensor) output.getElevatorBottomLimitSwitch().getInternalInteractionSurface());
         OP_MODE = opMode;
+        stabalize();
     }
 
     /**
