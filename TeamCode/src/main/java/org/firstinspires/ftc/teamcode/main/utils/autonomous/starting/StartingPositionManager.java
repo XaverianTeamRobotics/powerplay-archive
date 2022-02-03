@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
+import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.geometry.Angle;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.groups.StandardTankVehicleDrivetrain;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
@@ -30,6 +31,7 @@ public class StartingPositionManager {
     boolean isMovingToLBall = false, isMovingToMBall = false, isMovingToTBall = false, isMovingToLBlock = false, isMovingToMBlock = false, isMovingToTBlock = false, isMovingToBasePos = false, isMovingToIntakePos = false;
     ImgProc imgProc;
     AtomicBoolean readyForElevator = new AtomicBoolean(false);
+    ElevatorDriver elevatorDriver;
 
     // this should be true if the camera is upside down in real life (it wont work as well upside down, but this provides some functionality)
     boolean isCameraUpsideDown = false;
@@ -44,12 +46,12 @@ public class StartingPositionManager {
         this.isBlueSide = isBlueSide;
         this.isCloseToParking = isCloseToParking;
         this.ballDropHeight = ballDropHeight;
-
         positionSystem = Resources.Navigation.Sensors.getPositionSystem(opMode.hardwareMap);
 
         input = new InputSpace(opMode.hardwareMap);
         output = new OutputSpace(opMode.hardwareMap);
         tank = (StandardTankVehicleDrivetrain) input.getTank().getInternalInteractionSurface();
+        elevatorDriver = new ElevatorDriver(input, output, opMode);
         positionSystem.setDrivetrain(tank);
 
         imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
@@ -117,15 +119,29 @@ public class StartingPositionManager {
             movements.add(() -> positionSystem.encoderDrive(13));
         }
 
+        resetTimer();
+
+        movements.get(0).run();
+        movements.remove(0);
+
         while (opMode.opModeIsActive() && movements.size() > 0) {
-            if (isDrivetrainReady() && (liftIsMovingDown || step == 0)) {
+            opMode.sleep(500);
+
+            boolean isElevatorBlocking = elevatorDriver.isStable() || elevatorDriver.isResettingToOriginalPos();
+
+            if (isElevatorBlocking && isDrivetrainReady()) {
                 resetTimer();
                 positionSystem.getDrivetrain().brake();
                 movements.get(0).run();
                 movements.remove(0);
             }
-            if (readyForElevator.get() && !liftAutoMovementIsDone) {
-                controlEntireLiftAutonomously(ballDropHeight);
+            if (readyForElevator.get()) {
+                // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
+                //                                                   ElevatorDriver.runToHeight
+                elevatorDriver.runToHeight(h, isBlock);
+                if (elevatorDriver.isStable()) {
+                    readyForElevator.set(false);
+                }
             }
         }
     }
@@ -148,7 +164,7 @@ public class StartingPositionManager {
     }
 
     private boolean isDrivetrainReady() {
-        return positionSystem.areMotorsBusy() && !encoderTimeout.hasTimedOut() && opMode.opModeIsActive();
+        return !positionSystem.areMotorsBusy() && encoderTimeout.hasTimedOut() && opMode.opModeIsActive();
     }
 
     private void resetTimer() {
@@ -195,6 +211,7 @@ public class StartingPositionManager {
         input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, speed);
     }
 
+    @Deprecated
     private void controlEntireLiftAutonomously(int h) {
         // enables intake pos routine if requested
         if(!isMovingToBasePos && !isMovingToLBall && !isMovingToMBall && !isMovingToTBall && !isMovingToLBlock && !isMovingToMBlock && !isMovingToTBlock && !isMovingToIntakePos) {
