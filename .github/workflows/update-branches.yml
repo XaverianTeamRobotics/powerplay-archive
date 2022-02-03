@@ -26,7 +26,6 @@ jobs:
               rm -rf r
               mkdir -p r
               cd r
-              gh auth login --with-token
               gh repo clone XaverianTeamRobotics/FtcRobotController
               sha256sum ../cb.txt > cbh.txt
               gh workflow run merger.yml -f into=$i -f gen=$(cat cbh.txt) val=$(cat ../cb.txt)
@@ -37,3 +36,5 @@ jobs:
               echo "Token: $(cat cbh.txt)"
             fi
           done
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
