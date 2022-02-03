@@ -17,7 +17,7 @@ jobs:
           echo $(cat b.txt | tr " " "\n") > b.txt
           branches=()
           echo "Branches found! - $(cat b.txt)"
-          foreach i in `cat b.txt`;
+          for i in `cat b.txt`;
           do
             echo "Queueing merge into $i"
             rm -rf cb.txt
