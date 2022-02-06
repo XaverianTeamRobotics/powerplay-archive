@@ -25,6 +25,7 @@ public class PositionSystem {
     public CoordinateSystem coordinateSystem;
 
     private StandardVehicleDrivetrain drivetrain = null;
+    private VelocityTracker velocityTracker;
     public StandardIMU imu;
     public StandardIMU.HeadingDataPoint imuDirection = StandardIMU.HeadingDataPoint.HEADING;
     public StandardIMU.CompassReturnData<StandardIMU.HeadingDataPoint, Float> imuData;
@@ -273,5 +274,33 @@ public class PositionSystem {
 
             encoderDrive(Math.sqrt(Math.pow(target.y - current.y, 2) + Math.pow(target.x - current.x, 2)));
         }
+    }
+
+    public void updateVelocityTracker() {
+        if (velocityTracker != null) {
+            velocityTracker.update();
+        }
+    }
+
+    public double getDisplacement() {
+        if (velocityTracker != null) {
+            return velocityTracker.getCurrentDisplacement();
+        }
+        return 0;
+    }
+
+    public double getVelocity() {
+        if (velocityTracker != null) {
+            return velocityTracker.getVelocity();
+        }
+        return 0;
+    }
+
+    private VelocityTracker getVelocityTracker() {
+        return velocityTracker;
+    }
+
+    public void setVelocityTracker(VelocityTracker velocityTracker) {
+        this.velocityTracker = velocityTracker;
     }
 }
