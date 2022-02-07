@@ -296,6 +296,7 @@ public class ElevatorDriver {
         isPosLowBlock = false;
         isPosMedBlock = false;
         isPosTopBlock = false;
+        setResettingToOriginalPos(false);
     }
 
     private void updateTime() {
@@ -387,7 +388,7 @@ public class ElevatorDriver {
         }
         // after moving the hand, move the elevator to the base position
         if(step == 1) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(LIMIT.isPressed()) {
                     step++;
                 }else{
@@ -444,7 +445,7 @@ public class ElevatorDriver {
         // move elevator down to position
         if(step == 2 && time + 0.25 <= getOpModeTime()) {
             LEFT_SERVO.setPosition(handReleasingPositionLeft);
-            RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
             LEFT_MOTOR.driveToPosition(0, 50);
             RIGHT_MOTOR.driveToPosition(0, 50);
             step++;
@@ -469,9 +470,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 6) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -483,7 +485,6 @@ public class ElevatorDriver {
         if(step == 7 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.reset();
             RIGHT_MOTOR.reset();
             unsetFromLowerBallPosition();
@@ -531,9 +532,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 6) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -545,7 +547,6 @@ public class ElevatorDriver {
         if(step == 7 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.reset();
             RIGHT_MOTOR.reset();
             unsetFromMediumBallPosition();
@@ -560,9 +561,10 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // TODO: fix this
         // turn to dispensing position once position reached
         if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorTopBallPosition) {
+            LEFT_SERVO.setPosition(handReleasingPositionLeft);
+            RIGHT_SERVO.setPosition(handReleasingPositionRight);
             HAND_SPINNER.setPosition(handTurningTopBallPosition);
             updateTime();
             step++;
@@ -574,9 +576,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 3) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -588,7 +591,6 @@ public class ElevatorDriver {
         if(step == 4 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.reset();
             RIGHT_MOTOR.reset();
             unsetFromTopBallPosition();
@@ -636,9 +638,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 6) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -648,7 +651,6 @@ public class ElevatorDriver {
         }
         // once the elevator is at the bottom, reset it
         if(step == 7 && LIMIT.isPressed()) {
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
             LEFT_MOTOR.reset();
@@ -679,9 +681,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 3) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -691,7 +694,6 @@ public class ElevatorDriver {
         }
         // once the elevator is at the bottom, reset it
         if(step == 4 && LIMIT.isPressed()) {
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
             LEFT_MOTOR.reset();
@@ -722,9 +724,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             step++;
             setResettingToOriginalPos(true);
+            updateTime();
         }
         if(step == 3) {
-            if(time + 1.5 <= getOpModeTime()) {
+            if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
                     LEFT_MOTOR.driveWithEncoder(40);
                     RIGHT_MOTOR.driveWithEncoder(40);
@@ -734,7 +737,6 @@ public class ElevatorDriver {
         }
         // once the elevator is at the bottom, reset it
         if(step == 4 && LIMIT.isPressed()) {
-            setResettingToOriginalPos(false);
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
             LEFT_MOTOR.reset();
@@ -750,4 +752,7 @@ public class ElevatorDriver {
     public void setResettingToOriginalPos(boolean resettingToOriginalPos) {
         this.resettingToOriginalPos = resettingToOriginalPos;
     }
+
+    // TODO: need to calibrate grabber positions
+
 }
