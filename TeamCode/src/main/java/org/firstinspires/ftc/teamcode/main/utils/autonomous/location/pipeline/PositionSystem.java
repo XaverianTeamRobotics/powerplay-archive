@@ -282,6 +282,9 @@ public class PositionSystem {
         }
     }
 
+    /**
+     * Return the displacement tracked by the velocityTracker in units of cm
+     */
     public double getDisplacement() {
         if (velocityTracker != null) {
             return velocityTracker.getCurrentDisplacement();
@@ -289,6 +292,9 @@ public class PositionSystem {
         return 0;
     }
 
+    /**
+     * Return the displacement tracked by the velocityTracker in units of cm
+     */
     public double getVelocity() {
         if (velocityTracker != null) {
             return velocityTracker.getVelocity();
