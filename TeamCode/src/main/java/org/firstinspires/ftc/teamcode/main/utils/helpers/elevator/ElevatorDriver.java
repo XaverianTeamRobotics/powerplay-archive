@@ -28,9 +28,9 @@ public class ElevatorDriver {
     * CONFIG VALUES
     * */
     
-    private final int handGrabbingPositionRight = 30;
-    private final int handGrabbingPositionLeft = 55;
-    private final int handReleasingPositionRight = 60;
+    private final int handGrabbingPositionRight = 35;
+    private final int handGrabbingPositionLeft = 90;
+    private final int handReleasingPositionRight = 100;
     private final int handReleasingPositionLeft = 30;
     private final int distanceSensorDistance = 120;
     private final int handTurningGrabbingPosition = 20;
