@@ -139,7 +139,7 @@ public class StartingPositionManager {
 
         elevatorDriver.setPosition(h, isBlock);
 
-        while (true) {
+        while (!elevatorDriver.isStable()) {
             // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
             //                                                   ElevatorDriver.runToHeight
             elevatorDriver.run();
@@ -150,9 +150,6 @@ public class StartingPositionManager {
                 positionSystem.encoderDrive(3);
                 resetTimer();
                 hasDriven = true;
-            }
-            if (elevatorDriver.isStable()) {
-                return;
             }
         }
     }
