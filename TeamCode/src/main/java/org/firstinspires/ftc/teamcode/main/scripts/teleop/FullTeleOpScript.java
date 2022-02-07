@@ -78,8 +78,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
-        // debug
-        debug();
     }
 
     private void calibrateElevator() {
@@ -147,6 +145,7 @@ public class FullTeleOpScript extends TeleOpScript {
      * This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. During running, controllers will give feedback via vibrations to the user to let them know the elevator is performing a routine. Once a routine is complete, they will stop and the elevator will be able to run another routine once input is received.
      */
     private void controlEntireLiftAutonomously() {
+        elevatorDriver.run();
         // enables intake pos routine if requested
         if(gamepadManager.functionThreeGamepad().a) {
             elevatorDriver.setToIntakePosition();
@@ -182,14 +181,6 @@ public class FullTeleOpScript extends TeleOpScript {
         int speed = gamepadManager.functionFourGamepad().right_bumper ? -50 : 0;
         speed += gamepadManager.functionFourGamepad().left_bumper ? 50 : 0;
         inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, speed);
-    }
-
-    private void debug() {
-        getOpMode().telemetry.addData("Elevator Encoder Position", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
-        getOpMode().telemetry.addData("Intake Lift %", ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition());
-        getOpMode().telemetry.addData("Hand %", ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition());
-        getOpMode().telemetry.addData("Distance Sensor MM", outputSpace.receiveOutputFromHandDistanceSensor());
-        getOpMode().telemetry.update();
     }
 
     @Override
