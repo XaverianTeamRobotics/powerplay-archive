@@ -59,9 +59,14 @@ jobs:
         run: |
           GEN=${{ github.event.inputs.gen }}
           VAL=${{ github.event.inputs.val }}
-          echo $VAL > v.txt
+          echo "$VAL" > v.txt
           sha256sum v.txt > gv.txt
           GENVAL=$(cat gv.txt | xargs)
+          echo "$VAL"
+          echo "$GENVAL"
+          echo "$GEN"
+          echo "$(cat v.txt)"
+          echo "$(cat gv.txt)"
           if [[ ! "$GEN" == "$GENVAL" ]]
           then
             echo "Authentication failed!"
