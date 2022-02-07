@@ -25,6 +25,7 @@ public class PositionSystem {
     public CoordinateSystem coordinateSystem;
 
     private StandardVehicleDrivetrain drivetrain = null;
+    private VelocityTracker velocityTracker;
     public StandardIMU imu;
     public StandardIMU.HeadingDataPoint imuDirection = StandardIMU.HeadingDataPoint.HEADING;
     public StandardIMU.CompassReturnData<StandardIMU.HeadingDataPoint, Float> imuData;
@@ -156,14 +157,14 @@ public class PositionSystem {
     }
     public void encoderDrive(double distance) {
         if (drivetrain != null) {
-            encoderDrive((int) distance + 1, (int) -distance);
+            encoderDrive((int) distance, (int) -distance);
 
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
     }
     public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distanceLeft, (int) distanceRight, 30);
+            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 30);
         }
     }
 
@@ -273,5 +274,39 @@ public class PositionSystem {
 
             encoderDrive(Math.sqrt(Math.pow(target.y - current.y, 2) + Math.pow(target.x - current.x, 2)));
         }
+    }
+
+    public void updateVelocityTracker() {
+        if (velocityTracker != null) {
+            velocityTracker.update();
+        }
+    }
+
+    /**
+     * Return the displacement tracked by the velocityTracker in units of cm
+     */
+    public double getDisplacement() {
+        if (velocityTracker != null) {
+            return velocityTracker.getCurrentDisplacement();
+        }
+        return 0;
+    }
+
+    /**
+     * Return the displacement tracked by the velocityTracker in units of cm
+     */
+    public double getVelocity() {
+        if (velocityTracker != null) {
+            return velocityTracker.getVelocity();
+        }
+        return 0;
+    }
+
+    private VelocityTracker getVelocityTracker() {
+        return velocityTracker;
+    }
+
+    public void setVelocityTracker(VelocityTracker velocityTracker) {
+        this.velocityTracker = velocityTracker;
     }
 }

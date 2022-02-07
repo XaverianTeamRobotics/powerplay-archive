@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -64,11 +65,10 @@ public class StandardIMU extends InteractionItem {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-
         imu.initialize(parameters);
 
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
     }
 
     public CompassReturnData<HeadingDataPoint, Float> getCompassData() {
@@ -103,6 +103,16 @@ public class StandardIMU extends InteractionItem {
         velocityReturnData.put(VelocityDataPoint.X, (float) velocity.xVeloc);
         velocityReturnData.put(VelocityDataPoint.Y, (float) velocity.yVeloc);
         velocityReturnData.put(VelocityDataPoint.Z, (float) velocity.zVeloc);
+
+        return velocityReturnData;
+    }
+
+    public VelocityReturnData<VelocityDataPoint, Float> getAcceleration() {
+        Acceleration acceleration = imu.getLinearAcceleration();
+        VelocityReturnData<VelocityDataPoint, Float> velocityReturnData = new VelocityReturnData<>();
+        velocityReturnData.put(VelocityDataPoint.X, (float) acceleration.xAccel*100);
+        velocityReturnData.put(VelocityDataPoint.Y, (float) acceleration.yAccel*100);
+        velocityReturnData.put(VelocityDataPoint.Z, (float) acceleration.zAccel*100);
 
         return velocityReturnData;
     }
