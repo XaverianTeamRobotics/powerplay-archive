@@ -879,6 +879,7 @@ public class ElevatorDriver {
             // finally disable manual control
             if(step == 3) {
                 unsetManualControl();
+                // yes, I know i could add a return here, but I prefer to use if/else statements for more complicated things because it's easier to understand. when you see an if/else, you immediately think "oh this wont be executed if this was", whereas if you don't youll have to find the return statement to confirm that. sure, when theres only a couple lines its easier that way, but when you have a 25+ line block it's a bit annoying to try to find a return
             }
         }else{
             // TODO: manual control
