@@ -98,8 +98,8 @@ public class ElevatorDriver {
     private GamepadManager optionalControlGamepadManager;
     private boolean manualMode = false;
     private boolean manualModeIsResetting = false;
-    private double rightESpeed;
-    private double leftESpeed;
+    private int rightESpeed;
+    private int leftESpeed;
     private int rightGPos;
     private int leftGPos;
     private int spinPos;
@@ -907,6 +907,7 @@ public class ElevatorDriver {
         }else{
             GamepadManager gm = optionalControlGamepadManager;
             if(time + 0.5 <= getOpModeTime()) {
+                // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
                 double s = gm.functionSixGamepad().left_stick_y * 100;
                 if(LIMIT.isPressed()) {
                     if(s > 0) {
@@ -922,6 +923,7 @@ public class ElevatorDriver {
                     leftESpeed = (int) Range.clip(s, -100, 100);
                     rightESpeed = (int) Range.clip(s, -100, 100);
                 }
+                // get hand inputs
                 if(gm.functionSixGamepad().right_stick_y >= 0.2) {
                     spinPos += 1;
                 }else if(gm.functionSixGamepad().right_stick_y <= 0.2) {
@@ -934,11 +936,18 @@ public class ElevatorDriver {
                     rightGPos -= 1;
                     leftGPos += 1;
                 }
+                // make sure theyre wthin boundaries
                 rightGPos = Range.clip(rightGPos, handGrabbingPositionRight, handReleasingPositionRight);
                 leftGPos = Range.clip(leftGPos, handReleasingPositionLeft, handGrabbingPositionLeft);
+                // map inputs to devices
+                LEFT_MOTOR.driveWithEncoder(leftESpeed);
+                RIGHT_MOTOR.driveWithEncoder(rightESpeed);
+                HAND_SPINNER.setPosition(spinPos);
+                LEFT_SERVO.setPosition(leftGPos);
+                RIGHT_SERVO.setPosition(rightGPos);
+                // update the timeout variable
                 updateTime();
             }
-            // TODO: map inputs to devices
         }
     }
 
