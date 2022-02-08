@@ -934,9 +934,10 @@ public class ElevatorDriver {
                     rightGPos -= 1;
                     leftGPos += 1;
                 }
+                rightGPos = Range.clip(rightGPos, handGrabbingPositionRight, handReleasingPositionRight);
+                leftGPos = Range.clip(leftGPos, handReleasingPositionLeft, handGrabbingPositionLeft);
                 updateTime();
             }
-            // TODO: limit servo positions
             // TODO: map inputs to devices
         }
     }
