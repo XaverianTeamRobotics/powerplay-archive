@@ -37,12 +37,12 @@ public class FullTeleOpScript extends TeleOpScript {
          *  F3: Lift Control
          *  F4: Duck Spinner Control
          *  F5: Unassigned
-         *  F6: Unassigned
+         *  F6: Manual Intake Control
          * Users:
          *  U1: F1, F4
-         *  U2: F2, F3
+         *  U2: F2, F3, F6
          * */
-        gamepadManager = new GamepadManager(getOpMode().gamepad1, getOpMode().gamepad2, getOpMode().gamepad2, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad1);
+        gamepadManager = new GamepadManager(getOpMode().gamepad1, getOpMode().gamepad2, getOpMode().gamepad2, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad2);
         getOpMode().gamepad1.reset();
         getOpMode().gamepad2.reset();
         inputSpace = new InputSpace(getOpMode().hardwareMap);

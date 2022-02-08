@@ -905,6 +905,22 @@ public class ElevatorDriver {
             }
         }else{
             // TODO: manual control
+            GamepadManager gm = optionalControlGamepadManager;
+            if(time + 0.5 <= getOpModeTime()) {
+                if(gm.functionSixGamepad().right_stick_y >= 0.2) {
+                    spinPos += 1;
+                }else if(gm.functionSixGamepad().right_stick_y <= 0.2) {
+                    spinPos -= 1;
+                }
+                if(gm.functionSixGamepad().right_stick_x >= 0.2) {
+                    rightGPos += 1;
+                    leftGPos -= 1;
+                }else if(gm.functionSixGamepad().right_stick_x <= 0.2) {
+                    rightGPos -= 1;
+                    leftGPos += 1;
+                }
+                updateTime();
+            }
         }
     }
 
