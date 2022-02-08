@@ -90,9 +90,18 @@ public class ElevatorDriver {
 
     private GamepadManager optionalFeedbackGamepadManager;
 
+    /*
+    * MANUAL
+    * */
+
     private GamepadManager optionalControlGamepadManager;
     private boolean manualMode = false;
     private boolean manualModeIsResetting = false;
+    private double rightESpeed;
+    private double leftESpeed;
+    private int rightGPos;
+    private int leftGPos;
+    private int spinPos;
 
     /**
      * This creates an ElevatorDriver with two elevator motors, two hand grabber servos, a hand spinner servo, a limit switch, and a distance sensor to determine when the servos should grab the hand. It uses the default configuration for each motor, servo, and sensor, which at the time of writing is best for our 2021-2022 season robot.
@@ -272,8 +281,20 @@ public class ElevatorDriver {
     public void enableManualControl() {
         if(isStable() && optionalControlGamepadManager != null) {
             unstabalize();
+            resetManualVars();
             manualMode = true;
         }
+    }
+
+    /**
+     * Tells the driver to reset the manual control variables to their default state, such as the speeds of motors.
+     */
+    private void resetManualVars() {
+        rightESpeed = 0;
+        leftESpeed = 0;
+        rightGPos = handGrabbingPositionRight;
+        leftGPos = handGrabbingPositionLeft;
+        spinPos = handTurningDefaultPosition;
     }
 
     /**
@@ -289,6 +310,7 @@ public class ElevatorDriver {
      * Tells the driver to unset manual control after disabling and resetting.
      */
     private void unsetManualControl() {
+        resetManualVars();
         stabalize();
     }
 
