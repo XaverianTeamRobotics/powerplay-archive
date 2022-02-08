@@ -13,6 +13,20 @@ import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
 
 import java.util.HashMap;
 
+/**
+ * <p>This class helps drive the elevator on our robot for the 2020-2021 season. It's extrememly complicated, and as such should probably not be edited unless you know what you're doing. It allows for the following:</p>
+ * <ul>
+ *     <li>Dispensal of object at the bottom, middle, and top levels</li>
+ *     <li>Picking up of object</li>
+ *     <li>Toggable manual control of lift</li>
+ *     <li>Toggable feedback to physical drivers</li>
+ *     <li>Dispensal of object in autonomous OpModes</li>
+ * </ul>
+ * <p>The elevator has a list of configuration fields for defining the location of safe zones, certain points to reach at a given time, etc. These values are designed to be easily editable by changing their corresponding field, and should be changed when the robot physically changes.</p>
+ * <p>The elevator can be driven via #setTo&#60;<em>pos_item</em>&#62; where <em>pos</em> is the position and <em>item</em> is the item, block or ball, to dispense. The elevator can also be set via {@link #setPosition(int, boolean)}, although this is only recommended for autonomous OpModes. To physically run the elevator, the {@link #run()} method should be called iteratively.</p>
+ * <p>Manual mode can be enabled via {@link #enableManualControl()}, after calling {@link #setManualController(GamepadManager)}. It can then be disabled by {@link #disableManualControl()}, where it will stop a user from having control over the elevator and attempt to safely reset the elevator to its default position.</p>
+ * <p>Feedback is enabled by default, although you must specify where to send feedback to. Feedback is in the format of vibrations and as such can be sent to gamepads via a GamepadManager, using {@link #setFeedbackDestination(GamepadManager)}.</p>
+ */
 public class ElevatorDriver {
 
     /*
@@ -49,6 +63,11 @@ public class ElevatorDriver {
     private final int elevatorLowerBlockPosition = -150;
     private final int elevatorMiddleBlockPosition = -575;
     private final int elevatorTopBlockPosition = -1000;
+
+    /*
+    * END OF CONFIG VALUES
+    * BELOW ARE OTHER MISC FIELDS
+    * */
 
     private int step = 0;
     private final LinearOpMode OP_MODE;
@@ -258,7 +277,7 @@ public class ElevatorDriver {
     }
 
     /**
-     * Tells the driver to attempt to disable manual control if possible. This will also attempt to drive the elevator to the correct, default position.
+     * Tells the driver to attempt to disable manual control if possible. This will also attempt to drive the elevator to the correct, default position. Because of this, this method is more of a queueing method than a direct modifying method. It will queue the elevator to safely exit out of manual mode, which will disable manual mode once complete.
      */
     private void disableManualControl() {
         if(manualMode && !manualModeIsResetting) {
@@ -322,10 +341,16 @@ public class ElevatorDriver {
         stabalize();
     }
 
+    /**
+     * Tells the elevator it is not in a stable position to be ran.
+     */
     private void unstabalize() {
         isStable = false;
     }
 
+    /**
+     * Tells the elevator it's in a stable position to be ran. This method has no form of error-checking to make sure the elevator is actually stable, so should only be called once the elevator is guaranteed to be physically stable.
+     */
     private void stabalize() {
         isStable = true;
         step = 0;
@@ -341,10 +366,16 @@ public class ElevatorDriver {
         setResettingToOriginalPos(false);
     }
 
+    /**
+     * Updates the builtin {@link #time}stamp to the current time.
+     */
     private void updateTime() {
         time = OP_MODE.time;
     }
 
+    /**
+     * Sends feedback, in the form of vibrations or <strong>rumbles</strong>, to a feedback destination if one exists.
+     */
     private void rumble() {
         if(optionalFeedbackGamepadManager != null && rumbleTracker + 1 <= getOpModeTime()) {
             optionalFeedbackGamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
@@ -357,6 +388,9 @@ public class ElevatorDriver {
         }
     }
 
+    /**
+     * Cancels all feedback sent by {@link #rumble()}. Got #rumbleisoverparty trending once.
+     */
     private void derumble() {
         if(optionalFeedbackGamepadManager != null) {
             optionalFeedbackGamepadManager.functionOneGamepad().stopRumble();
@@ -380,14 +414,30 @@ public class ElevatorDriver {
         return isStable && step == 0 && !isPosIntake && !isPosLowBall && ! isPosMedBall && !isPosTopBall && !isPosLowBlock && !isPosMedBlock && !isPosTopBlock && !manualMode;
     }
 
+    /**
+     * <p>Gets the current step of whatever operation is occouring. Steps are arbitrary counters designed to help keep track of the elevator's movement.</p>
+     *
+     * <p>For example, when moving to <em>x</em> position, the elevator might be required to move in one direction a certain amount, followed by a movement in another direction. In this case, the step would equal 0 as the elevator is moving in one direction, and the step would equal 1 when it moves in another direction. If the elevator has more movements it must do following these two, the step will increase by 1 each time a notable movement has occoured.</p>
+     *
+     * <p>Note that the step will not increase for all movements, only important ones. For example, the step might stay at the same value while two servos are running, because in this example the combined movement of those serovs is important to track, not their individual movements.</p>
+     * @return The step as defined above
+     */
     public int getStep() {
         return step;
     }
 
-    public double getOpModeTime() {
+    /**
+     * Gets the current time, not the value of the {@link #time}stamp.
+     * @return The time
+     */
+    private double getOpModeTime() {
         return OP_MODE.time;
     }
 
+    /**
+     * Returns whether manual mode is enabled regardless of whether a disablement has been queued by {@link #disableManualControl()}, not whether {@link #setManualController(GamepadManager)} has been called.
+     * @return The status of manual mode
+     */
     public boolean isManualModeEnabled() {
         return manualMode;
     }
@@ -458,10 +508,12 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
+        // wait for an object to be picked up or for this to timeout
         if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance || step == 4 && time + 7 <= getOpModeTime()) {
             updateTime();
             step++;
         }
+        // move back to its original position, with the object in hand
         if(step == 5 && time + 0.5 <= getOpModeTime()) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -508,7 +560,7 @@ public class ElevatorDriver {
             RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             step++;
         }
-        // tell hand/elevator to reset once in a safe position to do so
+        // tell hand to reset once in a safe position to do so
         if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -517,6 +569,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // tell elevator to reset once in a safe position to do so
         if(step == 6) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -526,7 +579,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 7 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -579,6 +632,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // reset the elevator once ready to do so
         if(step == 6) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -588,7 +642,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 7 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -623,6 +677,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // reset elevator once its in a safe position
         if(step == 3) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -632,7 +687,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 4 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -676,7 +731,7 @@ public class ElevatorDriver {
             RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
             step++;
         }
-        // tell hand/elevator to reset once in a safe position to do so
+        // tell hand to reset once in a safe position to do so
         if(step == 5 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -685,6 +740,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // tell elevator to reset itself once its ready
         if(step == 6) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -694,7 +750,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 7 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -719,7 +775,7 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // tell hand/elevator to reset after block is dispensed
+        // tell hand to reset after block is dispensed
         if(step == 2 && time + 4 <= getOpModeTime()) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -728,6 +784,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // tell elevator to reset itself once it is safe to do so
         if(step == 3) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -737,7 +794,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 4 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -762,7 +819,7 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // tell hand/elevator to reset after block is dispensed
+        // tell hand to reset after block is dispensed
         if(step == 2 && time + 4 <= getOpModeTime()) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -771,6 +828,7 @@ public class ElevatorDriver {
             setResettingToOriginalPos(true);
             updateTime();
         }
+        // tell elevator to reset to its default position once safe
         if(step == 3) {
             if(time + 1.75 <= getOpModeTime()) {
                 if(!LIMIT.isPressed()) {
@@ -780,7 +838,7 @@ public class ElevatorDriver {
                 step++;
             }
         }
-        // once the elevator is at the bottom, reset it
+        // once the elevator is at the bottom, reset its encoders
         if(step == 4 && LIMIT.isPressed()) {
             LEFT_MOTOR.driveWithEncoder(0);
             RIGHT_MOTOR.driveWithEncoder(0);
@@ -791,12 +849,15 @@ public class ElevatorDriver {
     }
 
     private void doManualControl() {
+        // check if a disablement has been queued, and if so, reset
         if(manualModeIsResetting) {
+            // move the elevator to the safe position
             if(step == 0) {
                 LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
                 RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
                 step++;
             }
+            // once safe position reached, move the hand to safe position
             if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
                 LEFT_SERVO.setPosition(handGrabbingPositionLeft);
                 RIGHT_SERVO.setPosition(handGrabbingPositionRight);
@@ -804,9 +865,10 @@ public class ElevatorDriver {
                 updateTime();
                 step++;
             }
-            // I'm specifically NOT calling #setResettingToOriginalPos because I don't want to introduce that complexity. When anything manual is happening, the robot should not attempt to figure out what's going on. It should only know if it's being manually controlled or not, and that when it is not being manually controlled it doesn't need to know anything about manual control.
+            // I'm specifically NOT calling #setResettingToOriginalPos because I don't want to introduce that complexity. When anything manual is happening, the robot should not attempt to figure out what's going on. It should only know if it's being manually controlled or not, and that when it is not being manually controlled it doesn't need to know anything about manual control. Also, manual control is illegal during autonomous so this would be useless if I implemented it anyway.
+            // move the elevator to the default position after everything else has been moved
             if(step == 2) {
-                if(time + 1.75 <= getOpModeTime()) {
+                if(time + 2 <= getOpModeTime()) {
                     if(!LIMIT.isPressed()) {
                         LEFT_MOTOR.driveWithEncoder(40);
                         RIGHT_MOTOR.driveWithEncoder(40);
@@ -814,6 +876,7 @@ public class ElevatorDriver {
                     step++;
                 }
             }
+            // finally disable manual control
             if(step == 3) {
                 unsetManualControl();
             }
@@ -822,11 +885,22 @@ public class ElevatorDriver {
         }
     }
 
+    /*
+    * AUTONOMOUS MEMBERS
+    * */
 
+    /**
+     * Whether the elevator is in a state in which it has dispensed an object and is now driving back to its default position. This is basically useless unless you're using this in autonomous OpModes, where knowing the elevator's status is crucial to shaving off runtime by allowing the robot to multitask.
+     * @return The state of the elevator
+     */
     public boolean isResettingToOriginalPos() {
         return resettingToOriginalPos;
     }
 
+    /**
+     * Tells the elevator it is resetting its position to the default position. This is basically only to support {@link #isResettingToOriginalPos()}, and should be called a routine has reached the point where it has dispened an object and is now simply returning to its default positiion, meaning the robot does not have to sit next to the dispensing position and can do other things.
+     * @param resettingToOriginalPos Whether the robot is resetting to the original position, as defined above
+     */
     private void setResettingToOriginalPos(boolean resettingToOriginalPos) {
         this.resettingToOriginalPos = resettingToOriginalPos;
     }
