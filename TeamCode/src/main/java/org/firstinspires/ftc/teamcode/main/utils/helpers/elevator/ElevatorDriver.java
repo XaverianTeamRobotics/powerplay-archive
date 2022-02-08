@@ -301,7 +301,7 @@ public class ElevatorDriver {
     /**
      * Tells the driver to attempt to disable manual control if possible. This will also attempt to drive the elevator to the correct, default position. Because of this, this method is more of a queueing method than a direct modifying method. It will queue the elevator to safely exit out of manual mode, which will disable manual mode once complete.
      */
-    private void disableManualControl() {
+    public void disableManualControl() {
         if(manualMode && !manualModeIsResetting) {
             manualModeIsResetting = true;
         }
@@ -937,6 +937,7 @@ public class ElevatorDriver {
                     leftGPos += 1;
                 }
                 // make sure theyre wthin boundaries
+                spinPos = Range.clip(spinPos, 0, 100);
                 rightGPos = Range.clip(rightGPos, handGrabbingPositionRight, handReleasingPositionRight);
                 leftGPos = Range.clip(leftGPos, handReleasingPositionLeft, handGrabbingPositionLeft);
                 // map inputs to devices
