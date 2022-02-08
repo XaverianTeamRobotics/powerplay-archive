@@ -388,14 +388,12 @@ public class ElevatorDriver {
         }
         // after moving the hand, move the elevator to the base position
         if(step == 1) {
-            if(time + 1.75 <= getOpModeTime()) {
-                if(LIMIT.isPressed()) {
-                    step++;
-                }else{
-                    LEFT_MOTOR.driveWithEncoder(40);
-                    RIGHT_MOTOR.driveWithEncoder(40);
-                    step++;
-                }
+            if(LIMIT.isPressed()) {
+                step++;
+            }else if(time + 1.75 <= getOpModeTime()) {
+                LEFT_MOTOR.driveWithEncoder(40);
+                RIGHT_MOTOR.driveWithEncoder(40);
+                step++;
             }
         }
         // once the elevator is at the bottom, reset it
@@ -411,9 +409,10 @@ public class ElevatorDriver {
             HAND_SPINNER.setPosition(handTurningGrabbingPosition);
             LEFT_SERVO.setPosition(handReleasingPositionLeft);
             RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            updateTime();
             step++;
         }
-        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
+        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance || step == 4 && time + 7 <= getOpModeTime()) {
             updateTime();
             step++;
         }
