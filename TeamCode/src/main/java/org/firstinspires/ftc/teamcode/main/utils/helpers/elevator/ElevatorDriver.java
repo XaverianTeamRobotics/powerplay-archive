@@ -69,7 +69,11 @@ public class ElevatorDriver {
     private boolean isPosMedBlock = false;
     private boolean isPosTopBlock = false;
 
-    private GamepadManager optionalGamepadManager;
+    private GamepadManager optionalFeedbackGamepadManager;
+
+    private GamepadManager optionalControlGamepadManager;
+    private boolean manualMode = false;
+    private boolean manualModeIsResetting = false;
 
     /**
      * This creates an ElevatorDriver with two elevator motors, two hand grabber servos, a hand spinner servo, a limit switch, and a distance sensor to determine when the servos should grab the hand. It uses the default configuration for each motor, servo, and sensor, which at the time of writing is best for our 2021-2022 season robot.
@@ -94,7 +98,15 @@ public class ElevatorDriver {
      * @param gamepadManager The manager of the gamepads to send feedback to
      */
     public void setFeedbackDestination(GamepadManager gamepadManager) {
-        optionalGamepadManager = gamepadManager;
+        optionalFeedbackGamepadManager = gamepadManager;
+    }
+
+    /**
+     * Tells the driver to handle input from the {@link GamepadManager} when manual control is enabled. This needs to be called before attempting to enable manual control.
+     * @param gamepadManager The manager of the gamepads to take input from
+     */
+    public void setManualController(GamepadManager gamepadManager) {
+        optionalControlGamepadManager = gamepadManager;
     }
 
     /*
@@ -121,6 +133,8 @@ public class ElevatorDriver {
                 doPosMedBlock();
             }else if(isPosTopBlock) {
                 doPosTopBlock();
+            }else if(manualMode) {
+                doManualControl();
             }
         }else{
             derumble();
@@ -234,6 +248,32 @@ public class ElevatorDriver {
     }
 
     /**
+     * Tells the driver to enable manual control of itself if possible.
+     */
+    public void enableManualControl() {
+        if(isStable() && optionalControlGamepadManager != null) {
+            unstabalize();
+            manualMode = true;
+        }
+    }
+
+    /**
+     * Tells the driver to attempt to disable manual control if possible. This will also attempt to drive the elevator to the correct, default position.
+     */
+    private void disableManualControl() {
+        if(manualMode && !manualModeIsResetting) {
+            manualModeIsResetting = true;
+        }
+    }
+
+    /**
+     * Tells the driver to unset manual control after disabling and resetting.
+     */
+    private void unsetManualControl() {
+        stabalize();
+    }
+
+    /**
      * Tells the driver to attempt to reset after driving to the intake position if possible.
      */
     private void unsetFromIntakePosition() {
@@ -296,6 +336,8 @@ public class ElevatorDriver {
         isPosLowBlock = false;
         isPosMedBlock = false;
         isPosTopBlock = false;
+        manualMode = false;
+        manualModeIsResetting = false;
         setResettingToOriginalPos(false);
     }
 
@@ -304,25 +346,25 @@ public class ElevatorDriver {
     }
 
     private void rumble() {
-        if(optionalGamepadManager != null && rumbleTracker + 1 <= getOpModeTime()) {
-            optionalGamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalGamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalGamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalGamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalGamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalGamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+        if(optionalFeedbackGamepadManager != null && rumbleTracker + 1 <= getOpModeTime()) {
+            optionalFeedbackGamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            optionalFeedbackGamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            optionalFeedbackGamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            optionalFeedbackGamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            optionalFeedbackGamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            optionalFeedbackGamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
             rumbleTracker = getOpModeTime();
         }
     }
 
     private void derumble() {
-        if(optionalGamepadManager != null) {
-            optionalGamepadManager.functionOneGamepad().stopRumble();
-            optionalGamepadManager.functionTwoGamepad().stopRumble();
-            optionalGamepadManager.functionThreeGamepad().stopRumble();
-            optionalGamepadManager.functionFourGamepad().stopRumble();
-            optionalGamepadManager.functionFiveGamepad().stopRumble();
-            optionalGamepadManager.functionSixGamepad().stopRumble();
+        if(optionalFeedbackGamepadManager != null) {
+            optionalFeedbackGamepadManager.functionOneGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionTwoGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionThreeGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionFourGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionFiveGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionSixGamepad().stopRumble();
         }
     }
 
@@ -335,7 +377,7 @@ public class ElevatorDriver {
      * @return The robot's state; true if stable and false if unstable
      */
     public boolean isStable() {
-        return isStable && step == 0 && !isPosIntake && !isPosLowBall && ! isPosMedBall && !isPosTopBall && !isPosLowBlock && !isPosMedBlock && !isPosTopBlock;
+        return isStable && step == 0 && !isPosIntake && !isPosLowBall && ! isPosMedBall && !isPosTopBall && !isPosLowBlock && !isPosMedBlock && !isPosTopBlock && !manualMode;
     }
 
     public int getStep() {
@@ -344,6 +386,10 @@ public class ElevatorDriver {
 
     public double getOpModeTime() {
         return OP_MODE.time;
+    }
+
+    public boolean isManualModeEnabled() {
+        return manualMode;
     }
 
     /**
@@ -744,14 +790,45 @@ public class ElevatorDriver {
         }
     }
 
+    private void doManualControl() {
+        if(manualModeIsResetting) {
+            if(step == 0) {
+                LEFT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+                RIGHT_MOTOR.driveToPosition(elevatorSafePosition, 50);
+                step++;
+            }
+            if(step == 1 && LEFT_MOTOR.getDcMotor().getCurrentPosition() <= elevatorSafePosition) {
+                LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+                RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+                HAND_SPINNER.setPosition(handTurningDefaultPosition);
+                updateTime();
+                step++;
+            }
+            // I'm specifically NOT calling #setResettingToOriginalPos because I don't want to introduce that complexity. When anything manual is happening, the robot should not attempt to figure out what's going on. It should only know if it's being manually controlled or not, and that when it is not being manually controlled it doesn't need to know anything about manual control.
+            if(step == 2) {
+                if(time + 1.75 <= getOpModeTime()) {
+                    if(!LIMIT.isPressed()) {
+                        LEFT_MOTOR.driveWithEncoder(40);
+                        RIGHT_MOTOR.driveWithEncoder(40);
+                    }
+                    step++;
+                }
+            }
+            if(step == 3) {
+                unsetManualControl();
+            }
+        }else{
+            // TODO: manual control
+        }
+    }
+
+
     public boolean isResettingToOriginalPos() {
         return resettingToOriginalPos;
     }
 
-    public void setResettingToOriginalPos(boolean resettingToOriginalPos) {
+    private void setResettingToOriginalPos(boolean resettingToOriginalPos) {
         this.resettingToOriginalPos = resettingToOriginalPos;
     }
-
-    // TODO: need to calibrate grabber positions
 
 }
