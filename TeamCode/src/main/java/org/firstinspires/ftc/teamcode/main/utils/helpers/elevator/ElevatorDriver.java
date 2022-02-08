@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.main.utils.helpers.elevator;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardDistanceSensor;
@@ -904,9 +905,23 @@ public class ElevatorDriver {
                 // yes, I know i could add a return here, but I prefer to use if/else statements for more complicated things because it's easier to understand. when you see an if/else, you immediately think "oh this wont be executed if this was", whereas if you don't youll have to find the return statement to confirm that. sure, when theres only a couple lines its easier that way, but when you have a 25+ line block it's a bit annoying to try to find a return
             }
         }else{
-            // TODO: manual control
             GamepadManager gm = optionalControlGamepadManager;
             if(time + 0.5 <= getOpModeTime()) {
+                double s = gm.functionSixGamepad().left_stick_y * 100;
+                if(LIMIT.isPressed()) {
+                    if(s > 0) {
+                        rightESpeed = 0;
+                        leftESpeed = 0;
+                    }else{
+                        leftESpeed = (int) Range.clip(s, -100, 100);
+                        rightESpeed = (int) Range.clip(s, -100, 100);
+                    }
+                    LEFT_MOTOR.reset();
+                    RIGHT_MOTOR.reset();
+                }else if(!LIMIT.isPressed()) {
+                    leftESpeed = (int) Range.clip(s, -100, 100);
+                    rightESpeed = (int) Range.clip(s, -100, 100);
+                }
                 if(gm.functionSixGamepad().right_stick_y >= 0.2) {
                     spinPos += 1;
                 }else if(gm.functionSixGamepad().right_stick_y <= 0.2) {
@@ -921,6 +936,8 @@ public class ElevatorDriver {
                 }
                 updateTime();
             }
+            // TODO: limit servo positions
+            // TODO: map inputs to devices
         }
     }
 
