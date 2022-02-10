@@ -12,12 +12,15 @@ public class ColorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         StandardColorSensor sensor = new StandardColorSensor(hardwareMap, "color");
-        sensor.powerLED();
         waitForStart();
         while(opModeIsActive()) {
             telemetry.addData("RGBA: ", Arrays.toString(sensor.getRGBA()));
-            telemetry.addData("HSV: ", Arrays.toString(sensor.getHSV()));
+            double[] hsv = sensor.getHSV();
+            int[] hsvi = new int[] { (int) hsv[0], (int) (hsv[1] * 100), (int) (hsv[2] * 100) };
+            telemetry.addData("HSV: ", Arrays.toString(hsvi));
             telemetry.addData("ARGB: ", sensor.getARGB());
+            telemetry.addData("GSV: ", sensor.getGSV());
+            telemetry.update();
         }
     }
 

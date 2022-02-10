@@ -1,29 +1,16 @@
 package org.firstinspires.ftc.teamcode.main.utils.interactions.items;
 
 import android.graphics.Color;
-import android.graphics.ColorSpace;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+/**
+ * A StandardColorSensor detects colors. It returns all of its colors in the range between 0-255.
+ */
 public class StandardColorSensor extends InteractionItem {
 
-    ColorSensor SENSOR;
-
-    public enum Color {
-        BLACK,
-        BLUE,
-        CYAN,
-        DARK_GRAY,
-        GRAY,
-        GREEN,
-        LIGHT_GRAY,
-        MAGENTA,
-        ORANGE,
-        PINK,
-        RED,
-        WHITE,
-        YELLOW
-    }
+    NormalizedColorSensor SENSOR;
 
     /**
      * Creates a new StandardColorSensor, which can sense colors.
@@ -31,25 +18,26 @@ public class StandardColorSensor extends InteractionItem {
      * @param name The servo's name in the configuration
      */
     public StandardColorSensor(HardwareMap hardware, String name) {
-        SENSOR = hardware.get(ColorSensor.class, name);
+        SENSOR = hardware.get(NormalizedColorSensor.class, name);
     }
 
     /**
-     * Gets the RGBA values of the sensor, formatted as [ Red, Green, Blue, Alpha (in thiscase, amount of photons) ].
-     * @return the RGBA values of the sensor.
+     * Gets the RGBA values of the sensor, formatted as [ Red, Green, Blue, Alpha ].
+     * @return the RGBA values of the sensor
      */
     public int[] getRGBA() {
-        return new int[] { SENSOR.red(), SENSOR.green(), SENSOR.blue(), SENSOR.alpha() };
+        NormalizedRGBA h = SENSOR.getNormalizedColors();
+        return new int[] { (int) (h.red * 255), (int) (h.green * 255), (int) (h.blue * 255), (int) (h.alpha * 255) };
     }
 
     /**
-     * Gets the HSV values of the sensor, formatted as [ Hue, Saturation, Value ]
+     * Gets the HSV values of the sensor, formatted as [ Hue, Saturation, Value ].
      * @return The HSV values of the sensor
      */
     public double[] getHSV() {
         float[] colors = new float[3];
         int[] vals = getRGBA();
-        android.graphics.Color.RGBToHSV(vals[0], vals[1], vals[2], colors);
+        Color.RGBToHSV(vals[0], vals[1], vals[2], colors);
         double[] colorsd = new double[3];
         colorsd[0] = colors[0];
         colorsd[1] = colors[1];
@@ -58,28 +46,23 @@ public class StandardColorSensor extends InteractionItem {
     }
 
     /**
+     * Gets the GSV value of the sensor, also known as grayscale.
+     * @return The GSV value of the sensor
+     */
+    public int getGSV() {
+        int[] vals = getRGBA();
+        return vals[0] + vals[1] + vals[2];
+    }
+
+    /**
      * Gets the ARGB value of the sensor. This is <strong>NOT</strong> the same as {@link #getRGBA()}. The ARGB value is a packed 32-bit integer (to be interpreted as unsigned) containing all 4 color channels. It can be unpacked via bitshifting and bitmasking.
-     * @return The ARGB value of the sensor.
+     * @return The ARGB value of the sensor
      */
     public int getARGB() {
-        return SENSOR.argb();
+        return SENSOR.getNormalizedColors().toColor();
     }
 
-    /**
-     * Turns the color sensor's LED on.
-     */
-    public void powerLED() {
-        SENSOR.enableLed(true);
-    }
-
-    /**
-     * Turns the color sensor's LED off.
-     */
-    public void unpowerLED() {
-        SENSOR.enableLed(false);
-    }
-
-    public ColorSensor getInternalSensor() {
+    public NormalizedColorSensor getInternalSensor() {
         return SENSOR;
     }
 
@@ -93,7 +76,7 @@ public class StandardColorSensor extends InteractionItem {
 
     @Override
     public boolean isOutputDevice() {
-        return false;
+        return true;
     }
 
 }
