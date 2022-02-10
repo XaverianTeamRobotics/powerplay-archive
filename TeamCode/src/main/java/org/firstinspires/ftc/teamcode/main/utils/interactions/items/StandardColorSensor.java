@@ -33,11 +33,17 @@ public class StandardColorSensor extends InteractionItem {
     }
 
     /**
-     * Updates the state of the LED.
-     * @param state The state, on or off.
+     * Turns the color sensor's LED on.
      */
-    public void updateLEDState(boolean state) {
-        SENSOR.enableLed(state);
+    public void powerLED() {
+        SENSOR.enableLed(true);
+    }
+
+    /**
+     * Turns the color sensor's LED off.
+     */
+    public void unpowerLED() {
+        SENSOR.enableLed(false);
     }
 
     public ColorSensor getInternalSensor() {
