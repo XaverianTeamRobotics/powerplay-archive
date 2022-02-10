@@ -1,11 +1,29 @@
 package org.firstinspires.ftc.teamcode.main.utils.interactions.items;
 
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class StandardColorSensor extends InteractionItem {
 
     ColorSensor SENSOR;
+
+    public enum Color {
+        BLACK,
+        BLUE,
+        CYAN,
+        DARK_GRAY,
+        GRAY,
+        GREEN,
+        LIGHT_GRAY,
+        MAGENTA,
+        ORANGE,
+        PINK,
+        RED,
+        WHITE,
+        YELLOW
+    }
 
     /**
      * Creates a new StandardColorSensor, which can sense colors.
@@ -17,11 +35,26 @@ public class StandardColorSensor extends InteractionItem {
     }
 
     /**
-     * Gets the RGBA values of the sensor, formatted as [ Red, Green, Blue, Aplha ].
+     * Gets the RGBA values of the sensor, formatted as [ Red, Green, Blue, Alpha (in thiscase, amount of photons) ].
      * @return the RGBA values of the sensor.
      */
     public int[] getRGBA() {
         return new int[] { SENSOR.red(), SENSOR.green(), SENSOR.blue(), SENSOR.alpha() };
+    }
+
+    /**
+     * Gets the HSV values of the sensor, formatted as [ Hue, Saturation, Value ]
+     * @return The HSV values of the sensor
+     */
+    public double[] getHSV() {
+        float[] colors = new float[3];
+        int[] vals = getRGBA();
+        android.graphics.Color.RGBToHSV(vals[0], vals[1], vals[2], colors);
+        double[] colorsd = new double[3];
+        colorsd[0] = colors[0];
+        colorsd[1] = colors[1];
+        colorsd[2] = colors[2];
+        return colorsd;
     }
 
     /**

@@ -16,6 +16,7 @@ public class ColorTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()) {
             telemetry.addData("RGBA: ", Arrays.toString(sensor.getRGBA()));
+            telemetry.addData("HSV: ", Arrays.toString(sensor.getHSV()));
             telemetry.addData("ARGB: ", sensor.getARGB());
         }
     }
