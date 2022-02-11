@@ -45,16 +45,16 @@ public class FullTeleOpScript extends TeleOpScript {
         elevatorDriver.setFeedbackDestination(gamepadManager);
         elevatorDriver.setManualController(gamepadManager);
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
-        inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 35);
-        getOpMode().sleep(4000);
+        inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
+        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 22);
         calibrateElevator();
         /*
-        * VALUES OF ELEVATOR:
-        * LOW: 23
-        * HIGH: 60
-        * */
+         * VALUES OF INTAKE LIFTER:
+         * LOW: 22
+         * HIGH: 60
+         * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
-        getOpMode().sleep(5000);
+        getOpMode().sleep(1500);
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -81,16 +81,14 @@ public class FullTeleOpScript extends TeleOpScript {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, -100);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, -100);
         }
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
         // move elevator down until it reaches the bottom
         while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 30);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 30);
         }
-        // reset the elevator and hand
+        // reset the elevator
         ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).reset();
         ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
     }
 
     private void controlDrivetrain() {
@@ -112,7 +110,7 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 23);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
@@ -123,7 +121,7 @@ public class FullTeleOpScript extends TeleOpScript {
         if(!elevatorDriver.isStable()) {
             noControlIntakeLifter = true;
             intakeShouldBeDown = true;
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 23);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
         }
     }
 
