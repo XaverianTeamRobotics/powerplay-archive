@@ -14,21 +14,22 @@ public class openCV extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Init camera view
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
-        // With live preview
-        //OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        // Setup some variables
         WebcamName webCam = hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webCam, cameraMonitorViewId);
+
+        // Setup a camera listener
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                // Usually this is where you'll want to start streaming from the camera (see section 4)
                 telemetry.addData("Camera", "True");
                 telemetry.update();
                 camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
                 camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-                camera.setPipeline(new awesomePipeline());
+                camera.setPipeline(new AwesomePipeline());
             }
             @Override
             public void onError(int errorCode) {
@@ -42,7 +43,7 @@ public class openCV extends LinearOpMode {
             //loop until stop
         }
     }
-    class awesomePipeline extends OpenCvPipeline
+    static class AwesomePipeline extends OpenCvPipeline
     {
         private Mat original = new Mat();
         private Mat output = new Mat();
@@ -52,9 +53,12 @@ public class openCV extends LinearOpMode {
         {
             original = input;
             Imgproc.cvtColor(input, output,Imgproc.COLOR_RGB2HSV);
+            // Create two points and a color
             Point point1 = new Point(0, 100);
             Point point2 = new Point(200, 100);
             final Scalar blue = new Scalar(255, 0, 0);
+
+            // Create a line and return the image
             Imgproc.line(original, point1, point2, blue, 2,2,0);
             return original;
         }
