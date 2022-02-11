@@ -54,7 +54,7 @@ public class openCV extends LinearOpMode {
             Imgproc.cvtColor(input, output,Imgproc.COLOR_RGB2HSV);
             Point point1 = new Point(0, 100);
             Point point2 = new Point(200, 100);
-            Scalar blue = new Scalar(255, 0, 0);
+            final Scalar blue = new Scalar(255, 0, 0);
             Imgproc.line(original, point1, point2, blue, 2,2,0);
             return original;
         }
