@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
+import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardColorSensor;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServo;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
@@ -138,6 +139,8 @@ public class FullTeleOpScript extends TeleOpScript {
      * This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. During running, controllers will give feedback via vibrations to the user to let them know the elevator is performing a routine. Once a routine is complete, they will stop and the elevator will be able to run another routine once input is received.
      */
     private void controlEntireLiftAutonomously() {
+        double[] hsv = ((StandardColorSensor) outputSpace.getHandColorSensor().getInternalInteractionSurface()).getHSV();
+        int distance = (int) outputSpace.receiveOutputFromHandDistanceSensor();
         elevatorDriver.run();
         if(isAllowedToControlElevator) {
             // enables intake pos routine if requested
@@ -145,28 +148,28 @@ public class FullTeleOpScript extends TeleOpScript {
                 elevatorDriver.setToIntakePosition();
             }
             // enables lower level ball routine if requested
-            if(gamepadManager.functionThreeGamepad().b && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToLowerBallPosition();
+            if(gamepadManager.functionThreeGamepad().b) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToLowerBallPosition();
+                }else{
+                    elevatorDriver.setToLowerBlockPosition();
+                }
             }
             // enables middle level ball routine routine if requested
-            if(gamepadManager.functionThreeGamepad().y && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToMediumBallPosition();
+            if(gamepadManager.functionThreeGamepad().y) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToMediumBallPosition();
+                }else{
+                    elevatorDriver.setToMediumBlockPosition();
+                }
             }
             // enables top level ball routine if requested
-            if(gamepadManager.functionThreeGamepad().x && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToTopBallPosition();
-            }
-            // enables bottom level block routine if requested
-            if(gamepadManager.functionThreeGamepad().b && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToLowerBlockPosition();
-            }
-            // enables middle level block routine if requested
-            if(gamepadManager.functionThreeGamepad().y && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToMediumBlockPosition();
-            }
-            // enables top level block routine if requested
-            if(gamepadManager.functionThreeGamepad().x && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToTopBlockPosition();
+            if(gamepadManager.functionThreeGamepad().x) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToTopBallPosition();
+                }else{
+                    elevatorDriver.setToTopBlockPosition();
+                }
             }
             // toggles manual control
             if(gamepadManager.functionTwoGamepad().right_bumper) {

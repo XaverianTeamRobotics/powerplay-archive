@@ -21,7 +21,7 @@ public class HandDistanceSensorLocation extends Location {
      * Returns the distance detected by the sensor.
      * @return The distance in millimeters
      */
-    public double returnOutput() {
+    public int returnOutput() {
         if(SENSOR == null) {
             return 0;
         }

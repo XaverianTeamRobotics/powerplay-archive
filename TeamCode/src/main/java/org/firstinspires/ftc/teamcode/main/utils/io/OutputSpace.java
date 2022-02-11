@@ -43,7 +43,7 @@ public class OutputSpace {
         return ELEVATOR_BOTTOM_LIMIT_SWITCH.returnOutput(type);
     }
 
-    public double receiveOutputFromHandDistanceSensor() {
+    public int receiveOutputFromHandDistanceSensor() {
         return HAND_DISTANCE_SENSOR.returnOutput();
     }
 
