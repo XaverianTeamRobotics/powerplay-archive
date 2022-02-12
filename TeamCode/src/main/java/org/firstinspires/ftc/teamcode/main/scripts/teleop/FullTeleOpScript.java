@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
+import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardColorSensor;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardMotor;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServo;
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
@@ -44,16 +45,16 @@ public class FullTeleOpScript extends TeleOpScript {
         elevatorDriver.setFeedbackDestination(gamepadManager);
         elevatorDriver.setManualController(gamepadManager);
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
-        inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 35);
-        getOpMode().sleep(4000);
+        inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
+        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 22);
         calibrateElevator();
         /*
-        * VALUES OF ELEVATOR:
-        * LOW: 23
-        * HIGH: 60
-        * */
+         * VALUES OF INTAKE LIFTER:
+         * LOW: 22
+         * HIGH: 60
+         * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
-        getOpMode().sleep(5000);
+        getOpMode().sleep(1500);
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -80,16 +81,14 @@ public class FullTeleOpScript extends TeleOpScript {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, -100);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, -100);
         }
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
         // move elevator down until it reaches the bottom
         while(outputSpace.receiveOutputFromElevatorBottomLimitSwitch(ElevatorBottomLimitSwitchLocation.Values.PRESSED) == 0) {
             inputSpace.sendInputToElevatorLeftLift(ElevatorLeftLiftMotorLocation.Action.SET_SPEED, 30);
             inputSpace.sendInputToElevatorRightLift(ElevatorRightLiftMotorLocation.Action.SET_SPEED, 30);
         }
-        // reset the elevator and hand
+        // reset the elevator
         ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).reset();
         ((StandardMotor) inputSpace.getElevatorRightLift().getInternalInteractionSurface()).reset();
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
     }
 
     private void controlDrivetrain() {
@@ -111,7 +110,7 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 23);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
@@ -122,7 +121,7 @@ public class FullTeleOpScript extends TeleOpScript {
         if(!elevatorDriver.isStable()) {
             noControlIntakeLifter = true;
             intakeShouldBeDown = true;
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 23);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
         }
     }
 
@@ -138,6 +137,8 @@ public class FullTeleOpScript extends TeleOpScript {
      * This method controls all the autonomous stuff for the lift in TeleOps. Basically, it contains a bunch of routines. On every run, if no routine is running and a button is pressed to toggle a certain routine, the routine will fire. It will enable its routine, making all other routines impossible to run. During running, controllers will give feedback via vibrations to the user to let them know the elevator is performing a routine. Once a routine is complete, they will stop and the elevator will be able to run another routine once input is received.
      */
     private void controlEntireLiftAutonomously() {
+        double[] hsv = ((StandardColorSensor) outputSpace.getHandColorSensor().getInternalInteractionSurface()).getHSV();
+        int distance = (int) outputSpace.receiveOutputFromHandDistanceSensor();
         elevatorDriver.run();
         if(isAllowedToControlElevator) {
             // enables intake pos routine if requested
@@ -145,28 +146,28 @@ public class FullTeleOpScript extends TeleOpScript {
                 elevatorDriver.setToIntakePosition();
             }
             // enables lower level ball routine if requested
-            if(gamepadManager.functionThreeGamepad().b && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToLowerBallPosition();
+            if(gamepadManager.functionThreeGamepad().b) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToLowerBallPosition();
+                }else{
+                    elevatorDriver.setToLowerBlockPosition();
+                }
             }
             // enables middle level ball routine routine if requested
-            if(gamepadManager.functionThreeGamepad().y && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToMediumBallPosition();
+            if(gamepadManager.functionThreeGamepad().y) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToMediumBallPosition();
+                }else{
+                    elevatorDriver.setToMediumBlockPosition();
+                }
             }
             // enables top level ball routine if requested
-            if(gamepadManager.functionThreeGamepad().x && !gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToTopBallPosition();
-            }
-            // enables bottom level block routine if requested
-            if(gamepadManager.functionThreeGamepad().b && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToLowerBlockPosition();
-            }
-            // enables middle level block routine if requested
-            if(gamepadManager.functionThreeGamepad().y && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToMediumBlockPosition();
-            }
-            // enables top level block routine if requested
-            if(gamepadManager.functionThreeGamepad().x && gamepadManager.functionThreeGamepad().touchpad) {
-                elevatorDriver.setToTopBlockPosition();
+            if(gamepadManager.functionThreeGamepad().x) {
+                if(hsv[0] > 130) {
+                    elevatorDriver.setToTopBallPosition();
+                }else{
+                    elevatorDriver.setToTopBlockPosition();
+                }
             }
             // toggles manual control
             if(gamepadManager.functionTwoGamepad().right_bumper) {

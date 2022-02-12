@@ -43,10 +43,10 @@ public class ElevatorDriver {
     * CONFIG VALUES
     * */
     
-    private final int handGrabbingPositionRight = 35;
+    private final int handGrabbingPositionRight = 37;
     private final int handGrabbingPositionLeft = 90;
-    private final int handReleasingPositionRight = 100;
-    private final int handReleasingPositionLeft = 30;
+    private final int handReleasingPositionRight = 89;
+    private final int handReleasingPositionLeft = 40;
     private final int distanceSensorDistance = 120;
     private final int handTurningGrabbingPosition = 20;
     private final int handTurningDefaultPosition = 23;
@@ -532,7 +532,7 @@ public class ElevatorDriver {
             step++;
         }
         // wait for an object to be picked up or for this to timeout
-        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance || step == 4 && time + 7 <= getOpModeTime()) {
+        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance && time + 1 <= getOpModeTime() || step == 4 && time + 7 <= getOpModeTime()) {
             updateTime();
             step++;
         }
