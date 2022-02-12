@@ -59,7 +59,7 @@ public class StartingPositionManager {
         imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
         imgProc.init();
         imgProc.activate();
-        imgProc.setZoom(1, 16.0/9);
+        imgProc.setZoom(1.5, 16.0/9);
 
         while (h == 0) {
             h = initialPositionsOrientation(imgProc.identifyStartingPos());

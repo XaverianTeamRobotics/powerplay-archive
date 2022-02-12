@@ -27,7 +27,7 @@ public class openCV extends LinearOpMode {
             public void onOpened() {
                 telemetry.addData("Camera", "True");
                 telemetry.update();
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
                 camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
                 camera.setPipeline(new AwesomePipeline());
             }
