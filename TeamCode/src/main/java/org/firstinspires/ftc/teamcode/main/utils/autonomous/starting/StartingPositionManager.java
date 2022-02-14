@@ -59,7 +59,7 @@ public class StartingPositionManager {
         imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
         imgProc.init();
         imgProc.activate();
-        imgProc.setZoom(1, 16.0/9);
+        imgProc.setZoom(1.5, 16.0/9);
 
         while (h == 0) {
             h = initialPositionsOrientation(imgProc.identifyStartingPos());
@@ -91,6 +91,7 @@ public class StartingPositionManager {
             drivetrainHold();
 
             runElevator();
+            toggleIntakeLifter();
             drivetrainHold();
 
             // Drive forward 4 inches
@@ -101,9 +102,6 @@ public class StartingPositionManager {
             drivetrainHold();
             // Turn clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-            // Raise the intake
-            toggleIntakeLifter();
             drivetrainHold();
             // Go backward 1 tile
             positionSystem.encoderDrive(-15);
@@ -121,13 +119,12 @@ public class StartingPositionManager {
             drivetrainHold();
 
             runElevator();
+            toggleIntakeLifter();
             drivetrainHold();
 
             // Turn counter-clockwise 33 degrees and raise intake
             positionSystem.turnWithCorrection(new Angle(33 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
-
-            toggleIntakeLifter();
             // Drive One Tile
             positionSystem.encoderDrive(13);
             drivetrainHold();

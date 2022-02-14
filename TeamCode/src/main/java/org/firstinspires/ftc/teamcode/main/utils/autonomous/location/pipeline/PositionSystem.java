@@ -25,7 +25,6 @@ public class PositionSystem {
     public CoordinateSystem coordinateSystem;
 
     private StandardVehicleDrivetrain drivetrain = null;
-    private VelocityTracker velocityTracker;
     public StandardIMU imu;
     public StandardIMU.HeadingDataPoint imuDirection = StandardIMU.HeadingDataPoint.HEADING;
     public StandardIMU.CompassReturnData<StandardIMU.HeadingDataPoint, Float> imuData;
@@ -48,6 +47,7 @@ public class PositionSystem {
         this.drivetrain = drivetrain;
     }
 
+    @Deprecated
     public void getAndEvalReadings() {
         updateAngle();
 
@@ -56,6 +56,8 @@ public class PositionSystem {
 
         evalReadings(ew, ns);
     }
+
+    @Deprecated
     private void evalReadings(@NotNull AxisReading eastWest, @NotNull AxisReading northSouth) {
         boolean eastWestValid = true;
         boolean northSouthValid = true;
@@ -150,6 +152,7 @@ public class PositionSystem {
         return input;
     }
 
+    @Deprecated
     public void addDistance(double distance, double angleDegrees) {
         coordinateSystem.update(CoordinateSystem.FieldCoordinates.make(
                 coordinateSystem.current.x + distance * Math.cos(Math.toRadians(angleDegrees)),
@@ -164,7 +167,7 @@ public class PositionSystem {
     }
     public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 30);
+            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 50);
         }
     }
 
@@ -228,7 +231,7 @@ public class PositionSystem {
 
         EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(5000);
 
-        drivetrain.driveWithEncoder(right, left);
+        drivetrain.driveWithoutEncoder(right, left);
 
         while (!timeoutManager.hasTimedOut() || areMotorsBusy()) {
             updateAngle();
@@ -238,6 +241,7 @@ public class PositionSystem {
         }
     }
 
+    @Deprecated
     public void turnNoCorrection(Angle a) {
         float left = 0.5F;
         float right = 0.5F;
@@ -259,6 +263,8 @@ public class PositionSystem {
             drivetrain.driveDistance((int) (right*s), (int) (left*s), 30);
         }
     }
+
+    @Deprecated
     public void runToPosition(CoordinateSystem.FieldCoordinates target) {
         getAndEvalReadings();
 
@@ -276,37 +282,17 @@ public class PositionSystem {
         }
     }
 
-    public void updateVelocityTracker() {
-        if (velocityTracker != null) {
-            velocityTracker.update();
-        }
-    }
-
     /**
      * Return the displacement tracked by the velocityTracker in units of cm
      */
     public double getDisplacement() {
-        if (velocityTracker != null) {
-            return velocityTracker.getCurrentDisplacement();
-        }
-        return 0;
+        return imu.getAcceleration().getY();
     }
 
     /**
      * Return the displacement tracked by the velocityTracker in units of cm
      */
     public double getVelocity() {
-        if (velocityTracker != null) {
-            return velocityTracker.getVelocity();
-        }
-        return 0;
-    }
-
-    private VelocityTracker getVelocityTracker() {
-        return velocityTracker;
-    }
-
-    public void setVelocityTracker(VelocityTracker velocityTracker) {
-        this.velocityTracker = velocityTracker;
+        return imu.getVelocity().getY();
     }
 }
