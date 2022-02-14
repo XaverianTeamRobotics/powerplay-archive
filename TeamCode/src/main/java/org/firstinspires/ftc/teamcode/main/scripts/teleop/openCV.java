@@ -12,10 +12,13 @@ import org.openftc.easyopencv.*;
 @TeleOp(name = "ColinCam", group = "ColinCode")
 public class openCV extends LinearOpMode {
 
+    int stream_W = 640;
+    int stream_H = 480;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         // With live preview
         //OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         WebcamName webCam = hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
@@ -26,7 +29,7 @@ public class openCV extends LinearOpMode {
                 // Usually this is where you'll want to start streaming from the camera (see section 4)
                 telemetry.addData("Camera", "True");
                 telemetry.update();
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(stream_W, stream_H, OpenCvCameraRotation.UPRIGHT);
                 camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
                 camera.setPipeline(new awesomePipeline());
             }
@@ -46,17 +49,24 @@ public class openCV extends LinearOpMode {
     {
         private Mat original = new Mat();
         private Mat output = new Mat();
+        final Scalar blue = new Scalar(255, 0, 0);
 
         @Override
         public Mat processFrame(Mat input)
         {
             original = input;
             Imgproc.cvtColor(input, output,Imgproc.COLOR_RGB2HSV);
-            Point point1 = new Point(0, 100);
-            Point point2 = new Point(200, 100);
-            final Scalar blue = new Scalar(255, 0, 0);
-            Imgproc.line(original, point1, point2, blue, 2,2,0);
+            drawLinesToPoint(original, new Point(200, 100));
             return original;
+        }
+
+        public void drawLinesToPoint(Mat matInput, Point pointInput) {
+            Point point1_1 = new Point(0, pointInput.y); //horizontal line border point
+            Point point1_2 = new Point(pointInput.x, pointInput.y); //horizontal line destination point
+            Point point2_1 = new Point(pointInput.x, 0); //vertical line border point
+            Point point2_2 = new Point(pointInput.x, pointInput.y); //vertical line destination point
+            Imgproc.line(matInput, point1_1, point1_2, blue, 2);
+            Imgproc.line(matInput, point2_1, point2_2, blue, 2);
         }
     }
 }
