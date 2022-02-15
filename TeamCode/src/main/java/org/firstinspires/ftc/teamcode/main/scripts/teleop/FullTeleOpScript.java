@@ -57,6 +57,7 @@ public class FullTeleOpScript extends TeleOpScript {
         elevatorDriver = new ElevatorDriver(inputSpace, outputSpace, getOpMode());
         elevatorDriver.setFeedbackDestination(gamepadManager);
         elevatorDriver.setManualController(gamepadManager);
+        elevatorDriver.setIntakeToggleController(gamepadManager);
         // put everything in their default positions, or auto-calibration
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);

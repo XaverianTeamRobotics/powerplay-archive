@@ -27,6 +27,7 @@ import java.util.HashMap;
  * <p>The elevator can be driven via #setTo&#60;<em>pos_item</em>&#62; where <em>pos</em> is the position and <em>item</em> is the item, block or ball, to dispense. The elevator can also be set via {@link #setPosition(int, boolean)}, although this is only recommended for autonomous OpModes. To physically run the elevator, the {@link #run()} method should be called iteratively.</p>
  * <p>Manual mode can be enabled via {@link #enableManualControl()}, after calling {@link #setManualController(GamepadManager)}. It can then be disabled by {@link #disableManualControl()}, where it will stop a user from having control over the elevator and attempt to safely reset the elevator to its default position.</p>
  * <p>Feedback is enabled by default, although you must specify where to send feedback to. Feedback is in the format of vibrations and as such can be sent to gamepads via a GamepadManager, using {@link #setFeedbackDestination(GamepadManager)}.</p>
+ * <p>The hand can be manually toggled out of the intake position if it does not exit the position itself. This can be enabled by {@link #setIntakeToggleController(GamepadManager)}. If not enabled, the hand will only reset when it detects an object inside itself. Note: This does <strong>not</strong> disable the automatic reset when an object is detected, rather it allows both automatic and manual resetting.</p>
  */
 public class ElevatorDriver {
 
@@ -91,6 +92,8 @@ public class ElevatorDriver {
 
     private GamepadManager optionalFeedbackGamepadManager;
 
+    private GamepadManager optionalIntakeToggleGamepadManager;
+
     /*
     * MANUAL
     * */
@@ -136,6 +139,14 @@ public class ElevatorDriver {
      */
     public void setManualController(GamepadManager gamepadManager) {
         optionalControlGamepadManager = gamepadManager;
+    }
+
+    /**
+     * Tells the driver to listen to the provided {@link GamepadManager} for input from the second controller's cross button to enable manual closing of the hand during object intake.
+     * @param gamepadManager The manager of the gamepadds to listen to
+     */
+    public void setIntakeToggleController(GamepadManager gamepadManager) {
+        optionalIntakeToggleGamepadManager = gamepadManager;
     }
 
     /*
@@ -531,20 +542,40 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // wait for an object to be picked up or for this to timeout
-        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance && time + 1 <= getOpModeTime() || step == 4 && time + 7 <= getOpModeTime()) {
+        if(time + 1 <= getOpModeTime()) {
             updateTime();
             step++;
         }
-        // move back to its original position, with the object in hand
+        // wait for an object to be picked up or for someone to cancel
+        if(step == 4) {
+            // if object picked up, go to next step, if not, skip next step
+            if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
+                updateTime();
+                step++;
+            }else if(optionalIntakeToggleGamepadManager.functionThreeGamepad() != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+                updateTime();
+                step += 2;
+            }
+        }
+        // check if the object is still in the hand, if so go to next step, if not go back a step
         if(step == 5 && time + 0.5 <= getOpModeTime()) {
+            if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
+                updateTime();
+                step++;
+            }else{
+                updateTime();
+                step--;
+            }
+        }
+        // move back to its original position, with the object in hand
+        if(step == 6) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             updateTime();
             step++;
         }
-        if(step == 6) {
+        if(step == 7 && time + 0.5 <= getOpModeTime()) {
             unsetFromIntakePosition();
         }
     }
