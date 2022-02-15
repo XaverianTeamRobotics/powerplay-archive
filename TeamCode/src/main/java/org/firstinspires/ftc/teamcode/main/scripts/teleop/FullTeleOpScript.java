@@ -72,21 +72,21 @@ public class FullTeleOpScript extends TeleOpScript {
         // setup camera
         // FIXME: this needs to work n stuff
         // FIXME: add lib-opencv.so or whatever it is onto robot
-        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
-        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
-        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-
-            @Override
-            public void onOpened() {
-                CAMERA.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
-                CAMERA.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-                CAMERA.setPipeline(SHIPPING_PIPELINE);
-            }
-
-            @Override
-            public void onError(int errorCode) {}
-
-        });
+//        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
+//        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
+//        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//
+//            @Override
+//            public void onOpened() {
+//                CAMERA.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+//                CAMERA.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+//                CAMERA.setPipeline(SHIPPING_PIPELINE);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {}
+//
+//        });
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -104,6 +104,8 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
+        // FIXME: fix this
+//        controlElevatorCamera();
     }
 
     private void calibrateElevator() {
