@@ -84,7 +84,7 @@ public class StartingPositionManager {
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn counter-clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(140 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
             // Drive Back two inches
             positionSystem.encoderDrive(-1.5);
@@ -101,7 +101,7 @@ public class StartingPositionManager {
             positionSystem.turnWithCorrection(new Angle(33 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
             // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(-140 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
             // Go backward 1 tile
             positionSystem.encoderDrive(-15);
@@ -112,7 +112,7 @@ public class StartingPositionManager {
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(-140 * finalTurnModifier, Angle.AngleUnit.DEGREE));
             drivetrainHold();
             // Move Back 2 Inches
             positionSystem.encoderDrive(-1.5);
