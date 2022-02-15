@@ -30,6 +30,8 @@ public class FullTeleOpScript extends TeleOpScript {
     private OpenCvCamera CAMERA;
     private StorageLocatorPipeline SHIPPING_PIPELINE = new StorageLocatorPipeline();
 
+    private int testSpinPos = 0;
+
     public FullTeleOpScript(LinearOpMode opMode) {
         super(opMode);
         // set telemetry to monospace for better text formatting
@@ -105,6 +107,8 @@ public class FullTeleOpScript extends TeleOpScript {
         controlDuck();
         updateLiftControlPermissions();
         // FIXME: fix this
+//        testManualControl();
+        // FIXME: fix this too
 //        controlElevatorCamera();
     }
 
@@ -255,12 +259,30 @@ public class FullTeleOpScript extends TeleOpScript {
         getOpMode().telemetry.update();
     }
 
+    private void testManualControl() {
+        double s = gamepadManager.functionSixGamepad().left_stick_y * 100;
+        int ls = (int) Range.clip(s, -100, 100);
+        int rs = (int) Range.clip(s, -100, 100);
+        // get hand inputs
+        if(gamepadManager.functionSixGamepad().right_stick_y >= 0.2) {
+            testSpinPos += 1;
+        }else if(gamepadManager.functionSixGamepad().right_stick_y <= 0.2) {
+            testSpinPos -= 1;
+        }
+        // make sure theyre wthin boundaries
+        testSpinPos = Range.clip(testSpinPos, 23, 100);
+        getOpMode().telemetry.addData("Left Speed: ", ls);
+        getOpMode().telemetry.addData("Right Speed: ", rs);
+        getOpMode().telemetry.addData("Spin Position: ", testSpinPos);
+    }
+
     @Override
     public void stop() {
         inputSpace.stop();
         outputSpace.stop();
     }
 
+    // TODO: uncomment opencv and manual control tests to test them
     // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
 
 }
