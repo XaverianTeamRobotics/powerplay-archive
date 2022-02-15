@@ -952,49 +952,50 @@ public class ElevatorDriver {
             }
         }else{
             GamepadManager gm = optionalControlGamepadManager;
-            if(time + 0.5 <= getOpModeTime()) {
-                // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
-                double s = gm.functionSixGamepad().left_stick_y * 100;
-                if(LIMIT.isPressed()) {
-                    if(s > 0) {
-                        rightESpeed = 0;
-                        leftESpeed = 0;
-                    }else{
-                        leftESpeed = (int) Range.clip(s, -100, 100);
-                        rightESpeed = (int) Range.clip(s, -100, 100);
-                    }
-                    LEFT_MOTOR.reset();
-                    RIGHT_MOTOR.reset();
-                }else if(!LIMIT.isPressed()) {
+            // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
+            double s = gm.functionSixGamepad().left_stick_y * 100;
+            if(LIMIT.isPressed()) {
+                if(s > 0) {
+                    rightESpeed = 0;
+                    leftESpeed = 0;
+                }else{
                     leftESpeed = (int) Range.clip(s, -100, 100);
                     rightESpeed = (int) Range.clip(s, -100, 100);
                 }
-                // get hand inputs
-                if(gm.functionSixGamepad().right_stick_y >= 0.2) {
-                    spinPos += 1;
-                }else if(gm.functionSixGamepad().right_stick_y <= 0.2) {
-                    spinPos -= 1;
-                }
-                if(gm.functionSixGamepad().right_stick_x >= 0.2) {
-                    rightGPos += 1;
-                    leftGPos -= 1;
-                }else if(gm.functionSixGamepad().right_stick_x <= 0.2) {
-                    rightGPos -= 1;
-                    leftGPos += 1;
-                }
-                // make sure theyre wthin boundaries
-                spinPos = Range.clip(spinPos, 0, 100);
-                rightGPos = Range.clip(rightGPos, handGrabbingPositionRight, handReleasingPositionRight);
-                leftGPos = Range.clip(leftGPos, handReleasingPositionLeft, handGrabbingPositionLeft);
-                // map inputs to devices
-                LEFT_MOTOR.driveWithEncoder(leftESpeed);
-                RIGHT_MOTOR.driveWithEncoder(rightESpeed);
-                HAND_SPINNER.setPosition(spinPos);
-                LEFT_SERVO.setPosition(leftGPos);
-                RIGHT_SERVO.setPosition(rightGPos);
-                // update the timeout variable
-                updateTime();
+                LEFT_MOTOR.reset();
+                RIGHT_MOTOR.reset();
+            }else if(!LIMIT.isPressed()) {
+                leftESpeed = (int) Range.clip(s, -100, 100);
+                rightESpeed = (int) Range.clip(s, -100, 100);
             }
+            if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
+                if(s < 0) {
+                    rightESpeed = 0;
+                    leftESpeed = 0;
+                }else{
+                    leftESpeed = (int) Range.clip(s, -100, 100);
+                    rightESpeed = (int) Range.clip(s, -100, 100);
+                }
+            }
+            // get hand inputs
+            if(gm.functionSixGamepad().right_stick_y >= 0.2) {
+                spinPos -= 1;
+            }else if(gm.functionSixGamepad().right_stick_y <= -0.2) {
+                spinPos += 1;
+            }
+            // make sure theyre wthin boundaries
+            spinPos = Range.clip(spinPos, 23, 50);
+            // map inputs to devices
+            LEFT_MOTOR.driveWithEncoder(leftESpeed);
+            RIGHT_MOTOR.driveWithEncoder(rightESpeed);
+            HAND_SPINNER.setPosition(spinPos);
+            // TODO: hand grabbers manually
+//                LEFT_SERVO.setPosition(leftGPos);
+//                RIGHT_SERVO.setPosition(rightGPos);
+            // TODO: maybe change this to dpad?
+            // TODO: test elevator boundary
+            // update the timeout variable
+            updateTime();
         }
     }
 

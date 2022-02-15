@@ -108,8 +108,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlDuck();
         updateLiftControlPermissions();
         debug();
-        // FIXME: fix this
-//        testManualControl();
         // FIXME: fix this too
 //        controlElevatorCamera();
     }
@@ -206,21 +204,21 @@ public class FullTeleOpScript extends TeleOpScript {
                 }
             }
             // FIXME: this is horribly broken. needs fixing or we wont be able to put our object on the top
-//            // toggles manual control
-//            if(gamepadManager.functionTwoGamepad().right_bumper) {
-//                if(!elevatorButtonWasDown) {
-//                    elevatorShouldBeManuallyControlled = !elevatorShouldBeManuallyControlled;
-//                }
-//                elevatorButtonWasDown = true;
-//            }else{
-//                elevatorButtonWasDown = false;
-//            }
-//            // enables/disables manual control based on toggle
-//            if(elevatorShouldBeManuallyControlled) {
-//                elevatorDriver.enableManualControl();
-//            }else{
-//                elevatorDriver.disableManualControl();
-//            }
+            // toggles manual control
+            if(gamepadManager.functionTwoGamepad().right_bumper) {
+                if(!elevatorButtonWasDown) {
+                    elevatorShouldBeManuallyControlled = !elevatorShouldBeManuallyControlled;
+                }
+                elevatorButtonWasDown = true;
+            }else{
+                elevatorButtonWasDown = false;
+            }
+            // enables/disables manual control based on toggle
+            if(elevatorShouldBeManuallyControlled) {
+                elevatorDriver.enableManualControl();
+            }else{
+                elevatorDriver.disableManualControl();
+            }
         }
     }
 
@@ -258,14 +256,15 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     private void testManualControl() {
+
         double s = gamepadManager.functionSixGamepad().left_stick_y * 100;
         int ls = (int) Range.clip(s, -100, 100);
         int rs = (int) Range.clip(s, -100, 100);
         // get hand inputs
         if(gamepadManager.functionSixGamepad().right_stick_y >= 0.2) {
-            testSpinPos += 1;
-        }else if(gamepadManager.functionSixGamepad().right_stick_y <= 0.2) {
             testSpinPos -= 1;
+        }else if(gamepadManager.functionSixGamepad().right_stick_y <= -0.2) {
+            testSpinPos += 1;
         }
         // make sure theyre wthin boundaries
         testSpinPos = Range.clip(testSpinPos, 23, 100);
@@ -276,6 +275,7 @@ public class FullTeleOpScript extends TeleOpScript {
 
     public void debug() {
         getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
+        getOpMode().telemetry.addData("Elevator L Distance: ", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
         getOpMode().telemetry.update();
     }
 
@@ -287,6 +287,8 @@ public class FullTeleOpScript extends TeleOpScript {
 
     // TODO: uncomment opencv and manual control tests to test them
     // TODO: kira
+    // TODO: remove debug
+    // TODO: add back in functionality to force the intake down if the elevator is not stable
     // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
 
 }
