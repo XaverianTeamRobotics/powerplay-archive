@@ -25,10 +25,10 @@ public class FullTeleOpScript extends TeleOpScript {
     private GamepadManager gamepadManager;
     private InputSpace inputSpace;
     private OutputSpace outputSpace;
-    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, isAllowedToControlElevator = false, noControlIntakeLifter = false, elevatorButtonWasDown = false, elevatorShouldBeManuallyControlled = false;
+    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, isAllowedToControlElevator = false, elevatorButtonWasDown = false, elevatorShouldBeManuallyControlled = false;
     private ElevatorDriver elevatorDriver;
     private OpenCvCamera CAMERA;
-    private StorageLocatorPipeline SHIPPING_PIPELINE = new StorageLocatorPipeline();
+    private StorageLocatorPipeline SHIPPING_PIPELINE;
 
     private int testSpinPos = 0;
 
@@ -63,11 +63,11 @@ public class FullTeleOpScript extends TeleOpScript {
         // put everything in their default positions, or auto-calibration
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 22);
+        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
         calibrateElevator();
         /*
          * VALUES OF INTAKE LIFTER:
-         * LOW: 22
+         * LOW: 20
          * HIGH: 60
          * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
@@ -89,6 +89,7 @@ public class FullTeleOpScript extends TeleOpScript {
 //            public void onError(int errorCode) {}
 //
 //        });
+//        SHIPPING_PIPELINE = new StorageLocatorPipeline();
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -106,6 +107,7 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
+        debug();
         // FIXME: fix this
 //        testManualControl();
         // FIXME: fix this too
@@ -131,15 +133,15 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDrivetrain() {
         // calculate the x and y speeds
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y) * 75, -75, 75);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().right_stick_y) * 75, -75, 75);
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
         // set the defined speeds
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
 
     private void controlIntakeLifter() {
         // move the intake based on the left bumper's state
-        if(gamepadManager.functionTwoGamepad().left_bumper && !noControlIntakeLifter) {
+        if(gamepadManager.functionTwoGamepad().left_bumper) {
             if(!intakeButtonWasDown) {
                 intakeShouldBeDown = !intakeShouldBeDown;
             }
@@ -148,7 +150,7 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
@@ -156,17 +158,13 @@ public class FullTeleOpScript extends TeleOpScript {
 
     public void updateLiftControlPermissions() {
         isAllowedToControlElevator = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 60;
-        if(!elevatorDriver.isStable()) {
-            noControlIntakeLifter = true;
-            intakeShouldBeDown = true;
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
-        }
     }
 
     private void controlIntake() {
         // control the intake motor based on the trigger inputs
-        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * 100, 0, 100);
-        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * 100, 0, 100);
+        int modifier = 90;
+        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * modifier, 0, modifier);
+        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * modifier, 0, modifier);
         int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
         inputSpace.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, intakeSpeed);
     }
@@ -276,6 +274,11 @@ public class FullTeleOpScript extends TeleOpScript {
         getOpMode().telemetry.addData("Spin Position: ", testSpinPos);
     }
 
+    public void debug() {
+        getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
+        getOpMode().telemetry.update();
+    }
+
     @Override
     public void stop() {
         inputSpace.stop();
@@ -283,6 +286,7 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     // TODO: uncomment opencv and manual control tests to test them
+    // TODO: kira
     // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
 
 }

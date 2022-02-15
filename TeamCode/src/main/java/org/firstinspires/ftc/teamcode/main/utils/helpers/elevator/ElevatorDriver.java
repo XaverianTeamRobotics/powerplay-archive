@@ -48,7 +48,7 @@ public class ElevatorDriver {
     private final int handGrabbingPositionLeft = 90;
     private final int handReleasingPositionRight = 89;
     private final int handReleasingPositionLeft = 40;
-    private final int distanceSensorDistance = 120;
+    private final int distanceSensorDistance = 90;
     private final int handTurningGrabbingPosition = 20;
     private final int handTurningDefaultPosition = 23;
     private final int handTurningBottomBallPosition = 36;
@@ -557,12 +557,12 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        if(time + 1 <= getOpModeTime()) {
+        if(step == 4 && time + 1 <= getOpModeTime()) {
             updateTime();
             step++;
         }
         // wait for an object to be picked up or for someone to cancel
-        if(step == 4) {
+        if(step == 5) {
             // if object picked up, go to next step, if not, skip next step
             if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
                 updateTime();
@@ -573,7 +573,7 @@ public class ElevatorDriver {
             }
         }
         // check if the object is still in the hand, if so go to next step, if not go back a step
-        if(step == 5 && time + 0.5 <= getOpModeTime()) {
+        if(step == 6 && time + 0.5 <= getOpModeTime()) {
             if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
                 updateTime();
                 step++;
@@ -583,14 +583,14 @@ public class ElevatorDriver {
             }
         }
         // move back to its original position, with the object in hand
-        if(step == 6) {
+        if(step == 7) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             updateTime();
             step++;
         }
-        if(step == 7 && time + 0.5 <= getOpModeTime()) {
+        if(step == 8 && time + 0.5 <= getOpModeTime()) {
             unsetFromIntakePosition();
         }
     }
