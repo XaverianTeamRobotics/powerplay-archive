@@ -158,8 +158,8 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlIntake() {
         // control the intake motor based on the trigger inputs
-        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * 100, 0, 100);
-        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * 100, 0, 100);
+        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * 100, 0, 100);
+        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * 100, 0, 100);
         int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
         inputSpace.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, intakeSpeed);
     }
@@ -261,6 +261,5 @@ public class FullTeleOpScript extends TeleOpScript {
     // TODO: rumbling feedback change - for the driver, the feedback they gain from rumbles should be blips instead of constant. 1 blip for lower level, 2 blips for med level, 3 blips for top level. this is so they know where to position the robot.
     // TODO: switch the 7 second timeout on the intake pos to a toggle, this will also allow the distance sensor to fail because people can toggle it up themselves
     // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
-    // TODO: switch the intake controls from left forward right backward to left backward right forward
 
 }
