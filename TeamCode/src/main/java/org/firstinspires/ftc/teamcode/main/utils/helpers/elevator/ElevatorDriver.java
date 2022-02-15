@@ -158,7 +158,7 @@ public class ElevatorDriver {
      */
     public void run() {
         if(!isStable()) {
-            rumble();
+            rumbleF2();
             if(isPosIntake) {
                 doPosIntake();
             }else if(isPosLowBall) {
@@ -177,7 +177,7 @@ public class ElevatorDriver {
                 doManualControl();
             }
         }else{
-            derumble();
+            derumbleF2();
         }
     }
 
@@ -224,6 +224,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosIntake = true;
+            rumbleF1(4);
         }
     }
 
@@ -234,6 +235,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosLowBall = true;
+            rumbleF1(1);
         }
     }
 
@@ -244,6 +246,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosMedBall = true;
+            rumbleF1(2);
         }
     }
 
@@ -254,6 +257,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosTopBall = true;
+            rumbleF1(3);
         }
     }
 
@@ -264,6 +268,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosLowBlock = true;
+            rumbleF1(1);
         }
     }
 
@@ -274,6 +279,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosMedBlock = true;
+            rumbleF1(2);
         }
     }
 
@@ -284,6 +290,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosTopBlock = true;
+            rumbleF1(3);
         }
     }
 
@@ -295,6 +302,7 @@ public class ElevatorDriver {
             unstabalize();
             resetManualVars();
             manualMode = true;
+            rumbleF1(5);
         }
     }
 
@@ -408,31 +416,38 @@ public class ElevatorDriver {
     }
 
     /**
-     * Sends feedback, in the form of vibrations or <strong>rumbles</strong>, to a feedback destination if one exists.
+     * Sends feedback, in the form of vibrations or <strong>rumbles</strong>, to a feedback destination if one exists. It will rumble the gamepads assigned to function three.
      */
-    private void rumble() {
+    private void rumbleF2() {
         if(optionalFeedbackGamepadManager != null && rumbleTracker + 1 <= getOpModeTime()) {
-            optionalFeedbackGamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
             optionalFeedbackGamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
             rumbleTracker = getOpModeTime();
         }
     }
 
     /**
-     * Cancels all feedback sent by {@link #rumble()}. Got #rumbleisoverparty trending once.
+     * Sets the amount of rumble blips to be sent to the gamepad assigned to function one of the feedback destination set, if at all.
+     * <ul>
+     *     <li>1 Blip - Lower Position</li>
+     *     <li>2 Blips - Middle Position</li>
+     *     <li>3 Blips - Top Position</li>
+     *     <li>4 Blips - Intake Position</li>
+     *     <li>5 Blips - Manual Control</li>
+     * </ul>
+     * @param blips The amount of blips to be sent
      */
-    private void derumble() {
+    private void rumbleF1(int blips) {
         if(optionalFeedbackGamepadManager != null) {
-            optionalFeedbackGamepadManager.functionOneGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionTwoGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionOneGamepad().rumbleBlips(blips);
+        }
+    }
+
+    /**
+     * Cancels all feedback sent by {@link #rumbleF2()}. Got #rumbleisoverparty trending once.
+     */
+    private void derumbleF2() {
+        if(optionalFeedbackGamepadManager != null) {
             optionalFeedbackGamepadManager.functionThreeGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionFourGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionFiveGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionSixGamepad().stopRumble();
         }
     }
 
