@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.main.scripts.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.opencv.pipelines.StorageLocatorPipeline;
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardColorSensor;
@@ -11,7 +14,11 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServ
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.locations.*;
+import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 import org.firstinspires.ftc.teamcode.main.utils.scripting.TeleOpScript;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class FullTeleOpScript extends TeleOpScript {
 
@@ -20,10 +27,13 @@ public class FullTeleOpScript extends TeleOpScript {
     private OutputSpace outputSpace;
     private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, isAllowedToControlElevator = false, noControlIntakeLifter = false, elevatorButtonWasDown = false, elevatorShouldBeManuallyControlled = false;
     private ElevatorDriver elevatorDriver;
+    private OpenCvCamera CAMERA;
+    private StorageLocatorPipeline SHIPPING_PIPELINE = new StorageLocatorPipeline();
 
     public FullTeleOpScript(LinearOpMode opMode) {
         super(opMode);
-        // set fields and calibrate robot
+        // set telemetry to monospace for better text formatting
+        getOpMode().telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         /*
          * GamepadManager Functions:
          *  F1: Driving
@@ -36,14 +46,18 @@ public class FullTeleOpScript extends TeleOpScript {
          *  U1: F1, F4
          *  U2: F2, F3, F6
          * */
+        // setup gamepads
         gamepadManager = new GamepadManager(getOpMode().gamepad1, getOpMode().gamepad2, getOpMode().gamepad2, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad2);
         getOpMode().gamepad1.reset();
         getOpMode().gamepad2.reset();
+        // setup control spaces
         inputSpace = new InputSpace(getOpMode().hardwareMap);
         outputSpace = new OutputSpace(getOpMode().hardwareMap);
+        // setup elevator driver
         elevatorDriver = new ElevatorDriver(inputSpace, outputSpace, getOpMode());
         elevatorDriver.setFeedbackDestination(gamepadManager);
         elevatorDriver.setManualController(gamepadManager);
+        // put everything in their default positions, or auto-calibration
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
         inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 22);
@@ -54,7 +68,24 @@ public class FullTeleOpScript extends TeleOpScript {
          * HIGH: 60
          * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
-        getOpMode().sleep(1500);
+        // setup camera
+        // FIXME: this needs to work n stuff
+        // FIXME: add lib-opencv.so or whatever it is onto robot
+        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
+        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
+        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+
+            @Override
+            public void onOpened() {
+                CAMERA.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+                CAMERA.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+                CAMERA.setPipeline(SHIPPING_PIPELINE);
+            }
+
+            @Override
+            public void onError(int errorCode) {}
+
+        });
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -169,21 +200,22 @@ public class FullTeleOpScript extends TeleOpScript {
                     elevatorDriver.setToTopBlockPosition();
                 }
             }
-            // toggles manual control
-            if(gamepadManager.functionTwoGamepad().right_bumper) {
-                if(!elevatorButtonWasDown) {
-                    elevatorShouldBeManuallyControlled = !elevatorShouldBeManuallyControlled;
-                }
-                elevatorButtonWasDown = true;
-            }else{
-                elevatorButtonWasDown = false;
-            }
-            // enables/disables manual control based on toggle
-            if(elevatorShouldBeManuallyControlled) {
-                elevatorDriver.enableManualControl();
-            }else{
-                elevatorDriver.disableManualControl();
-            }
+            // FIXME: this is horribly broken. needs fixing or we wont be able to put our object on the top
+//            // toggles manual control
+//            if(gamepadManager.functionTwoGamepad().right_bumper) {
+//                if(!elevatorButtonWasDown) {
+//                    elevatorShouldBeManuallyControlled = !elevatorShouldBeManuallyControlled;
+//                }
+//                elevatorButtonWasDown = true;
+//            }else{
+//                elevatorButtonWasDown = false;
+//            }
+//            // enables/disables manual control based on toggle
+//            if(elevatorShouldBeManuallyControlled) {
+//                elevatorDriver.enableManualControl();
+//            }else{
+//                elevatorDriver.disableManualControl();
+//            }
         }
     }
 
@@ -194,10 +226,41 @@ public class FullTeleOpScript extends TeleOpScript {
         inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, speed);
     }
 
+    private void controlElevatorCamera() {
+        int result = SHIPPING_PIPELINE.getResult();
+        int[][] map = new int[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0}
+        };
+        int row = 2;
+        if(result <= 6) {
+            row = 1;
+        }
+        if(result <= 3) {
+            row = 0;
+        }
+        int col = result % 3;
+        map[row][col] = 1;
+        String str1 = map[0][0] + " " + map[0][1] + " " + map[0][2];
+        String str2 = map[1][0] + " " + map[1][1] + " " + map[1][2];
+        String str3 = map[2][0] + " " + map[2][1] + " " + map[2][2];
+        getOpMode().telemetry.log().clear();
+        getOpMode().telemetry.log().add(str1);
+        getOpMode().telemetry.log().add(str2);
+        getOpMode().telemetry.log().add(str3);
+        getOpMode().telemetry.update();
+    }
+
     @Override
     public void stop() {
         inputSpace.stop();
         outputSpace.stop();
     }
+
+    // TODO: rumbling feedback change - for the driver, the feedback they gain from rumbles should be blips instead of constant. 1 blip for lower level, 2 blips for med level, 3 blips for top level. this is so they know where to position the robot.
+    // TODO: switch the 7 second timeout on the intake pos to a toggle, this will also allow the distance sensor to fail because people can toggle it up themselves
+    // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
+    // TODO: switch the intake controls from left forward right backward to left backward right forward
 
 }
