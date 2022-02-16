@@ -131,8 +131,9 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDrivetrain() {
         // calculate the x and y speeds
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
+        int modifier = 90;
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * modifier, -modifier, modifier);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * modifier, -modifier, modifier);
         // set the defined speeds
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
@@ -163,7 +164,7 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlIntake() {
         // control the intake motor based on the trigger inputs
-        int modifier = 90;
+        int modifier = 100;
         int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * modifier, 0, modifier);
         int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * modifier, 0, modifier);
         int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
@@ -278,6 +279,7 @@ public class FullTeleOpScript extends TeleOpScript {
     public void debug() {
         getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
         getOpMode().telemetry.addData("Elevator L Distance: ", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
+        getOpMode().telemetry.addData("Hand Spin Pos: ", ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition());
         getOpMode().telemetry.update();
     }
 

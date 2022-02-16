@@ -107,14 +107,31 @@ public class StartingPositionManager {
             drivetrainHold();*/
         }
         else {
-            // Move Forward 1 Tile
+            // Kick thing away from us so we dont drive over it
+            int degree = 0;
+            if(ballDropHeight == 1) {
+                degree = 20;
+            }else if(ballDropHeight == 3) {
+                degree = -20;
+            }
+            positionSystem.turnWithCorrection(new Angle(degree * turnModifier, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
+            opMode.sleep(4000);
+            input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, -100);
+            positionSystem.encoderDrive(9);
+            drivetrainHold();
+            input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, 0);
+            positionSystem.encoderDrive(-9);
+            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(-degree * turnModifier, Angle.AngleUnit.DEGREE));
+            drivetrainHold();
+            // Drive forward one tile
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn clockwise 135 degrees
             positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
-
-            // Move Back 2 Inches
-            positionSystem.encoderDrive(-3);
+            drivetrainHold();
+            positionSystem.encoderDrive(2);
             drivetrainHold();
 
             runElevator();
@@ -205,7 +222,7 @@ public class StartingPositionManager {
         // move the intake based on the left bumper's state
         intakeShouldBeDown = !intakeShouldBeDown;
         if(intakeShouldBeDown) {
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
         }else{
             input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
