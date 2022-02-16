@@ -953,34 +953,37 @@ public class ElevatorDriver {
         }else{
             GamepadManager gm = optionalControlGamepadManager;
             // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
-            double s = gm.functionSixGamepad().left_stick_y * 60;
+            int a = gm.functionSixGamepad().dpad_down ? 1 : 0;
+            int y = gm.functionSixGamepad().dpad_up ? 1 : 0;
+            int spd = a - y;
+            int s = spd * 60;
             if(LIMIT.isPressed()) {
                 if(s > 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
                 }else{
-                    leftESpeed = (int) Range.clip(s, -60, 60);
-                    rightESpeed = (int) Range.clip(s, -60, 60);
+                    leftESpeed = Range.clip(s, -60, 60);
+                    rightESpeed = Range.clip(s, -60, 60);
                 }
                 LEFT_MOTOR.reset();
                 RIGHT_MOTOR.reset();
             }else if(!LIMIT.isPressed()) {
-                leftESpeed = (int) Range.clip(s, -60, 60);
-                rightESpeed = (int) Range.clip(s, -60, 60);
+                leftESpeed = Range.clip(s, -60, 60);
+                rightESpeed = Range.clip(s, -60, 60);
             }
             if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
                 if(s < 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
                 }else{
-                    leftESpeed = (int) Range.clip(s, -60, 60);
-                    rightESpeed = (int) Range.clip(s, -60, 60);
+                    leftESpeed = Range.clip(s, -60, 60);
+                    rightESpeed = Range.clip(s, -60, 60);
                 }
             }
             // get hand inputs
-            if(gm.functionSixGamepad().right_stick_y >= 0.2) {
+            if(gm.functionSixGamepad().dpad_right) {
                 spinPos -= 1;
-            }else if(gm.functionSixGamepad().right_stick_y <= -0.2) {
+            }else if(gm.functionSixGamepad().dpad_left) {
                 spinPos += 1;
             }
             // make sure theyre wthin boundaries
@@ -992,7 +995,6 @@ public class ElevatorDriver {
             // TODO: hand grabbers manually
 //                LEFT_SERVO.setPosition(leftGPos);
 //                RIGHT_SERVO.setPosition(rightGPos);
-            // TODO: maybe change this to dpad?
             // TODO: test elevator boundary
             // update the timeout variable
             updateTime();
