@@ -101,6 +101,8 @@ public class ElevatorDriver {
     private GamepadManager optionalControlGamepadManager;
     private boolean manualMode = false;
     private boolean manualModeIsResetting = false;
+    private boolean grabberButtonWasDown = false;
+    private boolean grabberShouldBeOpen = false;
     private int rightESpeed;
     private int leftESpeed;
     private int rightGPos;
@@ -988,16 +990,29 @@ public class ElevatorDriver {
             }
             // make sure theyre wthin boundaries
             spinPos = Range.clip(spinPos, 23, 50);
+            // get grabber inputs
+            if(gm.functionSixGamepad().touchpad) {
+                if(!grabberButtonWasDown) {
+                    grabberShouldBeOpen = !grabberShouldBeOpen;
+                }
+                grabberButtonWasDown = true;
+            }else{
+                grabberButtonWasDown = false;
+            }
             // map inputs to devices
             LEFT_MOTOR.driveWithEncoder(leftESpeed);
             RIGHT_MOTOR.driveWithEncoder(rightESpeed);
             HAND_SPINNER.setPosition(spinPos);
-            // TODO: hand grabbers manually
-//                LEFT_SERVO.setPosition(leftGPos);
-//                RIGHT_SERVO.setPosition(rightGPos);
-            // TODO: test elevator boundary
+            if(grabberShouldBeOpen) {
+                LEFT_SERVO.setPosition(handReleasingPositionLeft);
+                RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            }else{
+                LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+                RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            }
             // update the timeout variable
             updateTime();
+            // TODO: test elevator boundary
         }
     }
 
