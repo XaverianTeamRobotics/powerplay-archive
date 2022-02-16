@@ -292,5 +292,6 @@ public class FullTeleOpScript extends TeleOpScript {
     // TODO: uncomment opencv to test it
     // TODO: kira
     // TODO: remove debug
+    // TODO: intake lifter toggle not working, need to fix
 
 }

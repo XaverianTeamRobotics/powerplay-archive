@@ -943,6 +943,9 @@ public class ElevatorDriver {
                     if(!LIMIT.isPressed()) {
                         LEFT_MOTOR.driveWithEncoder(40);
                         RIGHT_MOTOR.driveWithEncoder(40);
+                    }else{
+                        LEFT_MOTOR.driveWithEncoder(0);
+                        RIGHT_MOTOR.driveWithEncoder(0);
                     }
                     step++;
                 }
@@ -973,7 +976,7 @@ public class ElevatorDriver {
                 leftESpeed = Range.clip(s, -60, 60);
                 rightESpeed = Range.clip(s, -60, 60);
             }
-            if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
+            if(Math.abs(LEFT_MOTOR.getDcMotor().getCurrentPosition()) >= 950) {
                 if(s < 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
@@ -1012,7 +1015,6 @@ public class ElevatorDriver {
             }
             // update the timeout variable
             updateTime();
-            // TODO: test elevator boundary
         }
     }
 
