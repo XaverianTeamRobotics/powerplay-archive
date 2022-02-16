@@ -156,6 +156,9 @@ public class FullTeleOpScript extends TeleOpScript {
 
     public void updateLiftControlPermissions() {
         isAllowedToControlElevator = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 60;
+        if(!elevatorDriver.isStable()) {
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
+        }
     }
 
     private void controlIntake() {
@@ -287,6 +290,5 @@ public class FullTeleOpScript extends TeleOpScript {
     // TODO: uncomment opencv to test it
     // TODO: kira
     // TODO: remove debug
-    // TODO: add back in functionality to force the intake down if the elevator is not stable
 
 }
