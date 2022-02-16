@@ -203,7 +203,6 @@ public class FullTeleOpScript extends TeleOpScript {
                     elevatorDriver.setToTopBlockPosition();
                 }
             }
-            // FIXME: this is horribly broken. needs fixing or we wont be able to put our object on the top
             // toggles manual control
             if(gamepadManager.functionTwoGamepad().right_bumper) {
                 if(!elevatorButtonWasDown) {
@@ -285,10 +284,9 @@ public class FullTeleOpScript extends TeleOpScript {
         outputSpace.stop();
     }
 
-    // TODO: uncomment opencv and manual control tests to test them
+    // TODO: uncomment opencv to test it
     // TODO: kira
     // TODO: remove debug
     // TODO: add back in functionality to force the intake down if the elevator is not stable
-    // TODO: make the distance sensor stricter to force objects to be closer because currently it can detect objects 12 cm away which is too far
 
 }
