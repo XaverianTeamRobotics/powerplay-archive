@@ -953,28 +953,28 @@ public class ElevatorDriver {
         }else{
             GamepadManager gm = optionalControlGamepadManager;
             // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
-            double s = gm.functionSixGamepad().left_stick_y * 100;
+            double s = gm.functionSixGamepad().left_stick_y * 60;
             if(LIMIT.isPressed()) {
                 if(s > 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
                 }else{
-                    leftESpeed = (int) Range.clip(s, -100, 100);
-                    rightESpeed = (int) Range.clip(s, -100, 100);
+                    leftESpeed = (int) Range.clip(s, -60, 60);
+                    rightESpeed = (int) Range.clip(s, -60, 60);
                 }
                 LEFT_MOTOR.reset();
                 RIGHT_MOTOR.reset();
             }else if(!LIMIT.isPressed()) {
-                leftESpeed = (int) Range.clip(s, -100, 100);
-                rightESpeed = (int) Range.clip(s, -100, 100);
+                leftESpeed = (int) Range.clip(s, -60, 60);
+                rightESpeed = (int) Range.clip(s, -60, 60);
             }
             if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
                 if(s < 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
                 }else{
-                    leftESpeed = (int) Range.clip(s, -100, 100);
-                    rightESpeed = (int) Range.clip(s, -100, 100);
+                    leftESpeed = (int) Range.clip(s, -60, 60);
+                    rightESpeed = (int) Range.clip(s, -60, 60);
                 }
             }
             // get hand inputs
