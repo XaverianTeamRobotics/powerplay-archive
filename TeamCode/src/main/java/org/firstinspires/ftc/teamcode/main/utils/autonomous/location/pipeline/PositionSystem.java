@@ -167,7 +167,7 @@ public class PositionSystem {
     }
     public void encoderDrive(float distanceLeft, float distanceRight) {
         if (drivetrain != null) {
-            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 50);
+            drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 30);
         }
     }
 
@@ -189,23 +189,24 @@ public class PositionSystem {
 
             updateAngle();
 
-            int leftInches = 1;
-            int rightInches = -1;
+            int leftSpeed = 1;
+            int rightSpeed = -1;
 
             switch (turnDirection) {
                 case CW:
-                    rightInches = -rightInches;
+                    rightSpeed = -rightSpeed;
                     while (normalizeDegrees((float) coordinateSystem.angle.asDegree()) <= normalizeDegrees((float) absoluteDegree)) {
-                        encoderDrive(leftInches, rightInches);
-                        while (drivetrain.getRightTop().getDcMotor().isBusy() || drivetrain.getLeftTop().getDcMotor().isBusy() || drivetrain.getLeftBottom().getDcMotor().isBusy() || drivetrain.getRightBottom().getDcMotor().isBusy()) {}
+                        drivetrain.driveWithEncoder(rightSpeed, leftSpeed);
+                        while (areMotorsBusy()) {}
                     }
                     break;
                 case CCW:
-                    leftInches = -leftInches;
+                    leftSpeed = -leftSpeed;
                     while (normalizeDegrees((float) coordinateSystem.angle.asDegree()) >= normalizeDegrees((float) absoluteDegree)) {
-                        encoderDrive(leftInches, rightInches);
-                        while (drivetrain.getRightTop().getDcMotor().isBusy() || drivetrain.getLeftTop().getDcMotor().isBusy() || drivetrain.getLeftBottom().getDcMotor().isBusy() || drivetrain.getRightBottom().getDcMotor().isBusy()) {}
+                        drivetrain.driveWithEncoder(rightSpeed, leftSpeed);
+                        while (areMotorsBusy()) {}
                     }
+                    drivetrain.brake();
                     break;
             }
         }
@@ -231,14 +232,18 @@ public class PositionSystem {
 
         EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(5000);
 
-        drivetrain.driveWithoutEncoder(right, left);
+        timeoutManager.restart();
 
-        while (!timeoutManager.hasTimedOut() || areMotorsBusy()) {
+        drivetrain.driveWithEncoder(right, left);
+
+        do {
             updateAngle();
             if (imuData.getHeading() < angle + 5 && imuData.getHeading() > angle - 5) {
                 break;
             }
-        }
+        } while (!timeoutManager.hasTimedOut() || areMotorsBusy());
+
+        drivetrain.brake();
     }
 
     @Deprecated

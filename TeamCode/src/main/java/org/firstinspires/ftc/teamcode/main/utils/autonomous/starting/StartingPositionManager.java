@@ -68,7 +68,6 @@ public class StartingPositionManager {
 
         int turnModifier = 1;
         if (!isBlueSide) turnModifier = -turnModifier;
-        int finalTurnModifier = turnModifier;
 
         opMode.waitForStart();
 
@@ -84,8 +83,8 @@ public class StartingPositionManager {
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn counter-clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(140 * turnModifier, Angle.AngleUnit.DEGREE));
+
             // Drive Back two inches
             positionSystem.encoderDrive(-1.5);
             drivetrainHold();
@@ -97,25 +96,25 @@ public class StartingPositionManager {
             // Drive forward 4 inches
             positionSystem.encoderDrive(3);
             drivetrainHold();
-            // Turn counter-clockwise 33 degrees
-            positionSystem.turnWithCorrection(new Angle(33 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
+/*            // Turn counter-clockwise 33 degrees
+            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+
             // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
+
             // Go backward 1 tile
             positionSystem.encoderDrive(-15);
-            drivetrainHold();
+            drivetrainHold();*/
         }
         else {
             // Move Forward 1 Tile
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-135 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
+
             // Move Back 2 Inches
-            positionSystem.encoderDrive(-1.5);
+            positionSystem.encoderDrive(-3);
             drivetrainHold();
 
             runElevator();
@@ -123,8 +122,8 @@ public class StartingPositionManager {
             drivetrainHold();
 
             // Turn counter-clockwise 33 degrees and raise intake
-            positionSystem.turnWithCorrection(new Angle(33 * finalTurnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+
             // Drive One Tile
             positionSystem.encoderDrive(13);
             drivetrainHold();
