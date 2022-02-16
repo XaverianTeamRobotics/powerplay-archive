@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.main.scripts.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.opencv.pipelines.StorageLocatorPipeline;
 import org.firstinspires.ftc.teamcode.main.utils.gamepads.GamepadManager;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
 import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardColorSensor;
@@ -11,19 +14,28 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardServ
 import org.firstinspires.ftc.teamcode.main.utils.io.InputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.io.OutputSpace;
 import org.firstinspires.ftc.teamcode.main.utils.locations.*;
+import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 import org.firstinspires.ftc.teamcode.main.utils.scripting.TeleOpScript;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class FullTeleOpScript extends TeleOpScript {
 
     private GamepadManager gamepadManager;
     private InputSpace inputSpace;
     private OutputSpace outputSpace;
-    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, isAllowedToControlElevator = false, noControlIntakeLifter = false, elevatorButtonWasDown = false, elevatorShouldBeManuallyControlled = false;
+    private boolean intakeShouldBeDown = false, intakeButtonWasDown = false, isAllowedToControlElevator = false, elevatorButtonWasDown = false, elevatorShouldBeManuallyControlled = false;
     private ElevatorDriver elevatorDriver;
+    private OpenCvCamera CAMERA;
+    private StorageLocatorPipeline SHIPPING_PIPELINE;
+
+    private int testSpinPos = 0;
 
     public FullTeleOpScript(LinearOpMode opMode) {
         super(opMode);
-        // set fields and calibrate robot
+        // set telemetry to monospace for better text formatting
+        getOpMode().telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         /*
          * GamepadManager Functions:
          *  F1: Driving
@@ -36,25 +48,48 @@ public class FullTeleOpScript extends TeleOpScript {
          *  U1: F1, F4
          *  U2: F2, F3, F6
          * */
+        // setup gamepads
         gamepadManager = new GamepadManager(getOpMode().gamepad1, getOpMode().gamepad2, getOpMode().gamepad2, getOpMode().gamepad1, getOpMode().gamepad1, getOpMode().gamepad2);
         getOpMode().gamepad1.reset();
         getOpMode().gamepad2.reset();
+        // setup control spaces
         inputSpace = new InputSpace(getOpMode().hardwareMap);
         outputSpace = new OutputSpace(getOpMode().hardwareMap);
+        // setup elevator driver
         elevatorDriver = new ElevatorDriver(inputSpace, outputSpace, getOpMode());
         elevatorDriver.setFeedbackDestination(gamepadManager);
         elevatorDriver.setManualController(gamepadManager);
+        elevatorDriver.setIntakeToggleController(gamepadManager);
+        // put everything in their default positions, or auto-calibration
         inputSpace.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
         inputSpace.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
-        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 22);
+        inputSpace.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
         calibrateElevator();
         /*
          * VALUES OF INTAKE LIFTER:
-         * LOW: 22
+         * LOW: 20
          * HIGH: 60
          * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
-        getOpMode().sleep(1500);
+        // setup camera
+        // FIXME: this needs to work n stuff
+        // FIXME: add lib-opencv.so or whatever it is onto robot
+//        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
+//        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
+//        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//
+//            @Override
+//            public void onOpened() {
+//                CAMERA.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+//                CAMERA.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+//                CAMERA.setPipeline(SHIPPING_PIPELINE);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {}
+//
+//        });
+//        SHIPPING_PIPELINE = new StorageLocatorPipeline();
         // alert drivers robot is ready
         gamepadManager.functionOneGamepad().rumble(1000);
         gamepadManager.functionTwoGamepad().rumble(1000);
@@ -72,6 +107,9 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
+        debug();
+        // FIXME: fix this too
+//        controlElevatorCamera();
     }
 
     private void calibrateElevator() {
@@ -93,15 +131,15 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDrivetrain() {
         // calculate the x and y speeds
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y) * 75, -75, 75);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().right_stick_y) * 75, -75, 75);
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
         // set the defined speeds
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
 
     private void controlIntakeLifter() {
         // move the intake based on the left bumper's state
-        if(gamepadManager.functionTwoGamepad().left_bumper && !noControlIntakeLifter) {
+        if(gamepadManager.functionTwoGamepad().left_bumper) {
             if(!intakeButtonWasDown) {
                 intakeShouldBeDown = !intakeShouldBeDown;
             }
@@ -110,7 +148,7 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
         }else{
             inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }
@@ -119,16 +157,15 @@ public class FullTeleOpScript extends TeleOpScript {
     public void updateLiftControlPermissions() {
         isAllowedToControlElevator = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 60;
         if(!elevatorDriver.isStable()) {
-            noControlIntakeLifter = true;
-            intakeShouldBeDown = true;
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 22);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
         }
     }
 
     private void controlIntake() {
         // control the intake motor based on the trigger inputs
-        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * 100, 0, 100);
-        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * 100, 0, 100);
+        int modifier = 90;
+        int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * modifier, 0, modifier);
+        int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * modifier, 0, modifier);
         int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
         inputSpace.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, intakeSpeed);
     }
@@ -194,10 +231,64 @@ public class FullTeleOpScript extends TeleOpScript {
         inputSpace.sendInputToDuckMotor(DuckMotorLocation.Action.SET_SPEED, speed);
     }
 
+    private void controlElevatorCamera() {
+        int result = SHIPPING_PIPELINE.getResult();
+        int[][] map = new int[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0}
+        };
+        int row = 2;
+        if(result <= 6) {
+            row = 1;
+        }
+        if(result <= 3) {
+            row = 0;
+        }
+        int col = result % 3;
+        map[row][col] = 1;
+        String str1 = map[0][0] + " " + map[0][1] + " " + map[0][2];
+        String str2 = map[1][0] + " " + map[1][1] + " " + map[1][2];
+        String str3 = map[2][0] + " " + map[2][1] + " " + map[2][2];
+        getOpMode().telemetry.log().clear();
+        getOpMode().telemetry.log().add(str1);
+        getOpMode().telemetry.log().add(str2);
+        getOpMode().telemetry.log().add(str3);
+        getOpMode().telemetry.update();
+    }
+
+    private void testManualControl() {
+
+        double s = gamepadManager.functionSixGamepad().left_stick_y * 100;
+        int ls = (int) Range.clip(s, -100, 100);
+        int rs = (int) Range.clip(s, -100, 100);
+        // get hand inputs
+        if(gamepadManager.functionSixGamepad().right_stick_y >= 0.2) {
+            testSpinPos -= 1;
+        }else if(gamepadManager.functionSixGamepad().right_stick_y <= -0.2) {
+            testSpinPos += 1;
+        }
+        // make sure theyre wthin boundaries
+        testSpinPos = Range.clip(testSpinPos, 23, 100);
+        getOpMode().telemetry.addData("Left Speed: ", ls);
+        getOpMode().telemetry.addData("Right Speed: ", rs);
+        getOpMode().telemetry.addData("Spin Position: ", testSpinPos);
+    }
+
+    public void debug() {
+        getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
+        getOpMode().telemetry.addData("Elevator L Distance: ", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
+        getOpMode().telemetry.update();
+    }
+
     @Override
     public void stop() {
         inputSpace.stop();
         outputSpace.stop();
     }
+
+    // TODO: uncomment opencv to test it
+    // TODO: kira
+    // TODO: remove debug
 
 }

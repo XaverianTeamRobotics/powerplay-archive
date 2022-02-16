@@ -27,6 +27,7 @@ import java.util.HashMap;
  * <p>The elevator can be driven via #setTo&#60;<em>pos_item</em>&#62; where <em>pos</em> is the position and <em>item</em> is the item, block or ball, to dispense. The elevator can also be set via {@link #setPosition(int, boolean)}, although this is only recommended for autonomous OpModes. To physically run the elevator, the {@link #run()} method should be called iteratively.</p>
  * <p>Manual mode can be enabled via {@link #enableManualControl()}, after calling {@link #setManualController(GamepadManager)}. It can then be disabled by {@link #disableManualControl()}, where it will stop a user from having control over the elevator and attempt to safely reset the elevator to its default position.</p>
  * <p>Feedback is enabled by default, although you must specify where to send feedback to. Feedback is in the format of vibrations and as such can be sent to gamepads via a GamepadManager, using {@link #setFeedbackDestination(GamepadManager)}.</p>
+ * <p>The hand can be manually toggled out of the intake position if it does not exit the position itself. This can be enabled by {@link #setIntakeToggleController(GamepadManager)}. If not enabled, the hand will only reset when it detects an object inside itself. Note: This does <strong>not</strong> disable the automatic reset when an object is detected, rather it allows both automatic and manual resetting.</p>
  */
 public class ElevatorDriver {
 
@@ -47,7 +48,7 @@ public class ElevatorDriver {
     private final int handGrabbingPositionLeft = 90;
     private final int handReleasingPositionRight = 89;
     private final int handReleasingPositionLeft = 40;
-    private final int distanceSensorDistance = 120;
+    private final int distanceSensorDistance = 90;
     private final int handTurningGrabbingPosition = 20;
     private final int handTurningDefaultPosition = 23;
     private final int handTurningBottomBallPosition = 36;
@@ -91,6 +92,8 @@ public class ElevatorDriver {
 
     private GamepadManager optionalFeedbackGamepadManager;
 
+    private GamepadManager optionalIntakeToggleGamepadManager;
+
     /*
     * MANUAL
     * */
@@ -98,6 +101,8 @@ public class ElevatorDriver {
     private GamepadManager optionalControlGamepadManager;
     private boolean manualMode = false;
     private boolean manualModeIsResetting = false;
+    private boolean grabberButtonWasDown = false;
+    private boolean grabberShouldBeOpen = false;
     private int rightESpeed;
     private int leftESpeed;
     private int rightGPos;
@@ -138,6 +143,14 @@ public class ElevatorDriver {
         optionalControlGamepadManager = gamepadManager;
     }
 
+    /**
+     * Tells the driver to listen to the provided {@link GamepadManager} for input from the second controller's cross button to enable manual closing of the hand during object intake.
+     * @param gamepadManager The manager of the gamepadds to listen to
+     */
+    public void setIntakeToggleController(GamepadManager gamepadManager) {
+        optionalIntakeToggleGamepadManager = gamepadManager;
+    }
+
     /*
     * DRIVER
     * */
@@ -147,7 +160,7 @@ public class ElevatorDriver {
      */
     public void run() {
         if(!isStable()) {
-            rumble();
+            rumbleF2();
             if(isPosIntake) {
                 doPosIntake();
             }else if(isPosLowBall) {
@@ -166,7 +179,7 @@ public class ElevatorDriver {
                 doManualControl();
             }
         }else{
-            derumble();
+            derumbleF2();
         }
     }
 
@@ -213,6 +226,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosIntake = true;
+            rumbleF1(4);
         }
     }
 
@@ -223,6 +237,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosLowBall = true;
+            rumbleF1(1);
         }
     }
 
@@ -233,6 +248,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosMedBall = true;
+            rumbleF1(2);
         }
     }
 
@@ -243,6 +259,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosTopBall = true;
+            rumbleF1(3);
         }
     }
 
@@ -253,6 +270,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosLowBlock = true;
+            rumbleF1(1);
         }
     }
 
@@ -263,6 +281,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosMedBlock = true;
+            rumbleF1(2);
         }
     }
 
@@ -273,6 +292,7 @@ public class ElevatorDriver {
         if(isStable()) {
             unstabalize();
             isPosTopBlock = true;
+            rumbleF1(3);
         }
     }
 
@@ -284,6 +304,7 @@ public class ElevatorDriver {
             unstabalize();
             resetManualVars();
             manualMode = true;
+            rumbleF1(5);
         }
     }
 
@@ -397,31 +418,38 @@ public class ElevatorDriver {
     }
 
     /**
-     * Sends feedback, in the form of vibrations or <strong>rumbles</strong>, to a feedback destination if one exists.
+     * Sends feedback, in the form of vibrations or <strong>rumbles</strong>, to a feedback destination if one exists. It will rumble the gamepads assigned to function three.
      */
-    private void rumble() {
+    private void rumbleF2() {
         if(optionalFeedbackGamepadManager != null && rumbleTracker + 1 <= getOpModeTime()) {
-            optionalFeedbackGamepadManager.functionOneGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionTwoGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
             optionalFeedbackGamepadManager.functionThreeGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionFourGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionFiveGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            optionalFeedbackGamepadManager.functionSixGamepad().rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
             rumbleTracker = getOpModeTime();
         }
     }
 
     /**
-     * Cancels all feedback sent by {@link #rumble()}. Got #rumbleisoverparty trending once.
+     * Sets the amount of rumble blips to be sent to the gamepad assigned to function one of the feedback destination set, if at all.
+     * <ul>
+     *     <li>1 Blip - Lower Position</li>
+     *     <li>2 Blips - Middle Position</li>
+     *     <li>3 Blips - Top Position</li>
+     *     <li>4 Blips - Intake Position</li>
+     *     <li>5 Blips - Manual Control</li>
+     * </ul>
+     * @param blips The amount of blips to be sent
      */
-    private void derumble() {
+    private void rumbleF1(int blips) {
         if(optionalFeedbackGamepadManager != null) {
-            optionalFeedbackGamepadManager.functionOneGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionTwoGamepad().stopRumble();
+            optionalFeedbackGamepadManager.functionOneGamepad().rumbleBlips(blips);
+        }
+    }
+
+    /**
+     * Cancels all feedback sent by {@link #rumbleF2()}. Got #rumbleisoverparty trending once.
+     */
+    private void derumbleF2() {
+        if(optionalFeedbackGamepadManager != null) {
             optionalFeedbackGamepadManager.functionThreeGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionFourGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionFiveGamepad().stopRumble();
-            optionalFeedbackGamepadManager.functionSixGamepad().stopRumble();
         }
     }
 
@@ -531,20 +559,40 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // wait for an object to be picked up or for this to timeout
-        if(step == 4 && DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance && time + 1 <= getOpModeTime() || step == 4 && time + 7 <= getOpModeTime()) {
+        if(step == 4 && time + 1 <= getOpModeTime()) {
             updateTime();
             step++;
         }
+        // wait for an object to be picked up or for someone to cancel
+        if(step == 5) {
+            // if object picked up, go to next step, if not, skip next step
+            if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
+                updateTime();
+                step++;
+            }else if(optionalIntakeToggleGamepadManager.functionThreeGamepad() != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+                updateTime();
+                step += 2;
+            }
+        }
+        // check if the object is still in the hand, if so go to next step, if not go back a step
+        if(step == 6 && time + 0.5 <= getOpModeTime()) {
+            if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
+                updateTime();
+                step++;
+            }else{
+                updateTime();
+                step--;
+            }
+        }
         // move back to its original position, with the object in hand
-        if(step == 5 && time + 0.5 <= getOpModeTime()) {
+        if(step == 7) {
             LEFT_SERVO.setPosition(handGrabbingPositionLeft);
             RIGHT_SERVO.setPosition(handGrabbingPositionRight);
             HAND_SPINNER.setPosition(handTurningDefaultPosition);
             updateTime();
             step++;
         }
-        if(step == 6) {
+        if(step == 8 && time + 0.5 <= getOpModeTime()) {
             unsetFromIntakePosition();
         }
     }
@@ -906,49 +954,65 @@ public class ElevatorDriver {
             }
         }else{
             GamepadManager gm = optionalControlGamepadManager;
-            if(time + 0.5 <= getOpModeTime()) {
-                // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
-                double s = gm.functionSixGamepad().left_stick_y * 100;
-                if(LIMIT.isPressed()) {
-                    if(s > 0) {
-                        rightESpeed = 0;
-                        leftESpeed = 0;
-                    }else{
-                        leftESpeed = (int) Range.clip(s, -100, 100);
-                        rightESpeed = (int) Range.clip(s, -100, 100);
-                    }
-                    LEFT_MOTOR.reset();
-                    RIGHT_MOTOR.reset();
-                }else if(!LIMIT.isPressed()) {
-                    leftESpeed = (int) Range.clip(s, -100, 100);
-                    rightESpeed = (int) Range.clip(s, -100, 100);
+            // for the elevator, get our inputs and, if the elevator is at the bottom, reset it prematurely and limit inputs to the correct direction
+            int a = gm.functionSixGamepad().dpad_down ? 1 : 0;
+            int y = gm.functionSixGamepad().dpad_up ? 1 : 0;
+            int spd = a - y;
+            int s = spd * 60;
+            if(LIMIT.isPressed()) {
+                if(s > 0) {
+                    rightESpeed = 0;
+                    leftESpeed = 0;
+                }else{
+                    leftESpeed = Range.clip(s, -60, 60);
+                    rightESpeed = Range.clip(s, -60, 60);
                 }
-                // get hand inputs
-                if(gm.functionSixGamepad().right_stick_y >= 0.2) {
-                    spinPos += 1;
-                }else if(gm.functionSixGamepad().right_stick_y <= 0.2) {
-                    spinPos -= 1;
-                }
-                if(gm.functionSixGamepad().right_stick_x >= 0.2) {
-                    rightGPos += 1;
-                    leftGPos -= 1;
-                }else if(gm.functionSixGamepad().right_stick_x <= 0.2) {
-                    rightGPos -= 1;
-                    leftGPos += 1;
-                }
-                // make sure theyre wthin boundaries
-                spinPos = Range.clip(spinPos, 0, 100);
-                rightGPos = Range.clip(rightGPos, handGrabbingPositionRight, handReleasingPositionRight);
-                leftGPos = Range.clip(leftGPos, handReleasingPositionLeft, handGrabbingPositionLeft);
-                // map inputs to devices
-                LEFT_MOTOR.driveWithEncoder(leftESpeed);
-                RIGHT_MOTOR.driveWithEncoder(rightESpeed);
-                HAND_SPINNER.setPosition(spinPos);
-                LEFT_SERVO.setPosition(leftGPos);
-                RIGHT_SERVO.setPosition(rightGPos);
-                // update the timeout variable
-                updateTime();
+                LEFT_MOTOR.reset();
+                RIGHT_MOTOR.reset();
+            }else if(!LIMIT.isPressed()) {
+                leftESpeed = Range.clip(s, -60, 60);
+                rightESpeed = Range.clip(s, -60, 60);
             }
+            if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
+                if(s < 0) {
+                    rightESpeed = 0;
+                    leftESpeed = 0;
+                }else{
+                    leftESpeed = Range.clip(s, -60, 60);
+                    rightESpeed = Range.clip(s, -60, 60);
+                }
+            }
+            // get hand inputs
+            if(gm.functionSixGamepad().dpad_right) {
+                spinPos -= 1;
+            }else if(gm.functionSixGamepad().dpad_left) {
+                spinPos += 1;
+            }
+            // make sure theyre wthin boundaries
+            spinPos = Range.clip(spinPos, 23, 50);
+            // get grabber inputs
+            if(gm.functionSixGamepad().touchpad) {
+                if(!grabberButtonWasDown) {
+                    grabberShouldBeOpen = !grabberShouldBeOpen;
+                }
+                grabberButtonWasDown = true;
+            }else{
+                grabberButtonWasDown = false;
+            }
+            // map inputs to devices
+            LEFT_MOTOR.driveWithEncoder(leftESpeed);
+            RIGHT_MOTOR.driveWithEncoder(rightESpeed);
+            HAND_SPINNER.setPosition(spinPos);
+            if(grabberShouldBeOpen) {
+                LEFT_SERVO.setPosition(handReleasingPositionLeft);
+                RIGHT_SERVO.setPosition(handReleasingPositionRight);
+            }else{
+                LEFT_SERVO.setPosition(handGrabbingPositionLeft);
+                RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+            }
+            // update the timeout variable
+            updateTime();
+            // TODO: test elevator boundary
         }
     }
 
