@@ -67,10 +67,10 @@ public class FullTeleOpScript extends TeleOpScript {
         calibrateElevator();
         /*
          * VALUES OF INTAKE LIFTER:
-         * LOW: 20
-         * HIGH: 60
+         * LOW: 30
+         * HIGH: 70
          * */
-        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
+        inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         // setup camera
         // TODO: fix this, also need to add lib-opencv.so or whatever it is onto robot
 //        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
@@ -146,16 +146,16 @@ public class FullTeleOpScript extends TeleOpScript {
             intakeButtonWasDown = false;
         }
         if(intakeShouldBeDown) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         }else{
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         }
     }
 
     public void updateLiftControlPermissions() {
-        isAllowedToControlElevator = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 60;
+        isAllowedToControlElevator = ((StandardServo) inputSpace.getIntakeLifter().getInternalInteractionSurface()).getPosition() != 70;
         if(!elevatorDriver.isStable()) {
-            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
+            inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         }
     }
 
@@ -278,8 +278,5 @@ public class FullTeleOpScript extends TeleOpScript {
         inputSpace.stop();
         outputSpace.stop();
     }
-
-    // TODO: test elevator intake position toggle feature
-    // TODO: remove calibration so it just starts where it should be based on the ending of autonomous
 
 }
