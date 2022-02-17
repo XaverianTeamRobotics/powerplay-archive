@@ -83,7 +83,7 @@ public class StartingPositionManager {
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn counter-clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(140 * turnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(135 * turnModifier, Angle.AngleUnit.DEGREE));
 
             // Drive Back two inches
             positionSystem.encoderDrive(-1.5);
@@ -111,10 +111,10 @@ public class StartingPositionManager {
             positionSystem.encoderDrive(15);
             drivetrainHold();
             // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
 
             // Move Back 2 Inches
-            positionSystem.encoderDrive(-3);
+            positionSystem.encoderDrive(-2.1);
             drivetrainHold();
 
             runElevator();
@@ -143,7 +143,7 @@ public class StartingPositionManager {
                 elevatorDriver.setPosition(h, isBlock);
 
                 // Go forward 3 if we are ready to move
-                positionSystem.encoderDrive(3);
+                positionSystem.encoderDrive(2.1);
                 resetTimer();
                 hasDriven = true;
             }
