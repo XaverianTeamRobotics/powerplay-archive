@@ -279,7 +279,6 @@ public class FullTeleOpScript extends TeleOpScript {
         outputSpace.stop();
     }
 
-    // TODO: kira
     // TODO: test elevator intake position toggle feature
 
 }
