@@ -103,9 +103,9 @@ public class StartingPositionManager {
                 // Turn clockwise 135 degrees
                 positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
 
-                // Go backward 1 tile
-                positionSystem.encoderDrive(-15);
-                drivetrainHold();*/
+            // Go backward 1 tile
+            positionSystem.encoderDrive(-15);
+            drivetrainHold();*/
             }
             else {
                 // Move Forward 1 Tile
@@ -129,6 +129,20 @@ public class StartingPositionManager {
                 positionSystem.encoderDrive(13);
                 drivetrainHold();
             }
+        }else{
+            opMode.waitForStart();
+            encoderTimeout = new EncoderTimeoutManager(0);
+            positionSystem.encoderDrive(-8);
+            toggleIntakeLifter();
+            drivetrainHold();
+            elevatorDriver.setPosition(3, isBlock);
+            while(!elevatorDriver.isStable()) {
+                elevatorDriver.run();
+            }
+            toggleIntakeLifter();
+            opMode.sleep(4000);
+            positionSystem.encoderDrive(8);
+            drivetrainHold();
         }
     }
 
