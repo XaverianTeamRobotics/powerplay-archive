@@ -72,8 +72,7 @@ public class FullTeleOpScript extends TeleOpScript {
          * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         // setup camera
-        // FIXME: this needs to work n stuff
-        // FIXME: add lib-opencv.so or whatever it is onto robot
+        // TODO: fix this, also need to add lib-opencv.so or whatever it is onto robot
 //        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
 //        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
 //        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -107,8 +106,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
-        debug();
-        // FIXME: fix this too
 //        controlElevatorCamera();
     }
 
@@ -131,8 +128,9 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlDrivetrain() {
         // calculate the x and y speeds
-        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
-        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * 100, -100, 100);
+        int modifier = 90;
+        int left = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y - gamepadManager.functionOneGamepad().right_stick_x) * modifier, -modifier, modifier);
+        int right = (int) Range.clip((gamepadManager.functionOneGamepad().left_stick_y + gamepadManager.functionOneGamepad().right_stick_x) * modifier, -modifier, modifier);
         // set the defined speeds
         inputSpace.sendInputToTank(TankDrivetrainLocation.Action.SET_SPEED, -right, -left);
     }
@@ -163,7 +161,7 @@ public class FullTeleOpScript extends TeleOpScript {
 
     private void controlIntake() {
         // control the intake motor based on the trigger inputs
-        int modifier = 90;
+        int modifier = 100;
         int intakeGas = (int) Range.clip(gamepadManager.functionTwoGamepad().right_trigger * modifier, 0, modifier);
         int intakeBrake = (int) Range.clip(gamepadManager.functionTwoGamepad().left_trigger * modifier, 0, modifier);
         int intakeSpeed = Range.clip(intakeGas - intakeBrake, -100, 100);
@@ -275,20 +273,12 @@ public class FullTeleOpScript extends TeleOpScript {
         getOpMode().telemetry.addData("Spin Position: ", testSpinPos);
     }
 
-    public void debug() {
-        getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
-        getOpMode().telemetry.addData("Elevator L Distance: ", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
-        getOpMode().telemetry.update();
-    }
-
     @Override
     public void stop() {
         inputSpace.stop();
         outputSpace.stop();
     }
 
-    // TODO: uncomment opencv to test it
-    // TODO: kira
-    // TODO: remove debug
+    // TODO: test elevator intake position toggle feature
 
 }

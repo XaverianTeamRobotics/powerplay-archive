@@ -205,7 +205,7 @@ public class StartingPositionManager {
         // move the intake based on the left bumper's state
         intakeShouldBeDown = !intakeShouldBeDown;
         if(intakeShouldBeDown) {
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 27);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
         }else{
             input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         }

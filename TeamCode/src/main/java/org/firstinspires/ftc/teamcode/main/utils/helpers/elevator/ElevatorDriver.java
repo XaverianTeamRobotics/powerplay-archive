@@ -563,15 +563,19 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // wait for an object to be picked up or for someone to cancel
+        // allow someone to cancel pickup if needed
+        if(step >= 5 && step <= 6) {
+            if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+                updateTime();
+                step = 7;
+            }
+        }
+        // wait for an object to be picked up
         if(step == 5) {
             // if object picked up, go to next step, if not, skip next step
             if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
                 updateTime();
                 step++;
-            }else if(optionalIntakeToggleGamepadManager.functionThreeGamepad() != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
-                updateTime();
-                step += 2;
             }
         }
         // check if the object is still in the hand, if so go to next step, if not go back a step
@@ -943,6 +947,9 @@ public class ElevatorDriver {
                     if(!LIMIT.isPressed()) {
                         LEFT_MOTOR.driveWithEncoder(40);
                         RIGHT_MOTOR.driveWithEncoder(40);
+                    }else{
+                        LEFT_MOTOR.driveWithEncoder(0);
+                        RIGHT_MOTOR.driveWithEncoder(0);
                     }
                     step++;
                 }
@@ -973,7 +980,7 @@ public class ElevatorDriver {
                 leftESpeed = Range.clip(s, -60, 60);
                 rightESpeed = Range.clip(s, -60, 60);
             }
-            if(LEFT_MOTOR.getDcMotor().getCurrentPosition() >= 1000) {
+            if(Math.abs(LEFT_MOTOR.getDcMotor().getCurrentPosition()) >= 950) {
                 if(s < 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
@@ -989,7 +996,7 @@ public class ElevatorDriver {
                 spinPos += 1;
             }
             // make sure theyre wthin boundaries
-            spinPos = Range.clip(spinPos, 23, 50);
+            spinPos = Range.clip(spinPos, 23, 43);
             // get grabber inputs
             if(gm.functionSixGamepad().touchpad) {
                 if(!grabberButtonWasDown) {
@@ -1012,7 +1019,6 @@ public class ElevatorDriver {
             }
             // update the timeout variable
             updateTime();
-            // TODO: test elevator boundary
         }
     }
 
