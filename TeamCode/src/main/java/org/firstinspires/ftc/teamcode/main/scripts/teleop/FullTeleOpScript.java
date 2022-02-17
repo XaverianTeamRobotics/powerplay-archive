@@ -72,8 +72,7 @@ public class FullTeleOpScript extends TeleOpScript {
          * */
         inputSpace.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
         // setup camera
-        // FIXME: this needs to work n stuff
-        // FIXME: add lib-opencv.so or whatever it is onto robot
+        // TODO: fix this, also need to add lib-opencv.so or whatever it is onto robot
 //        WebcamName webCam = getOpMode().hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
 //        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(webCam);
 //        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -107,7 +106,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
-        // FIXME: fix this too
 //        controlElevatorCamera();
     }
 
@@ -281,8 +279,7 @@ public class FullTeleOpScript extends TeleOpScript {
         outputSpace.stop();
     }
 
-    // TODO: uncomment opencv to test it
     // TODO: kira
-    // TODO: intake lifter toggle not working, need to fix
+    // TODO: test elevator intake position toggle feature
 
 }
