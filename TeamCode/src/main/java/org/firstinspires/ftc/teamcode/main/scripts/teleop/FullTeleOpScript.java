@@ -280,5 +280,6 @@ public class FullTeleOpScript extends TeleOpScript {
     }
 
     // TODO: test elevator intake position toggle feature
+    // TODO: remove calibration so it just starts where it should be based on the ending of autonomous
 
 }
