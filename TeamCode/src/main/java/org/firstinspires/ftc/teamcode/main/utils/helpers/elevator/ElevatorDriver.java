@@ -563,15 +563,19 @@ public class ElevatorDriver {
             updateTime();
             step++;
         }
-        // wait for an object to be picked up or for someone to cancel
+        // allow someone to cancel pickup if needed
+        if(step >= 5 && step <= 6) {
+            if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+                updateTime();
+                step = 7;
+            }
+        }
+        // wait for an object to be picked up
         if(step == 5) {
             // if object picked up, go to next step, if not, skip next step
             if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
                 updateTime();
                 step++;
-            }else if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
-                updateTime();
-                step += 2;
             }
         }
         // check if the object is still in the hand, if so go to next step, if not go back a step
