@@ -148,7 +148,8 @@ public class StartingPositionManager {
             }
         }else{
             opMode.waitForStart();
-            positionSystem.encoderDrive(-13);
+            encoderTimeout = new EncoderTimeoutManager(0);
+            positionSystem.encoderDrive(-8);
             toggleIntakeLifter();
             drivetrainHold();
             elevatorDriver.setPosition(3, isBlock);
@@ -156,8 +157,9 @@ public class StartingPositionManager {
                 elevatorDriver.run();
             }
             toggleIntakeLifter();
-            opMode.sleep(2000);
-            positionSystem.encoderDrive(13);
+            opMode.sleep(4000);
+            positionSystem.encoderDrive(8);
+            drivetrainHold();
         }
     }
 
