@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.main.utils.autonomous.starting.StartingPos
 public class StartingPositionRedRight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        new StartingPositionManager(this, false, false, 3);
+        new StartingPositionManager(this, false, false, 3, false);
     }
 
 }

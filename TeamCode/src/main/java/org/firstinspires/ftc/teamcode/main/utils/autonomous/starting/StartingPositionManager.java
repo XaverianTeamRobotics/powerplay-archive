@@ -43,7 +43,7 @@ public class StartingPositionManager {
 
     boolean isBlueSide, isCloseToParking;
 
-    public StartingPositionManager(LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight) {
+    public StartingPositionManager(LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight, boolean simple) {
         this.opMode = opMode;
         this.isBlueSide = isBlueSide;
         this.isCloseToParking = isCloseToParking;
@@ -56,46 +56,47 @@ public class StartingPositionManager {
         elevatorDriver = new ElevatorDriver(input, output, opMode);
         positionSystem.setDrivetrain(tank);
 
-        imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
-        imgProc.init();
-        imgProc.activate();
-        imgProc.setZoom(1.5, 16.0/9);
+        if(!simple) {
+            imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
+            imgProc.init();
+            imgProc.activate();
+            imgProc.setZoom(1.5, 16.0/9);
 
-        while (h == 0) {
-            h = initialPositionsOrientation(imgProc.identifyStartingPos());
-        }
-        this.ballDropHeight = h;
+            while (h == 0) {
+                h = initialPositionsOrientation(imgProc.identifyStartingPos());
+            }
+            this.ballDropHeight = h;
 
-        int turnModifier = 1;
-        if (!isBlueSide) turnModifier = -turnModifier;
+            int turnModifier = 1;
+            if (!isBlueSide) turnModifier = -turnModifier;
 
-        opMode.waitForStart();
+            opMode.waitForStart();
 
-        opMode.telemetry.addAction(() -> opMode.telemetry.addLine("github.com/michaell4438"));
+            opMode.telemetry.addAction(() -> opMode.telemetry.addLine("github.com/michaell4438"));
 
-        encoderTimeout = new EncoderTimeoutManager(0);
+            encoderTimeout = new EncoderTimeoutManager(0);
 
-        // Drop the intake
-        toggleIntakeLifter();
-
-        if (!isCloseToParking) {
-            // Move Forward 1 Tile
-            positionSystem.encoderDrive(15);
-            drivetrainHold();
-            // Turn counter-clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(140 * turnModifier, Angle.AngleUnit.DEGREE));
-
-            // Drive Back two inches
-            positionSystem.encoderDrive(-1.5);
-            drivetrainHold();
-
-            runElevator();
+            // Drop the intake
             toggleIntakeLifter();
-            drivetrainHold();
 
-            // Drive forward 4 inches
-            positionSystem.encoderDrive(3);
-            drivetrainHold();
+            if (!isCloseToParking) {
+                // Move Forward 1 Tile
+                positionSystem.encoderDrive(15);
+                drivetrainHold();
+                // Turn counter-clockwise 135 degrees
+                positionSystem.turnWithCorrection(new Angle(140 * turnModifier, Angle.AngleUnit.DEGREE));
+
+                // Drive Back two inches
+                positionSystem.encoderDrive(-1.5);
+                drivetrainHold();
+
+                runElevator();
+                toggleIntakeLifter();
+                drivetrainHold();
+
+                // Drive forward 4 inches
+                positionSystem.encoderDrive(3);
+                drivetrainHold();
 /*            // Turn counter-clockwise 33 degrees
             positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
 
@@ -105,45 +106,58 @@ public class StartingPositionManager {
             // Go backward 1 tile
             positionSystem.encoderDrive(-15);
             drivetrainHold();*/
-        }
-        else {
-            // Kick thing away from us so we dont drive over it
-            int degree = 0;
-            if(ballDropHeight == 1) {
-                degree = 20;
-            }else if(ballDropHeight == 3) {
-                degree = -20;
             }
-            positionSystem.turnWithCorrection(new Angle(degree * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-            opMode.sleep(4000);
-            input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, -100);
-            positionSystem.encoderDrive(9);
-            drivetrainHold();
-            input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, 0);
-            positionSystem.encoderDrive(-9);
-            drivetrainHold();
-            positionSystem.turnWithCorrection(new Angle(-degree * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-            // Drive forward one tile
-            positionSystem.encoderDrive(15);
-            drivetrainHold();
-            // Turn clockwise 135 degrees
-            positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
-            drivetrainHold();
-            positionSystem.encoderDrive(2);
-            drivetrainHold();
+            else {
+                // Kick thing away from us so we dont drive over it
+                int degree = 0;
+                if(ballDropHeight == 1) {
+                    degree = 20;
+                }else if(ballDropHeight == 3) {
+                    degree = -20;
+                }
+                positionSystem.turnWithCorrection(new Angle(degree * turnModifier, Angle.AngleUnit.DEGREE));
+                drivetrainHold();
+                opMode.sleep(4000);
+                input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, -100);
+                positionSystem.encoderDrive(9);
+                drivetrainHold();
+                input.sendInputToIntakeSpinner(IntakeSpinningMotorLocation.Action.SET_SPEED, 0);
+                positionSystem.encoderDrive(-9);
+                drivetrainHold();
+                positionSystem.turnWithCorrection(new Angle(-degree * turnModifier, Angle.AngleUnit.DEGREE));
+                drivetrainHold();
+                // Drive forward one tile
+                positionSystem.encoderDrive(15);
+                drivetrainHold();
+                // Turn clockwise 135 degrees
+                positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
+                drivetrainHold();
+                positionSystem.encoderDrive(2);
+                drivetrainHold();
 
-            runElevator();
+                runElevator();
+                toggleIntakeLifter();
+                drivetrainHold();
+
+                // Turn counter-clockwise 33 degrees and raise intake
+                positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+
+                // Drive One Tile
+                positionSystem.encoderDrive(13);
+                drivetrainHold();
+            }
+        }else{
+            opMode.waitForStart();
+            positionSystem.encoderDrive(-13);
             toggleIntakeLifter();
             drivetrainHold();
-
-            // Turn counter-clockwise 33 degrees and raise intake
-            positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
-
-            // Drive One Tile
+            elevatorDriver.setPosition(3, isBlock);
+            while(!elevatorDriver.isStable()) {
+                elevatorDriver.run();
+            }
+            toggleIntakeLifter();
+            opMode.sleep(2000);
             positionSystem.encoderDrive(13);
-            drivetrainHold();
         }
     }
 
