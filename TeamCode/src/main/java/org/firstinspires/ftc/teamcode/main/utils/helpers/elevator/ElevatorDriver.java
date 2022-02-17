@@ -569,7 +569,7 @@ public class ElevatorDriver {
             if(DISTANCE.getDistance(DistanceUnit.MM) <= distanceSensorDistance) {
                 updateTime();
                 step++;
-            }else if(optionalIntakeToggleGamepadManager.functionThreeGamepad() != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+            }else if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
                 updateTime();
                 step += 2;
             }
@@ -992,7 +992,7 @@ public class ElevatorDriver {
                 spinPos += 1;
             }
             // make sure theyre wthin boundaries
-            spinPos = Range.clip(spinPos, 23, 50);
+            spinPos = Range.clip(spinPos, 23, 43);
             // get grabber inputs
             if(gm.functionSixGamepad().touchpad) {
                 if(!grabberButtonWasDown) {

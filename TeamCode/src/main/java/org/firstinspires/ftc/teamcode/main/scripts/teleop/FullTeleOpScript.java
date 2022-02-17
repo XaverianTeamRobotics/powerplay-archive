@@ -107,7 +107,6 @@ public class FullTeleOpScript extends TeleOpScript {
         controlEntireLiftAutonomously();
         controlDuck();
         updateLiftControlPermissions();
-        debug();
         // FIXME: fix this too
 //        controlElevatorCamera();
     }
@@ -276,13 +275,6 @@ public class FullTeleOpScript extends TeleOpScript {
         getOpMode().telemetry.addData("Spin Position: ", testSpinPos);
     }
 
-    public void debug() {
-        getOpMode().telemetry.addData("Distance: ", outputSpace.receiveOutputFromHandDistanceSensor());
-        getOpMode().telemetry.addData("Elevator L Distance: ", ((StandardMotor) inputSpace.getElevatorLeftLift().getInternalInteractionSurface()).getDcMotor().getCurrentPosition());
-        getOpMode().telemetry.addData("Hand Spin Pos: ", ((StandardServo) inputSpace.getHandSpinner().getInternalInteractionSurface()).getPosition());
-        getOpMode().telemetry.update();
-    }
-
     @Override
     public void stop() {
         inputSpace.stop();
@@ -291,7 +283,6 @@ public class FullTeleOpScript extends TeleOpScript {
 
     // TODO: uncomment opencv to test it
     // TODO: kira
-    // TODO: remove debug
     // TODO: intake lifter toggle not working, need to fix
 
 }
