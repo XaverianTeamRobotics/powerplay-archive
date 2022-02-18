@@ -19,12 +19,12 @@ public class InterruptTest extends LinearOpMode {
     }
 
     private void testInterrupts() throws InterruptedException {
-        while (!isStopRequested()) {
+        do {
             telemetry.addData("Time", time);
             telemetry.update();
             if (isStopRequested()) {
                 throw new InterruptedException();
             }
-        }
+        } while (true);
     }
 }
