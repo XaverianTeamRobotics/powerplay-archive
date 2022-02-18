@@ -15,6 +15,7 @@ public class InterruptTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         waitForStart();
 
+        testInterrupts();
     }
 
     private void testInterrupts() throws InterruptedException {
@@ -26,5 +27,4 @@ public class InterruptTest extends LinearOpMode {
             }
         }
     }
-
 }
