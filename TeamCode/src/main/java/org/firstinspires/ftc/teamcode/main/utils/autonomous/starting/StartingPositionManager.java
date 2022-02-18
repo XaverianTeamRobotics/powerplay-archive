@@ -59,7 +59,11 @@ public class StartingPositionManager {
             imgProc.setZoom(1.5, 16.0/9);
 
             while (h == 0) {
-                h = initialPositionsOrientation(imgProc.identifyStartingPos());
+                try {
+                    h = initialPositionsOrientation(imgProc.identifyStartingPos());
+                }catch(Exception e) {
+                    h = 2;
+                }
             }
             this.ballDropHeight = h;
         }
