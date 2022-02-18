@@ -88,58 +88,32 @@ public class StartingPositionManager {
             // Drop the intake
             toggleIntakeLifter();
 
-            if (!isCloseToParking) {
-                // Move Forward 1 Tile
-                positionSystem.encoderDrive(15);
-                drivetrainHold();
-                // Turn counter-clockwise 135 degrees
-                positionSystem.turnWithCorrection(new Angle(135 * turnModifier, Angle.AngleUnit.DEGREE));
+            int initialTurnModifier = turnModifier;
+            if (isCloseToParking) initialTurnModifier = -initialTurnModifier;
 
-                // Drive Back two inches
-                positionSystem.encoderDrive(-1.5);
-                drivetrainHold();
+            positionSystem.encoderDrive(5);
+            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(-90 * initialTurnModifier, Angle.AngleUnit.DEGREE));
+            // Move Forward 1 Tile
+            positionSystem.encoderDrive(-12);
+            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
+            // Move Forward 1 Tile
+            positionSystem.encoderDrive(-3);
+            drivetrainHold();
 
-                runElevator();
-                toggleIntakeLifter();
-                drivetrainHold();
+            runElevator(0);
+            toggleIntakeLifter();
+            opMode.sleep(3000);
+            drivetrainHold();
 
-                // Drive forward 4 inches
-                positionSystem.encoderDrive(3);
-                drivetrainHold();
-    /*            // Turn counter-clockwise 33 degrees
-                positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.encoderDrive(-2.1);
+            drivetrainHold();
+            positionSystem.turnWithCorrection(new Angle(90 * turnModifier, Angle.AngleUnit.DEGREE));
 
-                // Turn clockwise 135 degrees
-                positionSystem.turnWithCorrection(new Angle(-140 * turnModifier, Angle.AngleUnit.DEGREE));
+            positionSystem.encoderDrive(-35, 35, 75);
+            drivetrainHold();
 
-            // Go backward 1 tile
-            positionSystem.encoderDrive(-15);
-            drivetrainHold();*/
-            }
-            else {
-                positionSystem.encoderDrive(5);
-                drivetrainHold();
-                positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
-                // Move Forward 1 Tile
-                positionSystem.encoderDrive(-12);
-                drivetrainHold();
-                positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
-                // Move Forward 1 Tile
-                positionSystem.encoderDrive(-3);
-                drivetrainHold();
-
-                runElevator(0);
-                toggleIntakeLifter();
-                opMode.sleep(3000);
-                drivetrainHold();
-
-                positionSystem.encoderDrive(-2.1);
-                drivetrainHold();
-                positionSystem.turnWithCorrection(new Angle(90 * turnModifier, Angle.AngleUnit.DEGREE));
-
-                positionSystem.encoderDrive(-35, 35, 75);
-                drivetrainHold();
-            }
         }else{
             opMode.waitForStart();
             encoderTimeout = new EncoderTimeoutManager(0);
