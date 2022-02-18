@@ -125,7 +125,7 @@ public class StartingPositionManager {
         }
     }
 
-    private void runElevator(float finalDist) throws InterruptedException {
+    private void runElevator(double finalDist) throws InterruptedException {
         boolean hasDriven = false;
 
         elevatorDriver.setPosition(h, isBlock);
@@ -137,7 +137,6 @@ public class StartingPositionManager {
             if (elevatorDriver.isResettingToOriginalPos() && !hasDriven) {
                 elevatorDriver.setPosition(h, isBlock);
 
-                // Go forward 3 if we are ready to move
                 positionSystem.encoderDrive(finalDist);
                 resetTimer();
                 hasDriven = true;
@@ -150,27 +149,7 @@ public class StartingPositionManager {
     }
 
     private void runElevator() throws InterruptedException {
-        boolean hasDriven = false;
-
-        elevatorDriver.setPosition(h, isBlock);
-
-        while (!elevatorDriver.isStable()) {
-            // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
-            //                                                   ElevatorDriver.runToHeight
-            elevatorDriver.run();
-            if (elevatorDriver.isResettingToOriginalPos() && !hasDriven) {
-                elevatorDriver.setPosition(h, isBlock);
-
-                // Go forward 3 if we are ready to move
-                positionSystem.encoderDrive(2.1);
-                resetTimer();
-                hasDriven = true;
-            }
-
-            if (opMode.isStopRequested()) {
-                throw new InterruptedException();
-            }
-        }
+        runElevator(2.1);
     }
 
     private void drivetrainHold() throws InterruptedException {
