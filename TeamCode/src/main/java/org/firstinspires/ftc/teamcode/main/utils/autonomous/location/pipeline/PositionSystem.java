@@ -165,11 +165,17 @@ public class PositionSystem {
             addDistance(distance, this.coordinateSystem.angle.asDegree());
         }
     }
+
     public void encoderDrive(float distanceLeft, float distanceRight) {
+        encoderDrive(distanceLeft, distanceRight, 30);
+    }
+
+    public void encoderDrive(float distanceLeft, float distanceRight, int speed) {
         if (drivetrain != null) {
             drivetrain.driveDistance((int) distanceLeft + 1, (int) distanceRight - 1, 30);
         }
     }
+
 
     public boolean areMotorsBusy() {
         return drivetrain.getRightTop().getDcMotor().isBusy() &&
@@ -230,7 +236,7 @@ public class PositionSystem {
         updateAngle();
         angle = imuData.getHeading() - angle;
 
-        EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(5000);
+        EncoderTimeoutManager timeoutManager = new EncoderTimeoutManager(10000);
 
         timeoutManager.restart();
 
