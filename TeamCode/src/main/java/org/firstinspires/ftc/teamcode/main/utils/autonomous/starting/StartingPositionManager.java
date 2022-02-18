@@ -239,7 +239,8 @@ public class StartingPositionManager {
         if (isCameraUpsideDown) {
             if (raw == 1) {
                 raw = 3;
-            } else if (raw == 3) {
+            }
+            else if (raw == 3) {
                 raw = 1;
             }
         }
