@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.main.utils.autonomous.starting;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
@@ -43,7 +45,7 @@ public class StartingPositionManager {
 
     boolean isBlueSide, isCloseToParking;
 
-    public StartingPositionManager(LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight, boolean simple) {
+    public StartingPositionManager(@NonNull LinearOpMode opMode, boolean isBlueSide, boolean isCloseToParking, int ballDropHeight, boolean simple) throws InterruptedException {
         this.opMode = opMode;
         this.isBlueSide = isBlueSide;
         this.isCloseToParking = isCloseToParking;
@@ -134,6 +136,9 @@ public class StartingPositionManager {
                 positionSystem.encoderDrive(-2.1);
                 drivetrainHold();
                 positionSystem.turnWithCorrection(new Angle(90 * turnModifier, Angle.AngleUnit.DEGREE));
+
+                positionSystem.encoderDrive(-35, 35, 75);
+                drivetrainHold();
             }
         }else{
             opMode.waitForStart();
@@ -152,7 +157,7 @@ public class StartingPositionManager {
         }
     }
 
-    private void runElevator(float finalDist) {
+    private void runElevator(float finalDist) throws InterruptedException {
         boolean hasDriven = false;
 
         elevatorDriver.setPosition(h, isBlock);
@@ -169,10 +174,14 @@ public class StartingPositionManager {
                 resetTimer();
                 hasDriven = true;
             }
+
+            if (opMode.isStopRequested()) {
+                throw new InterruptedException();
+            }
         }
     }
 
-    private void runElevator() {
+    private void runElevator() throws InterruptedException {
         boolean hasDriven = false;
 
         elevatorDriver.setPosition(h, isBlock);
@@ -189,6 +198,10 @@ public class StartingPositionManager {
                 resetTimer();
                 hasDriven = true;
             }
+
+            if (opMode.isStopRequested()) {
+                throw new InterruptedException();
+            }
         }
     }
 
@@ -197,13 +210,19 @@ public class StartingPositionManager {
         readyForElevator.set(true);
     }
 
-    private void drivetrainHold() {
+    private void drivetrainHold() throws InterruptedException {
         resetTimer();
 
         while (positionSystem.areMotorsBusy() && !encoderTimeout.hasTimedOut() && opMode.opModeIsActive()) {
             opMode.telemetry.addData("Motors busy for", encoderTimeout.getOperationTime());
             opMode.telemetry.update();
+
+            if (opMode.isStopRequested()) {
+                throw new InterruptedException();
+            }
         }
+
+        opMode.telemetry.clear();
 
         positionSystem.getDrivetrain().brake();
         encoderTimeout.restart();
