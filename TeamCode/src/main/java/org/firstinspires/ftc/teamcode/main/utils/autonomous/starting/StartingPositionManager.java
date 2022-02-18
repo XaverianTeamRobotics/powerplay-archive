@@ -56,7 +56,7 @@ public class StartingPositionManager {
         elevatorDriver = new ElevatorDriver(input, output, opMode);
         positionSystem.setDrivetrain(tank);
 
-        if(!simple) {
+        if (!simple) {
             imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
             imgProc.init();
             imgProc.activate();
@@ -66,7 +66,14 @@ public class StartingPositionManager {
                 h = initialPositionsOrientation(imgProc.identifyStartingPos());
             }
             this.ballDropHeight = h;
+        }
 
+        input.sendInputToLeftHandGrabber(LeftHandGrabbingServoLocation.Action.SET_POSITION, 90);
+        input.sendInputToRightHandGrabber(RightHandGrabbingServoLocation.Action.SET_POSITION, 37);
+        input.sendInputToHandSpinner(HandSpinningServoLocation.Action.SET_POSITION, 23);
+        input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
+
+        if(!simple) {
             int turnModifier = 1;
             if (!isBlueSide) turnModifier = -turnModifier;
 
@@ -108,26 +115,25 @@ public class StartingPositionManager {
             drivetrainHold();*/
             }
             else {
-                // Move Forward 1 Tile
-                positionSystem.encoderDrive(15);
+                positionSystem.encoderDrive(5);
                 drivetrainHold();
-                // Turn clockwise 135 degrees
-                positionSystem.turnWithCorrection(new Angle(-135 * turnModifier, Angle.AngleUnit.DEGREE));
+                positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
+                // Move Forward 1 Tile
+                positionSystem.encoderDrive(-12);
+                drivetrainHold();
+                positionSystem.turnWithCorrection(new Angle(-90 * turnModifier, Angle.AngleUnit.DEGREE));
+                // Move Forward 1 Tile
+                positionSystem.encoderDrive(-3);
+                drivetrainHold();
 
-                // Move Back 2 Inches
+                runElevator(0);
+                toggleIntakeLifter();
+                opMode.sleep(3000);
+                drivetrainHold();
+
                 positionSystem.encoderDrive(-2.1);
                 drivetrainHold();
-
-                runElevator();
-                toggleIntakeLifter();
-                drivetrainHold();
-
-                // Turn counter-clockwise 33 degrees and raise intake
-                positionSystem.turnWithCorrection(new Angle(33 * turnModifier, Angle.AngleUnit.DEGREE));
-
-                // Drive One Tile
-                positionSystem.encoderDrive(13);
-                drivetrainHold();
+                positionSystem.turnWithCorrection(new Angle(90 * turnModifier, Angle.AngleUnit.DEGREE));
             }
         }else{
             opMode.waitForStart();
@@ -143,6 +149,26 @@ public class StartingPositionManager {
             opMode.sleep(4000);
             positionSystem.encoderDrive(8);
             drivetrainHold();
+        }
+    }
+
+    private void runElevator(float finalDist) {
+        boolean hasDriven = false;
+
+        elevatorDriver.setPosition(h, isBlock);
+
+        while (!elevatorDriver.isStable()) {
+            // controlEntireLiftAutonomously(ballDropHeight); // DEPRECATED IN FAVOR OF
+            //                                                   ElevatorDriver.runToHeight
+            elevatorDriver.run();
+            if (elevatorDriver.isResettingToOriginalPos() && !hasDriven) {
+                elevatorDriver.setPosition(h, isBlock);
+
+                // Go forward 3 if we are ready to move
+                positionSystem.encoderDrive(finalDist);
+                resetTimer();
+                hasDriven = true;
+            }
         }
     }
 
@@ -221,9 +247,9 @@ public class StartingPositionManager {
         // move the intake based on the left bumper's state
         intakeShouldBeDown = !intakeShouldBeDown;
         if(intakeShouldBeDown) {
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 20);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 30);
         }else{
-            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 60);
+            input.sendInputToIntakeLifter(IntakeLiftingServoLocation.Action.SET_POSITION, 70);
         }
     }
 

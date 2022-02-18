@@ -565,7 +565,7 @@ public class ElevatorDriver {
         }
         // allow someone to cancel pickup if needed
         if(step >= 5 && step <= 6) {
-            if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().x) {
+            if(optionalIntakeToggleGamepadManager != null && optionalIntakeToggleGamepadManager.functionThreeGamepad().a) {
                 updateTime();
                 step = 7;
             }
@@ -950,8 +950,8 @@ public class ElevatorDriver {
                     }else{
                         LEFT_MOTOR.driveWithEncoder(0);
                         RIGHT_MOTOR.driveWithEncoder(0);
+                        step++;
                     }
-                    step++;
                 }
             }
             // finally disable manual control
@@ -970,17 +970,17 @@ public class ElevatorDriver {
                 if(s > 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
+                    LEFT_MOTOR.reset();
+                    RIGHT_MOTOR.reset();
                 }else{
                     leftESpeed = Range.clip(s, -60, 60);
                     rightESpeed = Range.clip(s, -60, 60);
                 }
-                LEFT_MOTOR.reset();
-                RIGHT_MOTOR.reset();
             }else if(!LIMIT.isPressed()) {
                 leftESpeed = Range.clip(s, -60, 60);
                 rightESpeed = Range.clip(s, -60, 60);
             }
-            if(Math.abs(LEFT_MOTOR.getDcMotor().getCurrentPosition()) >= 950) {
+            if(Math.abs(LEFT_MOTOR.getDcMotor().getCurrentPosition()) >= 990) {
                 if(s < 0) {
                     rightESpeed = 0;
                     leftESpeed = 0;
