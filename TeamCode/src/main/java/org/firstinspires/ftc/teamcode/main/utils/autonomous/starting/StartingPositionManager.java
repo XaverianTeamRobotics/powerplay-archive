@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.main.utils.autonomous.starting;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
@@ -60,8 +61,15 @@ public class StartingPositionManager {
             imgProc.activate();
             imgProc.setZoom(1.5, 16.0/9);
 
+            ElapsedTime finderTimer = new ElapsedTime();
+
+            finderTimer.reset();
+
             while (h == 0) {
                 h = initialPositionsOrientation(imgProc.identifyStartingPos());
+                if (finderTimer.milliseconds() > 3000) {
+                    h = 2;
+                }
             }
             this.ballDropHeight = h;
         }

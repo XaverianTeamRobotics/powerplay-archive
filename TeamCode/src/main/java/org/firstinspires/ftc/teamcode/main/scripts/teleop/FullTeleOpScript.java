@@ -45,7 +45,7 @@ public class FullTeleOpScript extends TeleOpScript {
          *  F5: Unassigned
          *  F6: Manual Intake Control
          * Users:
-         *  U1: F1, F4
+         *  U1: F1, F4, F5
          *  U2: F2, F3, F6
          * */
         // setup gamepads
@@ -199,6 +199,15 @@ public class FullTeleOpScript extends TeleOpScript {
                 elevatorDriver.enableManualControl();
             }else{
                 elevatorDriver.disableManualControl();
+            }
+
+            // manual hand
+            if (elevatorShouldBeManuallyControlled) {
+                if (gamepadManager.functionFiveGamepad().dpad_left) {
+                    elevatorDriver.manuallyGrabHand();
+                } else if (gamepadManager.functionFiveGamepad().dpad_right) {
+                    elevatorDriver.manuallyRealeaseHand();
+                }
             }
         }
     }

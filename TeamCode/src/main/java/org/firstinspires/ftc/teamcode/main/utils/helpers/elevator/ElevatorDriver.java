@@ -523,6 +523,16 @@ public class ElevatorDriver {
         return map;
     }
 
+    public void manuallyRealeaseHand() {
+        LEFT_SERVO.setPosition(handReleasingPositionLeft);
+        RIGHT_SERVO.setPosition(handReleasingPositionRight);
+    }
+
+    public void manuallyGrabHand() {
+        RIGHT_SERVO.setPosition(handGrabbingPositionRight);
+        HAND_SPINNER.setPosition(handTurningDefaultPosition);
+    }
+
     /*
      * LOGIC
      * */
