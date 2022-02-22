@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ImgProc {
     private static final String OBJECT_TO_IDENT = "Duck";
     private final String VUFORIA_KEY;

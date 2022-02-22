@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.main.ImageLib.ObjectDetector;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
-import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.geometry.Angle;
@@ -26,7 +26,7 @@ public class StartingPositionManager {
     OutputSpace output;
     int ballDropHeight;
     boolean intakeShouldBeDown = false;
-    ImgProc imgProc;
+    ObjectDetector imgProc;
     ElevatorDriver elevatorDriver;
 
     // this should be true if the camera is upside down in real life (it wont work as well upside down, but this provides some functionality)
@@ -55,7 +55,7 @@ public class StartingPositionManager {
         positionSystem.setDrivetrain(tank);
 
         if (!simple) {
-            imgProc = new ImgProc(opMode.hardwareMap, new String[]{"Duck", "Marker"}, "FreightFrenzy_DM.tflite");
+            imgProc = new ObjectDetector(Resources.Misc.VuforiaKey, "FreightFrenzy_DM.tflite", new String[]{"Duck", "Marker"}, opMode.hardwareMap, Resources.Misc.Webcam);
             imgProc.confidence = 0.55f;
             imgProc.init();
             imgProc.activate();
