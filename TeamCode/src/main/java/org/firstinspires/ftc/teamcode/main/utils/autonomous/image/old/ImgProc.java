@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.utils.autonomous.image;
+package org.firstinspires.ftc.teamcode.main.utils.autonomous.image.old;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.InitialPositions;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 import java.util.ArrayList;

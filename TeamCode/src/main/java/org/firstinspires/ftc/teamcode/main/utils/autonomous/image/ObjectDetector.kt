@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.ImageLib
+package org.firstinspires.ftc.teamcode.main.utils.autonomous.image
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.ClassFactory
@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF
 import org.firstinspires.ftc.robotcore.external.navigation.*
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
-import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.InitialPositions
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources
 
 class ObjectDetector(

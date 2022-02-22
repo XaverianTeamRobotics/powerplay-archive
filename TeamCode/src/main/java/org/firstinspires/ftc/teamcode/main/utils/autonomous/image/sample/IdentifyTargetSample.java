@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.main.utils.autonomous.image.sample;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ImgProc;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.old.ImgProc;
 
 @TeleOp(name = "Identify Image Sample")
 public class IdentifyTargetSample extends LinearOpMode {

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.main.ImageLib.ObjectDetector;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ObjectDetector;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.EncoderTimeoutManager;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.location.pipeline.PositionSystem;
 import org.firstinspires.ftc.teamcode.main.utils.helpers.elevator.ElevatorDriver;

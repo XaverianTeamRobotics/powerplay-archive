@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.utils.autonomous.image;
+package org.firstinspires.ftc.teamcode.main.utils.autonomous.image.old;
 
 import android.annotation.SuppressLint;
 
@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.InitialPositions;
 import org.firstinspires.ftc.teamcode.main.utils.resources.Resources;
 
 import java.util.ArrayList;
