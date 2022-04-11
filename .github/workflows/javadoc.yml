@@ -139,7 +139,7 @@ jobs:
       # Upload an Artifact of the Javadoc if for whatever reason one might need to download one.
 
       - name: Upload generated Javadoc to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Javadoc-output
           path: ./javadoc-output/
