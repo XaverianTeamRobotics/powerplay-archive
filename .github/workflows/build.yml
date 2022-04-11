@@ -38,7 +38,7 @@ jobs:
           --stacktrace
 
     - name: Upload the FtcRobotController build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: FtcRobotController-Build
         path: |
@@ -46,7 +46,7 @@ jobs:
           ./FtcRobotController/build/reports/
 
     - name: Upload the TeamCode build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: TeamCode-Build
         path: |
