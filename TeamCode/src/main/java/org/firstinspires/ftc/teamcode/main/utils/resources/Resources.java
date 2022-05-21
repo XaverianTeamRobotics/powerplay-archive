@@ -12,14 +12,17 @@ import org.firstinspires.ftc.teamcode.main.utils.interactions.items.StandardIMU;
 public class Resources {
     public static final class Navigation {
         public static final class Sensors {
+            public static NavigationSensorCollection getSensors(HardwareMap hardwareMap) {
+                return new NavigationSensorCollection(
+                    new StandardDistanceSensor(hardwareMap, Distance.North),
+                    new StandardDistanceSensor(hardwareMap, Distance.East),
+                    new StandardDistanceSensor(hardwareMap, Distance.West),
+                    new StandardIMU(hardwareMap),
+                    270
+                );
+            }
             public static PositionSystem getPositionSystem(HardwareMap hardwareMap) {
-                return new PositionSystem(new NavigationSensorCollection(
-                        new StandardDistanceSensor(hardwareMap, Distance.North),
-                        new StandardDistanceSensor(hardwareMap, Distance.East),
-                        new StandardDistanceSensor(hardwareMap, Distance.West),
-                        new StandardIMU(hardwareMap),
-                        270
-                ));
+                return new PositionSystem(getSensors(hardwareMap));
             }
 
             public static final class Distance {

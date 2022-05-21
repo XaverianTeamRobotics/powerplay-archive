@@ -55,7 +55,7 @@ class ObjectDetector(
         vuforiaTrackables!!.activate()
     }
 
-    private fun getUpdatedRecognitions(): List<Recognition>? {
+    fun getUpdatedRecognitions(): List<Recognition>? {
         return tfod!!.updatedRecognitions
     }
 
