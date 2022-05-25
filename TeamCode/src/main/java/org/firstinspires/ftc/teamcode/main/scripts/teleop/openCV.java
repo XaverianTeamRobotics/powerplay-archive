@@ -12,12 +12,18 @@ import org.openftc.easyopencv.*;
 @TeleOp(name = "ColinCam", group = "ColinCode")
 public class openCV extends LinearOpMode {
 
+    int stream_W = 640;
+    int stream_H = 480;
+
     @Override
     public void runOpMode() throws InterruptedException {
         // Init camera view
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         // Setup some variables
+        // With live preview
+        //OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         WebcamName webCam = hardwareMap.get(WebcamName.class, Resources.Misc.Webcam);
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webCam, cameraMonitorViewId);
 
@@ -27,14 +33,14 @@ public class openCV extends LinearOpMode {
             public void onOpened() {
                 telemetry.addData("Camera", "True");
                 telemetry.update();
-                camera.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(stream_W, stream_H, OpenCvCameraRotation.UPRIGHT);
                 camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
                 camera.setPipeline(new AwesomePipeline());
             }
             @Override
             public void onError(int errorCode) {
                 //This will be called if the camera could not be opened
-                telemetry.addData("Camera", "False");
+                telemetry.addData("Camera", "False"); //show the user that the camera probably won't work
                 telemetry.update();
             }
         });
@@ -45,8 +51,12 @@ public class openCV extends LinearOpMode {
     }
     static class AwesomePipeline extends OpenCvPipeline
     {
+        //private List<MatOfPoint> cnts;
         private Mat original = new Mat();
         private Mat output = new Mat();
+        //private Mat mask = new Mat();
+        final Scalar blue = new Scalar(255, 0, 0);
+        //private Point selectedPoint;
 
         @Override
         public Mat processFrame(Mat input)
