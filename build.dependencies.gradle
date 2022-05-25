@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-FreightFrenzy:1.0.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.4'
     implementation 'org.jetbrains:annotations:23.0.0'
-    implementation 'com.michaell:jlooping:1.0.+'
+    implementation 'com.michaell:jlooping:1.1.+'
 
     testImplementation 'junit:junit:4.13.2'
 }

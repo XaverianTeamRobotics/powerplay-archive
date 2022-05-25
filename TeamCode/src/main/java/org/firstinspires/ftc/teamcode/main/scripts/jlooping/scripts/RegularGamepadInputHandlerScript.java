@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.main.utils.locations.LeftHandGrabbingServo
 import org.firstinspires.ftc.teamcode.main.utils.locations.RightHandGrabbingServoLocation;
 import org.firstinspires.ftc.teamcode.main.utils.locations.TankDrivetrainLocation;
 
-public class GamepadInputHandlerScript extends ConditionalScriptTemplate {
+public class RegularGamepadInputHandlerScript extends ConditionalScriptTemplate {
     private LinearOpMode opMode;
 
     private GamepadManager gamepadManager;
@@ -34,7 +34,7 @@ public class GamepadInputHandlerScript extends ConditionalScriptTemplate {
 
     private int testSpinPos = 0;
 
-    public GamepadInputHandlerScript(String name, LinearOpMode opMode) {
+    public RegularGamepadInputHandlerScript(String name, LinearOpMode opMode) {
         super(name, true);
         this.opMode = opMode;
     }
