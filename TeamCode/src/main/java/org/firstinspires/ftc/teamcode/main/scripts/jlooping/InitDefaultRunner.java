@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.main.scripts.jlooping.scripts.OpModeStoppe
 import org.firstinspires.ftc.teamcode.main.scripts.jlooping.scripts.RegularGamepadInputHandlerScript;
 import org.firstinspires.ftc.teamcode.main.utils.autonomous.image.ObjectDetector;
 
+@Deprecated
 public class InitDefaultRunner {
     public static ScriptRunner generateRunner(LinearOpMode opMode, boolean addTankControllerDriving, boolean addMecanumDriving) {
         ScriptRunner runner = new ScriptRunner();
