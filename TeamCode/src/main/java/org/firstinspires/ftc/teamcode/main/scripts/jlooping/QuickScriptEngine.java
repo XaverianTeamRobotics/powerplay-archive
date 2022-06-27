@@ -109,6 +109,10 @@ public class QuickScriptEngine {
         }
     }
 
+    /**
+     * Runs the mecanum drive once
+     * @throws NullPointerException Thrown if the runner is null.
+     */
     public void runMecanumDriveOnce() throws NullPointerException {
         if (this.runner != null) {
             try {

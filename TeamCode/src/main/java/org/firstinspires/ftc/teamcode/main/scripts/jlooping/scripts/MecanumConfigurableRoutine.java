@@ -59,11 +59,13 @@ public class MecanumConfigurableRoutine extends ConditionalScriptTemplate {
 
     @Override
     public void toRun(ScriptParameters scriptParameters) {
-        // Put loop blocks here.
+        int timesRun = 0;
         try {
             vertical = (float) scriptParameters.getGlobalVariable("mecanumConfigVerticalAxis").getValue();
             horizontal = (float) scriptParameters.getGlobalVariable("mecanumConfigHorizontalAxis").getValue();
             pivot = (float) scriptParameters.getGlobalVariable("mecanumConfigPivotAxis").getValue();
+            timesRun = (int) scriptParameters.getGlobalVariable("mecanumConfigTimesRun").getValue();
+            timesRun++;
         } catch (ScriptParameters.VariableNotFoundException e) {
             e.printStackTrace();
         }
@@ -75,7 +77,14 @@ public class MecanumConfigurableRoutine extends ConditionalScriptTemplate {
         opMode.telemetry.addData("Horiz", horizontal);
         opMode.telemetry.addData("Pivot", pivot);
         opMode.telemetry.addData("Drive Direction", driveDirection);
+        opMode.telemetry.addData("Times Run", timesRun);
         opMode.telemetry.update();
+
+        try {
+            scriptParameters.getGlobalVariable("mecanumConfigTimesRun").setValue(timesRun);
+        } catch (ScriptParameters.VariableNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
