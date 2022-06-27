@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.main.scripts.jlooping.QuickScriptEngine;
 
-@Autonomous(name="AutonomousTemplate", group="templates") // replace the name and group with your OpMode's name and group
+@Autonomous(name = "QuickScriptEngineAutonomousTest", group = "tests")
 public class QuickScriptEngineAutonomousTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
