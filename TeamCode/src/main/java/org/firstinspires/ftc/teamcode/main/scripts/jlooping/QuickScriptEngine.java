@@ -4,22 +4,23 @@ import com.michaell.looping.ScriptParameters;
 import com.michaell.looping.ScriptRunner;
 import com.michaell.looping.ScriptTemplate;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.main.scripts.jlooping.scripts.MecanumConfigurableRoutine;
 import org.firstinspires.ftc.teamcode.main.scripts.jlooping.scripts.OpModeStopper;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 public class QuickScriptEngine {
     private ScriptRunner runner;
     private LinearOpMode opMode;
+    private ArrayList<MecanumDriveCommand> commandQueue;
 
     // Constructor
-    public QuickScriptEngine(LinearOpMode opMode) {
+    public QuickScriptEngine(@NotNull LinearOpMode opMode) {
         this.opMode = opMode;
-    }
-
-    // Constructor
-    public QuickScriptEngine() {
-        this.opMode = null;
+        generateBlankRunner();
     }
 
     /**
@@ -56,9 +57,15 @@ public class QuickScriptEngine {
         }
     }
 
+    /**
+     * Adds a MecanumConfigurableRoutine to the runner, as well as an OpModeStopper.
+     * @throws ScriptRunner.DuplicateScriptException Thrown if the script already exists in the runner.
+     * @throws NullPointerException Thrown if the runner is null.
+     */
     public void addMecanumConfigurableRoutine() throws ScriptRunner.DuplicateScriptException, NullPointerException {
         if (this.runner != null) {
             this.runner.addScript(new MecanumConfigurableRoutine("mecanumConfigurableRoutine", this.opMode));
+            this.runner.addScript(new OpModeStopper("opModeStopper", this.opMode));
         } else {
             throw new NullPointerException("Runner is null");
         }
@@ -76,6 +83,10 @@ public class QuickScriptEngine {
         }
     }
 
+    /**
+     * Runs all scripts once in the runner.
+     * @throws NullPointerException Thrown if the runner is null.
+     */
     public void runOneTime() throws NullPointerException {
         if (this.runner != null) {
             this.runner.runOneScript();
@@ -110,6 +121,15 @@ public class QuickScriptEngine {
     }
 
     /**
+     * Changes the drive values of the Mecanum Configurable Routine.
+     * @param command The values of vertical, horizontal, and pivot.
+     * @throws NullPointerException Thrown if the runner is null.
+     */
+    public void changeMecanumDriveValues(MecanumDriveCommand command) throws NullPointerException {
+        changeMecanumDriveValues(command.getVertical(), command.getHorizontal(), command.getPivot());
+    }
+
+    /**
      * Runs the mecanum drive once
      * @throws NullPointerException Thrown if the runner is null.
      */
@@ -137,6 +157,7 @@ public class QuickScriptEngine {
                          this.runner.scriptParametersGlobal.globalVariables) {
                         if (variable.name.equals("mecanumConfigRoutineAvailable")) {
                             if ((boolean) variable.getValue()) {
+                                runMecanumDriveOnce();
                                 return;
                             }
                         }
@@ -166,5 +187,59 @@ public class QuickScriptEngine {
      */
     public ScriptRunner getRunner() {
         return this.runner;
+    }
+
+    public void queueCommand(MecanumDriveCommand command) {
+        this.commandQueue.add(command);
+    }
+
+    /**
+     * Runs the command queue.
+     * @throws NullPointerException Thrown if the runner is null.
+     */
+    public void runQueue() throws NullPointerException {
+        while (this.commandQueue.size() > 0) {
+            MecanumDriveCommand command = this.commandQueue.get(0);
+            this.changeMecanumDriveValues(command);
+            this.runMecanumDriveOnce();
+            this.commandQueue.remove(0);
+            this.opMode.sleep(command.getTime());
+            if (this.opMode.isStopRequested()) {
+                return;
+            }
+        }
+    }
+
+    public static class MecanumDriveCommand {
+        public float vertical;
+        public float horizontal;
+        public float pivot;
+        public long time;
+
+        public MecanumDriveCommand(float vertical, float horizontal, float pivot, long time) throws IllegalArgumentException {
+            if (vertical < -1 || vertical > 1 || horizontal < -1 || horizontal > 1 || pivot < -1 || pivot > 1) {
+                throw new IllegalArgumentException("Invalid drive values");
+            }
+            this.vertical = vertical;
+            this.horizontal = horizontal;
+            this.pivot = pivot;
+            this.time = time;
+        }
+
+        public float getHorizontal() {
+            return this.horizontal;
+        }
+
+        public float getVertical() {
+            return this.vertical;
+        }
+
+        public float getPivot() {
+            return this.pivot;
+        }
+
+        public long getTime() {
+            return this.time;
+        }
     }
 }
