@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class QuickScriptEngine {
     private ScriptRunner runner;
     private LinearOpMode opMode;
-    private ArrayList<MecanumDriveCommand> commandQueue;
+    private ArrayList<MecanumDriveCommand> commandQueue = new ArrayList<>();
 
     // Constructor
     public QuickScriptEngine(@NotNull LinearOpMode opMode) {
