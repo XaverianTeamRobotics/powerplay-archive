@@ -6,6 +6,7 @@ repositories {
         dirs rootProject.file('libs')
     }
     maven { url = 'https://maven.brott.dev/' }
+    maven { url = "https://repo.repsy.io/mvn/michaell4438/jlooping" }
 }
 
 dependencies {
@@ -22,6 +23,7 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-FreightFrenzy:1.0.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.4'
     implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'com.michaell:jlooping:2.0.1'
 
     testImplementation 'junit:junit:4.13.2'
 }
