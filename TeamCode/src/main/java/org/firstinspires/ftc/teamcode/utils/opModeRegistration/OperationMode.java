@@ -30,34 +30,36 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        HardwareGetter.setEmulated(false);
+        HardwareGetter.setHardwareMap(hardwareMap);
+        ScriptTemplate jloopingScript;
+        ScriptRunner runner;
+        try {
+            jloopingScript = new ConvertToScript(this.getClass().getName(), this,
+                "absolutelyNothing", "run");
+            runner = new ScriptRunner();
+            runner.addScript(jloopingScript);
+            this.environment = runner.scriptParametersGlobal;
+            HardwareGetter.setJloopingRunner(runner);
+            HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
+            HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
+        } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
+            throw new RuntimeException(e);
+        }
         // set environment variables
         // tell user-defined code of the opmode to construct itself
         construct();
         // wait until the opmode is executed
         waitForStart();
         resetStartTime();
-        ScriptTemplate jloopingScript;
-        HardwareGetter.setEmulated(false);
-        HardwareGetter.setHardwareMap(hardwareMap);
-        try {
-            jloopingScript = new ConvertToScript(this.getClass().getName(), this,
-                "absolutelyNothing", "run");
-            // run the opmode using jlooping
-            ScriptRunner runner = new ScriptRunner();
-            runner.addScript(jloopingScript);
+        // run the opmode using jlooping
+        while (opModeIsActive()) {
+            runner.runOneScript();
             this.environment = runner.scriptParametersGlobal;
-            HardwareGetter.setJloopingRunner(runner);
-            while (opModeIsActive()) {
-                runner.runOneScript();
-                this.environment = runner.scriptParametersGlobal;
-            }
-
-            // tell the app to stop this opmode
-            requestOpModeStop();
-        } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
-            e.printStackTrace();
-            requestOpModeStop();
         }
+
+        // tell the app to stop this opmode
+        requestOpModeStop();
     }
 
     /**

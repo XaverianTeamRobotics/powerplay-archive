@@ -80,7 +80,6 @@ public abstract class EmulatedOpMode {
         HardwareGetter.setEmulated(true);
         ScriptRunner runner = new ScriptRunner();
 
-
         try {
             jloopingScript = new ConvertToScript(this.getClass().getName(), this,
                 "absolutelyNothing", "run");
@@ -88,6 +87,8 @@ public abstract class EmulatedOpMode {
             runner.addScript(jloopingScript);
             this.environment = runner.scriptParametersGlobal;
             HardwareGetter.setJloopingRunner(runner);
+            HardwareGetter.makeGamepadRequest("gamepad1", null);
+            HardwareGetter.makeGamepadRequest("gamepad2", null);
             // set environment variables
             // tell user-defined code of the opmode to construct itself
             construct();

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.emulated
 
 import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.hardware.physical.GamepadRequest
+import org.firstinspires.ftc.teamcode.hardware.physical.GamepadRequestInput
 
 class EmulatedGamepadRequest(name: String): ScriptParameters.Request(name) {
     init {
@@ -49,42 +49,42 @@ class EmulatedGamepadRequest(name: String): ScriptParameters.Request(name) {
 
     override fun issueRequest(p0: Any?): Any {
         val gamepad: GamepadEmulatedValue = HardwareGetter.jloopingRunner!!.scriptParametersGlobal.getGlobalVariable("emulatedGamepad$name").value as GamepadEmulatedValue
-        when (p0 as GamepadRequest.GamepadRequestInput) {
-            GamepadRequest.GamepadRequestInput.LEFT_STICK_X ->         return gamepad.left_stick_x
-            GamepadRequest.GamepadRequestInput.LEFT_STICK_Y ->         return gamepad.left_stick_y
-            GamepadRequest.GamepadRequestInput.RIGHT_STICK_X ->        return gamepad.right_stick_x
-            GamepadRequest.GamepadRequestInput.RIGHT_STICK_Y ->        return gamepad.right_stick_y
-            GamepadRequest.GamepadRequestInput.DPAD_UP ->              return gamepad.dpad_up
-            GamepadRequest.GamepadRequestInput.DPAD_DOWN ->            return gamepad.dpad_down
-            GamepadRequest.GamepadRequestInput.DPAD_LEFT ->            return gamepad.dpad_left
-            GamepadRequest.GamepadRequestInput.DPAD_RIGHT ->           return gamepad.dpad_right
-            GamepadRequest.GamepadRequestInput.A ->                    return gamepad.a
-            GamepadRequest.GamepadRequestInput.B ->                    return gamepad.b
-            GamepadRequest.GamepadRequestInput.X ->                    return gamepad.x
-            GamepadRequest.GamepadRequestInput.Y ->                    return gamepad.y
-            GamepadRequest.GamepadRequestInput.LEFT_BUMPER ->          return gamepad.left_bumper
-            GamepadRequest.GamepadRequestInput.RIGHT_BUMPER ->         return gamepad.right_bumper
-            GamepadRequest.GamepadRequestInput.LEFT_TRIGGER ->         return gamepad.left_trigger
-            GamepadRequest.GamepadRequestInput.RIGHT_TRIGGER ->        return gamepad.right_trigger
-            GamepadRequest.GamepadRequestInput.BACK ->                 return gamepad.back
-            GamepadRequest.GamepadRequestInput.START ->                return gamepad.start
-            GamepadRequest.GamepadRequestInput.LEFT_STICK_BUTTON ->    return gamepad.left_stick_button
-            GamepadRequest.GamepadRequestInput.RIGHT_STICK_BUTTON ->   return gamepad.right_stick_button
-            GamepadRequest.GamepadRequestInput.GUIDE ->                return gamepad.guide
-            GamepadRequest.GamepadRequestInput.CIRCLE ->               return gamepad.circle
-            GamepadRequest.GamepadRequestInput.CROSS ->                return gamepad.cross
-            GamepadRequest.GamepadRequestInput.SQUARE ->               return gamepad.square
-            GamepadRequest.GamepadRequestInput.TRIANGLE ->             return gamepad.triangle
-            GamepadRequest.GamepadRequestInput.SHARE ->                return gamepad.share
-            GamepadRequest.GamepadRequestInput.OPTIONS ->              return gamepad.options
-            GamepadRequest.GamepadRequestInput.TOUCHPAD ->             return gamepad.touchpad
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_1 ->    return gamepad.touchpad_finger_1
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_2 ->    return gamepad.touchpad_finger_2
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_1_X ->  return gamepad.touchpad_finger_1_x
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_1_Y ->  return gamepad.touchpad_finger_1_y
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_2_X ->  return gamepad.touchpad_finger_2_x
-            GamepadRequest.GamepadRequestInput.TOUCHPAD_FINGER_2_Y ->  return gamepad.touchpad_finger_2_y
-            GamepadRequest.GamepadRequestInput.PS ->                   return gamepad.ps
+        when (p0 as GamepadRequestInput) {
+            GamepadRequestInput.LEFT_STICK_X ->         return gamepad.left_stick_x
+            GamepadRequestInput.LEFT_STICK_Y ->         return gamepad.left_stick_y
+            GamepadRequestInput.RIGHT_STICK_X ->        return gamepad.right_stick_x
+            GamepadRequestInput.RIGHT_STICK_Y ->        return gamepad.right_stick_y
+            GamepadRequestInput.DPAD_UP ->              return gamepad.dpad_up
+            GamepadRequestInput.DPAD_DOWN ->            return gamepad.dpad_down
+            GamepadRequestInput.DPAD_LEFT ->            return gamepad.dpad_left
+            GamepadRequestInput.DPAD_RIGHT ->           return gamepad.dpad_right
+            GamepadRequestInput.A ->                    return gamepad.a
+            GamepadRequestInput.B ->                    return gamepad.b
+            GamepadRequestInput.X ->                    return gamepad.x
+            GamepadRequestInput.Y ->                    return gamepad.y
+            GamepadRequestInput.LEFT_BUMPER ->          return gamepad.left_bumper
+            GamepadRequestInput.RIGHT_BUMPER ->         return gamepad.right_bumper
+            GamepadRequestInput.LEFT_TRIGGER ->         return gamepad.left_trigger
+            GamepadRequestInput.RIGHT_TRIGGER ->        return gamepad.right_trigger
+            GamepadRequestInput.BACK ->                 return gamepad.back
+            GamepadRequestInput.START ->                return gamepad.start
+            GamepadRequestInput.LEFT_STICK_BUTTON ->    return gamepad.left_stick_button
+            GamepadRequestInput.RIGHT_STICK_BUTTON ->   return gamepad.right_stick_button
+            GamepadRequestInput.GUIDE ->                return gamepad.guide
+            GamepadRequestInput.CIRCLE ->               return gamepad.circle
+            GamepadRequestInput.CROSS ->                return gamepad.cross
+            GamepadRequestInput.SQUARE ->               return gamepad.square
+            GamepadRequestInput.TRIANGLE ->             return gamepad.triangle
+            GamepadRequestInput.SHARE ->                return gamepad.share
+            GamepadRequestInput.OPTIONS ->              return gamepad.options
+            GamepadRequestInput.TOUCHPAD ->             return gamepad.touchpad
+            GamepadRequestInput.TOUCHPAD_FINGER_1 ->    return gamepad.touchpad_finger_1
+            GamepadRequestInput.TOUCHPAD_FINGER_2 ->    return gamepad.touchpad_finger_2
+            GamepadRequestInput.TOUCHPAD_FINGER_1_X ->  return gamepad.touchpad_finger_1_x
+            GamepadRequestInput.TOUCHPAD_FINGER_1_Y ->  return gamepad.touchpad_finger_1_y
+            GamepadRequestInput.TOUCHPAD_FINGER_2_X ->  return gamepad.touchpad_finger_2_x
+            GamepadRequestInput.TOUCHPAD_FINGER_2_Y ->  return gamepad.touchpad_finger_2_y
+            GamepadRequestInput.PS ->                   return gamepad.ps
         }
     }
 
@@ -93,6 +93,6 @@ class EmulatedGamepadRequest(name: String): ScriptParameters.Request(name) {
     }
 
     override fun getInputType(): Class<*> {
-        return GamepadRequest.GamepadRequestInput::class.java
+        return GamepadRequestInput::class.java
     }
 }

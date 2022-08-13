@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>FTC Help Menu</title>
+     <link rel="stylesheet" href="./src/styles/main.css">
+     <script src="src/scripts/replace.js"></script>
+</head>
+<body>
+<h1>
+     FTC Help Menu
+</h1>
+<p>
+     This website will generate all the code
+     snippets you will need to get off the
+     ground fast!
+     <br>
+     <br>
+     This help page has interactive snippets that you
+     can change on the fly and copy into your file for easy use,
+     as well as many explanations on how to use different features.
+     <br>
+     <br>
+</p>
+
+<div id="opmode">
+     <h2> Opmodes </h2>
+     <p>
+          Opmodes are the way that you can make code appear on the robot.
+          They are defined the same way as normal classes, but with a few extras.
+          They follow a simple template that goes like this:
+
+          <br>
+          <br>
+
+     <pre class="code" id="opModeDefinition">
+public class <a id="opModeName">OpModeName</a> extends OperationMode implements TeleOperation {
+	@Override
+	public void contruct() { 
+		
+	} 
+	
+	@Override
+	public void run() {
+	
+	}
+}	</pre>
+
+     Opmode Name: <input id="classNameID" name="className" type="text" value="OpModeName" placeholder="Op Mode Name">
+     <br>
+     <button onclick='changeField("classNameID", "opModeName")'>Apply</button>
+
+     <br>
+     <br>
+
+     There are two functions there: construct and run. construct is run once at the beginning before the opMode starts,
+     and run is run periodically after it starts. It is important that you don't keep any long loops in the run function
+     or you may cause an error to occur.
+     <br>
+     <br>
+     To make an autonomous routine, swap the TeleOperation at the top to AutonomousOperation.
+     <br>
+     <br>
+     OpModes has a special varieable, environment, that allows for you to run special functions, set special
+     variables, and add additional features.
+     </p>
+</div>
+
+<div id="hardware">
+     <h2> Hardware </h2>
+     <p>
+          Hardware is the way that you can interact with the robot's physical features.
+          Hardware is the term for things like motors, gamepads, servos, and sensors.
+          <br>
+          <br>
+          Hardware devices can be interacted with using the HardwareGetter class.
+          Note that some hardware must be initialized before it can be used.
+          <br>
+          <br>
+          Hardware uses a system which I call "Requests". Requests have a two-part system.
+          First, a request must actually be created, then you can call that request. Requests can
+          be used in any part of the script, and some advantages will be explained later.
+
+          <h3> Motors </h3>
+          Motors must have a request active before they are used. To initialize a motor request, use the code below,
+          but make sure that the name matches that set in the robot configuration.
+          <br>
+
+          <pre class="code" id="motorInit">
+HardwareGetter.makeMotorRequest("<a id="motorNameInitSample">motorName</a>");</pre>
+
+
+          Motor Name: <input id="motorNameInitInputID" name="motorNameInitInput" type="text" value="motorName"
+                              placeholder="Motor Name">
+          <br>
+          <button onclick='changeField("motorNameInitInputID", "motorNameInitSample")'>Apply</button>
+
+          <br>
+          <br>
+          <br>
+          Once a request is created, you can do all sorts of things with it. Before you can use it,
+          you need to know what paramaters you want it to have. There are 3 main paramaters:
+          They are power, the motor's name, and the operation type. See more about operation types below.
+
+     <pre class="code" id="motorUsage">
+HardwareGetter.setMotorValue("<a id="motorNameUsageSample">motorName</a>", new StandardMotorParameters(
+          <a id="motorPowerUsageSample">1</a>,
+          MotorOperation.<a id="motorOperationUsageSample">POWER</a>)); </pre>
+
+     Motor Name: <input id="motorNameUsageInputID" name="motorNameInitInput" type="text" value="motorName"
+                        placeholder="Motor Name">
+     <br>
+     <button onclick='changeField("motorNameUsageInputID", "motorNameUsageSample")'>Apply</button>
+     </p>
+     Motor Power: <input id="motorPowerUsageInputID" name="motorPowerInitInput" type="text" value="1"
+                        placeholder="Motor Power">
+     <br>
+     <button onclick='changeField("motorPowerUsageInputID", "motorPowerUsageSample")'>Apply</button>
+
+     <br>
+     <br>
+
+     Motor Operation: <select id="motorOperationUsageInputID" name="motorOperationUsageInput">
+          <option value="POWER">POWER</option>
+          <option value="ENCODER_POWER">ENCODER_POWER</option>
+          <option value="ENCODER_DISTANCE">ENCODER_DISTANCE</option>
+     </select>
+     <br>
+     <button onclick='changeField("motorOperationUsageInputID", "motorOperationUsageSample")'>Apply</button>
+
+     <h4>Operation Types</h4>
+
+     There are three big operation types: POWER, ENCODER_POWER, and ENCODER_DISTANCE.
+
+     <br>
+     <br>
+     POWER accepts a value between -1 and 1, and will set the motor to that value. This is the most useful.
+     <br>
+     <br>
+     ENCODER_POWER accepts a value between -1 and 1, and will set the motor to that value, but will also adjust it to
+     keep the speed of the robot consistent. It does this by using a device called an "encoder".
+     <br>
+     <br>
+     ENCODER_DISTANCE accepts any value and will drive the motor to that many "counts", which are a small fraction of
+     one revolution.
+     To find out how what the input should be for this, use this sample formula:
+     <pre class="code">
+counts_per_inch = (counts_per_rev * gear_ratio) / (wheel_diameter * PI)</pre>
+     <br>
+     Counts per inch: The amount of counts that the encoder to do to get the robot to move 1 inch. If you multiply this value
+     by any distance (in inches), then you will get the number of encoder counts needed to move the robot that distance.
+     <br>
+     <br>
+     Counts per rev: The amount of counts that the encoder has per revolution of the motor internally. For most
+     motors this is 1440, but you can look this information up online for the motor if you need to.
+     <br>
+     <br>
+     Gear Ratio: The ratio of the gears in between the motor and the wheel. You can see this information on the
+     gearbox attatched to the motor, if there is no external gearbox, assume that this is 1.
+     <br>
+     <br>
+     Wheel Diameter: The diameter (in inches) of the wheel that the motor is attached to.
+     </p>
+</div>
+</body>
+</html>

@@ -66,7 +66,7 @@ public class OperationModeClassFilter implements ClassFilter {
     private void sanatizeClass(Class clazz) {
         OperationModeRegistrationLogger.log("Checking " + clazz.getName(), KEY);
         // check if the class is an opmode
-        if(OperationMode.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers()) && clazz.getName().startsWith("org.firstinspires.ftc.teamcode")) {
+        if(OperationMode.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers())) {
             Class<? extends OperationMode> claxx = (Class<? extends OperationMode>) clazz;
             // check if the class has already been handled before. this may not be necessary, but it exists just in case the internals of finding classes are wonky
             if(!OperationModeRegistrarStore.getClasses(KEY).contains(claxx)) {
