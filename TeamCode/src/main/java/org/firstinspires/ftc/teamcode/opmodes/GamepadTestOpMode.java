@@ -11,12 +11,11 @@ public class GamepadTestOpMode extends OperationMode implements TeleOperation {
     @Override
     public void construct() {
         HardwareGetter.makeMotorRequest("Motor1");
-        HardwareGetter.makeGamepadRequest("Gamepad1", gamepad1);
     }
 
     @Override
     public void run() {
-        double power = HardwareGetter.getGamepadValue("Gamepad1", GamepadRequestInput.RIGHT_TRIGGER);
+        double power = HardwareGetter.getGamepadValue("gamepad1", GamepadRequestInput.RIGHT_TRIGGER);
         HardwareGetter.setMotorValue("Motor1", new StandardMotorParameters(power,
             MotorOperation.POWER));
     }

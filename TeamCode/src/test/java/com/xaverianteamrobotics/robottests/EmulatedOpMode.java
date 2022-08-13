@@ -123,7 +123,7 @@ public abstract class EmulatedOpMode {
      * @throws ScriptParameters.VariableNotFoundException Thrown if there is no valid gamepad
      */
     public void setGamepadValues(EmulatedGamepadRequest.GamepadEmulatedValue value, String gamepadName) throws ScriptParameters.VariableNotFoundException {
-        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).scriptParametersGlobal.getGlobalVariable("emulatedGamepad" + gamepadName).setValue(value);
+        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).scriptParametersGlobal.getGlobalVariable(gamepadName).setValue(value);
     }
 
     /**

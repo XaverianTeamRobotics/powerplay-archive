@@ -160,6 +160,150 @@ counts_per_inch = (counts_per_rev * gear_ratio) / (wheel_diameter * PI)</pre>
      <br>
      <br>
      Wheel Diameter: The diameter (in inches) of the wheel that the motor is attached to.
+
+     <br>
+     <br>
+     <h3>Gamepads</h3>
+
+     If you just scrolled past the long section about motors and thought "You know what.... this hurts my brain!", then
+     great, because it took me two hours to write.
+     <br>
+     <br>
+     But do not fear, because gamepads are pretty simple.
+     <br>
+     They work on the same request system as motors, but require fewer inputs, and are initialized for you!
+     <br>
+     <br>
+     To interact with a gamepad, you need to know a few things:
+     <br>
+     <br>
+     First, you need to know which gamepad you want to use. You can choose between two, which are called "gamepad1" and "gamepad2".
+     <br>
+     <br>
+     Second, you need to know which type of gamepad you want to use, which are either Xbox style, which have A B X Y
+     as the labels on the four buttons on the front of the controller, or PlayStation style, which have the weird shapes
+     as labels on the four buttons on the front of the controller.
+     <br>
+     <br>
+     Third, you need to know which button you want to use. There are quite a lot, so here is a list of them, however
+     they should be in all uppercase, but that would be too much work, and I don't have enough caffeine.
+
+     <pre class="code">
+GENERIC BUTTONS
+     dpad_up
+     dpad_down
+     dpad_left
+     dpad_right
+     left_stick_button
+     right_stick_button
+     left_bumper
+     right_bumper
+
+GENERIC AXES
+     left_trigger
+     right_trigger
+     left_stick_x
+     left_stick_y
+     right_stick_x
+     right_stick_y
+
+XBOX-ONLY BUTTONS
+     a
+     b
+     x
+     y
+     back
+     start
+     guide
+
+PLAYSTATION-ONLY BUTTONS
+     circle
+     cross
+     square
+     triangle
+     share
+     options
+     touchpad
+     touchpad_finger_1
+     touchpad_finger_2
+     ps
+
+PLAYSTATION-ONLY AXES
+     touchpad_finger_1_x
+     touchpad_finger_1_y
+     touchpad_finger_2_x
+     touchpad_finger_2_y
+     </pre>
+
+     Note that some of those buttons, are axes, rather than buttons. Axes will return a value between -1 and 1, with
+     the exception of the touchpad of the playstation controller, which we never use. Buttons will return a value
+     that is either 0 or 1, 0 being not pressed, and 1 being pressed. To use the gamepad, look at the code snippet
+     below:
+
+     <pre class="code">
+HardwareGetter.getGamepadValue("<a id="gamepadNameSample">gamepad1</a>", GamepadRequestInput.<a
+               id="gamepadButtonSample">DPAD_UP</a>);</pre>
+     <br>
+     Gamepad Name: <select id="gamepadNameInputID" name="gamepadNameInput">
+          <option value="gamepad1">gamepad1</option>
+          <option value="gamepad2">gamepad2</option>
+     </select>
+     <br>
+     <button onclick='changeField("gamepadNameInputID", "gamepadNameSample")'>Apply</button>
+
+     <br>
+     <br>
+
+     Gamepad button: <select id="gamepadButtonInputID" name="gamepadButtonInput">
+          <option value="DPAD_UP">DPAD_UP</option>
+          <option value="DPAD_DOWN">DPAD_DOWN</option>
+          <option value="DPAD_LEFT">DPAD_LEFT</option>
+          <option value="DPAD_RIGHT">DPAD_RIGHT</option>
+
+          <option value="LEFT_STICK_BUTTON">LEFT_STICK_BUTTON</option>
+          <option value="RIGHT_STICK_BUTTON">RIGHT_STICK_BUTTON</option>
+          <option value="LEFT_BUMPER">LEFT_BUMPER</option>
+          <option value="RIGHT_BUMPER">RIGHT_BUMPER</option>
+
+          <option value="LEFT_TRIGGER">LEFT_TRIGGER</option>
+          <option value="RIGHT_TRIGGER">RIGHT_TRIGGER</option>
+
+          <option value="LEFT_STICK_X">LEFT_STICK_X</option>
+          <option value="LEFT_STICK_Y">LEFT_STICK_Y</option>
+
+          <option value="RIGHT_STICK_X">RIGHT_STICK_X</option>
+          <option value="RIGHT_STICK_Y">RIGHT_STICK_Y</option>
+
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="X">X</option>
+          <option value="Y">Y</option>
+
+          <option value="BACK">BACK</option>
+          <option value="START">START</option>
+          <option value="GUIDE">GUIDE</option>
+
+          <option value="CIRCLE">CIRCLE</option>
+          <option value="CROSS">CROSS</option>
+          <option value="SQUARE">SQUARE</option>
+          <option value="TRIANGLE">TRIANGLE</option>
+
+          <option value="SHARE">SHARE</option>
+          <option value="OPTIONS">OPTIONS</option>
+          <option value="PS">PS</option>
+
+          <option value="TOUCHPAD">TOUCHPAD</option>
+          <option value="TOUCHPAD_FINGER_1">TOUCHPAD_FINGER_1</option>
+          <option value="TOUCHPAD_FINGER_2">TOUCHPAD_FINGER_2</option>
+
+          <option value="TOUCHPAD_FINGER_1_X">TOUCHPAD_FINGER_1_X</option>
+          <option value="TOUCHPAD_FINGER_1_Y">TOUCHPAD_FINGER_1_Y</option>
+
+          <option value="TOUCHPAD_FINGER_2_X">TOUCHPAD_FINGER_2_X</option>
+          <option value="TOUCHPAD_FINGER_2_Y">TOUCHPAD_FINGER_2_Y</option>
+     </select>
+     <br>
+     <button onclick='changeField("gamepadButtonInputID", "gamepadButtonSample")'>Apply</button>
      </p>
 </div>
 </body>

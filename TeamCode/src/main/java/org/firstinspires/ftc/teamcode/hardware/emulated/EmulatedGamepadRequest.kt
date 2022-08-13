@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.hardware.physical.GamepadRequestInput
 
 class EmulatedGamepadRequest(name: String): ScriptParameters.Request(name) {
     init {
-        val variable = ScriptParameters.GlobalVariable<GamepadEmulatedValue>("emulatedGamepad$name")
+        val variable = ScriptParameters.GlobalVariable<GamepadEmulatedValue>(name)
         variable.value = GamepadEmulatedValue()
         HardwareGetter.jloopingRunner!!.scriptParametersGlobal.addGlobalVariable(variable)
     }
