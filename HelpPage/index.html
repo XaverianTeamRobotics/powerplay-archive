@@ -304,6 +304,48 @@ HardwareGetter.getGamepadValue("<a id="gamepadNameSample">gamepad1</a>", Gamepad
      </select>
      <br>
      <button onclick='changeField("gamepadButtonInputID", "gamepadButtonSample")'>Apply</button>
+
+     <h2>Emulator</h2>
+
+     The emulator can be used almost identically to opmodes, just a little bit differently.
+     First you need to use a different folder to put them in. The folders highlighted green in Android Studio contain
+     data for the emulator. To create them is exactly the same.
+
+     <br>
+     <br>
+
+     <pre class="code" id="emuOpModeDefinition">
+public class <a id="emuOpModeName">OpModeName</a> extends EmulatedOpMode implements TeleOperation {
+	@Override
+	public void contruct() {
+
+	}
+
+	@Override
+	public void run() {
+
+	}
+}	</pre>
+
+     Opmode Name: <input id="emuClassNameID" name="emuClassName" type="text" value="OpModeName"
+                         placeholder="Op Mode Name">
+     <br>
+     <button onclick='changeField("emuClassNameID", "emuOpModeName")'>Apply</button>
+
+     <br>
+     <br>
+
+     When you have it open, there should be a little green play button next to the class name. Click it and it will
+     run the emulator.
+
+     <br>
+     <br>
+
+     There are no differences except for a few extra functions. <br> <br>
+     First are the setTimeUntilAbort and getTimeUntilAbort functions. They are used to set the time until the
+     emulator will stop running. <br> <br>
+     Second is the setGamepadValues function, which allows you to change the values of the emulated gamepad. This can
+     be used to test what different gamepad inputs will do. <br> <br>
      </p>
 </div>
 </body>
