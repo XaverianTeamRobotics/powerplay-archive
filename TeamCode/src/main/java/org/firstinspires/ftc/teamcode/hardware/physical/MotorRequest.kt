@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private var motor: DcMotor
+    var motor: DcMotor
     init {
        motor = hardwareMap.get(DcMotor::class.java, name)
     }
