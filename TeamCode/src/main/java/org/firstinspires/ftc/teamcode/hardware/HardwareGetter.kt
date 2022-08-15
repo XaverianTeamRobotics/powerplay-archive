@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware
 
 import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.emulated.EmulatedGamepadRequest
@@ -65,6 +66,23 @@ class HardwareGetter {
             val req = MotorRequest(name, hardwareMap!!)
             jloopingRunner!!.addRequest(req)
             return req
+        }
+
+        /**
+         * Get a motor from a previously initialized request
+         */
+        @JvmStatic
+        fun getMotorFromRequest(name: String): DcMotor? {
+            if (hardwareMap == null || jloopingRunner == null) {
+                if (isEmulated && jloopingRunner != null) {
+                    return null
+                } else {
+                    println("HardwareMap: $hardwareMap")
+                    println("ScriptRunner: $jloopingRunner")
+                    throw NullPointerException("The hardwareMap or jloopingRunner are null")
+                }
+            }
+            return (jloopingRunner!!.scriptParametersGlobal.getRequest(name) as MotorRequest).motor
         }
 
         /**
