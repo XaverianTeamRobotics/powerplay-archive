@@ -129,5 +129,22 @@ class HardwareGetter {
                 ) as Double
             } catch (_:Exception) {}
         }
+
+        /**
+         * Check if a motor is currently busy. This can be used in autonomous programming to track distances.
+         */
+        @JvmStatic
+        fun isMotorBusy(name: String): Boolean {
+            if (hardwareMap == null || jloopingRunner == null) {
+                if (isEmulated && jloopingRunner != null) {
+                    return false
+                } else {
+                    println("HardwareMap: $hardwareMap")
+                    println("ScriptRunner: $jloopingRunner")
+                    throw NullPointerException("The hardwareMap or jloopingRunner are null")
+                }
+            }
+            return getMotorFromRequest(name)!!.isBusy
+        }
     }
 }
