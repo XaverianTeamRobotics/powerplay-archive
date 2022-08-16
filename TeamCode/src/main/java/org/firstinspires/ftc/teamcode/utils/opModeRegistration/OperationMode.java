@@ -43,6 +43,7 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.setJloopingRunner(runner);
             HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
             HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
+            HardwareGetter.initAllDevices();
         } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
             throw new RuntimeException(e);
         }

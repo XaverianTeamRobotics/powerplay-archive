@@ -89,6 +89,7 @@ public abstract class EmulatedOpMode {
             HardwareGetter.setJloopingRunner(runner);
             HardwareGetter.makeGamepadRequest("gamepad1", null);
             HardwareGetter.makeGamepadRequest("gamepad2", null);
+            HardwareGetter.initAllDevices();
             // set environment variables
             // tell user-defined code of the opmode to construct itself
             construct();

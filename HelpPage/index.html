@@ -82,51 +82,55 @@ public class <a id="opModeName">OpModeName</a> extends OperationMode implements 
           be used in any part of the script, and some advantages will be explained later.
 
           <h3> Motors </h3>
-          Motors must have a request active before they are used. To initialize a motor request, use the code below,
-          but make sure that the name matches that set in the robot configuration.
-          <br>
-
-          <pre class="code" id="motorInit">
-HardwareGetter.makeMotorRequest("<a id="motorNameInitSample">motorName</a>");</pre>
-
-
-          Motor Name: <input id="motorNameInitInputID" name="motorNameInitInput" type="text" value="motorName"
-                              placeholder="Motor Name">
-          <br>
-          <button onclick='changeField("motorNameInitInputID", "motorNameInitSample")'>Apply</button>
-
+          Motors are automatically ready for you, you just need to know what port its attached to.
           <br>
           <br>
-          <br>
-          Once a request is created, you can do all sorts of things with it. Before you can use it,
-          you need to know what paramaters you want it to have. There are 3 main paramaters:
-          They are power, the motor's name, and the operation type. See more about operation types below.
+          There are 2 main paramaters for a motor which can all be changed:
+          They are power and the operation type. See more about operation types below.
 
+     To change a motor's power, use the following command.
      <pre class="code" id="motorUsage">
-HardwareGetter.setMotorValue("<a id="motorNameUsageSample">motorName</a>", new StandardMotorParameters(
-          <a id="motorPowerUsageSample">1</a>,
-          MotorOperation.<a id="motorOperationUsageSample">POWER</a>)); </pre>
-
-     Motor Name: <input id="motorNameUsageInputID" name="motorNameInitInput" type="text" value="motorName"
-                        placeholder="Motor Name">
+Devices.getMotor<a id="motorPortPower">0</a>.setPower(<a id="motorPower">1.0</a>); // Set the power of the motor</pre>
      <br>
-     <button onclick='changeField("motorNameUsageInputID", "motorNameUsageSample")'>Apply</button>
-     </p>
-     Motor Power: <input id="motorPowerUsageInputID" name="motorPowerInitInput" type="text" value="1"
-                        placeholder="Motor Power">
-     <br>
-     <button onclick='changeField("motorPowerUsageInputID", "motorPowerUsageSample")'>Apply</button>
-
-     <br>
-     <br>
-
-     Motor Operation: <select id="motorOperationUsageInputID" name="motorOperationUsageInput">
-          <option value="POWER">POWER</option>
-          <option value="ENCODER_POWER">ENCODER_POWER</option>
-          <option value="ENCODER_DISTANCE">ENCODER_DISTANCE</option>
+     Motor Port: <select id="motorPortPowerInput">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
      </select>
      <br>
-     <button onclick='changeField("motorOperationUsageInputID", "motorOperationUsageSample")'>Apply</button>
+     <button onclick='changeField("motorPortPowerInput", "motorPortPower")'>Apply</button>
+     <br>
+     <br>
+     Motor Power: <input id="motorPowerInput" name="motorPower" type="text" value="1.0" placeholder="Motor Power">
+     <br>
+     <button onclick='changeField("motorPowerInput", "motorPower")'>Apply</button>
+     <br>
+     <br>
+
+     To change a motor's operation type, use the following command.
+     <pre class="code" id="motorOperation">
+Devices.getMotor<a id="motorPortOperation">0</a>.setOperation(<a id="motorOperationType">OperationType</a>); // Set the operation type of the motor</pre>
+     <br>
+     Motor Port: <select id="motorPortOperationInput">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+     </select>
+     <br>
+     <button onclick='changeField("motorPortOperationInput", "motorPortOperation")'>Apply</button>
+     <br>
+     <br>
+     Operation Type: <select id="motorOperationTypeInput">
+          <option value="POWER">POWER</option>
+          <option value="ENCODER_POWER">ENCODER_POWER</option>
+          <option value="ENCODER_POSITION">ENCODER_POSITION</option>
+     </select>
+     <br>
+     <button onclick='changeField("motorOperationTypeInput", "motorOperationType")'>Apply</button>
+     <br>
+     <br>
 
      <h4>Operation Types</h4>
 
@@ -185,27 +189,26 @@ counts_per_inch = (counts_per_rev * gear_ratio) / (wheel_diameter * PI)</pre>
      as labels on the four buttons on the front of the controller.
      <br>
      <br>
-     Third, you need to know which button you want to use. There are quite a lot, so here is a list of them, however
-     they should be in all uppercase, but that would be too much work, and I don't have enough caffeine.
+     Third, you need to know which button you want to use. There are quite a lot, so here is a list of them.
 
      <pre class="code">
 GENERIC BUTTONS
-     dpad_up
-     dpad_down
-     dpad_left
-     dpad_right
-     left_stick_button
-     right_stick_button
-     left_bumper
-     right_bumper
+     dpadUp
+     dpadDown
+     dpadLeft
+     dpadRight
+     leftStickSutton
+     rightStickButton
+     leftBumper
+     rightBumper
 
 GENERIC AXES
-     left_trigger
-     right_trigger
-     left_stick_x
-     left_stick_y
-     right_stick_x
-     right_stick_y
+     leftTrigger
+     rightTrigger
+     leftStickX
+     leftStickY
+     rightStickX
+     rightStickY
 
 XBOX-ONLY BUTTONS
      a
@@ -224,29 +227,29 @@ PLAYSTATION-ONLY BUTTONS
      share
      options
      touchpad
-     touchpad_finger_1
-     touchpad_finger_2
+     touchpadFinger1
+     touchpadFinger2
      ps
 
 PLAYSTATION-ONLY AXES
-     touchpad_finger_1_x
-     touchpad_finger_1_y
-     touchpad_finger_2_x
-     touchpad_finger_2_y
+     touchpadFinger1X
+     touchpadFinger1Y
+     touchpadFinger2X
+     touchpadFinger2Y
      </pre>
 
      Note that some of those buttons, are axes, rather than buttons. Axes will return a value between -1 and 1, with
-     the exception of the touchpad of the playstation controller, which we never use. Buttons will return a value
-     that is either 0 or 1, 0 being not pressed, and 1 being pressed. To use the gamepad, look at the code snippet
+     the exception of the touchpad of the playstation controller, which we never use. Buttons will return a boolean
+     value. To use the gamepad, look at the code snippet
      below:
 
      <pre class="code">
-HardwareGetter.getGamepadValue("<a id="gamepadNameSample">gamepad1</a>", GamepadRequestInput.<a
-               id="gamepadButtonSample">DPAD_UP</a>);</pre>
+Devices.getGamepad<a id="gamepadNameSample">1</a>.get<a
+               id="gamepadButtonSample">DpadUp</a>();</pre>
      <br>
      Gamepad Name: <select id="gamepadNameInputID" name="gamepadNameInput">
-          <option value="gamepad1">gamepad1</option>
-          <option value="gamepad2">gamepad2</option>
+          <option value="1">gamepad1</option>
+          <option value="2">gamepad2</option>
      </select>
      <br>
      <button onclick='changeField("gamepadNameInputID", "gamepadNameSample")'>Apply</button>
@@ -255,52 +258,41 @@ HardwareGetter.getGamepadValue("<a id="gamepadNameSample">gamepad1</a>", Gamepad
      <br>
 
      Gamepad button: <select id="gamepadButtonInputID" name="gamepadButtonInput">
-          <option value="DPAD_UP">DPAD_UP</option>
-          <option value="DPAD_DOWN">DPAD_DOWN</option>
-          <option value="DPAD_LEFT">DPAD_LEFT</option>
-          <option value="DPAD_RIGHT">DPAD_RIGHT</option>
-
-          <option value="LEFT_STICK_BUTTON">LEFT_STICK_BUTTON</option>
-          <option value="RIGHT_STICK_BUTTON">RIGHT_STICK_BUTTON</option>
-          <option value="LEFT_BUMPER">LEFT_BUMPER</option>
-          <option value="RIGHT_BUMPER">RIGHT_BUMPER</option>
-
-          <option value="LEFT_TRIGGER">LEFT_TRIGGER</option>
-          <option value="RIGHT_TRIGGER">RIGHT_TRIGGER</option>
-
-          <option value="LEFT_STICK_X">LEFT_STICK_X</option>
-          <option value="LEFT_STICK_Y">LEFT_STICK_Y</option>
-
-          <option value="RIGHT_STICK_X">RIGHT_STICK_X</option>
-          <option value="RIGHT_STICK_Y">RIGHT_STICK_Y</option>
-
+          <option value="DpadUp">DpadUp</option>
+          <option value="DpadDown">DpadDown</option>
+          <option value="DpadLeft">DpadLeft</option>
+          <option value="DpadRight">DpadRight</option>
+          <option value="LeftStickX">LeftStickX</option>
+          <option value="LeftStickY">LeftStickY</option>
+          <option value="RightStickX">RightStickX</option>
+          <option value="RightStickY">RightStickY</option>
+          <option value="LeftTrigger">LeftTrigger</option>
+          <option value="RightTrigger">RightTrigger</option>
+          <option value="LeftStickButton">LeftStickButton</option>
+          <option value="RightStickButton">RightStickButton</option>
+          <option value="LeftBumper">LeftBumper</option>
+          <option value="RightBumper">RightBumper</option>
           <option value="A">A</option>
           <option value="B">B</option>
           <option value="X">X</option>
           <option value="Y">Y</option>
-
-          <option value="BACK">BACK</option>
-          <option value="START">START</option>
-          <option value="GUIDE">GUIDE</option>
-
-          <option value="CIRCLE">CIRCLE</option>
-          <option value="CROSS">CROSS</option>
-          <option value="SQUARE">SQUARE</option>
-          <option value="TRIANGLE">TRIANGLE</option>
-
-          <option value="SHARE">SHARE</option>
-          <option value="OPTIONS">OPTIONS</option>
-          <option value="PS">PS</option>
-
-          <option value="TOUCHPAD">TOUCHPAD</option>
-          <option value="TOUCHPAD_FINGER_1">TOUCHPAD_FINGER_1</option>
-          <option value="TOUCHPAD_FINGER_2">TOUCHPAD_FINGER_2</option>
-
-          <option value="TOUCHPAD_FINGER_1_X">TOUCHPAD_FINGER_1_X</option>
-          <option value="TOUCHPAD_FINGER_1_Y">TOUCHPAD_FINGER_1_Y</option>
-
-          <option value="TOUCHPAD_FINGER_2_X">TOUCHPAD_FINGER_2_X</option>
-          <option value="TOUCHPAD_FINGER_2_Y">TOUCHPAD_FINGER_2_Y</option>
+          <option value="Back">Back</option>
+          <option value="Start">Start</option>
+          <option value="Guide">Guide</option>
+          <option value="Circle">Circle</option>
+          <option value="Cross">Cross</option>
+          <option value="Square">Square</option>
+          <option value="Triangle">Triangle</option>
+          <option value="Share">Share</option>
+          <option value="Options">Options</option>
+          <option value="Touchpad">Touchpad</option>
+          <option value="TouchpadFinger1">TouchpadFinger1</option>
+          <option value="TouchpadFinger2">TouchpadFinger2</option>
+          <option value="Ps">PS</option>
+          <option value="TouchpadFinger1X">TouchpadFinger1X</option>
+          <option value="TouchpadFinger1Y">TouchpadFinger1Y</option>
+          <option value="TouchpadFinger2X">TouchpadFinger2X</option>
+          <option value="TouchpadFinger2Y">TouchpadFinger2Y</option>
      </select>
      <br>
      <button onclick='changeField("gamepadButtonInputID", "gamepadButtonSample")'>Apply</button>
