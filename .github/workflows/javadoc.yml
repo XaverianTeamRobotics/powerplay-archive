@@ -18,10 +18,10 @@ jobs:
       # Set up our environment.
   
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up the JDK environment
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: 16
           distribution: "temurin"
@@ -46,7 +46,7 @@ jobs:
       # Checkout repository to place FTC SDK into.
           
       - name: Prepare link update
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: 'gh-pages'
           path: './docs/tempgit/FtcRobotController/'
@@ -139,7 +139,7 @@ jobs:
       # Upload an Artifact of the Javadoc if for whatever reason one might need to download one.
 
       - name: Upload generated Javadoc to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Javadoc-output
           path: ./javadoc-output/
@@ -159,7 +159,7 @@ jobs:
           mkdir ./tjdmp/
       
       - name: Checkout Pages in Action Workspace
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: 'gh-pages'
           path: './tjdmp/'

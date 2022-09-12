@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up the JDK environment
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: 16
         distribution: 'adopt'
@@ -38,7 +38,7 @@ jobs:
           --stacktrace
 
     - name: Upload the FtcRobotController build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: FtcRobotController-Build
         path: |
@@ -46,7 +46,7 @@ jobs:
           ./FtcRobotController/build/reports/
 
     - name: Upload the TeamCode build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: TeamCode-Build
         path: |
