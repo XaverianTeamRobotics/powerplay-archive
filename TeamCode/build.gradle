@@ -12,15 +12,12 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
-
 apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
 apply from: '../build.dependencies.gradle'
 
 android {
-    androidResources {
-        noCompress 'tflite'
-    }
+    namespace = 'org.firstinspires.ftc.teamcode'
 }
 
 dependencies {
