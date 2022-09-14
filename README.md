@@ -5,7 +5,7 @@ This GitHub repository contains the source code that is used to build an Android
 [![Gradle Java Build](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/build.yml/badge.svg)](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/build.yml)
 [![CodeQL Analysis](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/codeql.yml/badge.svg)](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/codeql.yml)
 [![DevSkim Analysis](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/devskim.yml/badge.svg)](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/devskim.yml)
-[![Javadoc Generation](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/javadoc.yml/badge.svg)](https://github.com/XaverianTeamRobotics/FtcRobotController/actions/workflows/javadoc.yml)
+![Javadoc Generation Disabled](https://img.shields.io/badge/Javadoc%20Generation-Disabled-lightgrey)
 
 ## Getting Started
 
