@@ -52,7 +52,7 @@ public abstract class OperationMode extends LinearOpMode {
         construct();
         // wait until the opmode is executed
         waitForStart();
-        resetStartTime();
+        resetRuntime();
         // run the opmode using jlooping
         while (opModeIsActive()) {
             runner.runOneScript();
