@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
+import org.firstinspires.ftc.teamcode.utils.opModeRegistration.xmlOpModes.XMLOperationModeRegistrar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,6 +46,8 @@ public class OperationModeRegistrar {
         // process our classes, sending them off for registration
         OperationModeRegistrationLogger.log("Processing classes...", KEY);
         ClassManagerFactory.processAllClasses();
+
+        XMLOperationModeRegistrar.registerOperationModes(manager);
     }
 
     /**

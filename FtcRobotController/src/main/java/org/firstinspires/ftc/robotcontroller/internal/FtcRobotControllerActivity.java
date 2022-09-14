@@ -150,7 +150,7 @@ public class FtcRobotControllerActivity extends Activity
   protected ProgrammingModeManager programmingModeManager;
 
   protected UpdateUI.Callback callback;
-  protected Context context;
+  protected static Context context;
   protected Utility utility;
   protected StartResult prefRemoterStartResult = new StartResult();
   protected StartResult deviceNameStartResult = new StartResult();
@@ -856,4 +856,8 @@ public class FtcRobotControllerActivity extends Activity
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
   }
+
+    public static Context getAppContext() {
+      return context;
+    }
 }

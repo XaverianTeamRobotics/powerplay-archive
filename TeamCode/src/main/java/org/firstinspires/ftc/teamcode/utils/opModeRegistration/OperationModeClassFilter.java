@@ -71,6 +71,11 @@ public class OperationModeClassFilter implements ClassFilter {
             // check if the class has already been handled before. this may not be necessary, but it exists just in case the internals of finding classes are wonky
             if(!OperationModeRegistrarStore.getClasses(KEY).contains(claxx)) {
                 OperationModeRegistrarStore.addClass(claxx, KEY);
+                if (claxx.getName().equals("XMLOpModeTemplate")) {
+                    OperationModeRegistrationLogger.log(claxx.getName() + " is a special file, won't be made an OpMode",
+                        KEY);
+                    return;
+                }
                 // attempt to register the class if its an opmode and hasnt been registered already by the registrar
                 OperationModeRegistrationLogger.log(claxx.getName() + " allowed, attempting registration...", KEY);
                 OperationModeRegistrar.attemptRegistration(claxx);
