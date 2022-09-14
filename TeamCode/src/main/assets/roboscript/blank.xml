@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<roboscript>
+    <isTeleOp>0</isTeleOp>
+    <group>XML TEST</group>
+    <name>Blank XML Test</name>
+
+    <init>
+    </init>
+
+    <loop>
+    </loop>
+</roboscript>
