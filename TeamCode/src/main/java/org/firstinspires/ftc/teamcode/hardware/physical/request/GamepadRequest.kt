@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.hardware.physical
+package org.firstinspires.ftc.teamcode.hardware.physical.request
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.Gamepad
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.GamepadRequestInput
 
 class GamepadRequest(private val gamepad: Gamepad, name: String): ScriptParameters.Request(name) {
     override fun issueRequest(p0: Any?): Double {

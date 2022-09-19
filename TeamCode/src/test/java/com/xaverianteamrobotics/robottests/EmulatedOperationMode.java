@@ -4,26 +4,21 @@ import com.michaell.looping.ScriptParameters;
 import com.michaell.looping.ScriptRunner;
 import com.michaell.looping.ScriptTemplate;
 import com.michaell.looping.builtin.ConvertToScript;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.hardware.emulated.EmulatedGamepadRequest;
 import org.firstinspires.ftc.teamcode.utils.opModeRegistration.OperationMode;
 import org.junit.Test;
 
-import java.io.Console;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Extend from this class to make an emulated OpMode
  * In order to run your emulated opmode, you can click the run icon next to the class name,
  * or in the tests list in Android Studio
  */
-public abstract class EmulatedOpMode {
+public abstract class EmulatedOperationMode {
     public ScriptParameters environment;
 
     private double timestamp = 0;

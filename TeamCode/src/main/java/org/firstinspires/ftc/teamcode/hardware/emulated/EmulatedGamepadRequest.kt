@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.emulated
 
 import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.hardware.physical.GamepadRequestInput
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.GamepadRequestInput
 
 class EmulatedGamepadRequest(name: String): ScriptParameters.Request(name) {
     init {

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.emulated
 
 import com.michaell.looping.ScriptParameters
-import org.firstinspires.ftc.teamcode.hardware.physical.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.StandardMotorParameters
 
 class EmulatedMotorRequest(name: String?) : ScriptParameters.Request(name) {
     override fun issueRequest(o: Any?): Any {

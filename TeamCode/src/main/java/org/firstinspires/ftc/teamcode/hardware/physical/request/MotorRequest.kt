@@ -1,13 +1,18 @@
-package org.firstinspires.ftc.teamcode.hardware.physical
+package org.firstinspires.ftc.teamcode.hardware.physical.request
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.MotorOperation
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.StandardMotorParameters
 
 open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     var motor: DcMotor
     init {
-       motor = hardwareMap.get(DcMotor::class.java, name)
+        motor = hardwareMap.get(DcMotor::class.java, name)
+        motor.resetDeviceConfigurationForOpMode()
+        motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        motor.power = 0.0
     }
     override fun issueRequest(o: Any): Any {
         var input = o as StandardMotorParameters

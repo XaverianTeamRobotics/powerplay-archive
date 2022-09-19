@@ -7,7 +7,11 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.emulated.EmulatedGamepadRequest
 import org.firstinspires.ftc.teamcode.hardware.emulated.EmulatedMotorRequest
-import org.firstinspires.ftc.teamcode.hardware.physical.*
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.GamepadRequestInput
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.MotorOperation
+import org.firstinspires.ftc.teamcode.hardware.physical.inputs.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.hardware.physical.request.GamepadRequest
+import org.firstinspires.ftc.teamcode.hardware.physical.request.MotorRequest
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
