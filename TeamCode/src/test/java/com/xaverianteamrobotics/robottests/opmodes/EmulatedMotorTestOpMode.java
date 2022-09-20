@@ -2,7 +2,7 @@ package com.xaverianteamrobotics.robottests.opmodes;
 
 import com.xaverianteamrobotics.robottests.EmulatedOperationMode;
 
-import org.firstinspires.ftc.teamcode.hardware.Devices;
+import org.firstinspires.ftc.teamcode.utils.hardware.Devices;
 
 public class EmulatedMotorTestOpMode extends EmulatedOperationMode {
     @Override

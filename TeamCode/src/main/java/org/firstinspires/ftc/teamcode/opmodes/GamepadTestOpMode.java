@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import org.firstinspires.ftc.teamcode.hardware.Devices;
-import org.firstinspires.ftc.teamcode.utils.opModeRegistration.OperationMode;
-import org.firstinspires.ftc.teamcode.utils.opModeRegistration.TeleOperation;
+import org.firstinspires.ftc.teamcode.utils.hardware.Devices;
+import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
+import org.firstinspires.ftc.teamcode.utils.registration.TeleOperation;
 
 public class GamepadTestOpMode extends OperationMode implements TeleOperation {
     @Override
