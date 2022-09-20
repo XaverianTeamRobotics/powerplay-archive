@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
 import com.michaell.looping.ScriptParameters;
 import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.accessors.AccelerometerGlobalAccess;
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.AccelerometerData;
 
 public class AccelerometerRequest extends ScriptParameters.Request {
