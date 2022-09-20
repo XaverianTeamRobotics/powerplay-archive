@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotor
 class GlobalMotorAccess(var name: String) {
     private val motorRequest: ScriptParameters.Request = HardwareGetter.makeMotorRequest(name)
 
-    val motor: DcMotor?
+    val motor: DcMotor
         get() = HardwareGetter.getMotorFromRequest(name)
 
     var power: Double = 0.0

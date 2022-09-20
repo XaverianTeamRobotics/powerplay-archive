@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.utils.hardware.physical.accessors.GlobalMo
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.GamepadRequestInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.MotorOperation
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.AccelerometerRequest
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.GamepadRequest
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.MotorRequest
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.ServoRequest
 import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
 
 class HardwareGetter {
     companion object {
@@ -111,10 +111,10 @@ class HardwareGetter {
          * Get a motor from a previously initialized request
          */
         @JvmStatic
-        fun getMotorFromRequest(name: String): DcMotor? {
+        fun getMotorFromRequest(name: String): DcMotor {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
-                    return null
+                    throw NullPointerException("This is running in the emulator!")
                 } else {
                     println("HardwareMap: $hardwareMap")
                     println("ScriptRunner: $jloopingRunner")
@@ -149,7 +149,7 @@ class HardwareGetter {
                     throw NullPointerException("The hardwareMap or jloopingRunner are null")
                 }
             }
-            return getMotorFromRequest(name)!!.isBusy
+            return getMotorFromRequest(name).isBusy
         }
 
         @JvmStatic
