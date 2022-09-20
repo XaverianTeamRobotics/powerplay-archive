@@ -1,48 +1,42 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import android.graphics.Color;
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.Colors;
+import android.graphics.Color
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.ColorSensor
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.Colors
 
-public class ColorSensorRequest extends ScriptParameters.Request {
+class ColorSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val NORMALIZED_COLORS: NormalizedColorSensor
+    private val RAW: ColorSensor
 
-    private final NormalizedColorSensor NORMALIZED_COLORS;
-    private final ColorSensor RAW;
-
-    public ColorSensorRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        NORMALIZED_COLORS = hardwareMap.get(NormalizedColorSensor.class, name);
-        RAW = hardwareMap.get(ColorSensor.class, name);
+    init {
+        NORMALIZED_COLORS = hardwareMap.get(NormalizedColorSensor::class.java, name)
+        RAW = hardwareMap.get(ColorSensor::class.java, name)
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        int[] vals = new int[4];
-        vals[0] = (int) (NORMALIZED_COLORS.getNormalizedColors().red * 255);
-        vals[1] = (int) (NORMALIZED_COLORS.getNormalizedColors().green * 255);
-        vals[2] = (int) (NORMALIZED_COLORS.getNormalizedColors().blue * 255);
-        vals[3] = (int) (NORMALIZED_COLORS.getNormalizedColors().alpha * 255);
-        float[] colors = new float[3];
-        Color.RGBToHSV(vals[0], vals[1], vals[2], colors);
-        double[] colorsd = new double[3];
-        colorsd[0] = colors[0];
-        colorsd[1] = colors[1];
-        colorsd[2] = colors[2];
-        int gray = vals[0] + vals[1] + vals[2];
-        return new Colors(vals, colorsd, gray, NORMALIZED_COLORS.getGain(), RAW.argb());
+    override fun issueRequest(o: Any): Any {
+        val vals = IntArray(4)
+        vals[0] = (NORMALIZED_COLORS.normalizedColors.red * 255).toInt()
+        vals[1] = (NORMALIZED_COLORS.normalizedColors.green * 255).toInt()
+        vals[2] = (NORMALIZED_COLORS.normalizedColors.blue * 255).toInt()
+        vals[3] = (NORMALIZED_COLORS.normalizedColors.alpha * 255).toInt()
+        val colors = FloatArray(3)
+        Color.RGBToHSV(vals[0], vals[1], vals[2], colors)
+        val colorsd = DoubleArray(3)
+        colorsd[0] = colors[0].toDouble()
+        colorsd[1] = colors[1].toDouble()
+        colorsd[2] = colors[2].toDouble()
+        val gray = vals[0] + vals[1] + vals[2]
+        return Colors(vals, colorsd, gray, NORMALIZED_COLORS.gain.toDouble(), RAW.argb())
     }
 
-    @Override
-    public Class getOutputType() {
-        return Colors.class;
+    override fun getOutputType(): Class<*> {
+        return Colors::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return Object.class;
+    override fun getInputType(): Class<*> {
+        return Any::class.java
     }
-
 }

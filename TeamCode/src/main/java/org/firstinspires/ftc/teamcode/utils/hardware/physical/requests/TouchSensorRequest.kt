@@ -1,34 +1,28 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.TouchSensorData;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.TouchSensor
+import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.TouchSensorData
 
-public class TouchSensorRequest extends ScriptParameters.Request {
+class TouchSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SENSOR: TouchSensor
 
-    private final TouchSensor SENSOR;
-
-    public TouchSensorRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SENSOR = hardwareMap.get(TouchSensor.class, name);
-        SENSOR.resetDeviceConfigurationForOpMode();
+    init {
+        SENSOR = hardwareMap.get(TouchSensor::class.java, name)
+        SENSOR.resetDeviceConfigurationForOpMode()
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        return new TouchSensorData(SENSOR.isPressed(), Range.clip(SENSOR.getValue() * 100, 0, 100));
+    override fun issueRequest(o: Any): Any {
+        return TouchSensorData(SENSOR.isPressed, Range.clip(SENSOR.value * 100, 0.0, 100.0))
     }
 
-    @Override
-    public Class getOutputType() {
-        return TouchSensorData.class;
+    override fun getOutputType(): Class<*> {
+        return TouchSensorData::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return Object.class;
+    override fun getInputType(): Class<*> {
+        return Any::class.java
     }
-
 }

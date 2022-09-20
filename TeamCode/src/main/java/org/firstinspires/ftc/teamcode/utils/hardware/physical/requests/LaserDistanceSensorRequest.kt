@@ -1,33 +1,27 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.DistanceSensor
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
-public class LaserDistanceSensorRequest extends ScriptParameters.Request {
+class LaserDistanceSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SENSOR: DistanceSensor
 
-    private final DistanceSensor SENSOR;
-
-    public LaserDistanceSensorRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SENSOR = hardwareMap.get(DistanceSensor.class, name);
-        SENSOR.resetDeviceConfigurationForOpMode();
+    init {
+        SENSOR = hardwareMap.get(DistanceSensor::class.java, name)
+        SENSOR.resetDeviceConfigurationForOpMode()
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        return SENSOR.getDistance((DistanceUnit) o);
+    override fun issueRequest(o: Any): Any {
+        return SENSOR.getDistance(o as DistanceUnit)
     }
 
-    @Override
-    public Class getOutputType() {
-        return double.class;
+    override fun getOutputType(): Class<*>? {
+        return Double::class.javaPrimitiveType
     }
 
-    @Override
-    public Class getInputType() {
-        return DistanceUnit.class;
+    override fun getInputType(): Class<*> {
+        return DistanceUnit::class.java
     }
-
 }

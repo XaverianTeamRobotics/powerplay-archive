@@ -1,33 +1,27 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.AnalogData;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.AnalogInput
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.AnalogData
 
-public class AnalogDeviceRequest extends ScriptParameters.Request {
+class AnalogDeviceRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val CONTROLLER: AnalogInput
 
-    private final AnalogInput CONTROLLER;
-
-    public AnalogDeviceRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        CONTROLLER = hardwareMap.get(AnalogInput.class, name);
-        CONTROLLER.resetDeviceConfigurationForOpMode();
+    init {
+        CONTROLLER = hardwareMap.get(AnalogInput::class.java, name)
+        CONTROLLER.resetDeviceConfigurationForOpMode()
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        return new AnalogData(CONTROLLER.getVoltage(), CONTROLLER.getMaxVoltage());
+    override fun issueRequest(o: Any): Any {
+        return AnalogData(CONTROLLER.voltage, CONTROLLER.maxVoltage)
     }
 
-    @Override
-    public Class getOutputType() {
-        return AnalogData.class;
+    override fun getOutputType(): Class<*> {
+        return AnalogData::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return Object.class;
+    override fun getInputType(): Class<*> {
+        return Any::class.java
     }
-
 }

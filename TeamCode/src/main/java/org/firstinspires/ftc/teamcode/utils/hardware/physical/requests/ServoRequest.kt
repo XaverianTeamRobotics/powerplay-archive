@@ -1,44 +1,38 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoInput;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoOptions;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoInput
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoOptions
 
-public class ServoRequest extends ScriptParameters.Request {
+class ServoRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SERVO: Servo
 
-    private final Servo SERVO;
-
-    public ServoRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SERVO = hardwareMap.get(Servo.class, name);
-        SERVO.resetDeviceConfigurationForOpMode();
-        SERVO.setDirection(Servo.Direction.FORWARD);
+    init {
+        SERVO = hardwareMap.get(Servo::class.java, name)
+        SERVO.resetDeviceConfigurationForOpMode()
+        SERVO.direction = Servo.Direction.FORWARD
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        ServoInput vals = (ServoInput) o;
-        if(vals.getType() == ServoOptions.GET) {
-            return SERVO.getPosition() * 100;
-        }else{
-            double val = vals.getPosition();
-            val = Range.clip(val, 0, 100);
-            SERVO.setPosition(val / 100);
-            return 0;
+    override fun issueRequest(o: Any): Any {
+        val vals = o as ServoInput
+        return if (vals.type === ServoOptions.GET) {
+            SERVO.position * 100
+        } else {
+            var `val` = vals.position
+            `val` = Range.clip(`val`, 0.0, 100.0)
+            SERVO.position = `val` / 100
+            0
         }
     }
 
-    @Override
-    public Class getOutputType() {
-        return double.class;
+    override fun getOutputType(): Class<*>? {
+        return Double::class.javaPrimitiveType
     }
 
-    @Override
-    public Class getInputType() {
-        return ServoInput.class;
+    override fun getInputType(): Class<*> {
+        return ServoInput::class.java
     }
-
 }

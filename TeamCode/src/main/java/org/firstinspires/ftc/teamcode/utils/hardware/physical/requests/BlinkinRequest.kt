@@ -1,41 +1,35 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinInput;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinOptions;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinInput
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinOptions
 
-public class BlinkinRequest extends ScriptParameters.Request {
+class BlinkinRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SERVO: Servo
 
-    private final Servo SERVO;
-
-    public BlinkinRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SERVO = hardwareMap.get(Servo.class, name);
-        SERVO.resetDeviceConfigurationForOpMode();
+    init {
+        SERVO = hardwareMap.get(Servo::class.java, name)
+        SERVO.resetDeviceConfigurationForOpMode()
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        BlinkinInput input = (BlinkinInput) o;
-        if(input.getType() == BlinkinOptions.GET) {
-            return SERVO.getPosition();
-        }else{
-            SERVO.setPosition(Range.clip(input.getId(), 0.2525, 0.7475));
-            return 0;
+    override fun issueRequest(o: Any): Any {
+        val (id, type) = o as BlinkinInput
+        return if (type === BlinkinOptions.GET) {
+            SERVO.position
+        } else {
+            SERVO.position = Range.clip(id.toDouble(), 0.2525, 0.7475)
+            0
         }
     }
 
-    @Override
-    public Class getOutputType() {
-        return double.class;
+    override fun getOutputType(): Class<*>? {
+        return Double::class.javaPrimitiveType
     }
 
-    @Override
-    public Class getInputType() {
-        return BlinkinInput.class;
+    override fun getInputType(): Class<*> {
+        return BlinkinInput::class.java
     }
-
 }

@@ -1,38 +1,35 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.GyroData;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.GyroSensor
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.GyroData
 
-public class GyroRequest extends ScriptParameters.Request {
+class GyroRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SENSOR: GyroSensor
 
-    private final GyroSensor SENSOR;
-
-    public GyroRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SENSOR = hardwareMap.get(GyroSensor.class, name);
-        SENSOR.resetDeviceConfigurationForOpMode();
+    init {
+        SENSOR = hardwareMap.get(GyroSensor::class.java, name)
+        SENSOR.resetDeviceConfigurationForOpMode()
         try {
-            SENSOR.calibrate();
-            while(SENSOR.isCalibrating());
-        } catch(UnsupportedOperationException ignored) {}
+            SENSOR.calibrate()
+            while (SENSOR.isCalibrating);
+        } catch (ignored: UnsupportedOperationException) {
+        }
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        return new GyroData(SENSOR.getHeading(), new int[] { SENSOR.rawX(), SENSOR.rawY(), SENSOR.rawZ() },
-            SENSOR.status());
+    override fun issueRequest(o: Any): Any {
+        return GyroData(
+            SENSOR.heading, intArrayOf(SENSOR.rawX(), SENSOR.rawY(), SENSOR.rawZ()),
+            SENSOR.status()
+        )
     }
 
-    @Override
-    public Class getOutputType() {
-        return GyroData.class;
+    override fun getOutputType(): Class<*> {
+        return GyroData::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return Object.class;
+    override fun getInputType(): Class<*> {
+        return Any::class.java
     }
-
 }

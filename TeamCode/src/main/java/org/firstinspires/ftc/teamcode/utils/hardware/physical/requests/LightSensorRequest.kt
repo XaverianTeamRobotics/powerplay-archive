@@ -1,40 +1,36 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.LightSensorData;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.LightSensor
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.LightSensorData
 
-public class LightSensorRequest extends ScriptParameters.Request {
+class LightSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SENSOR: LightSensor
+    private var led = true
 
-    private final LightSensor SENSOR;
-    private boolean led = true;
-
-    public LightSensorRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SENSOR = hardwareMap.get(LightSensor.class, name);
-        SENSOR.enableLed(true);
+    init {
+        SENSOR = hardwareMap.get(LightSensor::class.java, name)
+        SENSOR.enableLed(true)
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        boolean change = (boolean) o;
-        if(change) {
-            SENSOR.enableLed(!led);
-            led = !led;
+    override fun issueRequest(o: Any): Any {
+        val change = o as Boolean
+        if (change) {
+            SENSOR.enableLed(!led)
+            led = !led
         }
-        return new LightSensorData(SENSOR.getRawLightDetected(), SENSOR.getRawLightDetectedMax(),
-            SENSOR.getLightDetected(), SENSOR.status());
+        return LightSensorData(
+            SENSOR.rawLightDetected, SENSOR.rawLightDetectedMax,
+            SENSOR.lightDetected, SENSOR.status()
+        )
     }
 
-    @Override
-    public Class getOutputType() {
-        return LightSensorData.class;
+    override fun getOutputType(): Class<*> {
+        return LightSensorData::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return boolean.class;
+    override fun getInputType(): Class<*>? {
+        return Boolean::class.javaPrimitiveType
     }
-
 }

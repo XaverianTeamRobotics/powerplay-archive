@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.MotorOperatio
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotorParameters
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.GamepadRequest
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.MotorRequest
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.ServoRequest
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
@@ -47,6 +48,41 @@ class HardwareGetter {
                     field = value
                 }
             }
+
+        /**
+         * Creates a GamepadRequest, adds it to the global JloopingRunner, then returns it
+         * Note this it returns just a generic request, so you check that it is not emulated before casting
+         */
+        @JvmStatic
+        fun makeGamepadRequest(name: String, gamepad: Gamepad?): ScriptParameters.Request{
+            if (hardwareMap == null || jloopingRunner == null) {
+                if (isEmulated && jloopingRunner != null) {
+                    val req = EmulatedGamepadRequest(name)
+                    jloopingRunner!!.addRequest(req)
+                    return req
+                } else {
+                    println("HardwareMap: $hardwareMap")
+                    println("ScriptRunner: $jloopingRunner")
+                    throw NullPointerException("The hardwareMap or jloopingRunner are null")
+                }
+            }
+
+            val req = GamepadRequest(gamepad!!, name)
+            jloopingRunner!!.addRequest(req)
+            return req
+        }
+
+        @JvmStatic
+        fun getGamepadValue(name: String, gamepadRequestInput: GamepadRequestInput): Double {
+            var n: String = if (isEmulated) {
+                "emulatedGamepad$name"
+            } else {
+                name
+            }
+
+            return jloopingRunner!!.scriptParametersGlobal.issueRequest(gamepadRequestInput, jloopingRunner!!
+                .scriptParametersGlobal.getRequest(n)) as Double
+        }
 
         /**
          * Creates a StandardMotorRequest, adds it to the global JloopingRunner, then returns it
@@ -86,41 +122,6 @@ class HardwareGetter {
                 }
             }
             return (jloopingRunner!!.scriptParametersGlobal.getRequest(name) as MotorRequest).motor
-        }
-
-        /**
-         * Creates a GamepadRequest, adds it to the global JloopingRunner, then returns it
-         * Note this it returns just a generic request, so you check that it is not emulated before casting
-         */
-        @JvmStatic
-        fun makeGamepadRequest(name: String, gamepad: Gamepad?): ScriptParameters.Request{
-            if (hardwareMap == null || jloopingRunner == null) {
-                if (isEmulated && jloopingRunner != null) {
-                    val req = EmulatedGamepadRequest(name)
-                    jloopingRunner!!.addRequest(req)
-                    return req
-                } else {
-                    println("HardwareMap: $hardwareMap")
-                    println("ScriptRunner: $jloopingRunner")
-                    throw NullPointerException("The hardwareMap or jloopingRunner are null")
-                }
-            }
-
-            val req = GamepadRequest(gamepad!!, name)
-            jloopingRunner!!.addRequest(req)
-            return req
-        }
-
-        @JvmStatic
-        fun getGamepadValue(name: String, gamepadRequestInput: GamepadRequestInput): Double{
-            var n: String = if (isEmulated) {
-                "emulatedGamepad$name"
-            } else {
-                name
-            }
-
-            return jloopingRunner!!.scriptParametersGlobal.issueRequest(gamepadRequestInput, jloopingRunner!!
-                .scriptParametersGlobal.getRequest(n)) as Double
         }
 
         @JvmStatic

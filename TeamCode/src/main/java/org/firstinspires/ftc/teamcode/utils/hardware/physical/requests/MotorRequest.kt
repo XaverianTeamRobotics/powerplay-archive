@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.MotorOperatio
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotorParameters
 
 open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    var motor: DcMotor
+    val motor: DcMotor
     init {
         motor = hardwareMap.get(DcMotor::class.java, name)
         motor.resetDeviceConfigurationForOpMode()

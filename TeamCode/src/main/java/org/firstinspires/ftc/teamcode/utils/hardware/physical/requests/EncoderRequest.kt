@@ -1,40 +1,34 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.EncoderInput;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.EncoderInput
 
-public class EncoderRequest extends ScriptParameters.Request {
+class EncoderRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val ENCODER: DcMotor
+    private var offset: Int
 
-    private final DcMotor ENCODER;
-    private int offset;
-
-    public EncoderRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        ENCODER = hardwareMap.get(DcMotor.class, name);
-        offset = ENCODER.getCurrentPosition();
+    init {
+        ENCODER = hardwareMap.get(DcMotor::class.java, name)
+        offset = ENCODER.currentPosition
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        EncoderInput input = (EncoderInput) o;
-        if(input == EncoderInput.GET) {
-            return ENCODER.getCurrentPosition() - offset;
-        }else{
-            offset = ENCODER.getCurrentPosition();
-            return 0;
+    override fun issueRequest(o: Any): Any {
+        val input = o as EncoderInput
+        return if (input === EncoderInput.GET) {
+            ENCODER.currentPosition - offset
+        } else {
+            offset = ENCODER.currentPosition
+            0
         }
     }
 
-    @Override
-    public Class getOutputType() {
-        return Integer.class;
+    override fun getOutputType(): Class<*> {
+        return Int::class.java
     }
 
-    @Override
-    public Class getInputType() {
-        return EncoderInput.class;
+    override fun getInputType(): Class<*> {
+        return EncoderInput::class.java
     }
-
 }

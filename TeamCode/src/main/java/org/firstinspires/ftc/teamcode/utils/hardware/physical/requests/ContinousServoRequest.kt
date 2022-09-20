@@ -1,45 +1,39 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoInput;
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoOptions;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoInput
+import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoOptions
 
-public class ContinousServoRequest extends ScriptParameters.Request {
+class ContinousServoRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SERVO: CRServo
 
-    private final CRServo SERVO;
-
-    public ContinousServoRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SERVO = hardwareMap.get(CRServo.class, name);
-        SERVO.resetDeviceConfigurationForOpMode();
-        SERVO.setDirection(DcMotorSimple.Direction.FORWARD);
+    init {
+        SERVO = hardwareMap.get(CRServo::class.java, name)
+        SERVO.resetDeviceConfigurationForOpMode()
+        SERVO.direction = DcMotorSimple.Direction.FORWARD
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        ContinousServoInput input = (ContinousServoInput) o;
-        if(input.getType() == ContinousServoOptions.GET) {
-            return SERVO.getPower() * 100;
-        }else{
-            double val = input.getPower();
-            val = Range.clip(val, -100, 100);
-            SERVO.setPower(val / 100);
-            return 0;
+    override fun issueRequest(o: Any): Any {
+        val input = o as ContinousServoInput
+        return if (input.type === ContinousServoOptions.GET) {
+            SERVO.power * 100
+        } else {
+            var `val` = input.power
+            `val` = Range.clip(`val`, -100.0, 100.0)
+            SERVO.power = `val` / 100
+            0
         }
     }
 
-    @Override
-    public Class getOutputType() {
-        return double.class;
+    override fun getOutputType(): Class<*>? {
+        return Double::class.javaPrimitiveType
     }
 
-    @Override
-    public Class getInputType() {
-        return ContinousServoInput.class;
+    override fun getInputType(): Class<*> {
+        return ContinousServoInput::class.java
     }
-
 }

@@ -1,32 +1,26 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 
-import com.michaell.looping.ScriptParameters;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.michaell.looping.ScriptParameters
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.VoltageSensor
 
-public class VoltageSensorRequest extends ScriptParameters.Request {
+class VoltageSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+    private val SENSOR: VoltageSensor
 
-    private final VoltageSensor SENSOR;
-
-    public VoltageSensorRequest(String name, HardwareMap hardwareMap) {
-        super(name);
-        SENSOR = hardwareMap.get(VoltageSensor.class, name);
-        SENSOR.resetDeviceConfigurationForOpMode();
+    init {
+        SENSOR = hardwareMap.get(VoltageSensor::class.java, name)
+        SENSOR.resetDeviceConfigurationForOpMode()
     }
 
-    @Override
-    public Object issueRequest(Object o) {
-        return SENSOR.getVoltage();
+    override fun issueRequest(o: Any): Any {
+        return SENSOR.voltage
     }
 
-    @Override
-    public Class getOutputType() {
-        return double.class;
+    override fun getOutputType(): Class<*>? {
+        return Double::class.javaPrimitiveType
     }
 
-    @Override
-    public Class getInputType() {
-        return Object.class;
+    override fun getInputType(): Class<*> {
+        return Any::class.java
     }
-
 }
