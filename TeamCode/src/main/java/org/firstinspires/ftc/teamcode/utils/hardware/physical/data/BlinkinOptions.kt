@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.data;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.data
 
-public enum BlinkinOptions {
-    GET,
-    SET
+enum class BlinkinOptions {
+    GET, SET
 }

@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.data;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.data
 
-public enum ContinousServoOptions {
-    GET,
-    SET
+enum class ContinousServoOptions {
+    GET, SET
 }

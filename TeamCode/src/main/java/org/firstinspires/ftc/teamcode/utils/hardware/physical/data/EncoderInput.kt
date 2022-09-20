@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.physical.data;
+package org.firstinspires.ftc.teamcode.utils.hardware.physical.data
 
-public enum EncoderInput {
-    GET,
-    SET
+enum class EncoderInput {
+    GET, SET
 }
