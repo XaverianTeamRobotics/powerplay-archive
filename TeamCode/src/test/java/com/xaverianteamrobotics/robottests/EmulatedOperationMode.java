@@ -6,7 +6,7 @@ import com.michaell.looping.ScriptTemplate;
 import com.michaell.looping.builtin.ConvertToScript;
 
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.utils.hardware.emulated.EmulatedGamepadRequest;
+import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.EmulatedGamepadRequest;
 import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
 import org.junit.Test;
 
