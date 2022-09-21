@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoOptions
 
-class ContinousServoRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class ContinousServoRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SERVO: CRServo
 
     init {

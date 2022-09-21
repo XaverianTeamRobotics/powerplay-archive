@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.TouchSensorData
 
-class TouchSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class TouchSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SENSOR: TouchSensor
 
     init {

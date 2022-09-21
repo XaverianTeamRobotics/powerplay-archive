@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ServoOptions
 
-class ServoRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class ServoRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SERVO: Servo
 
     init {

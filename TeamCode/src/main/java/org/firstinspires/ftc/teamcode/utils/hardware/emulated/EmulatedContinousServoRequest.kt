@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.ContinousServoOptions
 
-class EmulatedContinousServoRequest(name: String?) : ScriptParameters.Request(name) {
+class EmulatedContinousServoRequest(name: String) : ScriptParameters.Request(name) {
     private var power = 0.0
 
     override fun issueRequest(p0: Any?): Any {
@@ -21,8 +21,8 @@ class EmulatedContinousServoRequest(name: String?) : ScriptParameters.Request(na
         }
     }
 
-    override fun getOutputType(): Class<*> {
-        return Double::class.java
+    override fun getOutputType(): Class<Double>? {
+        return Double::class.javaPrimitiveType
     }
 
     override fun getInputType(): Class<*> {

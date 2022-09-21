@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.AnalogData
 
-class AnalogDeviceRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class AnalogDeviceRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val CONTROLLER: AnalogInput
 
     init {

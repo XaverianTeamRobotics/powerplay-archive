@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils.hardware.physical.requests
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.utils.hardware.InitializedDCDevices
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.MotorOperation
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotorParameters
 
@@ -10,8 +11,11 @@ open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParamete
     val motor: DcMotor
     init {
         motor = hardwareMap.get(DcMotor::class.java, name)
-        motor.resetDeviceConfigurationForOpMode()
-        motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        if(!InitializedDCDevices.has(name)) {
+            motor.resetDeviceConfigurationForOpMode()
+            motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            InitializedDCDevices.add(name)
+        }
         motor.power = 0.0
     }
     override fun issueRequest(o: Any): Any {

@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinOptions
 
-class EmulatedBlinkinRequest(name: String?) : ScriptParameters.Request(name) {
+class EmulatedBlinkinRequest(name: String) : ScriptParameters.Request(name) {
     private var pos = 0
 
     override fun issueRequest(p0: Any?): Any {

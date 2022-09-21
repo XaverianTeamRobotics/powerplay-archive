@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
-class LaserDistanceSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class LaserDistanceSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SENSOR: DistanceSensor
 
     init {

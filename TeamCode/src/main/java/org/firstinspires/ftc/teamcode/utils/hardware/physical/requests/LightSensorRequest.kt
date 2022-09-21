@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.LightSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.LightSensorData
 
-class LightSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class LightSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SENSOR: LightSensor
     private var led = true
 

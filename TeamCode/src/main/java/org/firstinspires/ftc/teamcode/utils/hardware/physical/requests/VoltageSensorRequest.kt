@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.VoltageSensor
 
-class VoltageSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class VoltageSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SENSOR: VoltageSensor
 
     init {

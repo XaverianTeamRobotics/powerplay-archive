@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.Colors
 
-class ColorSensorRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class ColorSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val NORMALIZED_COLORS: NormalizedColorSensor
     private val RAW: ColorSensor
 

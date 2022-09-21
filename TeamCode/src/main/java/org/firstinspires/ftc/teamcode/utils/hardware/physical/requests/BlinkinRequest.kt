@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinInput
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.BlinkinOptions
 
-class BlinkinRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class BlinkinRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SERVO: Servo
 
     init {

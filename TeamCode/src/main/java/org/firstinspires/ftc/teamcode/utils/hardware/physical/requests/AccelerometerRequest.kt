@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.AccelerationSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.AccelerometerData
 
-class AccelerometerRequest(name: String?, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class AccelerometerRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val SENSOR: AccelerationSensor
 
     init {
