@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.utils.hardware.requests.GamepadRequest
 import org.firstinspires.ftc.teamcode.utils.hardware.requests.MotorRequest
 import java.lang.IllegalArgumentException
 
-// more tests
 class HardwareGetter {
     companion object {
         @JvmStatic
