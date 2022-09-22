@@ -5,17 +5,14 @@ import com.michaell.looping.ScriptRunner
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
-import org.firstinspires.ftc.teamcode.utils.hardware.emulated.EmulatedGamepadRequest
-import org.firstinspires.ftc.teamcode.utils.hardware.emulated.EmulatedMotorRequest
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.accessors.GlobalGamepadAccess
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.accessors.GlobalMotorAccess
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.GamepadRequestInput
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.MotorOperation
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.data.StandardMotorParameters
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.AccelerometerRequest
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.GamepadRequest
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.MotorRequest
-import org.firstinspires.ftc.teamcode.utils.hardware.physical.requests.ServoRequest
+import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalGamepadAccess
+import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalMotorAccess
+import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.EmulatedGamepadRequest
+import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.EmulatedMotorRequest
+import org.firstinspires.ftc.teamcode.utils.hardware.data.GamepadRequestInput
+import org.firstinspires.ftc.teamcode.utils.hardware.data.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.utils.hardware.requests.GamepadRequest
+import org.firstinspires.ftc.teamcode.utils.hardware.requests.MotorRequest
 import java.lang.IllegalArgumentException
 
 class HardwareGetter {
@@ -74,7 +71,7 @@ class HardwareGetter {
 
         @JvmStatic
         fun getGamepadValue(name: String, gamepadRequestInput: GamepadRequestInput): Double {
-            var n: String = if (isEmulated) {
+            val n: String = if (isEmulated) {
                 "emulatedGamepad$name"
             } else {
                 name
@@ -163,6 +160,25 @@ class HardwareGetter {
             Devices.motor3 = GlobalMotorAccess("motor3")
         }
     }
+}
+
+/**
+ * This keeps track of a list of all motors and encoders which were initialized. Required to initialize them properly.
+ */
+object InitializedDCDevices {
+
+    private val devices = HashMap<String, Boolean>()
+
+    @JvmStatic
+    fun has(name: String): Boolean {
+        return devices.containsKey(name)
+    }
+
+    @JvmStatic
+    fun add(name: String) {
+        devices[name] = true
+    }
+
 }
 
 class Devices {
