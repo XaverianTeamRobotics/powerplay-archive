@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.utils.hardware.data.AnalogData
 
 class AnalogDeviceRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val CONTROLLER: AnalogInput
+    val controller: AnalogInput
 
     init {
-        CONTROLLER = hardwareMap.get(AnalogInput::class.java, name)
-        CONTROLLER.resetDeviceConfigurationForOpMode()
+        controller = hardwareMap.get(AnalogInput::class.java, name)
+        controller.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
-        return AnalogData(CONTROLLER.voltage, CONTROLLER.maxVoltage)
+        return AnalogData(controller.voltage, controller.maxVoltage)
     }
 
     override fun getOutputType(): Class<*> {

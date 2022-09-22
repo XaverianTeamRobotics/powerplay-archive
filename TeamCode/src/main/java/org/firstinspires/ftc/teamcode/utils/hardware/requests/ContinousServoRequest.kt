@@ -9,22 +9,22 @@ import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoOptions
 
 class ContinousServoRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SERVO: CRServo
+    val servo: CRServo
 
     init {
-        SERVO = hardwareMap.get(CRServo::class.java, name)
-        SERVO.resetDeviceConfigurationForOpMode()
-        SERVO.direction = DcMotorSimple.Direction.FORWARD
+        servo = hardwareMap.get(CRServo::class.java, name)
+        servo.resetDeviceConfigurationForOpMode()
+        servo.direction = DcMotorSimple.Direction.FORWARD
     }
 
     override fun issueRequest(o: Any): Any {
         val input = o as ContinousServoInput
         return if (input.type === ContinousServoOptions.GET) {
-            SERVO.power * 100
+            servo.power * 100
         } else {
             var `val` = input.power
             `val` = Range.clip(`val`, -100.0, 100.0)
-            SERVO.power = `val` / 100
+            servo.power = `val` / 100
             0
         }
     }

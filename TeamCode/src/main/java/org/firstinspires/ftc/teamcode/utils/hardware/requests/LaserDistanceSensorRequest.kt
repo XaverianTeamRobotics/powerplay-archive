@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 
 class LaserDistanceSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: DistanceSensor
+    val sensor: DistanceSensor
 
     init {
-        SENSOR = hardwareMap.get(DistanceSensor::class.java, name)
-        SENSOR.resetDeviceConfigurationForOpMode()
+        sensor = hardwareMap.get(DistanceSensor::class.java, name)
+        sensor.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
-        return SENSOR.getDistance(o as DistanceUnit)
+        return sensor.getDistance(o as DistanceUnit)
     }
 
     override fun getOutputType(): Class<*>? {
