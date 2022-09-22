@@ -17,6 +17,8 @@ public class TempOpMode extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor hand = hardwareMap.dcMotor.get("hand");
+        DcMotor freedom = hardwareMap.dcMotor.get("freedom");
+
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
@@ -31,12 +33,15 @@ public class TempOpMode extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
-            double a1 = gamepad1.right_bumper ? 1 : 0;
-            double a2 = gamepad1.left_bumper ? -1 : 0;
-            double a = a1 - a2;
-            double h1 = gamepad1.right_trigger;
-            double h2 = -gamepad1.left_trigger;
+            double h1 = gamepad1.a ? 0.5 : 0;
+            double h2 = gamepad1.b ? -0.5 : 0;
             double h = h1 - h2;
+            double a1 = gamepad1.right_trigger;
+            double a2 = -gamepad1.left_trigger;
+            double a = a1 - a2;
+            double f1 = gamepad1.right_bumper ? 0.5 : 0;
+            double f2 = gamepad1.left_bumper ? -0.5 : 0;
+            double f = f1 - f2;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -54,6 +59,7 @@ public class TempOpMode extends LinearOpMode {
 
             arm.setPower(a);
             hand.setPower(h);
+            freedom.setPower(f);
         }
     }
 }
