@@ -29,7 +29,7 @@ public class XMLOperationModeRegistrar {
      * The method which acts as a functional registrar. Do <strong>NOT</strong> call this yourself unless you are absolutely sure of what you're doing!
      * @param manager The manager to register OpModes with, passed by the app itself as the app is supposed to call this method, <em>not you (probably)</em>
      */
-    //@OpModeRegistrar
+    // @OpModeRegistrar
     public static void registerOperationModes(OpModeManager manager) {
         // log init and set up our store
         XMLOperationModeRegistrationLogger.log("Initializing service...", KEY);
