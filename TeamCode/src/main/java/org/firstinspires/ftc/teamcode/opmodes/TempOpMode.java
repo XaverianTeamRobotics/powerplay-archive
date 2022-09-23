@@ -39,6 +39,9 @@ public class TempOpMode extends LinearOpMode {
             double a1 = gamepad1.right_trigger;
             double a2 = -gamepad1.left_trigger;
             double a = a1 - a2;
+            if (gamepad1.cross) {
+                a = 0.1;
+            }
             double f1 = gamepad1.right_bumper ? 0.5 : 0;
             double f2 = gamepad1.left_bumper ? -0.5 : 0;
             double f = f1 - f2;
