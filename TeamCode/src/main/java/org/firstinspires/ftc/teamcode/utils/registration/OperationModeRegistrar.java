@@ -47,7 +47,7 @@ public class OperationModeRegistrar {
         OperationModeRegistrationLogger.log("Processing classes...", KEY);
         ClassManagerFactory.processAllClasses();
 
-        XMLOperationModeRegistrar.registerOperationModes(manager);
+//        XMLOperationModeRegistrar.registerOperationModes(manager);
     }
 
     /**

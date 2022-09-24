@@ -11,13 +11,16 @@ public class TempOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-        DcMotor arm = hardwareMap.dcMotor.get("arm");
-        DcMotor hand = hardwareMap.dcMotor.get("hand");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("fl");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("bl");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("fr");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("br");
+        DcMotor aa1 = hardwareMap.dcMotor.get("a1");
+        DcMotor aa2 = hardwareMap.dcMotor.get("a2");
+        DcMotor hand = hardwareMap.dcMotor.get("h1");
+        hand.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotor freedom = hardwareMap.dcMotor.get("freedom");
+        freedom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Reverse the right side motors
@@ -31,17 +34,17 @@ public class TempOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
-            double h1 = gamepad1.a ? 0.5 : 0;
-            double h2 = gamepad1.b ? -0.5 : 0;
-            double h = h1 - h2;
+            double h1 = gamepad1.a ? 0.3 : 0;
+            double h2 = gamepad1.b ? -0.7 : 0;
+            double h = h1 + h2;
             double a1 = gamepad1.right_trigger;
             double a2 = -gamepad1.left_trigger;
-            double a = a1 - a2;
-            double f1 = gamepad1.right_bumper ? 0.5 : 0;
+            double a = a1 + a2;
+            double f1 = gamepad1.right_bumper ? 0.2 : 0;
             double f2 = gamepad1.left_bumper ? -0.5 : 0;
-            double f = f1 - f2;
+            double f = f1 + f2;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -67,7 +70,8 @@ public class TempOpMode extends LinearOpMode {
             motorFrontRight.setPower(frontRightPower);
             motorBackRight.setPower(backRightPower);
 
-            arm.setPower(a);
+            aa1.setPower(a);
+            aa2.setPower(-a);
             hand.setPower(h);
             freedom.setPower(f);
         }
