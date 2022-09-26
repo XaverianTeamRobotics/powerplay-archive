@@ -10,12 +10,7 @@ import static org.firstinspires.ftc.teamcode.utils.hardware.Devices.*;
 
 public class MecanumDrivetrainFeature extends BlankFeature {
     public MecanumDrivetrainFeature() {
-        super("MecanumOpMode", true);
-    }
-
-    @Override
-    public void init(ScriptParameters parameters) {
-
+        super("MecanumOpMode", false);
     }
 
     @Override
