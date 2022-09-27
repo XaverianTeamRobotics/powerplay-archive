@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
 
-@TeleOp
+
 public class MecanumTeleOp extends OperationMode {
 
     @Override

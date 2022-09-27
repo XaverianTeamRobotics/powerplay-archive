@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
+import org.firstinspires.ftc.teamcode.opmodes.MecanumTeleOp;
 import org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrar;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +33,7 @@ public class OperationModeRegistrar {
      * The method which acts as a functional registrar. Do <strong>NOT</strong> call this yourself unless you are absolutely sure of what you're doing!
      * @param manager The manager to register OpModes with, passed by the app itself as the app is supposed to call this method, <em>not you (probably)</em>
      */
-    //@OpModeRegistrar
+    @OpModeRegistrar
     public static void registerOperationModes(OpModeManager manager) {
         // log init and set up our store
         OperationModeRegistrationLogger.log("Initializing service...", KEY);
@@ -45,7 +46,11 @@ public class OperationModeRegistrar {
         cm.registerFilter(new OperationModeClassFilter());
         // process our classes, sending them off for registration
         OperationModeRegistrationLogger.log("Processing classes...", KEY);
-        ClassManagerFactory.processAllClasses();
+
+        // ClassManagerFactory.processAllClasses(); // Temporarily commented out until SDK is fixed
+
+        // For now, hardcode classes here
+        manager.register("MecanumTeleOp", MecanumTeleOp.class);
 
         //XMLOperationModeRegistrar.registerOperationModes(manager);
             // Can be run standalone by uncommenting the annotation in the XMLOperationModeRegistrar class and commenting
