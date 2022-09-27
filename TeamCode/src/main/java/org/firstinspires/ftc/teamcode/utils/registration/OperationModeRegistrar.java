@@ -45,9 +45,7 @@ public class OperationModeRegistrar {
         cm.registerFilter(new OperationModeClassFilter());
         // process our classes, sending them off for registration
         OperationModeRegistrationLogger.log("Processing classes...", KEY);
-        ClassManagerFactory.processAllClasses();
-
-//        XMLOperationModeRegistrar.registerOperationModes(manager);
+//        ClassManagerFactory.processAllClasses();
     }
 
     /**
