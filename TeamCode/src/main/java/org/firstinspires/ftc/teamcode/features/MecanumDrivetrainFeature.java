@@ -28,10 +28,10 @@ public class MecanumDrivetrainFeature extends BlankFeature {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        motor0.setPower(frontLeftPower);
-        motor1.setPower(backLeftPower);
-        motor2.setPower(frontRightPower);
-        motor3.setPower(backRightPower);
+        motor0.setPower(backLeftPower);
+        motor1.setPower(frontLeftPower);
+        motor2.setPower(backRightPower);
+        motor3.setPower(frontRightPower);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.registration.xml;
 
+import android.content.Context;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
@@ -7,6 +8,9 @@ import org.firstinspires.ftc.teamcode.utils.registration.*;
 
 import static org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta.Flavor.AUTONOMOUS;
 import static org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta.Flavor.TELEOP;
+import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrarStore.getManager;
+import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrationLogger.log;
+import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLRoboscriptParser.getRoboscriptXMLFiles;
 
 /**
  * This registers {@link OperationMode}s. It should not be instantiated. As a rule of thumb, most classes referring to registration should not be instantiated as registration follows functional patterns. That's just the Qualcomm Way™.
@@ -32,15 +36,15 @@ public class XMLOperationModeRegistrar {
     @OpModeRegistrar
     public static void registerOperationModes(OpModeManager manager) {
         // log init and set up our store
-        XMLOperationModeRegistrationLogger.log("Initializing service...", KEY);
+        log("Initializing service...", KEY);
         XMLOperationModeRegistrarStore.setManager(manager, KEY);
         XMLOperationModeRegistrarStore.purgeClasses(KEY);
         // process our classes, sending them off for registration
-        XMLOperationModeRegistrationLogger.log("Processing classes...", KEY);
-        XMLOperationModeRegistrationLogger.log("XML Files Found: " + XMLRoboscriptParser.getRoboscriptXMLFiles().size(), KEY);
+        log("Processing classes...", KEY);
+        log("XML Files Found: " + getRoboscriptXMLFiles().size(), KEY);
         for (String fileName :
-            XMLRoboscriptParser.getRoboscriptXMLFiles()) {
-            XMLOperationModeRegistrationLogger.log("Processing file: " + fileName, KEY);
+            getRoboscriptXMLFiles()) {
+            log("Processing file: " + fileName, KEY);
             XMLRoboscriptParser xmlParser = new XMLRoboscriptParser("roboscript/"+fileName);
             OpModeMeta.Flavor flavor;
             if (xmlParser.isTeleOp()) {
@@ -60,9 +64,9 @@ public class XMLOperationModeRegistrar {
                 metaBuilder.setTransitionTarget(null);
             }
 
-            XMLOperationModeRegistrarStore.getManager(KEY).register(metaBuilder.build(),
+            getManager(KEY).register(metaBuilder.build(),
                 new XMLOpModeTemplate(xmlParser));
-            XMLOperationModeRegistrationLogger.log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
+            log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
                 " registered! Moving on...", KEY);
         }
     }

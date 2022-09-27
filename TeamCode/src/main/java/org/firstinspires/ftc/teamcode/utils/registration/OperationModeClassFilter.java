@@ -64,22 +64,27 @@ public class OperationModeClassFilter implements ClassFilter {
      * @param clazz
      */
     private void sanatizeClass(Class clazz) {
-        OperationModeRegistrationLogger.log("Checking " + clazz.getName(), KEY);
-        // check if the class is an opmode
-        if(OperationMode.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers())) {
-            Class<? extends OperationMode> claxx = (Class<? extends OperationMode>) clazz;
-            // check if the class has already been handled before. this may not be necessary, but it exists just in case the internals of finding classes are wonky
-            if(!OperationModeRegistrarStore.getClasses(KEY).contains(claxx)) {
-                OperationModeRegistrarStore.addClass(claxx, KEY);
-                if (claxx.getName().equals("XMLOpModeTemplate")) {
-                    OperationModeRegistrationLogger.log(claxx.getName() + " is a special file, won't be made an OpMode",
-                        KEY);
-                    return;
+        try {
+            OperationModeRegistrationLogger.log("Checking " + clazz.getName(), KEY);
+            // check if the class is an opmode
+            if (OperationMode.class.isAssignableFrom(clazz) && !Modifier.isAbstract(clazz.getModifiers())) {
+                Class<? extends OperationMode> claxx = (Class<? extends OperationMode>) clazz;
+                // check if the class has already been handled before. this may not be necessary, but it exists just in case the internals of finding classes are wonky
+                if (!OperationModeRegistrarStore.getClasses(KEY).contains(claxx)) {
+                    OperationModeRegistrarStore.addClass(claxx, KEY);
+                    if (claxx.getName().equals("XMLOpModeTemplate")) {
+                        OperationModeRegistrationLogger.log(claxx.getName() + " is a special file, won't be made an OpMode",
+                            KEY);
+                        return;
+                    }
+                    // attempt to register the class if its an opmode and hasnt been registered already by the registrar
+                    OperationModeRegistrationLogger.log(claxx.getName() + " allowed, attempting registration...", KEY);
+                    OperationModeRegistrar.attemptRegistration(claxx);
                 }
-                // attempt to register the class if its an opmode and hasnt been registered already by the registrar
-                OperationModeRegistrationLogger.log(claxx.getName() + " allowed, attempting registration...", KEY);
-                OperationModeRegistrar.attemptRegistration(claxx);
             }
+        } catch (Exception e) {
+            OperationModeRegistrationLogger.log("Error while checking " + clazz.getName() + ": " + e.getMessage(), KEY);
+            e.printStackTrace();
         }
     }
 
