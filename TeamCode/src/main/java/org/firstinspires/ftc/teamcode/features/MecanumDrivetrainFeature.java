@@ -30,8 +30,8 @@ public class MecanumDrivetrainFeature extends BlankFeature {
 
         motor0.setPower(backLeftPower);
         motor1.setPower(frontLeftPower);
-        motor2.setPower(backRightPower);
-        motor3.setPower(frontRightPower);
+        motor2.setPower(-backRightPower);
+        motor3.setPower(-frontRightPower);
     }
 
     @Override
