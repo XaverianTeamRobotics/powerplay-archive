@@ -2,15 +2,19 @@ package org.firstinspires.ftc.teamcode.utils.registration;
 
 import com.qualcomm.ftccommon.ClassManagerFactory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
+import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMetaAndClass;
 import org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+
 /**
  * This registers {@link OperationMode}s. It should not be instantiated. As a rule of thumb, most classes referring to registration should not be instantiated as registration follows functional patterns. That's just the Qualcomm Way™.
  * <br>
@@ -37,15 +41,7 @@ public class OperationModeRegistrar {
         // log init and set up our store
         OperationModeRegistrationLogger.log("Initializing service...", KEY);
         OperationModeRegistrarStore.setManager(manager, KEY);
-        OperationModeRegistrarStore.purgeClasses(KEY);
-        // apply our class filters to filter all of the APK's classes through
-        OperationModeRegistrationLogger.log("Applying filters...", KEY);
-        ClassManagerFactory.registerFilters();
-        ClassManager cm = ClassManager.getInstance();
-        cm.registerFilter(new OperationModeClassFilter());
-        // process our classes, sending them off for registration
-        OperationModeRegistrationLogger.log("Processing classes...", KEY);
-//        ClassManagerFactory.processAllClasses();
+        register();
     }
 
     /**
@@ -95,11 +91,26 @@ public class OperationModeRegistrar {
         // finish building the opmode's meta
         OpModeMeta opModeMeta = opModeMetaBuilder.build();
         if(!isPsuedoDisabled) {
-            // finally, register the opmode, assuming the opmode has either auto control or teleop control
-            OperationModeRegistrarStore.getManager(KEY).register(opModeMeta, clazz);
-            OperationModeRegistrationLogger.log("Operation Mode registered! Moving on...", KEY);
+            // finally, add the opmode to the queue, assuming the opmode has either auto control or teleop control
+            OperationModeRegistrarStore.addFinalClass(new FullOperationMode(opModeMeta, clazz), KEY);
         }else{
             OperationModeRegistrationLogger.log("Registration failed, moving on...", KEY);
+        }
+    }
+
+    /**
+     * Registers an {@link OperationMode} if the {@link OperationModeClassFilter} has finished filtering and the {@link OpModeManager} for this operation exists.
+     */
+    public static synchronized void register() {
+        // we need check if the manager and the classes are finished resolving bc they're on different threads
+        if(OperationModeRegistrarStore.areClassesReady(KEY) && OperationModeRegistrarStore.isManagerReady(KEY)) {
+            // then we grab the classes and manager and iterate through and register them
+            ArrayList<FullOperationMode> classes = OperationModeRegistrarStore.getFinalClasses(KEY);
+            OpModeManager manager = OperationModeRegistrarStore.getManager(KEY);
+            for(FullOperationMode opmode : classes) {
+                manager.register(opmode.getMeta(), opmode.getClazz());
+                OperationModeRegistrationLogger.log("Operation Mode registered! Moving on...", KEY);
+            }
         }
     }
 
