@@ -6,22 +6,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.utils.hardware.data.GyroData
 
 class GyroRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: GyroSensor
+    val gyro: GyroSensor
 
     init {
-        SENSOR = hardwareMap.get(GyroSensor::class.java, name)
-        SENSOR.resetDeviceConfigurationForOpMode()
+        gyro = hardwareMap.get(GyroSensor::class.java, name)
+        gyro.resetDeviceConfigurationForOpMode()
         try {
-            SENSOR.calibrate()
-            while (SENSOR.isCalibrating);
+            gyro.calibrate()
+            while (gyro.isCalibrating);
         } catch (ignored: UnsupportedOperationException) {
         }
     }
 
     override fun issueRequest(o: Any): Any {
         return GyroData(
-            SENSOR.heading, intArrayOf(SENSOR.rawX(), SENSOR.rawY(), SENSOR.rawZ()),
-            SENSOR.status()
+            gyro.heading, intArrayOf(gyro.rawX(), gyro.rawY(), gyro.rawZ()),
+            gyro.status()
         )
     }
 

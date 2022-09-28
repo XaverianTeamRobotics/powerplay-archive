@@ -8,22 +8,22 @@ import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoOptions
 
 class ServoRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SERVO: Servo
+    val servo: Servo
 
     init {
-        SERVO = hardwareMap.get(Servo::class.java, name)
-        SERVO.resetDeviceConfigurationForOpMode()
-        SERVO.direction = Servo.Direction.FORWARD
+        servo = hardwareMap.get(Servo::class.java, name)
+        servo.resetDeviceConfigurationForOpMode()
+        servo.direction = Servo.Direction.FORWARD
     }
 
     override fun issueRequest(o: Any): Any {
         val vals = o as ServoInput
         return if (vals.type === ServoOptions.GET) {
-            SERVO.position * 100
+            servo.position * 100
         } else {
             var `val` = vals.position
             `val` = Range.clip(`val`, 0.0, 100.0)
-            SERVO.position = `val` / 100
+            servo.position = `val` / 100
             0
         }
     }

@@ -7,15 +7,15 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.data.TouchSensorData
 
 class TouchSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: TouchSensor
+    val sensor: TouchSensor
 
     init {
-        SENSOR = hardwareMap.get(TouchSensor::class.java, name)
-        SENSOR.resetDeviceConfigurationForOpMode()
+        sensor = hardwareMap.get(TouchSensor::class.java, name)
+        sensor.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
-        return TouchSensorData(SENSOR.isPressed, Range.clip(SENSOR.value * 100, 0.0, 100.0))
+        return TouchSensorData(sensor.isPressed, Range.clip(sensor.value * 100, 0.0, 100.0))
     }
 
     override fun getOutputType(): Class<*> {

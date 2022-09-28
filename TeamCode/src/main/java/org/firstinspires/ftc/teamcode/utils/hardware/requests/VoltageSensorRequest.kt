@@ -5,15 +5,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.VoltageSensor
 
 class VoltageSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: VoltageSensor
+    val sensor: VoltageSensor
 
     init {
-        SENSOR = hardwareMap.get(VoltageSensor::class.java, name)
-        SENSOR.resetDeviceConfigurationForOpMode()
+        sensor = hardwareMap.get(VoltageSensor::class.java, name)
+        sensor.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
-        return SENSOR.voltage
+        return sensor.voltage
     }
 
     override fun getOutputType(): Class<*>? {

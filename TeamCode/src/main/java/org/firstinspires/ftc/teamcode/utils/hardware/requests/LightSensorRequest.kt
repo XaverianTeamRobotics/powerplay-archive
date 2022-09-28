@@ -6,23 +6,23 @@ import com.qualcomm.robotcore.hardware.LightSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.data.LightSensorData
 
 class LightSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: LightSensor
+    val sensor: LightSensor
     private var led = true
 
     init {
-        SENSOR = hardwareMap.get(LightSensor::class.java, name)
-        SENSOR.enableLed(true)
+        sensor = hardwareMap.get(LightSensor::class.java, name)
+        sensor.enableLed(true)
     }
 
     override fun issueRequest(o: Any): Any {
         val change = o as Boolean
         if (change) {
-            SENSOR.enableLed(!led)
+            sensor.enableLed(!led)
             led = !led
         }
         return LightSensorData(
-            SENSOR.rawLightDetected, SENSOR.rawLightDetectedMax,
-            SENSOR.lightDetected, SENSOR.status()
+            sensor.rawLightDetected, sensor.rawLightDetectedMax,
+            sensor.lightDetected, sensor.status()
         )
     }
 

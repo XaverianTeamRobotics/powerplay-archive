@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import java.lang.reflect.Modifier;
 
 /**
- * A {@link ClassFilter} to filter {@link OperationMode}s during registration. All classes of this APK are sent through this filter, and the valid {@link OperationMode}s of those classes are registered, if possible. The methods of this filter are called by a {@link ClassManager} which is responsible for managing the classes of this APK. The {@link ClassManager} is controlled by the {@link ClassManagerFactory} which is managed by the {@link OperationModeRegistrar} which is managed by a {@link Thread} spawned by the app at runtime.
+ * A {@link ClassFilter} to filter {@link OperationMode}s during registration. All classes of this APK are sent through this filter, and the valid {@link OperationMode}s of those classes are queued to be registered, if possible. The methods of this filter are called by a {@link ClassManager} which is responsible for managing the classes of this APK. The {@link ClassManager} is controlled by the {@link ClassManagerFactory} which is managed by the {@link org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity}. This reliance on the internal activity is required due to a multithreading bug in FTC SDK v8.0.
  */
 public class OperationModeClassFilter implements ClassFilter {
 
@@ -51,7 +51,10 @@ public class OperationModeClassFilter implements ClassFilter {
     }
 
     @Override
-    public void filterAllClassesComplete() {}
+    public void filterAllClassesComplete() {
+        OperationModeRegistrarStore.finishedProcessingClasses(KEY);
+        OperationModeRegistrar.register();
+    }
 
     @Override
     public void filterOnBotJavaClassesComplete() {}

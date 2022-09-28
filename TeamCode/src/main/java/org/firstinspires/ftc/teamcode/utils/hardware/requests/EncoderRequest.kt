@@ -7,28 +7,28 @@ import org.firstinspires.ftc.teamcode.utils.hardware.InitializedDCDevices
 import org.firstinspires.ftc.teamcode.utils.hardware.data.EncoderInput
 
 class EncoderRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val ENCODER: DcMotor
+    val encoder: DcMotor
     private var offset: Int
 
     init {
-        ENCODER = hardwareMap.get(DcMotor::class.java, name)
+        encoder = hardwareMap.get(DcMotor::class.java, name)
         if(!InitializedDCDevices.has(name)) {
-            ENCODER.resetDeviceConfigurationForOpMode()
-            ENCODER.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-            ENCODER.power = 0.0
-            offset = ENCODER.currentPosition
+            encoder.resetDeviceConfigurationForOpMode()
+            encoder.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            encoder.power = 0.0
+            offset = encoder.currentPosition
             InitializedDCDevices.add(name)
         }else{
-            offset = ENCODER.currentPosition
+            offset = encoder.currentPosition
         }
     }
 
     override fun issueRequest(o: Any): Any {
         val input = o as EncoderInput
         return if (input === EncoderInput.GET) {
-            ENCODER.currentPosition - offset
+            encoder.currentPosition - offset
         } else {
-            offset = ENCODER.currentPosition
+            offset = encoder.currentPosition
             0
         }
     }

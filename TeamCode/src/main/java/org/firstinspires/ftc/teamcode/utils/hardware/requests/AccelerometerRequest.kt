@@ -6,17 +6,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.utils.hardware.data.AccelerometerData
 
 class AccelerometerRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    private val SENSOR: AccelerationSensor
+    val accelerometer: AccelerationSensor
 
     init {
-        SENSOR = hardwareMap.get(AccelerationSensor::class.java, name)
-        SENSOR.resetDeviceConfigurationForOpMode()
+        accelerometer = hardwareMap.get(AccelerationSensor::class.java, name)
+        accelerometer.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
         return AccelerometerData(
-            SENSOR.acceleration,
-            SENSOR.status()
+            accelerometer.acceleration,
+            accelerometer.status()
         )
     }
 
