@@ -11,10 +11,10 @@ public class TempOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("fl");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("bl");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("fr");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("br");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
         DcMotor aa1 = hardwareMap.dcMotor.get("a1");
         DcMotor aa2 = hardwareMap.dcMotor.get("a2");
         DcMotor hand = hardwareMap.dcMotor.get("h1");
@@ -33,7 +33,7 @@ public class TempOpMode extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+            double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
             double h1 = gamepad1.a ? 0.3 : 0;
@@ -45,6 +45,8 @@ public class TempOpMode extends LinearOpMode {
             double f1 = gamepad1.right_bumper ? 0.2 : 0;
             double f2 = gamepad1.left_bumper ? -0.5 : 0;
             double f = f1 + f2;
+
+            double fineMotorMod = gamepad1.x ? 0.2 : 1;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -70,10 +72,10 @@ public class TempOpMode extends LinearOpMode {
             motorFrontRight.setPower(frontRightPower);
             motorBackRight.setPower(backRightPower);
 
-            aa1.setPower(a);
-            aa2.setPower(-a);
-            hand.setPower(h);
-            freedom.setPower(f);
+            aa1.setPower(a * fineMotorMod);
+            aa2.setPower(-a * fineMotorMod) ;
+            hand.setPower(h * fineMotorMod);
+            freedom.setPower(f * fineMotorMod);
         }
     }
 }
