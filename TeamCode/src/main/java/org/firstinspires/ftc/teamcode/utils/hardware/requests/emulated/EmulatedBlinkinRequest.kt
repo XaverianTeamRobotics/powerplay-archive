@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.data.BlinkinInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.BlinkinOptions
 
 class EmulatedBlinkinRequest(name: String) : ScriptParameters.Request(name) {
-    private var pos = 0
+    private var pos = 0.0
 
     override fun issueRequest(p0: Any?): Any {
         val (id, type) = p0 as BlinkinInput
