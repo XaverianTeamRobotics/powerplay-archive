@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.utils.registration.*;
 
 import static org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta.Flavor.AUTONOMOUS;
 import static org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta.Flavor.TELEOP;
-import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrarStore.getManager;
 import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrationLogger.log;
 import static org.firstinspires.ftc.teamcode.utils.registration.xml.XMLRoboscriptParser.getRoboscriptXMLFiles;
 
@@ -37,8 +36,6 @@ public class XMLOperationModeRegistrar {
     public static void registerOperationModes(OpModeManager manager) {
         // log init and set up our store
         log("Initializing service...", KEY);
-        XMLOperationModeRegistrarStore.setManager(manager, KEY);
-        XMLOperationModeRegistrarStore.purgeClasses(KEY);
         // process our classes, sending them off for registration
         log("Processing classes...", KEY);
         log("XML Files Found: " + getRoboscriptXMLFiles().size(), KEY);
@@ -64,7 +61,7 @@ public class XMLOperationModeRegistrar {
                 metaBuilder.setTransitionTarget(null);
             }
 
-            getManager(KEY).register(metaBuilder.build(),
+            manager.register(metaBuilder.build(),
                 new XMLOpModeTemplate(xmlParser));
             log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
                 " registered! Moving on...", KEY);
