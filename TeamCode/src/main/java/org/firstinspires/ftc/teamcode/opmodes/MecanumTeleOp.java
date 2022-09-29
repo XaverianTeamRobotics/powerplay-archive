@@ -22,11 +22,6 @@ public class MecanumTeleOp extends OperationMode implements TeleOperation {
             e.printStackTrace();
             stop();
         }
-
-        bind(GamepadRequestInput.A, Devices.controller1, (n) -> {
-            motor0.setPower(n);
-            return null;
-        });
     }
 
     @Override
