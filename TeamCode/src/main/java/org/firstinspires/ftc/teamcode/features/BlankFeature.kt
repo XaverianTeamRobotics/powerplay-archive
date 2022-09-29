@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode.features;
+package org.firstinspires.ftc.teamcode.features
 
-import com.michaell.looping.ScriptRunner;
-import com.michaell.looping.ScriptTemplate;
-import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
+import com.michaell.looping.ScriptRunner.DuplicateScriptException
+import com.michaell.looping.ScriptTemplate
+import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter.Companion.jloopingRunner
 
-public abstract class BlankFeature extends ScriptTemplate {
-    public BlankFeature(String name, boolean needsInit) {
-        super(name, needsInit);
+abstract class BlankFeature(name: String?, needsInit: Boolean) : ScriptTemplate(name, needsInit) {
+    companion object {
+        @JvmStatic
+        @Throws(DuplicateScriptException::class)
+        fun registerFeature(feature: BlankFeature) {
+            jloopingRunner!!.addScript(feature)
+        }
     }
-
-    public abstract void addToOpMode(OperationMode opMode) throws ScriptRunner.DuplicateScriptException;
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.utils.hardware.Logging;
 
 import java.util.HashMap;
 
@@ -30,6 +31,7 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Logging.setTelemetry(telemetry);
         HardwareGetter.setEmulated(false);
         HardwareGetter.setHardwareMap(hardwareMap);
         ScriptTemplate jloopingScript;
