@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.michaell.looping.ScriptRunner;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
+import org.firstinspires.ftc.teamcode.utils.hardware.Devices;
+import org.firstinspires.ftc.teamcode.utils.hardware.data.GamepadRequestInput;
 import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
+import org.firstinspires.ftc.teamcode.utils.registration.TeleOperation;
+
+import static org.firstinspires.ftc.teamcode.utils.hardware.Devices.*;
 
 
-public class MecanumTeleOp extends OperationMode {
+public class MecanumTeleOp extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
@@ -21,6 +22,11 @@ public class MecanumTeleOp extends OperationMode {
             e.printStackTrace();
             stop();
         }
+
+        bind(GamepadRequestInput.A, Devices.controller1, (n) -> {
+            motor0.setPower(n);
+            return null;
+        });
     }
 
     @Override

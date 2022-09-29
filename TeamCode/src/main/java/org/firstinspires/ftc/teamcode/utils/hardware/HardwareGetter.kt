@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.utils.hardware
 
 import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
-import com.qualcomm.hardware.HardwareFactory
+import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.AccelerationSensor
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
@@ -696,8 +696,8 @@ class HardwareGetter {
 
         @JvmStatic
         fun initAllDevices() {
-            Devices.gamepad1 = GlobalGamepadAccess("gamepad1")
-            Devices.gamepad2 = GlobalGamepadAccess("gamepad2")
+            Devices.controller1 = GlobalGamepadAccess("gamepad1")
+            Devices.controller2 = GlobalGamepadAccess("gamepad2")
 
             Devices.motor0 = GlobalMotorAccess("motor0")
             Devices.motor1 = GlobalMotorAccess("motor1")
@@ -728,12 +728,29 @@ object InitializedDCDevices {
 
 class Devices {
     companion object {
-        @JvmStatic lateinit var gamepad1: GlobalGamepadAccess
-        @JvmStatic lateinit var gamepad2: GlobalGamepadAccess
+        @JvmStatic
+        lateinit var controller1: GlobalGamepadAccess
+        @JvmStatic
+        lateinit var controller2: GlobalGamepadAccess
 
-        @JvmStatic lateinit var motor0: GlobalMotorAccess
-        @JvmStatic lateinit var motor1: GlobalMotorAccess
-        @JvmStatic lateinit var motor2: GlobalMotorAccess
-        @JvmStatic lateinit var motor3: GlobalMotorAccess
+        @JvmStatic
+        lateinit var motor0: GlobalMotorAccess
+        @JvmStatic
+        lateinit var motor1: GlobalMotorAccess
+        @JvmStatic
+        lateinit var motor2: GlobalMotorAccess
+        @JvmStatic
+        lateinit var motor3: GlobalMotorAccess
+
+        @JvmStatic
+        fun bind(button: GamepadRequestInput, gamepad: GlobalGamepadAccess, lambda: (Double) -> Unit) {
+            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
+        }
+    }
+}
+
+class GamepadBinding(val button: GamepadRequestInput, val gamepad: GlobalGamepadAccess, val lambda: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
+    override fun run(p0: ScriptParameters?) {
+        lambda(gamepad.gamepadRequest.issueRequest(button) as Double)
     }
 }

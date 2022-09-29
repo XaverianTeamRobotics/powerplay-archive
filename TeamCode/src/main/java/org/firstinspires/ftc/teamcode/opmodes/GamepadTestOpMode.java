@@ -11,6 +11,6 @@ public class GamepadTestOpMode extends OperationMode implements TeleOperation {
 
     @Override
     public void run() {
-        Devices.getMotor0().setPower(Devices.getGamepad1().getRightTrigger());
+        Devices.getMotor0().setPower(Devices.getController1().getRightTrigger());
     }
 }

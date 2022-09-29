@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.features;
 
 import com.michaell.looping.ScriptParameters;
 import com.michaell.looping.ScriptRunner;
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices;
-import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalMotorAccess;
 import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
 
 import static org.firstinspires.ftc.teamcode.utils.hardware.Devices.*;
@@ -15,9 +13,9 @@ public class MecanumDrivetrainFeature extends BlankFeature {
 
     @Override
     public void run(ScriptParameters scriptParameters) {
-        double y = -gamepad1.getLeftStickY(); // Remember, this is reversed!
-        double x = gamepad1.getRightStickX() * 1.1; // Counteract imperfect strafing
-        double rx = gamepad1.getRightStickX();
+        double y = -controller1.getLeftStickY(); // Remember, this is reversed!
+        double x = controller1.getRightStickX() * 1.1; // Counteract imperfect strafing
+        double rx = controller1.getRightStickX();
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
