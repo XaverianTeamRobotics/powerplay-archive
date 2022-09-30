@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalGamepadAccess
 import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalMotorAccess
+import org.firstinspires.ftc.teamcode.utils.hardware.accessors.IMUGlobalAccess
 import org.firstinspires.ftc.teamcode.utils.hardware.data.*
 import org.firstinspires.ftc.teamcode.utils.hardware.requests.*
 import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.*
@@ -694,6 +695,33 @@ class HardwareGetter {
             return jloopingRunner!!.scriptParametersGlobal.issueRequest(Any(), jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as Double
         }
 
+        /**
+         * Create a IMURequest, add it to the global JloopingRunner, then return it
+         */
+        @JvmStatic
+        fun makeIMURequest(name: String): ScriptParameters.Request{
+            if (hardwareMap == null || jloopingRunner == null) {
+                if (isEmulated && jloopingRunner != null) {
+                    val req = EmulatedIMURequest(name)
+                    jloopingRunner!!.addRequest(req)
+                    return req
+                } else {
+                    println("HardwareMap: $hardwareMap")
+                    println("ScriptRunner: $jloopingRunner")
+                    throw NullPointerException("The hardwareMap or jloopingRunner are null")
+                }
+            }
+
+            val req = IMURequest(name)
+            jloopingRunner!!.addRequest(req)
+            return req
+        }
+
+        @JvmStatic
+        fun getIMUData(name: String): IMUData {
+            return jloopingRunner!!.scriptParametersGlobal.issueRequest(Any(), jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as IMUData
+        }
+
         @JvmStatic
         fun initAllDevices() {
             Devices.controller1 = GlobalGamepadAccess("gamepad1")
@@ -762,6 +790,14 @@ class Devices {
             expansion_motor1 = GlobalMotorAccess("motor1e")
             expansion_motor2 = GlobalMotorAccess("motor2e")
             expansion_motor3 = GlobalMotorAccess("motor3e")
+        }
+
+        @JvmStatic
+        lateinit var integrated_imu: IMUGlobalAccess
+
+        @JvmStatic
+        fun initializeIntegratedIMU() {
+            integrated_imu = IMUGlobalAccess("imu")
         }
     }
 }
