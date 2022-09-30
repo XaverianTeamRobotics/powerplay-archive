@@ -50,6 +50,7 @@ public class <a id="opModeName">OpModeName</a> extends OperationMode implements 
      Opmode Name: <input id="classNameID" name="className" type="text" value="OpModeName" placeholder="Op Mode Name">
      <br>
      <button onclick='changeField("classNameID", "opModeName")'>Apply</button>
+     <button onclick="navigator.clipboard.writeText(document.getElementById('opModeDefinition').innerText)">Copy</button>
 
      <br>
      <br>
@@ -106,6 +107,7 @@ Devices.getMotor<a id="motorPortPower">0</a>.setPower(<a id="motorPower">1.0</a>
      Motor Power: <input id="motorPowerInput" name="motorPower" type="text" value="1.0" placeholder="Motor Power">
      <br>
      <button onclick='changeField("motorPowerInput", "motorPower")'>Apply</button>
+     <button onclick="navigator.clipboard.writeText(document.getElementById('motorUsage').innerText)">Copy</button>
      <br>
      <br>
 
@@ -130,6 +132,7 @@ Devices.getMotor<a id="motorPortOperation">0</a>.setOperation(<a id="motorOperat
      </select>
      <br>
      <button onclick='changeField("motorOperationTypeInput", "motorOperationType")'>Apply</button>
+     <button onclick="navigator.clipboard.writeText(document.getElementById('motorOperation').innerText)">Copy</button>
      <br>
      <br>
 
@@ -244,7 +247,7 @@ PLAYSTATION-ONLY AXES
      value. To use the gamepad, look at the code snippet
      below:
 
-     <pre class="code">
+     <pre class="code" id="gamepadExample">
 Devices.getGamepad<a id="gamepadNameSample">1</a>.get<a
                id="gamepadButtonSample">DpadUp</a>();</pre>
      <br>
@@ -297,6 +300,7 @@ Devices.getGamepad<a id="gamepadNameSample">1</a>.get<a
      </select>
      <br>
      <button onclick='changeField("gamepadButtonInputID", "gamepadButtonSample")'>Apply</button>
+     <button onclick="navigator.clipboard.writeText(document.getElementById('gamepadExample').innerText)">Copy</button>
 
      <h2>Emulator</h2>
 
@@ -324,6 +328,7 @@ public class <a id="emuOpModeName">OpModeName</a> extends EmulatedOpMode impleme
                          placeholder="Op Mode Name">
      <br>
      <button onclick='changeField("emuClassNameID", "emuOpModeName")'>Apply</button>
+     <button onclick="navigator.clipboard.writeText(document.getElementById('emuOpModeDefinition').innerText)">Copy</button>
 
      <br>
      <br>
