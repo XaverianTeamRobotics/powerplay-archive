@@ -784,6 +784,14 @@ class Devices {
         @JvmStatic
         lateinit var expansion_motor3: GlobalMotorAccess
 
+        /**
+         * Initializes all motors on the expansion hub. Required to use their GlobalMotorAccess objects
+         * Requires the following motor names:
+         * - motor0e
+         * - motor1e
+         * - motor2e
+         * - motor3e
+         */
         @JvmStatic
         fun initializeExpansionHubMotors() {
             expansion_motor0 = GlobalMotorAccess("motor0e")
@@ -795,6 +803,13 @@ class Devices {
         @JvmStatic
         lateinit var integrated_imu: IMUGlobalAccess
 
+        /**
+         * Initializes the IMU on the expansion hub. Required to use the integrated_imu object
+         * Requires the following IMU name:
+         * - imu
+         *
+         * _(This is built into the robot controller on i2c port 0, it just needs to be named in the config)_
+         */
         @JvmStatic
         fun initializeIntegratedIMU() {
             integrated_imu = IMUGlobalAccess("imu")
