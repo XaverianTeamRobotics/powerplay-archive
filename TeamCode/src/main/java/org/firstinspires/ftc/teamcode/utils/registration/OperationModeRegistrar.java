@@ -1,16 +1,10 @@
 package org.firstinspires.ftc.teamcode.utils.registration;
 
-import com.qualcomm.ftccommon.ClassManagerFactory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
-import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
-import org.firstinspires.ftc.teamcode.opmodes.MecanumTeleOp;
-import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMetaAndClass;
-import org.firstinspires.ftc.teamcode.utils.registration.xml.XMLOperationModeRegistrar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

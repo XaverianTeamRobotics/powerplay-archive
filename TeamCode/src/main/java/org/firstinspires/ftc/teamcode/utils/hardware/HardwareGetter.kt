@@ -746,11 +746,28 @@ class Devices {
         fun bind(button: GamepadRequestInput, gamepad: GlobalGamepadAccess, lambda: (Double) -> Unit) {
             HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
         }
+
+        @JvmStatic
+        lateinit var expansion_motor0: GlobalMotorAccess
+        @JvmStatic
+        lateinit var expansion_motor1: GlobalMotorAccess
+        @JvmStatic
+        lateinit var expansion_motor2: GlobalMotorAccess
+        @JvmStatic
+        lateinit var expansion_motor3: GlobalMotorAccess
+
+        @JvmStatic
+        fun initializeExpansionHubMotors() {
+            expansion_motor0 = GlobalMotorAccess("motor0e")
+            expansion_motor1 = GlobalMotorAccess("motor1e")
+            expansion_motor2 = GlobalMotorAccess("motor2e")
+            expansion_motor3 = GlobalMotorAccess("motor3e")
+        }
     }
 }
 
-class GamepadBinding(val button: GamepadRequestInput, val gamepad: GlobalGamepadAccess, val lambda: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
+class GamepadBinding(val button: GamepadRequestInput, val gamepad: GlobalGamepadAccess, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
     override fun run(p0: ScriptParameters?) {
-        lambda(gamepad.gamepadRequest.issueRequest(button) as Double)
+        action(gamepad.gamepadRequest.issueRequest(button) as Double)
     }
 }
