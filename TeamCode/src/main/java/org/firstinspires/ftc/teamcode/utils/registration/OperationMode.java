@@ -4,6 +4,7 @@ import com.michaell.looping.ScriptParameters;
 import com.michaell.looping.ScriptRunner;
 import com.michaell.looping.ScriptTemplate;
 import com.michaell.looping.builtin.ConvertToScript;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.utils.hardware.Logging;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * An {@link OperationMode} represents a program the robot can run.
@@ -46,6 +48,15 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
             HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
             HardwareGetter.initAllDevices();
+
+            // Set the Caching mode to auto. This allows for faster access of all sensors
+            // The cache gets cleared whenever a call to a sensor is repeated
+            // This does NOT effect writing data to a device
+            List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+            for (LynxModule hub : allHubs) {
+                hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+            }
         } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
             throw new RuntimeException(e);
         }
