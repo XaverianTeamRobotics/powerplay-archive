@@ -28,10 +28,10 @@ class IMURequest(name: String) : ScriptParameters.Request(name) {
     }
 
     override fun getOutputType(): Class<*> {
-        return Any::class.java
+        return IMUData::class.java
     }
 
     override fun getInputType(): Class<*> {
-        return IMUData::class.java
+        return Any::class.java
     }
 }
