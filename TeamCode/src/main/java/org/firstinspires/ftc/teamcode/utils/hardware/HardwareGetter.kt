@@ -315,7 +315,7 @@ class HardwareGetter {
          * Get ColorSensor from a previously initialized request
          */
         @JvmStatic
-        fun getColorSensorFromRequest(name: String): ColorSensorRequest.Sensors {
+        fun getColorSensorFromRequest(name: String): ColorSensors {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     throw NullPointerException("This is running in the emulator!")

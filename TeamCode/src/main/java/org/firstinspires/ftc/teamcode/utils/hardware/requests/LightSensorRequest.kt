@@ -16,9 +16,9 @@ class LightSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParamet
 
     override fun issueRequest(o: Any): Any {
         val change = o as Boolean
-        if (change) {
-            sensor.enableLed(!led)
-            led = !led
+        if(change != led) {
+            sensor.enableLed(change)
+            led = change
         }
         return LightSensorData(
             sensor.rawLightDetected, sensor.rawLightDetectedMax,

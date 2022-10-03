@@ -1,25 +1,23 @@
 package org.firstinspires.ftc.teamcode.utils.hardware.requests
 
 import android.graphics.Color
-import android.hardware.Sensor
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.data.Colors
+import org.firstinspires.ftc.teamcode.utils.hardware.data.ColorSensors
 
 class ColorSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val NORMALIZED_COLORS: NormalizedColorSensor
     private val RAW: ColorSensor
 
-    val sensors: Sensors
-
-    data class Sensors(val sanitized: NormalizedColorSensor, val raw: ColorSensor)
+    val sensors: ColorSensors
 
     init {
         NORMALIZED_COLORS = hardwareMap.get(NormalizedColorSensor::class.java, name)
         RAW = hardwareMap.get(ColorSensor::class.java, name)
-        sensors = Sensors(NORMALIZED_COLORS, RAW)
+        sensors = ColorSensors(NORMALIZED_COLORS, RAW)
     }
 
     override fun issueRequest(o: Any): Any {

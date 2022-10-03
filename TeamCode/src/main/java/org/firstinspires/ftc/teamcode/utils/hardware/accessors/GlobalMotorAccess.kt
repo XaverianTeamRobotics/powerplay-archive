@@ -7,25 +7,30 @@ import org.firstinspires.ftc.teamcode.utils.hardware.data.MotorOperation
 import org.firstinspires.ftc.teamcode.utils.hardware.data.StandardMotorParameters
 
 class GlobalMotorAccess(var name: String) {
+
     private val motorRequest: ScriptParameters.Request = HardwareGetter.makeMotorRequest(name)
 
     val motor: DcMotor
         get() = HardwareGetter.getMotorFromRequest(name)
 
     var power: Double = 0.0
-        set(value) {
-            field = value
-            HardwareGetter.setMotorValue(name, StandardMotorParameters(value, runMode))
-        }
-
-    var runMode: MotorOperation = MotorOperation.POWER
-        set(value) {
-            field = value
-            HardwareGetter.setMotorValue(name, StandardMotorParameters(power, value))
-        }
-
-    val isBusy: Boolean
         get() {
-            return HardwareGetter.isMotorBusy(name)
+            return motor.power
+        } set(value) {
+            field = value
+            HardwareGetter.setMotorValue(name, StandardMotorParameters(value, MotorOperation.POWER))
         }
+
+    var speed: Double = 0.0
+        get() {
+            return motor.power
+        } set(value) {
+            field = value
+            HardwareGetter.setMotorValue(name, StandardMotorParameters(value, MotorOperation.ENCODER_POWER))
+        }
+
+    fun isBusy(): Boolean {
+        return HardwareGetter.isMotorBusy(name)
+    }
+
 }

@@ -14,23 +14,24 @@ open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParamete
         if(!InitializedDCDevices.has(name)) {
             motor.resetDeviceConfigurationForOpMode()
             motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+            motor.power = 0.0
             InitializedDCDevices.add(name)
         }
-        motor.power = 0.0
     }
     override fun issueRequest(o: Any): Any {
         val input = o as StandardMotorParameters
         when (input.operation) {
             MotorOperation.POWER -> {
-                motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                if(motor.mode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+                    motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                }
                 motor.power = input.value
             }
-            MotorOperation.ENCODER_DISTANCE -> {
-                motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-                motor.targetPosition = input.value.toInt()
-            }
             MotorOperation.ENCODER_POWER -> {
-                motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+                if(motor.mode != DcMotor.RunMode.RUN_USING_ENCODER) {
+                    motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+                }
                 motor.power = input.value
             }
         }
