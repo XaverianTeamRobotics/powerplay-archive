@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 
-class TouchSensorGlobalAccess(var name: String) {
+class TouchSensor(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeTouchSensorRequest(name)
 

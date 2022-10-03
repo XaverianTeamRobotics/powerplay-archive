@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.AccelerationSensor
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 
-class AccelerometerGlobalAccess(var name: String) {
+class Accelerometer(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeAccelerometerRequest(name)
 

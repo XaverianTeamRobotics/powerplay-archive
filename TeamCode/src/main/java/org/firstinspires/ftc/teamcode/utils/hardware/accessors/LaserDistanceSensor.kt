@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 
-class LaserDistanceSensorGlobalAccess(var name: String) {
+class LaserDistanceSensor(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeLaserDistanceSensorRequest(name)
 

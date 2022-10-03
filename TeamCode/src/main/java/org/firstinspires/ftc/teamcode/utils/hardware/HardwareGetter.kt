@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DistanceSensor
-import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.GyroSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.LightSensor
@@ -15,8 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalGamepadAccess
-import org.firstinspires.ftc.teamcode.utils.hardware.accessors.GlobalMotorAccess
+import org.firstinspires.ftc.teamcode.utils.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.utils.hardware.data.*
 import org.firstinspires.ftc.teamcode.utils.hardware.requests.*
 import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.*
@@ -58,7 +56,7 @@ class HardwareGetter {
          * Note this it returns just a generic request, so you check that it is not emulated before casting
          */
         @JvmStatic
-        fun makeGamepadRequest(name: String, gamepad: Gamepad?): ScriptParameters.Request{
+        fun makeGamepadRequest(name: String, gamepad: com.qualcomm.robotcore.hardware.Gamepad?): ScriptParameters.Request{
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     val req = EmulatedGamepadRequest(name)
@@ -695,13 +693,13 @@ class HardwareGetter {
 
         @JvmStatic
         fun initAllDevices() {
-            Devices.gamepad1 = GlobalGamepadAccess("gamepad1")
-            Devices.gamepad2 = GlobalGamepadAccess("gamepad2")
+            Devices.gamepad1 = org.firstinspires.ftc.teamcode.utils.hardware.accessors.Gamepad("gamepad1")
+            Devices.gamepad2 = org.firstinspires.ftc.teamcode.utils.hardware.accessors.Gamepad("gamepad2")
 
-            Devices.motor0 = GlobalMotorAccess("motor0")
-            Devices.motor1 = GlobalMotorAccess("motor1")
-            Devices.motor2 = GlobalMotorAccess("motor2")
-            Devices.motor3 = GlobalMotorAccess("motor3")
+            Devices.motor0 = Motor("motor0")
+            Devices.motor1 = Motor("motor1")
+            Devices.motor2 = Motor("motor2")
+            Devices.motor3 = Motor("motor3")
         }
     }
 }
@@ -727,12 +725,12 @@ object InitializedDCDevices {
 
 class Devices {
     companion object {
-        @JvmStatic lateinit var gamepad1: GlobalGamepadAccess
-        @JvmStatic lateinit var gamepad2: GlobalGamepadAccess
+        @JvmStatic lateinit var gamepad1: org.firstinspires.ftc.teamcode.utils.hardware.accessors.Gamepad
+        @JvmStatic lateinit var gamepad2: org.firstinspires.ftc.teamcode.utils.hardware.accessors.Gamepad
 
-        @JvmStatic lateinit var motor0: GlobalMotorAccess
-        @JvmStatic lateinit var motor1: GlobalMotorAccess
-        @JvmStatic lateinit var motor2: GlobalMotorAccess
-        @JvmStatic lateinit var motor3: GlobalMotorAccess
+        @JvmStatic lateinit var motor0: Motor
+        @JvmStatic lateinit var motor1: Motor
+        @JvmStatic lateinit var motor2: Motor
+        @JvmStatic lateinit var motor3: Motor
     }
 }

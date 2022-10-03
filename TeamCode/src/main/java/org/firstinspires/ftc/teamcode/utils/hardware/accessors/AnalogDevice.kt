@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.utils.hardware.accessors
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.AnalogInput
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.utils.hardware.requests.AnalogDeviceRequest
 
-class AnalogDeviceGlobalAccess(var name: String) {
+class AnalogDevice(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeAnalogDeviceRequest(name)
 

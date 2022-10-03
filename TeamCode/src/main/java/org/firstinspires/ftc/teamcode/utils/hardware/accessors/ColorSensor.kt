@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.Colors
 
-class ColorSensorGlobalAccess(var name: String) {
+class ColorSensor(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeColorSensorRequest(name)
 

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoOptions
 
-class ServoGlobalAccess(var name: String) {
+class Servo(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeServoRequest(name)
 

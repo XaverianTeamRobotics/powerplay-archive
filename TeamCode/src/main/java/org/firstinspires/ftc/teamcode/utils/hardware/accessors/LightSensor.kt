@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.LightSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.RawBrightness
 
-class LightSensorGlobalAccess(var name: String) {
+class LightSensor(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeLightSensorRequest(name)
 

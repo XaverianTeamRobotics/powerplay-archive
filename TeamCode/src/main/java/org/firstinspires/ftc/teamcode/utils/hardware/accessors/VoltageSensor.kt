@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 
-class VoltageSensorGlobalAccess(var name: String) {
+class VoltageSensor(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeVoltageSensorRequest(name)
 

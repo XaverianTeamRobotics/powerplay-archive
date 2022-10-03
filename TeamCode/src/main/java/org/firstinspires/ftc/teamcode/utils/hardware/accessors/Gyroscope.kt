@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.GyroSensor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 
-class GyroGlobalAccess(var name: String) {
+class Gyroscope(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeGyroscopeRequest(name)
 

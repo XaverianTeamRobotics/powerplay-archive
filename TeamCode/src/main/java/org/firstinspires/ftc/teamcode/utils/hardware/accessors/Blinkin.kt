@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.BlinkinInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.BlinkinOptions
 
-class BlinkinGlobalAccess(var name: String) {
+class Blinkin(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeBlinkinRequest(name)
 

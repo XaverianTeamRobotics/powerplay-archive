@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.EncoderInput
 
-class EncoderGlobalAccess(var name: String) {
+class Encoder(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeEncoderRequest(name)
 

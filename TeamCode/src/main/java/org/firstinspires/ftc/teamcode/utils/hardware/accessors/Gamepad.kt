@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.GamepadRequestInput
 
-class GlobalGamepadAccess(var name: String) {
+class Gamepad(var name: String) {
     var gamepadRequest: ScriptParameters.Request = HardwareGetter.jloopingRunner!!.
     scriptParametersGlobal.getRequest(name) as ScriptParameters.Request
 

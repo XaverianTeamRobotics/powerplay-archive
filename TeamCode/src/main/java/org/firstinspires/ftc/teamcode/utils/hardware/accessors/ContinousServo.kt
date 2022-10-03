@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoInput
 import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoOptions
 
-class ContinousServoGlobalAccess(var name: String) {
+class ContinousServo(var name: String) {
 
     private val request: ScriptParameters.Request = HardwareGetter.makeContinousServoRequest(name)
 

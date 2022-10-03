@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.utils.hardware.data.MotorOperation
 import org.firstinspires.ftc.teamcode.utils.hardware.data.StandardMotorParameters
 
-class GlobalMotorAccess(var name: String) {
+class Motor(var name: String) {
 
     private val motorRequest: ScriptParameters.Request = HardwareGetter.makeMotorRequest(name)
 
