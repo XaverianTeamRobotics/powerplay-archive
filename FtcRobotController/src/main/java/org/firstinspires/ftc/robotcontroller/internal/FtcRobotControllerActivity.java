@@ -365,8 +365,8 @@ public class FtcRobotControllerActivity extends Activity
       // Also, check this out: https://github.com/FIRST-Tech-Challenge/FtcRobotController/discussions/384
       try {
         // we remove all our previously dealt with opmodes (just in case), then add and run the filter to add opmodes
-        Class c = Class.forName("org.firstinspires.ftc.teamcode.utils.registration.OperationModeClassFilter");
-        Class d = Class.forName("org.firstinspires.ftc.teamcode.utils.registration.OperationModeRegistrarStore");
+        Class c = Class.forName("org.firstinspires.ftc.teamcode.internals.registration.OperationModeClassFilter");
+        Class d = Class.forName("org.firstinspires.ftc.teamcode.internals.registration.OperationModeRegistrarStore");
         Method method = d.getMethod("purgeClasses", String.class);
         method.invoke(null, "a7216e0b6a49850c6092991040467037d0fc899960bba2c08c4afafeb8b3bf1bfd748fe8050348f614c7e4421af2449a47db9d01de07b13a8c2fb060dac3e1ed5053643c4739479ff3fc665a9dba57e47d65803838d1617de4b1658a9e022e9bc0eaf71b");
         ClassManager.getInstance().registerFilter((ClassFilter) c.newInstance());
