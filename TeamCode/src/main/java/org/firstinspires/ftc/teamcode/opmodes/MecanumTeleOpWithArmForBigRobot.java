@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.michaell.looping.ScriptRunner;
 import org.firstinspires.ftc.teamcode.features.DrivetrainMapMode;
-import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
+import org.firstinspires.ftc.teamcode.internals.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
-import static org.firstinspires.ftc.teamcode.features.BlankFeature.registerFeature;
+import static org.firstinspires.ftc.teamcode.internals.features.BlankFeature.registerFeature;
 import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.*;
 
 

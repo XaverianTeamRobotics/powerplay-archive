@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
-import org.firstinspires.ftc.teamcode.internals.Vector3
+import org.firstinspires.ftc.teamcode.internals.misc.Vector3
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 
 class IMUGlobalAccess(var name: String) {

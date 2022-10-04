@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.hardware.requests
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.hardware.bosch.BNO055IMU
-import org.firstinspires.ftc.teamcode.internals.Vector3
+import org.firstinspires.ftc.teamcode.internals.misc.Vector3
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.internals.hardware.data.IMUData
 

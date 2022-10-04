@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated
 
 import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.internals.hardware.data.IMUData
+import org.firstinspires.ftc.teamcode.internals.misc.Vector3
 
 class EmulatedIMURequest(name: String) : ScriptParameters.Request(name) {
     override fun issueRequest(p0: Any?): Any {
         return IMUData(
-            org.firstinspires.ftc.teamcode.internals.Vector3(0.0, 0.0, 0.0),
-            org.firstinspires.ftc.teamcode.internals.Vector3(0.0, 0.0, 0.0)
+            Vector3(0.0, 0.0, 0.0),
+            Vector3(0.0, 0.0, 0.0)
         )
     }
 
