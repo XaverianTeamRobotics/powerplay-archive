@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.AnalogInput
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 
 /**
  * An analog device is a device which records voltage passed through its port, like a voltage sensor intrgrated into the Control Hub itself. The OpMode is expected to interperet its readings as data returned by an analog sensor.

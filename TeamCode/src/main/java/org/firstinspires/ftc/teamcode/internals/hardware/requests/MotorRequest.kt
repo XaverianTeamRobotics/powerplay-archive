@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.requests
+package org.firstinspires.ftc.teamcode.internals.hardware.requests
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.teamcode.utils.hardware.InitializedDCDevices
-import org.firstinspires.ftc.teamcode.utils.hardware.data.MotorOperation
-import org.firstinspires.ftc.teamcode.utils.hardware.data.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.internals.hardware.InitializedDCDevices
+import org.firstinspires.ftc.teamcode.internals.hardware.data.MotorOperation
+import org.firstinspires.ftc.teamcode.internals.hardware.data.StandardMotorParameters
 
 open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     val motor: DcMotor

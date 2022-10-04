@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.AccelerationSensor
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 
 /**
  * An accelerometer measures acceleration.

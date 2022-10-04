@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.requests
+package org.firstinspires.ftc.teamcode.internals.hardware.requests
 
 import android.graphics.Color
-import android.hardware.Sensor
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
-import org.firstinspires.ftc.teamcode.utils.hardware.data.Colors
-import org.firstinspires.ftc.teamcode.utils.hardware.data.ColorSensors
+import org.firstinspires.ftc.teamcode.internals.hardware.data.Colors
+import org.firstinspires.ftc.teamcode.internals.hardware.data.ColorSensors
 
 class ColorSensorRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
     private val NORMALIZED_COLORS: NormalizedColorSensor

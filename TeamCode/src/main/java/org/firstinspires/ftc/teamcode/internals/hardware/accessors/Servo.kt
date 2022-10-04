@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.Servo
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoInput
-import org.firstinspires.ftc.teamcode.utils.hardware.data.ServoOptions
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.data.ServoInput
+import org.firstinspires.ftc.teamcode.internals.hardware.data.ServoOptions
 
 /**
  * A servo is similar to a motor but can only drive to a specific position.

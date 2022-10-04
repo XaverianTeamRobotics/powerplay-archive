@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.utils.hardware.data.Colors
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.data.Colors
 
 /**
  * A color sensor can see sounds and hear colors. It is high on multiple psychedelic drugs.

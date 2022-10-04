@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.DistanceSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 
 /**
  * A laser distance sensor is a distance sensor that shoots photons out and measures the time it takes for them to reflect back. It, obviously, uses a laser. Ultrasonic distance sensors are another FTC legal distance sensor option but are not supported by this class. Using a set of cameras to compute depth of field via parallax is the final FTC legal distance sensor option, but this is not supported by the 19460 API and EasyOpenCV, Tensorflow, or Vuforia must be used.

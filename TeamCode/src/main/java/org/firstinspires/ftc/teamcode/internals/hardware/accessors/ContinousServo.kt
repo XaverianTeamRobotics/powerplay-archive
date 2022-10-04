@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.CRServo
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoInput
-import org.firstinspires.ftc.teamcode.utils.hardware.data.ContinousServoOptions
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.data.ContinousServoInput
+import org.firstinspires.ftc.teamcode.internals.hardware.data.ContinousServoOptions
 
 /**
  * A continous servo is a servo that can run in a direction forever but cannot drive to a specific position nor report its position data.

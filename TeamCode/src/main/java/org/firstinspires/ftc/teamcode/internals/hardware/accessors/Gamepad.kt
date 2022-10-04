@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.utils.hardware.data.GamepadRequestInput
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.data.GamepadRequestInput
 
 /**
  * A gamepad is simply a controller that a human uses to control the robot.

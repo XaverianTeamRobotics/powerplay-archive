@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.utils.hardware.accessors
+package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.GyroSensor
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 
 /**
  * A gyroscope measures its direction, somewhat like a compass.
