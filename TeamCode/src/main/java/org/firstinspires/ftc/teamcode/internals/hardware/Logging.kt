@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.hardware
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.isEmulated
 
@@ -7,6 +9,7 @@ class Logging {
     companion object {
         @JvmStatic
         lateinit var telemetry: Telemetry
+        var dashboardPacket = TelemetryPacket()
 
         @JvmStatic
         fun logText(text: String) {
@@ -14,6 +17,7 @@ class Logging {
                 println(text)
             } else {
                 telemetry.addLine(text)
+                dashboardPacket.addLine(text)
             }
         }
 
@@ -23,6 +27,9 @@ class Logging {
                 println("$key: $value")
             } else {
                 telemetry.addData(key, value)
+                dashboardPacket.addLine(" ")
+                dashboardPacket.put(key, value)
+                dashboardPacket.put(key+" (key)", "$key:")
             }
         }
 
@@ -30,6 +37,8 @@ class Logging {
         fun updateLog() {
             if (!isEmulated) {
                 telemetry.update()
+                FtcDashboard.getInstance().sendTelemetryPacket(dashboardPacket)
+                dashboardPacket = TelemetryPacket()
             }
         }
 
@@ -37,6 +46,8 @@ class Logging {
         fun clear() {
             if (!isEmulated) {
                 telemetry.clear()
+                FtcDashboard.getInstance().clearTelemetry()
+                dashboardPacket = TelemetryPacket()
             }
         }
     }
