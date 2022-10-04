@@ -5,9 +5,9 @@ import com.michaell.looping.ScriptRunner;
 import com.michaell.looping.ScriptTemplate;
 import com.michaell.looping.builtin.ConvertToScript;
 
-import org.firstinspires.ftc.teamcode.utils.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.utils.hardware.requests.emulated.EmulatedGamepadRequest;
-import org.firstinspires.ftc.teamcode.utils.registration.OperationMode;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.EmulatedGamepadRequest;
+import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.junit.Test;
 
 import java.util.HashMap;

@@ -1,23 +1,8 @@
 package org.firstinspires.ftc.teamcode.features
 
 import com.michaell.looping.ScriptParameters
-import org.firstinspires.ftc.teamcode.utils.MecanumDriver
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.controller1
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.expansion_motor0
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.expansion_motor1
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.expansion_motor2
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.expansion_motor3
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.integrated_imu
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.motor0
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.motor1
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.motor2
-import org.firstinspires.ftc.teamcode.utils.hardware.Devices.Companion.motor3
-import org.firstinspires.ftc.teamcode.utils.hardware.Logging
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.sin
+import org.firstinspires.ftc.teamcode.internals.MecanumDriver
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 
 /**
 * This is a feature that allows for a mecanum robot to be powered by a gamepad.
