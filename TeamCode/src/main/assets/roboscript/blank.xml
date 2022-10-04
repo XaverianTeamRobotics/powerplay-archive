@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<roboscript>
-    <isTeleOp>0</isTeleOp>
+<?xml version="1.0"?>
+<roboscript id="roboscript">
+    <mode>auto</mode>
+    <!-- <mode>teleop</mode> -->
     <group>XML TEST</group>
     <name>Blank XML Test</name>
 
