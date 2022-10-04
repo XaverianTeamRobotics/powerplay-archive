@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DistanceSensor
-import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.GyroSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.LightSensor
@@ -16,9 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.GlobalGamepadAccess
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.GlobalMotorAccess
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMUGlobalAccess
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
@@ -60,7 +58,7 @@ class HardwareGetter {
          * Note this it returns just a generic request, so you check that it is not emulated before casting
          */
         @JvmStatic
-        fun makeGamepadRequest(name: String, gamepad: Gamepad?): ScriptParameters.Request{
+        fun makeGamepadRequest(name: String, gamepad: com.qualcomm.robotcore.hardware.Gamepad?): ScriptParameters.Request{
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     val req = EmulatedGamepadRequest(name)
@@ -317,7 +315,7 @@ class HardwareGetter {
          * Get ColorSensor from a previously initialized request
          */
         @JvmStatic
-        fun getColorSensorFromRequest(name: String): ColorSensorRequest.Sensors {
+        fun getColorSensorFromRequest(name: String): ColorSensors {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     throw NullPointerException("This is running in the emulator!")
@@ -724,13 +722,13 @@ class HardwareGetter {
 
         @JvmStatic
         fun initAllDevices() {
-            Devices.controller1 = GlobalGamepadAccess("gamepad1")
-            Devices.controller2 = GlobalGamepadAccess("gamepad2")
+            Devices.controller1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad1")
+            Devices.controller2 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad2")
 
-            Devices.motor0 = GlobalMotorAccess("motor0")
-            Devices.motor1 = GlobalMotorAccess("motor1")
-            Devices.motor2 = GlobalMotorAccess("motor2")
-            Devices.motor3 = GlobalMotorAccess("motor3")
+            Devices.motor0 = Motor("motor0")
+            Devices.motor1 = Motor("motor1")
+            Devices.motor2 = Motor("motor2")
+            Devices.motor3 = Motor("motor3")
         }
     }
 }
@@ -756,33 +754,34 @@ object InitializedDCDevices {
 
 class Devices {
     companion object {
-        @JvmStatic
-        lateinit var controller1: GlobalGamepadAccess
-        @JvmStatic
-        lateinit var controller2: GlobalGamepadAccess
 
         @JvmStatic
-        lateinit var motor0: GlobalMotorAccess
+        lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
         @JvmStatic
-        lateinit var motor1: GlobalMotorAccess
-        @JvmStatic
-        lateinit var motor2: GlobalMotorAccess
-        @JvmStatic
-        lateinit var motor3: GlobalMotorAccess
+        lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
 
         @JvmStatic
-        fun bind(button: GamepadRequestInput, gamepad: GlobalGamepadAccess, lambda: (Double) -> Unit) {
+        lateinit var motor0: Motor
+        @JvmStatic
+        lateinit var motor1: Motor
+        @JvmStatic
+        lateinit var motor2: Motor
+        @JvmStatic
+        lateinit var motor3: Motor
+
+        @JvmStatic
+        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
             HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
         }
 
         @JvmStatic
-        lateinit var expansion_motor0: GlobalMotorAccess
+        lateinit var expansion_motor0: Motor
         @JvmStatic
-        lateinit var expansion_motor1: GlobalMotorAccess
+        lateinit var expansion_motor1: Motor
         @JvmStatic
-        lateinit var expansion_motor2: GlobalMotorAccess
+        lateinit var expansion_motor2: Motor
         @JvmStatic
-        lateinit var expansion_motor3: GlobalMotorAccess
+        lateinit var expansion_motor3: Motor
 
         /**
          * Initializes all motors on the expansion hub. Required to use their GlobalMotorAccess objects
@@ -794,12 +793,11 @@ class Devices {
          */
         @JvmStatic
         fun initializeExpansionHubMotors() {
-            expansion_motor0 = GlobalMotorAccess("motor0e")
-            expansion_motor1 = GlobalMotorAccess("motor1e")
-            expansion_motor2 = GlobalMotorAccess("motor2e")
-            expansion_motor3 = GlobalMotorAccess("motor3e")
+            expansion_motor0 = Motor("motor0e")
+            expansion_motor1 = Motor("motor1e")
+            expansion_motor2 = Motor("motor2e")
+            expansion_motor3 = Motor("motor3e")
         }
-
         @JvmStatic
         lateinit var integrated_imu: IMUGlobalAccess
 
@@ -817,8 +815,8 @@ class Devices {
     }
 }
 
-class GamepadBinding(val button: GamepadRequestInput, val gamepad: GlobalGamepadAccess, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
+class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
     override fun run(p0: ScriptParameters?) {
-        action(gamepad.gamepadRequest.issueRequest(button) as Double)
+        action(gamepad.request.issueRequest(button) as Double)
     }
 }

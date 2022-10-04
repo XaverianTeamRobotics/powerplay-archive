@@ -4,9 +4,15 @@ import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.internals.hardware.data.GamepadRequestInput
 
-class GlobalGamepadAccess(var name: String) {
-    var gamepadRequest: ScriptParameters.Request = HardwareGetter.jloopingRunner!!.
-    scriptParametersGlobal.getRequest(name) as ScriptParameters.Request
+/**
+ * A gamepad is simply a controller that a human uses to control the robot.
+ */
+class Gamepad(var name: String) {
+
+    /**
+     * The jlooping request managing the underlying hardware.
+     */
+    val request: ScriptParameters.Request = HardwareGetter.jloopingRunner!!.scriptParametersGlobal.getRequest(name) as ScriptParameters.Request
 
     val leftStickX: Double
         get() {
