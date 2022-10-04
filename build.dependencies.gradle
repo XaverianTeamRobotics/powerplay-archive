@@ -23,6 +23,7 @@ dependencies {
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation 'com.michaell:jlooping:2.0.1'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
 
     testImplementation 'junit:junit:4.13.2'
 }
