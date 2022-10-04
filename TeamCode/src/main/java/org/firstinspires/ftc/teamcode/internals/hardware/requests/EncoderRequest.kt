@@ -15,6 +15,7 @@ class EncoderRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.
         if(!InitializedDCDevices.has(name)) {
             encoder.resetDeviceConfigurationForOpMode()
             encoder.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            encoder.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
             encoder.power = 0.0
             offset = encoder.currentPosition
             InitializedDCDevices.add(name)
