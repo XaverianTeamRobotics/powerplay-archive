@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils.hardware.requests
 import com.michaell.looping.ScriptParameters
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.utils.hardware.InitializedDCDevices
 import org.firstinspires.ftc.teamcode.utils.hardware.data.MotorOperation
 import org.firstinspires.ftc.teamcode.utils.hardware.data.StandardMotorParameters
@@ -26,13 +27,13 @@ open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParamete
                 if(motor.mode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
                     motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
                 }
-                motor.power = input.value
+                motor.power = Range.clip(input.value, -100.0, 100.0)
             }
             MotorOperation.ENCODER_POWER -> {
                 if(motor.mode != DcMotor.RunMode.RUN_USING_ENCODER) {
                     motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
                 }
-                motor.power = input.value
+                motor.power = Range.clip(input.value, -100.0, 100.0)
             }
         }
         return 0
