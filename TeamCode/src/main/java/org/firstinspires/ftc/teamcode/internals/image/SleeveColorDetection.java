@@ -38,8 +38,8 @@ public class SleeveColorDetection extends OpenCvPipeline {
 
 
         // Convert to grayscale
-        Mat grayScale = new Mat();
-        cvtColor(processedMat, grayScale, Imgproc.COLOR_HSV2RGB); // There is no HSV to grayscale conversion, so we must convert to RGB first
+        Mat grayScale = processedMat.clone();
+        cvtColor(grayScale, grayScale, Imgproc.COLOR_HSV2RGB); // There is no HSV to grayscale conversion, so we must convert to RGB first
         cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
 
         // Blur both the gray and color images to reduce noise
@@ -47,12 +47,21 @@ public class SleeveColorDetection extends OpenCvPipeline {
         GaussianBlur(grayScale, grayScale, blurSize, 0);
         GaussianBlur(processedMat, processedMat, blurSize, 0);
 
-        // Remove the background from the gray image and just get the cone to use as a mask
-        inRange(grayScale, new Scalar(ImageProcessingConstants.GRAY_MIN), new Scalar(ImageProcessingConstants.GRAY_MAX), grayScale);
+        // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
+        inRange(
+            grayScale,
+            new Scalar(ImageProcessingConstants.GRAY_MIN),
+            new Scalar(ImageProcessingConstants.GRAY_MAX),
+            grayScale
+        );
         // Set the GRAY_MIN and GRAY_MAX values to 0 and 255, respectively, to disable the feature
+        cvtColor(grayScale, grayScale, COLOR_GRAY2RGB);
+        cvtColor(processedMat, processedMat, COLOR_HSV2RGB);
 
         // Use the grayscale image with the background removed to get rid of the background in the color image
         bitwise_and(processedMat, grayScale, processedMat);
+
+        cvtColor(processedMat, processedMat, COLOR_RGB2HSV);
 
         // Find the average colors of the original image
         double redAverage = processForColor(processedMat, redLowHSV, redHighHSV, "red");
