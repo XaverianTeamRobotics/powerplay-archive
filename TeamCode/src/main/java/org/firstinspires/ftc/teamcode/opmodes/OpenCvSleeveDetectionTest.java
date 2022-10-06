@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
@@ -14,13 +15,17 @@ import static org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.g
 
 public class OpenCvSleeveDetectionTest extends OperationMode implements TeleOperation {
 
+    public SleeveColorDetection detector;
+
     @Override
     public void construct() {
         WebcamName webcamName = getHardwareMap().get(WebcamName.class, "camera0");
         int cameraMonitorViewId = getHardwareMap().appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 
-        camera.setPipeline(new SleeveColorDetection());
+        detector = new SleeveColorDetection();
+
+        camera.setPipeline(detector);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -43,6 +48,7 @@ public class OpenCvSleeveDetectionTest extends OperationMode implements TeleOper
 
     @Override
     public void run() {
-
+        Logging.logData("Sleeve Color ID", detector.getDetection());
+        Logging.updateLog();
     }
 }

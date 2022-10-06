@@ -105,11 +105,11 @@ public class SleeveColorDetection extends OpenCvPipeline {
         if (largestVal == redAverage) {
             Logging.logData("Sleeve Color", "Red");
             detection = 1;
-        } else if (largestVal == blueAverage) {
-            Logging.logData("Sleeve Color", "Blue");
-            detection = 2;
         } else if (largestVal == greenAverage) {
             Logging.logData("Sleeve Color", "Green");
+            detection = 2;
+        } else if (largestVal == blueAverage) {
+            Logging.logData("Sleeve Color", "Blue");
             detection = 3;
         } else {
             Logging.logData("Sleeve Color", "Unknown");
