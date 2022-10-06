@@ -35,6 +35,9 @@ public class ImageProcessingConstants {
 
     public static double GAUSSIAN_BLUR_SIZE = 15;
     public static double GRAYSCALE_BLOB_MIN_AREA = 100;
+    public static double GRAYSCALE_BLOB_MAX_AREA = 2000;
 
     public static boolean RETURN_GRAYSCALE = false;
+
+    public static int MAX_BACKGROUND_FILTER_ADJUSTMENT_ITERATIONS = 10;
 }
