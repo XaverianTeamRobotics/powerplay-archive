@@ -14,23 +14,26 @@ import static org.opencv.features2d.Features2d.drawKeypoints;
 import static org.opencv.imgproc.Imgproc.*;
 
 public class SleeveColorDetection extends OpenCvPipeline {
-    Mat processedMat = new Mat();
     private volatile int detection = 0;
 
     @Override
     public Mat processFrame(Mat input) {
-
         double cropRatio = ImageProcessingConstants.CROP_RATIO;
 
         // Crop part of the image to focus the center of the image
-        Rect roi = new Rect(    new Point(processedMat.width()*cropRatio, processedMat.height()*cropRatio),
-                                new Point(processedMat.width()*(1-cropRatio), processedMat.height()*(1-cropRatio)));
+        Rect roi = new Rect(    new Point(input.width()*cropRatio, input.height()*cropRatio),
+                                new Point(input.width()*(1-cropRatio), input.height()*(1-cropRatio)));
 
-        processedMat = input.submat(roi);
+        Mat processedMat = input.submat(roi);
 
         // Blur both the image to reduce noise
         Size blurSize = new Size(ImageProcessingConstants.GAUSSIAN_BLUR_SIZE, ImageProcessingConstants.GAUSSIAN_BLUR_SIZE);
         GaussianBlur(processedMat, processedMat, blurSize, 0);
+
+        // Convert to grayscale
+        Mat grayScale = processedMat.clone();
+        cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
+
         cvtColor(processedMat, processedMat, Imgproc.COLOR_RGB2HSV);
 
         // Define the colors that we want to detect
@@ -43,12 +46,6 @@ public class SleeveColorDetection extends OpenCvPipeline {
         Scalar greenLowHSV = new Scalar(ImageProcessingConstants.GREEN_H_MIN, ImageProcessingConstants.GREEN_S_MIN, ImageProcessingConstants.GREEN_V_MIN);
         Scalar greenHighHSV = new Scalar(ImageProcessingConstants.GREEN_H_MAX, ImageProcessingConstants.GREEN_S_MAX, ImageProcessingConstants.GREEN_V_MAX);
 
-        // Convert to grayscale
-        Mat grayScale = processedMat.clone();
-        cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
-
-        autoCalibrateBackgroundFilter(grayScale);
-
         // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
         inRange(
             grayScale,
@@ -57,36 +54,6 @@ public class SleeveColorDetection extends OpenCvPipeline {
             grayScale
         );
         // Set the GRAY_MIN and GRAY_MAX values to 0 and 255, respectively, to disable the feature
-
-        // Run blob detection on the grayscale image to detect the cone
-        MatOfKeyPoint keypoints = new MatOfKeyPoint();
-        SimpleBlobDetector_Params grayscaleBlobParameters = new SimpleBlobDetector_Params();
-        grayscaleBlobParameters.set_minArea((float) ImageProcessingConstants.GRAYSCALE_BLOB_MIN_AREA);
-        grayscaleBlobParameters.set_maxArea((float) ImageProcessingConstants.GRAYSCALE_BLOB_MAX_AREA);
-        SimpleBlobDetector detector = SimpleBlobDetector.create();
-        detector.detect(grayScale, keypoints);
-
-        // Mark the detections in the color image
-        drawKeypoints(processedMat, keypoints, processedMat, new Scalar(255, 255, 255), 0);
-
-        // On the grayscale image, if there is only one blob, then we have detected the cone
-        // So, make only the area around the cone part of the mask
-        KeyPoint[] keypointsArray = keypoints.toArray();
-        Logging.logData("Number of blobs found in gray mask", keypointsArray.length);
-        if (keypointsArray.length == 1) {
-            Logging.logText("Only 1 blob found... adding to mask");
-            for (KeyPoint keypoint : keypointsArray) {
-                // Apply blob to gray mask
-                Mat newMask = new Mat(grayScale.size(), CvType.CV_8UC1, new Scalar(0));
-                circle(newMask, new Point(keypoint.pt.x, keypoint.pt.y), (int) keypoint.size, new Scalar(255), -1);
-                Logging.logData("Blob size", keypoint.size);
-                bitwise_and(grayScale, newMask, grayScale);
-            }
-        } else {
-            Logging.logText("More than 1 blob found... mask will not be filtered using blob detection");
-        }
-
-        Logging.updateLog();
 
         // Use the grayscale image with the background removed to get rid of the background in the color image
         cvtColor(grayScale, grayScale, COLOR_GRAY2RGB);
@@ -119,8 +86,10 @@ public class SleeveColorDetection extends OpenCvPipeline {
         Logging.updateLog();
 
         if (ImageProcessingConstants.RETURN_GRAYSCALE) {
+            processedMat.release();
             return grayScale; // Useful for tuning the background filtering
         } else {
+            grayScale.release();
             cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
             return processedMat; // Useful for previewing the final output
         }
@@ -159,6 +128,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
      * This method will automatically change the constants in the ImageProcessingConstants class. No value will be returned
      * @param input The grayscale image to process
      */
+    @Deprecated
     public void autoCalibrateBackgroundFilter(Mat input) {
         Mat mat = input.clone();
         int iterations = 0;
@@ -171,18 +141,22 @@ public class SleeveColorDetection extends OpenCvPipeline {
             detector.detect(mat, keypoints);
 
             KeyPoint[] keypointsArray = keypoints.toArray();
-            Logging.logData("Number of blobs found in gray mask", keypointsArray.length);
-            if (keypointsArray.length == 1) {
-                return;
-            } else if (keypointsArray.length > 1) {
-                ImageProcessingConstants.GRAY_MIN += 5;
-                ImageProcessingConstants.GRAY_MAX -= 5;
-            } else {
-                ImageProcessingConstants.GRAY_MIN -= 5;
-                ImageProcessingConstants.GRAY_MAX += 5;
+            if (keypointsArray != null) {
+                if (keypointsArray.length == 1) {
+                    return;
+                } else if (keypointsArray.length > 1) {
+                    ImageProcessingConstants.GRAY_MIN += 5;
+                    ImageProcessingConstants.GRAY_MAX -= 5;
+                } else {
+                    ImageProcessingConstants.GRAY_MIN -= 5;
+                    ImageProcessingConstants.GRAY_MAX += 5;
+                }
+                Logging.updateLog();
             }
-            Logging.updateLog();
+            iterations++;
         }
+
+        mat.release();
     }
 
     public int getDetection() {

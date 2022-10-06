@@ -28,14 +28,10 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     }
 
     override fun run(scriptParameters: ScriptParameters) {
-        //val y = gamepad1.left_stick_y.toDouble()
-        //val x = gamepad1.left_stick_x.toDouble()
-        //val rx = gamepad1.right_stick_x.toDouble()
-        var rot: Double?
-        if (!isRotInverted) {
-            rot = controller1.leftStickX
+        val rot: Double = if (!isRotInverted) {
+            controller1.leftStickX
         } else {
-            rot = -controller1.leftStickX
+            -controller1.leftStickX
         }
         val x: Double = controller1.rightStickX
         val y: Double = -controller1.rightStickY

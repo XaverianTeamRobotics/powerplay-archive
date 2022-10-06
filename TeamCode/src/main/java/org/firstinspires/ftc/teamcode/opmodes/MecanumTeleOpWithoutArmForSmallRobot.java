@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
-@TeleOp(name = "Mecanun-A:F-S:S")
 public class MecanumTeleOpWithoutArmForSmallRobot extends OperationMode implements TeleOperation {
 
     @Override

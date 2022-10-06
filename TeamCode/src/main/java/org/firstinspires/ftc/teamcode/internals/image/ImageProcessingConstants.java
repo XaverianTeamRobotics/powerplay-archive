@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ImageProcessingConstants {
-    public static int GRAY_MIN = 50;
+    public static int GRAY_MIN = 45;
     public static int GRAY_MAX = 100;
 
     public static double CROP_RATIO = 0;
