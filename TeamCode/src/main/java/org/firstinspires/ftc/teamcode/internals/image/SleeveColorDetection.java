@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.internals.image;
 import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
 import org.opencv.core.*;
 import org.opencv.features2d.SimpleBlobDetector;
+import org.opencv.features2d.SimpleBlobDetector_Params;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.lang.reflect.Array;
+
 import static org.opencv.core.Core.*;
+import static org.opencv.features2d.Features2d.drawKeypoints;
 import static org.opencv.imgproc.Imgproc.*;
 
 public class SleeveColorDetection extends OpenCvPipeline {
@@ -47,6 +51,30 @@ public class SleeveColorDetection extends OpenCvPipeline {
         GaussianBlur(grayScale, grayScale, blurSize, 0);
         GaussianBlur(processedMat, processedMat, blurSize, 0);
 
+        // Run blob detection on the grayscale image to detect the cone
+        MatOfKeyPoint keypoints = new MatOfKeyPoint();
+        SimpleBlobDetector_Params grayscaleBlobParameters = new SimpleBlobDetector_Params();
+        grayscaleBlobParameters.set_minArea((float) ImageProcessingConstants.GRAYSCALE_BLOB_MIN_AREA);
+        SimpleBlobDetector detector = SimpleBlobDetector.create();
+        detector.detect(grayScale, keypoints);
+
+        // Mark the detections in the color image
+        drawKeypoints(processedMat, keypoints, processedMat, new Scalar(255, 255, 255), 0);
+
+        // On the grayscale image, if there is only one blob, then we have detected the cone
+        // So, make only the area around the cone part of the mask
+        KeyPoint[] keypointsArray = keypoints.toArray();
+        Logging.logData("Number of blobs", keypointsArray.length);
+        if (keypointsArray.length == 1) {
+            Logging.logText("Only 1 blob found... adding to mask");
+            for (KeyPoint keypoint : keypointsArray) {
+                // Apply blob to a new mask
+                Mat newMask = new Mat(grayScale.size(), CvType.CV_8UC1, new Scalar(0));
+                circle(newMask, new Point(keypoint.pt.x, keypoint.pt.y), (int) keypoint.size, new Scalar(255), -1);
+                grayScale = newMask;
+            }
+        }
+
         // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
         inRange(
             grayScale,
@@ -86,6 +114,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
         if (ImageProcessingConstants.RETURN_GRAYSCALE) {
             return grayScale; // Useful for tuning the background filtering
         } else {
+            cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
             return processedMat; // Useful for previewing the final output
         }
     }
