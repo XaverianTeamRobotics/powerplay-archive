@@ -175,11 +175,11 @@ public class SleeveColorDetection extends OpenCvPipeline {
             if (keypointsArray.length == 1) {
                 return;
             } else if (keypointsArray.length > 1) {
-                ImageProcessingConstants.GRAY_MIN += 1;
-                ImageProcessingConstants.GRAY_MAX -= 1;
+                ImageProcessingConstants.GRAY_MIN += 5;
+                ImageProcessingConstants.GRAY_MAX -= 5;
             } else {
-                ImageProcessingConstants.GRAY_MIN -= 1;
-                ImageProcessingConstants.GRAY_MAX += 1;
+                ImageProcessingConstants.GRAY_MIN -= 5;
+                ImageProcessingConstants.GRAY_MAX += 5;
             }
             Logging.updateLog();
         }
