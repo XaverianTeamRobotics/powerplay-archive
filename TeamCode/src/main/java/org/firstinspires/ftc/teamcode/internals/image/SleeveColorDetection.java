@@ -17,7 +17,13 @@ public class SleeveColorDetection extends OpenCvPipeline {
     private volatile int detection = 0;
 
     @Override
+    public void init(Mat mat) {}
+
+    @Override
     public Mat processFrame(Mat input) {
+        Logging.logData("Input Height", input.height());
+        Logging.logData("Input Width", input.width());
+
         double cropRatio = ImageProcessingConstants.CROP_RATIO;
 
         // Crop part of the image to focus the center of the image
@@ -45,6 +51,8 @@ public class SleeveColorDetection extends OpenCvPipeline {
 
         Scalar greenLowHSV = new Scalar(ImageProcessingConstants.GREEN_H_MIN, ImageProcessingConstants.GREEN_S_MIN, ImageProcessingConstants.GREEN_V_MIN);
         Scalar greenHighHSV = new Scalar(ImageProcessingConstants.GREEN_H_MAX, ImageProcessingConstants.GREEN_S_MAX, ImageProcessingConstants.GREEN_V_MAX);
+
+        autoCalibrateBackgroundFilter(grayScale);
 
         // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
         inRange(
@@ -128,11 +136,18 @@ public class SleeveColorDetection extends OpenCvPipeline {
      * This method will automatically change the constants in the ImageProcessingConstants class. No value will be returned
      * @param input The grayscale image to process
      */
-    @Deprecated
     public void autoCalibrateBackgroundFilter(Mat input) {
-        Mat mat = input.clone();
         int iterations = 0;
         while (iterations <= ImageProcessingConstants.MAX_BACKGROUND_FILTER_ADJUSTMENT_ITERATIONS) {
+            iterations++;
+            Mat mat = input.clone();
+            // Remove the background from the gray image
+            inRange(
+                mat,
+                new Scalar(ImageProcessingConstants.GRAY_MIN),
+                new Scalar(ImageProcessingConstants.GRAY_MAX),
+                mat
+            );
             MatOfKeyPoint keypoints = new MatOfKeyPoint();
             SimpleBlobDetector_Params grayscaleBlobParameters = new SimpleBlobDetector_Params();
             grayscaleBlobParameters.set_minArea((float) ImageProcessingConstants.GRAYSCALE_BLOB_MIN_AREA);
@@ -151,12 +166,13 @@ public class SleeveColorDetection extends OpenCvPipeline {
                     ImageProcessingConstants.GRAY_MIN -= 5;
                     ImageProcessingConstants.GRAY_MAX += 5;
                 }
+                Logging.logData("GRAY_MIN", ImageProcessingConstants.GRAY_MIN);
+                Logging.logData("GRAY_MAX", ImageProcessingConstants.GRAY_MAX);
                 Logging.updateLog();
             }
-            iterations++;
+            mat.release();
+            if (iterations >= ImageProcessingConstants.MAX_BACKGROUND_FILTER_ADJUSTMENT_ITERATIONS) return;
         }
-
-        mat.release();
     }
 
     public int getDetection() {
