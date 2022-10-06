@@ -7,7 +7,7 @@ public class ImageProcessingConstants {
     public static int GRAY_MIN = 45;
     public static int GRAY_MAX = 100;
 
-    public static double CROP_RATIO = 0;
+    public static double CROP_RATIO = 0.1;
 
     public static double RED_H_MIN = 0;
     public static double RED_S_MIN = 53;
