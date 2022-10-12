@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
