@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.image;
 
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.opencv.core.*;
 import org.opencv.features2d.SimpleBlobDetector;
 import org.opencv.features2d.SimpleBlobDetector_Params;

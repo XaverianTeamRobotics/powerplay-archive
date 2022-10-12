@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.internals.misc
+package org.firstinspires.ftc.teamcode.internals.telemetry
 
 import com.michaell.looping.ScriptTemplate
 import com.michaell.looping.builtin.ConvertToScript
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging
 
 /**
  * Create a menu in the telemetry interface (using the Logging class) to allow for configuration during a match
