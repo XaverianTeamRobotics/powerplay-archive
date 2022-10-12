@@ -29,9 +29,6 @@ import java.util.Objects;
  */
 public abstract class OperationMode extends LinearOpMode {
 
-    private double timestamp = 0;
-    private HashMap<String, Double> otherTimestamps = new HashMap<>();
-
     public ScriptParameters environment;
 
     @Override
@@ -77,59 +74,6 @@ public abstract class OperationMode extends LinearOpMode {
 
         // tell the app to stop this opmode
         requestOpModeStop();
-    }
-
-    /**
-     * Updates the timestamp stored in the {@link OperationMode} to the current time.
-     */
-    public void updateDefaultTimestamp() {
-        timestamp = time;
-    }
-
-    /**
-     * Updates the timestamp stored in the {@link OperationMode} to a specific time.
-     * @param time The time to set
-     */
-    public void updateDefaultTimestamp(double time) {
-        timestamp = time;
-    }
-
-    /**
-     * Gets the most recent timestamp set by {@link #updateDefaultTimestamp()} or {@link #updateDefaultTimestamp(double)}, or 0 if the timestamp has never been set.
-     * @return The most recent timestamp
-     */
-    public double getDefaultTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Updates a named timestamp to the current time. If a timestamp does not exist with this name, the timestamp is created.
-     * @param name The name of the timestamp
-     */
-    public void updateNamedTimestamp(String name) {
-        otherTimestamps.put(name, time);
-    }
-
-    /**
-     * Updates a named timestamp to a specific time. If a timestamp does not exist with this name, the timestamp is created.
-     * @param name The name of the timestamp
-     * @param time The time to set
-     */
-    public void updateNamedTimestamp(String name, double time) {
-        otherTimestamps.put(name, time);
-    }
-
-    /**
-     * Gets the most recent timestamp with a certain name, or 0 if the timestamp has never been set.
-     * @param name The name of the timestamp
-     * @return The most recent timestamp with that name
-     */
-    public Double getNamedTimestamp(String name) {
-        Double timestamp = otherTimestamps.get(name);
-        if(timestamp == null) {
-            timestamp = 0D;
-        }
-        return timestamp;
     }
 
     /**
