@@ -8,11 +8,14 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An {@link OperationMode} represents a program the robot can run.
@@ -142,4 +145,14 @@ public abstract class OperationMode extends LinearOpMode {
     public void absolutelyNothing() {
         // do absolutely nothing
     }
+
+    /**
+     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
+     * @param feature The feature to register.
+     * @throws ScriptRunner.DuplicateScriptException Thrown when a script with the same name already exists. Features' names come from their class names.
+     */
+    public static void registerFeature(@NotNull Feature feature) throws ScriptRunner.DuplicateScriptException {
+        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+    }
+
 }
