@@ -1,9 +1,8 @@
 package com.xaverianteamrobotics.robottests.opmodes;
 
-import com.xaverianteamrobotics.robottests.EmulatedOpMode;
-import org.firstinspires.ftc.teamcode.hardware.emulated.EmulatedGamepadRequest;
+import com.xaverianteamrobotics.robottests.EmulatedOperationMode;
 
-public class SampleEmulatedOpMode extends EmulatedOpMode {
+public class SampleEmulatedOpMode extends EmulatedOperationMode {
     @Override
     public void construct() {
         System.out.println("EmulatedOpMode Constructed");

@@ -1,13 +1,10 @@
 package com.xaverianteamrobotics.robottests.opmodes;
 
-import com.xaverianteamrobotics.robottests.EmulatedOpMode;
+import com.xaverianteamrobotics.robottests.EmulatedOperationMode;
 
-import org.firstinspires.ftc.teamcode.hardware.Devices;
-import org.firstinspires.ftc.teamcode.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.hardware.physical.MotorOperation;
-import org.firstinspires.ftc.teamcode.hardware.physical.StandardMotorParameters;
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 
-public class EmulatedMotorTestOpMode extends EmulatedOpMode {
+public class EmulatedMotorTestOpMode extends EmulatedOperationMode {
     @Override
     public void construct() {
         setTimeUntillAbort(5);
