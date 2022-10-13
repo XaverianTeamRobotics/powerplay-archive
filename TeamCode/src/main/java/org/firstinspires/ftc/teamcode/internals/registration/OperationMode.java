@@ -7,12 +7,13 @@ import com.michaell.looping.builtin.ConvertToScript;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An {@link OperationMode} represents a program the robot can run.
@@ -25,9 +26,6 @@ import java.util.List;
  * @see OperationModeRegistrar
  */
 public abstract class OperationMode extends LinearOpMode {
-
-    private double timestamp = 0;
-    private HashMap<String, Double> otherTimestamps = new HashMap<>();
 
     public ScriptParameters environment;
 
@@ -77,59 +75,6 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Updates the timestamp stored in the {@link OperationMode} to the current time.
-     */
-    public void updateDefaultTimestamp() {
-        timestamp = time;
-    }
-
-    /**
-     * Updates the timestamp stored in the {@link OperationMode} to a specific time.
-     * @param time The time to set
-     */
-    public void updateDefaultTimestamp(double time) {
-        timestamp = time;
-    }
-
-    /**
-     * Gets the most recent timestamp set by {@link #updateDefaultTimestamp()} or {@link #updateDefaultTimestamp(double)}, or 0 if the timestamp has never been set.
-     * @return The most recent timestamp
-     */
-    public double getDefaultTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Updates a named timestamp to the current time. If a timestamp does not exist with this name, the timestamp is created.
-     * @param name The name of the timestamp
-     */
-    public void updateNamedTimestamp(String name) {
-        otherTimestamps.put(name, time);
-    }
-
-    /**
-     * Updates a named timestamp to a specific time. If a timestamp does not exist with this name, the timestamp is created.
-     * @param name The name of the timestamp
-     * @param time The time to set
-     */
-    public void updateNamedTimestamp(String name, double time) {
-        otherTimestamps.put(name, time);
-    }
-
-    /**
-     * Gets the most recent timestamp with a certain name, or 0 if the timestamp has never been set.
-     * @param name The name of the timestamp
-     * @return The most recent timestamp with that name
-     */
-    public Double getNamedTimestamp(String name) {
-        Double timestamp = otherTimestamps.get(name);
-        if(timestamp == null) {
-            timestamp = 0D;
-        }
-        return timestamp;
-    }
-
-    /**
      * The method to be called at the start of the {@link OperationMode}'s operation, after the INIT button is pressed but before the PLAY button is pressed. This will run once. You do not need to call {@link #waitForStart()}, the {@link OperationMode} will do this automatically after this method is finished.
      */
     public abstract void construct();
@@ -142,4 +87,14 @@ public abstract class OperationMode extends LinearOpMode {
     public void absolutelyNothing() {
         // do absolutely nothing
     }
+
+    /**
+     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
+     * @param feature The feature to register.
+     * @throws ScriptRunner.DuplicateScriptException Thrown when a script with the same name already exists. Features' names come from their class names.
+     */
+    public static void registerFeature(@NotNull Feature feature) throws ScriptRunner.DuplicateScriptException {
+        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+    }
+
 }
