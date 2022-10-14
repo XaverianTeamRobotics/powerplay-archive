@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import org.firstinspires.ftc.teamcode.internals.misc.MenuItem;
-import org.firstinspires.ftc.teamcode.internals.misc.MenuItemType;
-import org.firstinspires.ftc.teamcode.internals.misc.TelemetryMenu;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItem;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItemType;
+import org.firstinspires.ftc.teamcode.internals.telemetry.TelemetryMenu;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
