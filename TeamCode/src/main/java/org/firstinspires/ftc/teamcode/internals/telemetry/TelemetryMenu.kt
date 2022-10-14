@@ -4,7 +4,7 @@ import com.michaell.looping.ScriptTemplate
 import com.michaell.looping.builtin.ConvertToScript
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
 import java.lang.System.lineSeparator
 import kotlin.math.min
 
