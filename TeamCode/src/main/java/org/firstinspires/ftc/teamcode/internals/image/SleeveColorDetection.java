@@ -22,20 +22,22 @@ public class SleeveColorDetection extends OpenCvPipeline {
         //Logging.logData("Input Height", input.height());
         //Logging.logData("Input Width", input.width());
 
+        Mat processedMat, grayScale;
+
         double cropRatio = CROP_RATIO;
 
         // Crop part of the image to focus the center of the image
         Rect roi = new Rect(    new Point(input.width()*cropRatio, input.height()*cropRatio),
                                 new Point(input.width()*(1-cropRatio), input.height()*(1-cropRatio)));
 
-        Mat processedMat = input.submat(roi);
+        processedMat = input.submat(roi).clone();
 
         // Blur both the image to reduce noise
         Size blurSize = new Size(GAUSSIAN_BLUR_SIZE, GAUSSIAN_BLUR_SIZE);
         GaussianBlur(processedMat, processedMat, blurSize, 0);
 
         // Convert to grayscale
-        Mat grayScale = processedMat.clone();
+        grayScale = processedMat.clone();
         cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
 
         cvtColor(processedMat, processedMat, Imgproc.COLOR_RGB2HSV);
@@ -91,18 +93,16 @@ public class SleeveColorDetection extends OpenCvPipeline {
 
         Logging.updateLog();
 
-        if (RETURN_GRAYSCALE) {
-            processedMat.release();
-            return grayScale; // Useful for tuning the background filtering
-        } else {
-            grayScale.release();
-            cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
-            for (KeyPoint blob : grayscaleBlobs.toList()) {
-                // Generate a circle given the points and size of the blob
-                circle(processedMat, new Point(blob.pt.x, blob.pt.y), (int) blob.size/2, new Scalar(0, 255, 0), 3);
-            }
-            return processedMat; // Useful for previewing the final output
+        grayScale.release();
+
+        cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
+        for (KeyPoint blob : grayscaleBlobs.toList()) {
+            // Generate a circle given the points and size of the blob
+            circle(processedMat, new Point(blob.pt.x, blob.pt.y), (int) blob.size/2, new Scalar(0, 255, 0), 3);
         }
+        input = processedMat.clone();
+        processedMat.release();
+        return input; // Useful for previewing the final output
     }
 
     /**
@@ -125,6 +125,8 @@ public class SleeveColorDetection extends OpenCvPipeline {
         // Log all values used in calculation for verification purposes
         Logging.logData(name+" - Average", averageValue * 100 + "%");
         Logging.updateLog();
+
+        mat.release();
 
         return averageValue;
     }
@@ -173,7 +175,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
             grayscaleBlobParameters.set_filterByInertia(false);
             grayscaleBlobParameters.set_filterByColor(true);
 
-            SimpleBlobDetector detector = SimpleBlobDetector.create();
+            SimpleBlobDetector detector = SimpleBlobDetector.create(grayscaleBlobParameters);
             detector.detect(mat, keypoints);
 
             // If there is only one blob, we have found the correct values
