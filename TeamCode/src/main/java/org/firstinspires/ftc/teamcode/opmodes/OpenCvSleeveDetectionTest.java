@@ -57,6 +57,9 @@ public class OpenCvSleeveDetectionTest extends OperationMode implements TeleOper
         // Code here helps determine the effectiveness of the brightness adjustment feature
         Logging.logData("GRAY_MIN", ImageProcessingConstants.GRAY_MIN);
         Logging.logData("GRAY_MAX", ImageProcessingConstants.GRAY_MAX);
+
+        Logging.logData("GRAYSCALE_BLOB_MAX_AREA", ImageProcessingConstants.GRAYSCALE_BLOB_MAX_AREA);
+        Logging.logData("GRAYSCALE_BLOB_MIN_AREA", ImageProcessingConstants.GRAYSCALE_BLOB_MIN_AREA);
         Logging.updateLog();
     }
 }
