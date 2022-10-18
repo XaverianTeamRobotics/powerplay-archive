@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
+import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItem;
 import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItemType;
 import org.firstinspires.ftc.teamcode.internals.telemetry.TelemetryMenu;
-import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
-import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
 import java.util.ArrayList;
 
@@ -33,6 +33,6 @@ public class TelemetryMenuTest extends OperationMode implements TeleOperation {
 
     @Override
     public void run() {
-        menu.setAnnotation("Boolean inside the other menu" + ((boolean) menu.getMenuItem("Boolean inside other menu").getValue()));
+        menu.setAnnotation("Boolean inside the other menu " + ((boolean) menu.getMenuItem("Boolean inside other menu").getValue()));
     }
 }

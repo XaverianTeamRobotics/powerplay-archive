@@ -29,7 +29,7 @@ class Logging {
                 telemetry.addData(key, value)
                 dashboardPacket.addLine(" ")
                 dashboardPacket.put(key, value)
-                dashboardPacket.put(key+" (key)", "$key:")
+                dashboardPacket.put("$key (key)", "$key:")
             }
         }
 
