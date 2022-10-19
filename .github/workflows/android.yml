@@ -45,7 +45,7 @@ jobs:
         
       - name: Add apk to FtcRobotController/HelpPage/apk
         run: |
-          cp -f artifact/TeamCode-debug.apk FtcRobotController/HelpPage/apk/TeamCode-debug.apk
+          cp -f artifact/TeamCode-debug.apk FtcRobotController/HelpPage/apk/
         
       - name: Commit & Push changes
         uses: actions-js/push@master
