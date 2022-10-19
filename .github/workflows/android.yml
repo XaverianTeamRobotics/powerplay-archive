@@ -42,3 +42,12 @@ jobs:
     
       - name: Display structure of downloaded files
         run: ls -laR artifact
+        
+      - name: Add apk to FtcRobotController/HelpPage/apk
+        run: |
+          cp -f artifact/TeamCode-debug.apk FtcRobotController/HelpPage/apk/TeamCode-debug.apk
+        
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
