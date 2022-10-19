@@ -41,5 +41,4 @@ jobs:
           path: artifact
     
       - name: Display structure of downloaded files
-        run: ls -laR
-        working-directory: ${{steps.download.outputs.download-path}}
+        run: ls -laR artifact
