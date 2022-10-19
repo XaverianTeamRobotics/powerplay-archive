@@ -35,7 +35,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - uses: actions/download-artifact@v3
         name: Create local changes
