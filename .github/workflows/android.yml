@@ -38,15 +38,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: apk
-          path: artifact
+          path: HelpPage/apk/bin
     
       - name: Display structure of downloaded files
-        run: ls -laR artifact
-        
-      - name: Add apk to FtcRobotController/HelpPage/apk
-        run: |
-          ls
-          cp -f artifact/TeamCode-debug.apk FtcRobotController/HelpPage/apk/
+        run: ls -laR HelpPage/apk/bin
         
       - name: Commit & Push changes
         uses: actions-js/push@master
