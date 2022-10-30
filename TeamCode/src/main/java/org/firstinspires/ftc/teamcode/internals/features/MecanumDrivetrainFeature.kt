@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.internals.features
 
-import com.michaell.looping.ScriptParameters
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
-import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 
 /**
 * This is a feature that allows for a mecanum robot to be powered by a gamepad.
@@ -25,12 +24,12 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
 
     override fun loop() {
         val rot: Double = if (!isRotInverted) {
-            controller1.leftStickX
+            controller1.rightStickX
         } else {
-            -controller1.leftStickX
+            -controller1.rightStickX
         }
-        val x: Double = controller1.rightStickX
-        val y: Double = -controller1.rightStickY
+        val x: Double = controller1.leftStickX
+        val y: Double = -controller1.leftStickY
 
         mecanumDriver!!.runMecanum(x, y, rot)
     }
