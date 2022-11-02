@@ -1,5 +1,7 @@
-package org.firstinspires.ftc.teamcode.internals.features
+package org.firstinspires.ftc.teamcode.features
 
+import org.firstinspires.ftc.teamcode.internals.features.Buildable
+import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
@@ -10,7 +12,8 @@ import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
  * @param useExpansionHub Whether or not to use the expansion hub to get the motors. Requires that the expansion hub motors be initialized before use
  * @param fieldCentric Whether or not to use field centric controls. The imu must be initialized prior to use.
  */
-class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(), Buildable {
+class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(),
+    Buildable {
 
     private var mecanumDriver: MecanumDriver? = null
 

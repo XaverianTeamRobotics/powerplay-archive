@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.michaell.looping.ScriptRunner;
-import org.firstinspires.ftc.teamcode.internals.features.Feature;
-import org.firstinspires.ftc.teamcode.internals.features.MecanumDrivetrainFeature;
+import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
