@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
 
-public class ArmMecanumBigRobot extends OperationMode implements TeleOperation {
+public class ArmMecanumDemo extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
