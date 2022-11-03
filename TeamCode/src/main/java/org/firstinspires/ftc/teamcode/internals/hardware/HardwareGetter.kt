@@ -4,6 +4,7 @@ import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
 import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.*
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
@@ -717,6 +718,7 @@ class HardwareGetter {
             Devices.controller1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad1")
             Devices.controller2 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad2")
         }
+
     }
 }
 
@@ -755,6 +757,15 @@ class Devices {
         lateinit var motor2: Motor
         @JvmStatic
         lateinit var motor3: Motor
+
+        @JvmStatic
+        lateinit var camera0: WebcamName
+        @JvmStatic
+        lateinit var camera1: WebcamName
+        @JvmStatic
+        lateinit var camera2: WebcamName
+        @JvmStatic
+        lateinit var camera3: WebcamName
 
         @JvmStatic
         fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
@@ -818,6 +829,39 @@ class Devices {
         fun initializeIntegratedIMU() {
             integrated_imu = IMU("imu")
         }
+
+        /**
+         * Initializes camera 0 as a WebcamName.
+         */
+        @JvmStatic
+        fun initializeCamera0() {
+            camera0 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera0")
+        }
+
+        /**
+         * Initializes camera 1 as a WebcamName.
+         */
+        @JvmStatic
+        fun initializeCamera1() {
+            camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
+        }
+
+        /**
+         * Initializes camera 2 as a WebcamName.
+         */
+        @JvmStatic
+        fun initializeCamera2() {
+            camera2 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera2")
+        }
+
+        /**
+         * Initializes camera 3 as a WebcamName.
+         */
+        @JvmStatic
+        fun initializeCamera3() {
+            camera3 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera3")
+        }
+
     }
 }
 
