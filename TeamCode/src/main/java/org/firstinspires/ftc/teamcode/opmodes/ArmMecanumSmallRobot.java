@@ -10,10 +10,11 @@ import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.*;
 
 
-public class MecanumTeleOpWithArmForSmallRobot extends OperationMode implements TeleOperation {
+public class ArmMecanumSmallRobot extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
+        Devices.initializeControlHubMotors();
         Devices.initializeExpansionHubMotors();
         MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, false, false, true);
 
