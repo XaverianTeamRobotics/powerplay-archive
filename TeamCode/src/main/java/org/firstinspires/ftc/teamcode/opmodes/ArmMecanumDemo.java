@@ -12,6 +12,7 @@ public class ArmMecanumDemo extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
+        Devices.initializeArmMotors();
         Devices.initializeExpansionHubMotors();
         MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, true);
         ArmFeature arm = new ArmFeature();

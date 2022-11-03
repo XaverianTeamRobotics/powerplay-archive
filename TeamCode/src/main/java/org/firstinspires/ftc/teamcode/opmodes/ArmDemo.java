@@ -9,7 +9,7 @@ public class ArmDemo extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-        Devices.initializeControlHubMotors();
+        Devices.initializeArmMotors();
         registerFeature(new ArmFeature());
     }
 

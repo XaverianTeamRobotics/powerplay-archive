@@ -3,24 +3,13 @@ package org.firstinspires.ftc.teamcode.internals.hardware
 import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
 import com.michaell.looping.ScriptTemplate
-import com.qualcomm.robotcore.hardware.AccelerationSensor
-import com.qualcomm.robotcore.hardware.AnalogInput
-import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DistanceSensor
-import com.qualcomm.robotcore.hardware.GyroSensor
-import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.LightSensor
-import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.hardware.TouchSensor
-import com.qualcomm.robotcore.hardware.VoltageSensor
+import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMUGlobalAccess
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
-import java.lang.IllegalArgumentException
 
 class HardwareGetter {
     companion object {
@@ -813,6 +802,11 @@ class Devices {
             motor1 = Motor("motor1")
             motor2 = Motor("motor2")
             motor3 = Motor("motor3")
+        }
+
+        @JvmStatic
+        fun initializeArmMotors() {
+            motor0 = Motor("motor0")
         }
 
         @JvmStatic
