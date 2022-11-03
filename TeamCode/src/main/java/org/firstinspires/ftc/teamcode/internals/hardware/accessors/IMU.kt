@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.internals.hardware.accessors
 
-import org.firstinspires.ftc.teamcode.internals.misc.Vector3
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.misc.Vector3
 
-class IMUGlobalAccess(var name: String) {
+class IMU(var name: String) {
     private val request = HardwareGetter.makeIMURequest(name)
 
     val orientation: Vector3
