@@ -91,10 +91,13 @@ public abstract class OperationMode extends LinearOpMode {
     /**
      * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
      * @param feature The feature to register.
-     * @throws ScriptRunner.DuplicateScriptException Thrown when a script with the same name already exists. Features' names come from their class names.
      */
-    public static void registerFeature(@NotNull Feature feature) throws ScriptRunner.DuplicateScriptException {
-        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+    public static void registerFeature(@NotNull Feature feature) {
+        try {
+            Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+        } catch (ScriptRunner.DuplicateScriptException e) {
+            e.printStackTrace();
+        }
     }
 
 }

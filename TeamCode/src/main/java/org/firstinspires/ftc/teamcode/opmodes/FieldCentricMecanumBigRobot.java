@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.michaell.looping.ScriptRunner;
 import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode;
@@ -15,13 +14,7 @@ public class FieldCentricMecanumBigRobot extends OperationMode implements TeleOp
         Devices.initializeExpansionHubMotors();
         Devices.initializeIntegratedIMU();
         MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, true, true, false);
-
-        try {
-            registerFeature(drivetrain);
-        } catch (ScriptRunner.DuplicateScriptException e) {
-            e.printStackTrace();
-            stop();
-        }
+        registerFeature(drivetrain);
     }
 
     @Override
