@@ -720,15 +720,13 @@ class HardwareGetter {
             return jloopingRunner!!.scriptParametersGlobal.issueRequest(Any(), jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as IMUData
         }
 
+        /**
+         * Inits standard devices which can be assumed to exist on all robots. Other devices must be initialized inside <code>OperationMode.construct()</code>.
+         */
         @JvmStatic
-        fun initAllDevices() {
+        fun initStdDevices() {
             Devices.controller1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad1")
             Devices.controller2 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad2")
-
-            Devices.motor0 = Motor("motor0")
-            Devices.motor1 = Motor("motor1")
-            Devices.motor2 = Motor("motor2")
-            Devices.motor3 = Motor("motor3")
         }
     }
 }
@@ -784,7 +782,8 @@ class Devices {
         lateinit var expansion_motor3: Motor
 
         /**
-         * Initializes all motors on the expansion hub. Required to use their GlobalMotorAccess objects
+         * Initializes all motors on the expansion hub. Required to use their Motor objects.
+         *
          * Requires the following motor names:
          * - motor0e
          * - motor1e
@@ -798,6 +797,24 @@ class Devices {
             expansion_motor2 = Motor("motor2e")
             expansion_motor3 = Motor("motor3e")
         }
+
+        /**
+         * Initializes all motors on the control hub. Required to use their Motor objects.
+         *
+         * Requires the following motor names:
+         * - motor0
+         * - motor1
+         * - motor2
+         * - motor3
+         */
+        @JvmStatic
+        fun initializeControlHubMotors() {
+            motor0 = Motor("motor0")
+            motor1 = Motor("motor1")
+            motor2 = Motor("motor2")
+            motor3 = Motor("motor3")
+        }
+
         @JvmStatic
         lateinit var integrated_imu: IMUGlobalAccess
 
