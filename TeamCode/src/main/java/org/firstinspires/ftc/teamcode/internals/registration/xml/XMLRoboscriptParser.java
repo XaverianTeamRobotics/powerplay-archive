@@ -8,13 +8,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-
-import javax.xml.parsers.*;
 
 public class XMLRoboscriptParser {
 
@@ -69,7 +70,7 @@ public class XMLRoboscriptParser {
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
-        File file = new File("test.xml");
+        File file = new File(filePath);
         Document doc;
         try {
             doc = builder.parse(file);
@@ -82,11 +83,9 @@ public class XMLRoboscriptParser {
     }
 
     public boolean isTeleOp() {
-        if (rootElement.getAttribute("isTeleOp") == "1") {
-            return true;
-        } else if (rootElement.getAttribute("isTeleOp") == "0") {
-            return false;
-        } else {
+        if (rootElement.getAttribute("mode").equals("teleop")) return true;
+        else if (rootElement.getAttribute("mode").equals("data")) return false;
+        else {
             throw new RuntimeException("Invalid XML Data");
         }
     }
@@ -99,11 +98,7 @@ public class XMLRoboscriptParser {
         return rootElement.getElementsByTagName("name").item(0).getTextContent();
     }
 
-    public Node getInit() {
-        return rootElement.getElementsByTagName("init").item(0);
-    }
-
-    public Node getLoop() {
-        return rootElement.getElementsByTagName("loop").item(0);
+    public Node getCodeBlock() {
+        return rootElement.getElementsByTagName("code").item(0);
     }
 }
