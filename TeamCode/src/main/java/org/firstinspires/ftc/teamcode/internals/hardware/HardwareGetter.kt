@@ -806,7 +806,8 @@ class Devices {
 
         @JvmStatic
         fun initializeArmMotors() {
-            motor0 = Motor("motor0")
+            expansion_motor0 = Motor("motor0e")
+            expansion_motor1 = Motor("motor1e")
         }
 
         @JvmStatic
