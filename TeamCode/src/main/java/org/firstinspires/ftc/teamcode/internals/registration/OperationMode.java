@@ -7,6 +7,7 @@ import com.michaell.looping.builtin.ConvertToScript;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
@@ -31,9 +32,11 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         Logging.setTelemetry(telemetry);
         HardwareGetter.setEmulated(false);
         HardwareGetter.setHardwareMap(hardwareMap);
+        HardwareGetter.setOpMode(this);
         ScriptTemplate jloopingScript;
         ScriptRunner runner;
         try {

@@ -6,11 +6,13 @@ import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gyroscope
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
+import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
 
 class HardwareGetter {
     companion object {
@@ -38,6 +40,17 @@ class HardwareGetter {
             set(value) {
                 if (value == null) {
                     throw IllegalArgumentException("The global ScriptRunner cannot be set to null during execution")
+                } else {
+                    field = value
+                }
+            }
+
+        @JvmStatic
+        var opMode: OperationMode? = null
+            get() = field
+            set(value) {
+                if (value == null) {
+                    throw IllegalArgumentException("The global OpMode cannot be set to null during execution")
                 } else {
                     field = value
                 }
@@ -759,20 +772,6 @@ class Devices {
         lateinit var motor3: Motor
 
         @JvmStatic
-        lateinit var camera0: WebcamName
-        @JvmStatic
-        lateinit var camera1: WebcamName
-        @JvmStatic
-        lateinit var camera2: WebcamName
-        @JvmStatic
-        lateinit var camera3: WebcamName
-
-        @JvmStatic
-        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
-            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
-        }
-
-        @JvmStatic
         lateinit var expansion_motor0: Motor
         @JvmStatic
         lateinit var expansion_motor1: Motor
@@ -780,6 +779,22 @@ class Devices {
         lateinit var expansion_motor2: Motor
         @JvmStatic
         lateinit var expansion_motor3: Motor
+
+        @JvmStatic
+        lateinit var camera0: WebcamName
+        @JvmStatic
+        lateinit var camera1: WebcamName
+
+        @JvmStatic
+        lateinit var gyroscope: Gyroscope
+
+        @JvmStatic
+        lateinit var integrated_imu: IMU
+
+        @JvmStatic
+        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
+            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
+        }
 
         /**
          * Initializes all motors on the expansion hub. Required to use their Motor objects.
@@ -815,9 +830,6 @@ class Devices {
             motor3 = Motor("motor3")
         }
 
-        @JvmStatic
-        lateinit var integrated_imu: IMU
-
         /**
          * Initializes the IMU on the expansion hub. Required to use the integrated_imu object
          * Requires the following IMU name:
@@ -846,20 +858,9 @@ class Devices {
             camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
         }
 
-        /**
-         * Initializes camera 2 as a WebcamName.
-         */
         @JvmStatic
-        fun initializeCamera2() {
-            camera2 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera2")
-        }
-
-        /**
-         * Initializes camera 3 as a WebcamName.
-         */
-        @JvmStatic
-        fun initializeCamera3() {
-            camera3 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera3")
+        fun initializeGyroscope() {
+            gyroscope = Gyroscope("gyro")
         }
 
     }
