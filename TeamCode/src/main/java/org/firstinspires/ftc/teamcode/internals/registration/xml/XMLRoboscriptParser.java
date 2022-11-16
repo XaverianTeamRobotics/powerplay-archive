@@ -2,20 +2,15 @@ package org.firstinspires.ftc.teamcode.internals.registration.xml;
 
 import android.content.res.AssetManager;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class XMLRoboscriptParser {
 
@@ -33,48 +28,65 @@ public class XMLRoboscriptParser {
     }
 
     public static ArrayList<String> getRoboscriptXMLFiles() {
-        AssetManager am = FtcRobotControllerActivity.getAppContext().getAssets();
+        am = FtcRobotControllerActivity.getAppContext().getAssets();
+        System.out.println("[XML] AM: " + am);
 
         ArrayList<String> fileNames;
 
         try {
-            fileNames = (ArrayList<String>) Arrays.asList(am.list("roboscript"));
-        } catch (IOException e) {
+            fileNames = new ArrayList<>(Arrays.asList(am.list("roboscript")));
+        } catch (Exception e) {
+            System.out.println("[XML] Error getting roboscript files: " + e);
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        for (String f:
-             fileNames) {
-            if (!f.contains(".xml")) fileNames.remove(f);
-        }
+        System.out.println("[XML] File names: " + fileNames);
+
+        fileNames.removeIf(f -> !f.contains(".xml"));
 
         return fileNames;
     }
 
     public XMLRoboscriptParser(String filePath) {
         this.filePath = filePath;
-        if (!getRoboscriptXMLFiles().contains(filePath)) {
-            throw new RuntimeException(filePath + " not found");
+        System.out.println("[XML] File path: " + this.filePath);
+        if (!getRoboscriptXMLFiles().contains(this.filePath)) {
+            throw new RuntimeException(this.filePath + " not found");
         }
-        am = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getAssets();
+        if (am == null) {
+            am = FtcRobotControllerActivity.getAppContext().getAssets();
+        }
+
+        this.filePath = "roboscript/" + this.filePath;
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-        factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
 
         DocumentBuilder builder = null;
 
         try {
             builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
+            System.out.println("[XML] Error creating document builder: " + e);
             throw new RuntimeException(e);
         }
-        File file = new File(filePath);
+
+        System.out.println("[XML] Builder: " + builder);
+        System.out.println("[XML] Building file...");
+        InputStream file = null;
+        try {
+            file = am.open(this.filePath);
+        } catch (Exception e) {
+            System.out.println("[XML] Error opening file: " + e);
+            throw new RuntimeException(e);
+        }
         Document doc;
         try {
             doc = builder.parse(file);
-        } catch (IOException | SAXException e) {
+        } catch (Exception e) {
+            System.out.println("[XML] Error parsing file: " + e);
             throw new RuntimeException(e);
         }
 
@@ -83,9 +95,10 @@ public class XMLRoboscriptParser {
     }
 
     public boolean isTeleOp() {
-        if (rootElement.getAttribute("mode").equals("teleop")) return true;
-        else if (rootElement.getAttribute("mode").equals("data")) return false;
+        if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("teleop")) return true;
+        else if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("data")) return false;
         else {
+            System.out.println("[XML] Error: mode is unknown (" + rootElement.getElementsByTagName("mode").item(0).getTextContent() + ")");
             throw new RuntimeException("Invalid XML Data");
         }
     }

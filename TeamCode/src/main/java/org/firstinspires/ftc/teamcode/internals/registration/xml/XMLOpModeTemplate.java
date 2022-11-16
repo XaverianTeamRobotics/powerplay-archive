@@ -11,7 +11,7 @@ public class XMLOpModeTemplate extends OperationMode {
     public ArrayList<XMLCodeLine> xmlCodeLines;
 
     public XMLOpModeTemplate(XMLRoboscriptParser roboscriptParser) {
-        super();
+        System.out.println("[XML] - Constructing XMLOpModeTemplate");
         this.roboscriptParser = roboscriptParser;
         this.codeBlock = new XMLCodeSegment(roboscriptParser.getCodeBlock());
         this.xmlCodeLines = codeBlock.getContainedCode();
