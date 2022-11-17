@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.features
 
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.telemetry
 
 /*
@@ -31,10 +32,10 @@ class TeleOpNextObjectiveReminder: Feature(){
     var currentObjective: String? = null
 
     override fun loop() {
-        // Check to see if the driver has pressed the OPTIONS button on gamepad 2. We also need to check if its been held
-        // so that the driver can see the next objective
+        // Check to see if the driver has pressed the OPTIONS button on gamepad 1 or 2. We also need to check if its been held
+        // so that the driver can see the next objective without it going off the screen
 
-        if (controller1.options && !isButtonHeld) {
+        if ((controller2.options || controller1.options) && !isButtonHeld) {
             // Set the isButtonHeld variable to true so that the driver can see the next objective
             isButtonHeld = true
 
@@ -44,28 +45,36 @@ class TeleOpNextObjectiveReminder: Feature(){
                 objectiveCounts[currentObjective!!] = objectiveCounts[currentObjective!!]!! - 1
                 currentObjective = null
             }
-        } else if (!controller1.options && isButtonHeld) {
+        } else if (!controller2.options || !controller1.options) {
             // Set the isButtonHeld variable to false so that the driver can see the next objective
             isButtonHeld = false
         }
 
         if (currentObjective == null) {
-            // If the currentObjective variable is null, then we need to find the next objective
-            // We will do this by finding the objective with the highest count in the objectiveCounts hashmap
-            var highestCount = 0
-            var highestCountObjective: String? = null
-            for (objective in objectiveCounts.keys) {
-                if (objectiveCounts[objective]!! > highestCount) {
-                    highestCount = objectiveCounts[objective]!!
-                    highestCountObjective = objective
-                }
+            // Find the most valuable objective if objectiveCounts is not 0 for that task
+            // The "most valuable" being the one that gives us the most points
+            if (objectiveCounts["high"]!! > 0) {
+                currentObjective = "high"
+            } else if (objectiveCounts["medium"]!! > 0) {
+                currentObjective = "medium"
+            } else if (objectiveCounts["low"]!! > 0) {
+                currentObjective = "low"
+            } else if (objectiveCounts["ground"]!! > 0) {
+                currentObjective = "ground"
+            } else if (objectiveCounts["terminal"]!! > 0) {
+                currentObjective = "terminal"
             }
-
-            // Set the currentObjective variable to the objective with the highest count
-            currentObjective = highestCountObjective
         }
         // Display the current objective on the driver station. We should always do this for code cleanliness
-        telemetry.addData("Next Objective", currentObjective)
+        telemetry.addData(
+            "Next Objective",
+            if (currentObjective != null) currentObjective else "No more tasks"
+        )
+        // Say how much of that objective is remaining
+        if (currentObjective != null) {
+            telemetry.addData("Remaining times for this objective", objectiveCounts[currentObjective!!]!!)
+        }
+        telemetry.addLine("Press OPTIONS to mark the current objective as complete")
         telemetry.update()
     }
 }
