@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.internals.features
+package org.firstinspires.ftc.teamcode.features
 
+import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.telemetry
