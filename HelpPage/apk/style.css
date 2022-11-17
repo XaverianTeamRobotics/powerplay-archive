@@ -10,10 +10,6 @@ a {
     padding-top: 1em;
     padding-bottom: 1em;
     background-color: gray;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
     text-align: center;
 }
 

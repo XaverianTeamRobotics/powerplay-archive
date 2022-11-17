@@ -4,6 +4,8 @@
 *.ap_
 *.aab
 
+!HelpPage/apk/bin/*.apk
+
 !libs/*.aar
 
 # Files for the ART/Dalvik VM

@@ -7,6 +7,7 @@ import com.michaell.looping.builtin.ConvertToScript;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
@@ -31,9 +32,11 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         Logging.setTelemetry(telemetry);
         HardwareGetter.setEmulated(false);
         HardwareGetter.setHardwareMap(hardwareMap);
+        HardwareGetter.setOpMode(this);
         ScriptTemplate jloopingScript;
         ScriptRunner runner;
         try {
@@ -45,7 +48,7 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.setJloopingRunner(runner);
             HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
             HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
-            HardwareGetter.initAllDevices();
+            HardwareGetter.initStdDevices();
 
             // Set the Caching mode to auto. This allows for faster access of all sensors
             // The cache gets cleared whenever a call to a sensor is repeated
@@ -91,10 +94,13 @@ public abstract class OperationMode extends LinearOpMode {
     /**
      * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
      * @param feature The feature to register.
-     * @throws ScriptRunner.DuplicateScriptException Thrown when a script with the same name already exists. Features' names come from their class names.
      */
-    public static void registerFeature(@NotNull Feature feature) throws ScriptRunner.DuplicateScriptException {
-        Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+    public static void registerFeature(@NotNull Feature feature) {
+        try {
+            Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+        } catch (ScriptRunner.DuplicateScriptException e) {
+            e.printStackTrace();
+        }
     }
 
 }
