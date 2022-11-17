@@ -46,9 +46,9 @@ public class Menu {
         for(int i = 0; i < ITEMS.size(); i++) {
             Item item = ITEMS.get(i);
             if(i == selected) {
-                builder.append("+ ").append(item.getName()).append(System.lineSeparator());
+                builder.append("⇨ ").append(item.getName()).append(System.lineSeparator());
             }else{
-                builder.append(item.getName()).append(System.lineSeparator());
+                builder.append("  ").append(item.getName()).append(System.lineSeparator());
             }
         }
         // add hints
