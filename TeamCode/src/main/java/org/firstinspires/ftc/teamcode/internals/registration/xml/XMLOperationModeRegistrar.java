@@ -41,7 +41,8 @@ public class XMLOperationModeRegistrar {
         for (String fileName :
             getRoboscriptXMLFiles()) {
             log("Processing file: " + fileName, KEY);
-            XMLRoboscriptParser xmlParser = new XMLRoboscriptParser("roboscript/"+fileName);
+            XMLRoboscriptParser xmlParser = new XMLRoboscriptParser(fileName);
+            log("Processing metadata...", KEY);
             OpModeMeta.Flavor flavor;
             if (xmlParser.isTeleOp()) {
                 flavor = TELEOP;
@@ -54,14 +55,16 @@ public class XMLOperationModeRegistrar {
             metaBuilder.setName(xmlParser.getName());
             metaBuilder.setSource(OpModeMeta.Source.EXTERNAL_LIBRARY);
 
+            log("Checking for autoTransition...", KEY);
             if (xmlParser.rootElement.hasAttribute("autoTransition")) {
                 metaBuilder.setTransitionTarget(xmlParser.rootElement.getAttribute("autoTransition"));
             } else {
                 metaBuilder.setTransitionTarget(null);
             }
 
-            manager.register(metaBuilder.build(),
-                new XMLOpModeTemplate(xmlParser));
+            log("Registering...", KEY);
+            XMLOpModeTemplate template = new XMLOpModeTemplate(xmlParser);
+            manager.register(metaBuilder.build(), template);
             log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
                 " registered! Moving on...", KEY);
         }
