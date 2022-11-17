@@ -7,22 +7,15 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItem;
-import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItemType;
-import org.firstinspires.ftc.teamcode.internals.telemetry.TelemetryMenu;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Objects;
 
-import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.GRAY_MAX;
-import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.GRAY_MIN;
-
 public class SleeveDetectionFeature extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
-    private TelemetryMenu menu;
     public int spot = 1;
 
     @Override
@@ -52,40 +45,10 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
                 Logging.updateLog();
             }
         });
-
-        menu = new TelemetryMenu();
-        MenuItem grayscalePreset = new MenuItem("Grayscale Preset", MenuItemType.INT, true);
-        grayscalePreset.setStepSize(1);
-        grayscalePreset.setMax(3);
-        grayscalePreset.setMin(1);
-        grayscalePreset.setValue(2);
-        menu.addMenuItem(grayscalePreset);
-        menu.runInBackground();
     }
 
     @Override
     public void loop() {
-        int detectionID = detector.getDetection();
-        spot = detectionID;
-        int grayscalePreset = (int) menu.getMenuItem("Grayscale Preset").getValue();
-
-        switch (grayscalePreset) {
-            case 1:
-                GRAY_MAX = 75;
-                GRAY_MIN = 20;
-                break;
-            case 2:
-                GRAY_MAX = 100;
-                GRAY_MIN = 45;
-                break;
-            case 3:
-                GRAY_MAX = 150;
-                GRAY_MIN = 95;
-                break;
-        }
-
-        menu.setAnnotation("To change the grayscale presets, set them to the approriate value \n 1 - Low Brightness \n 2 - Medium Brightness \n 3 - High Brightness" +
-            "\n\nCurrent gray range: " + GRAY_MIN + " - " + GRAY_MAX + "\n\nCurrent detection ID: " + detectionID);
+        spot = detector.getDetection();
     }
-
 }
