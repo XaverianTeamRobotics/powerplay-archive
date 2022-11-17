@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
@@ -14,6 +15,9 @@ public class Park extends OperationMode implements AutonomousOperation {
 
     @Override
     public void construct() {
+        Devices.initializeCamera0();
+        Devices.initializeControlHubMotors();
+        Devices.initializeExpansionHubMotors();
         sleeveDetectionFeature = new SleeveDetectionFeature();
         registerFeature(sleeveDetectionFeature);
         spots.set(0, 0);

@@ -27,7 +27,6 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
 
     @Override
     public void build() {
-        Devices.initializeCamera0();
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
 
