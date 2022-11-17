@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.FtcDashboard;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
@@ -28,9 +28,9 @@ public class OpenCvSleeveDetectionTest extends OperationMode implements TeleOper
     @SuppressLint("DiscouragedApi")
     @Override
     public void construct() {
-        WebcamName webcamName = Objects.requireNonNull(getHardwareMap()).get(WebcamName.class, "camera0");
-        int cameraMonitorViewId = getHardwareMap().appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        Devices.initializeCamera0();
+        int cameraMonitorViewId = Objects.requireNonNull(getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
 
         detector = new SleeveColorDetection();
 

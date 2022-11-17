@@ -15,7 +15,7 @@ public abstract class Feature extends ScriptTemplate {
         super("", true);
         // override needsinit to follow reflection patterns of opmodes
         // if opmodes use reflection, why shouldnt features?
-        this.needsInit = this instanceof Buildable;
+        this.needsInit = Buildable.class.isAssignableFrom(this.getClass());
         // also its super useful to just use the class name as the script name, have a ssot just like opmodes
         this.name = this.getClass().getName();
     }
@@ -31,7 +31,7 @@ public abstract class Feature extends ScriptTemplate {
     @Override
     public void run(ScriptParameters parameters) {
         environment = parameters;
-        if(this.getClass().isAssignableFrom(Conditional.class)) {
+        if(Conditional.class.isAssignableFrom(this.getClass())) {
             Conditional feature = (Conditional) this;
             if(feature.when()) {
                 loop();
