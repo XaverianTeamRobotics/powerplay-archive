@@ -813,6 +813,12 @@ class Devices {
             expansion_motor3 = Motor("motor3e")
         }
 
+        @JvmStatic
+        fun initializeArmMotors() {
+            expansion_motor0 = Motor("motor0e")
+            expansion_motor1 = Motor("motor1e")
+        }
+
         /**
          * Initializes all motors on the control hub. Required to use their Motor objects.
          *

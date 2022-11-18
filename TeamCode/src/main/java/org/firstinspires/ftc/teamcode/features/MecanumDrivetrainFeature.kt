@@ -31,8 +31,8 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
         } else {
             -(controller1.rightStickX / 2.5)
         }
-        val x: Double = controller1.leftStickY / 2.5
-        val y: Double = controller1.leftStickX / 2.5
+        val x: Double = -controller1.leftStickX / 1.25
+        val y: Double = controller1.leftStickY / 1.25
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }
