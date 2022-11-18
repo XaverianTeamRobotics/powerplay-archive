@@ -22,7 +22,7 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
                 // Denominator is the largest motor power (absolute value) or 1
                 // This ensures all the powers maintain the same ratio, but only when
                 // at least one is out of the range [-1, 1]
-                val denominator = max(abs(rot) + abs(x) + abs(y), 1.0)
+                val denominator = max(abs(rot) + abs(x) + abs(y), 0.8)
                 frontLeftPower = (y + x + rot) / denominator
                 backLeftPower = (y - x + rot) / denominator
                 frontRightPower = -(y - x - rot) / denominator
