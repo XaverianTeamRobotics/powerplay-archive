@@ -1,9 +1,15 @@
 package org.firstinspires.ftc.teamcode.features;
 
+import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 
-public class ArmFeature extends Feature {
+public class ArmFeature extends Feature implements Buildable {
+
+    @Override
+    public void build() {
+        Devices.initializeArmMotors();
+    }
 
     public boolean useExpansionHub = false;
 
@@ -25,4 +31,5 @@ public class ArmFeature extends Feature {
 
         }
     }
+
 }
