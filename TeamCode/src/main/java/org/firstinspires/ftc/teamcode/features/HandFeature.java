@@ -4,7 +4,14 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 
+import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.controller1;
+import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.expansion_motor2;
+
 public class HandFeature extends Feature implements Buildable {
+
+    private int holdMode = 1;
+    // 1 for force hold
+    // 2 for auto braking mode
 
     @Override
     public void build() {
@@ -13,12 +20,12 @@ public class HandFeature extends Feature implements Buildable {
 
     @Override
     public void loop() {
-        if(Devices.controller1.getA()) {
-            Devices.expansion_motor2.setPower(0.5);
-        }else if(Devices.controller1.getB()) {
-            Devices.expansion_motor2.setPower(-0.25);
-        }else{
-            Devices.expansion_motor2.setPower(0);
-        }
+        if (controller1.getB())         holdMode = 1;
+        else if (controller1.getX())    holdMode = 2;
+
+        if (controller1.getA())         expansion_motor2.setSpeed( 0.50);
+        else if (controller1.getY())    expansion_motor2.setSpeed(-0.25);
+        else if (holdMode == 1)         expansion_motor2.setSpeed(-0.25);
+        else                            expansion_motor2.setSpeed( 0.00);
     }
 }
