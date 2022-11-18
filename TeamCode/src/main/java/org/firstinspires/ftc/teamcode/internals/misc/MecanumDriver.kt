@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.misc
 
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
-import org.firstinspires.ftc.teamcode.internals.hardware.Logging
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max

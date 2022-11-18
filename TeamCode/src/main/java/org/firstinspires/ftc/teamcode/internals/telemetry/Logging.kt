@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.hardware
+package org.firstinspires.ftc.teamcode.internals.telemetry
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
