@@ -17,7 +17,6 @@ public class Park extends OperationMode implements AutonomousOperation {
     public void construct() {
         Devices.initializeCamera0();
         Devices.initializeControlHubMotors();
-        Devices.initializeExpansionHubMotors();
         sleeveDetectionFeature = new SleeveDetectionFeature();
         registerFeature(sleeveDetectionFeature);
         spots.set(0, 0);

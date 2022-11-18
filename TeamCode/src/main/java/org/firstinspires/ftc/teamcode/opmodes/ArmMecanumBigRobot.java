@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.michaell.looping.ScriptRunner;
-import org.firstinspires.ftc.teamcode.internals.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.features.ArmFeature;
 import org.firstinspires.ftc.teamcode.features.MecanumDrivetrainFeature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
@@ -14,6 +12,7 @@ public class ArmMecanumBigRobot extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
+        Devices.initializeControlHubMotors();
         Devices.initializeExpansionHubMotors();
         MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL);
         ArmFeature arm = new ArmFeature();

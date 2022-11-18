@@ -16,6 +16,7 @@ public class ArmMecanumSmallRobot extends OperationMode implements TeleOperation
         Devices.initializeExpansionHubMotors();
         MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, false, false, true);
         ArmFeature arm = new ArmFeature();
+        arm.useExpansionHub = true;
         registerFeature(drivetrain);
         registerFeature(arm);
     }
