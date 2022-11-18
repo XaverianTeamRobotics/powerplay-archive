@@ -22,14 +22,14 @@ class Logging {
         }
 
         @JvmStatic
-        fun logData(key: String, value: Any) {
+        fun logData(key: String, value: Any?) {
             if (isEmulated) {
                 println("$key: $value")
             } else {
                 telemetry.addData(key, value)
                 dashboardPacket.addLine(" ")
                 dashboardPacket.put(key, value)
-                dashboardPacket.put(key+" (key)", "$key:")
+                dashboardPacket.put("$key (key)", "$key:")
             }
         }
 

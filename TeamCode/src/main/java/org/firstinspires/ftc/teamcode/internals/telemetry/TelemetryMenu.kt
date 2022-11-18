@@ -2,22 +2,38 @@ package org.firstinspires.ftc.teamcode.internals.telemetry
 
 import com.michaell.looping.ScriptTemplate
 import com.michaell.looping.builtin.ConvertToScript
+import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
+import java.lang.System.lineSeparator
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Create a menu in the telemetry interface (using the Logging class) to allow for configuration during a match
  * Use controllers as inputs to navigate the menu
  */
+@Deprecated("Use the new MenuManager and Menu classes instead")
 class TelemetryMenu {
+    var dPadUpHeld: Boolean = false
+    var dPadDownHeld: Boolean = false
+    var dPadLeftHeld: Boolean = false
+    var dPadRightHeld: Boolean = false
+    var backHeld: Boolean = false
     var currentMenuIndex: Int = 0
     var currentMenu: MenuItem = MenuItem("Main Menu", MenuItemType.MENU, true)
     lateinit var jloopingScript: ScriptTemplate
     var allMenuItems: MutableList<MenuItem> = mutableListOf()
+    var annotation: String = ""
 
     fun addMenuItem(menuItem: MenuItem) {
         (currentMenu.value as MutableList<MenuItem>).add(menuItem)
         allMenuItems.add(menuItem)
+
+        if (menuItem.type == MenuItemType.MENU) {
+            allMenuItems.addAll(menuItem.value as MutableList<MenuItem>)
+        }
     }
 
     fun getMenuItemInCurrentMenu(name: String): MenuItem? {
@@ -44,6 +60,8 @@ class TelemetryMenu {
         } else {
             currentMenuIndex = (currentMenu.value as MutableList<MenuItem>).size - 1
         }
+
+        currentMenuIndex = min(currentMenuIndex, (currentMenu.value as MutableList<MenuItem>).size - 1)
     }
 
     private fun nextMenuItem() {
@@ -74,8 +92,8 @@ class TelemetryMenu {
         if (item.type != MenuItemType.MENU) {
             item.increment()
         } else {
+            item.enterMenu(currentMenu)
             currentMenu = item
-            item.enterMenu(null)
         }
     }
 
@@ -94,15 +112,17 @@ class TelemetryMenu {
         for (i in (currentMenu.value as MutableList<MenuItem>).indices) {
             val item = (currentMenu.value as MutableList<MenuItem>)[i]
             var text = "${if (i == currentMenuIndex) "> " else "  "}${item.name}"
+            text += item.isEditable.let { if (it) "" else " (read-only)" }
             if (item.type != MenuItemType.MENU) {
                 text += ": ${item.value}"
-            }
-            if (i == currentMenuIndex) {
-                Logging.logText("> ${item.name}")
             } else {
-                Logging.logText("  ${item.name}")
+                text += "  >>>"
             }
+            Logging.logText(text)
         }
+
+        Logging.logText(" ")
+        Logging.logText(annotation)
         Logging.updateLog()
     }
 
@@ -115,27 +135,37 @@ class TelemetryMenu {
         HardwareGetter.jloopingRunner!!.addScript(ConvertToScript("TelemetryMenu", this, null, "listenForControllerInput"))
     }
 
-    fun stopInBackground() {
+    fun stopBackground() {
         HardwareGetter.jloopingRunner!!.scripts.remove(jloopingScript)
     }
 
     fun listenForControllerInput() {
-        if (controller1.dpadUp) {
+        if (controller1.dpadUp && !dPadUpHeld) {
             onDPadUp()
+            dPadUpHeld = true;
         }
-        if (controller1.dpadDown) {
+        else if (controller1.dpadDown && !dPadDownHeld) {
             onDPadDown()
+            dPadDownHeld = true;
         }
-        if (controller1.dpadLeft) {
+        else if (controller1.dpadLeft && !dPadLeftHeld) {
             onDPadLeft()
+            dPadLeftHeld = true;
         }
-        if (controller1.dpadRight) {
+        else if (controller1.dpadRight && !dPadRightHeld) {
             onDPadRight()
+            dPadRightHeld = true;
+        }
+        else if ((controller1.b || controller1.circle) && !backHeld) {
+            onBackButton()
+            backHeld = true
         }
 
-        if (controller1.b || controller1.circle) {
-            onBackButton()
-        }
+        if (!controller1.dpadUp) dPadUpHeld = false
+        if (!controller1.dpadDown) dPadDownHeld = false
+        if (!controller1.dpadLeft) dPadLeftHeld = false
+        if (!controller1.dpadRight) dPadRightHeld = false
+        if (!controller1.b || !controller1.circle) backHeld = false
 
         display()
     }
@@ -143,8 +173,32 @@ class TelemetryMenu {
 
 class MenuItem(val name: String, val type: MenuItemType, var isEditable: Boolean) {
     var value: Any
+        get() = when (type) {
+            MenuItemType.BOOLEAN -> field
+            MenuItemType.DOUBLE -> field
+            MenuItemType.INT -> field
+            MenuItemType.MENU -> field
+        }
     var previousMenu: MenuItem? = null
     var stepSize: Double = 1.0
+        set(value) {
+            if (type == MenuItemType.DOUBLE || type == MenuItemType.INT) {
+                if (type == MenuItemType.INT) {
+                    this.value = value.toInt()
+                }
+            }
+            field = value
+        }
+    var min: Double = 0.0
+        set(value) {
+            if (type == MenuItemType.DOUBLE || type == MenuItemType.INT) {
+                if (type == MenuItemType.INT) {
+                    this.value = value.toInt()
+                }
+            }
+            field = value
+        }
+    var max: Double = 1000.0
         set(value) {
             if (type == MenuItemType.DOUBLE || type == MenuItemType.INT) {
                 if (type == MenuItemType.INT) {
@@ -164,35 +218,53 @@ class MenuItem(val name: String, val type: MenuItemType, var isEditable: Boolean
     }
 
     fun increment() {
-        when (type) {
-            MenuItemType.INT -> {
-                value = (value as Int) + 1
-            }
-            MenuItemType.DOUBLE -> {
-                value = (value as Double) + 1
-            }
-            MenuItemType.BOOLEAN -> {
-                value = !(value as Boolean)
-            }
+        if (isEditable) {
+            when (type) {
+                MenuItemType.INT -> {
+                    value = (value as Int) + stepSize.toInt()
+                }
 
-            else -> {}
+                MenuItemType.DOUBLE -> {
+                    value = (value as Double) + stepSize
+                }
+
+                MenuItemType.BOOLEAN -> {
+                    value = !(value as Boolean)
+                }
+
+                else -> {}
+            }
         }
+
+//        if (type == MenuItemType.INT || type == MenuItemType.DOUBLE) {
+//            // Get value within bounds
+//            value = if (type == MenuItemType.DOUBLE) Range.clip(value as Double, min, max) else Range.clip(value as Int, min.toInt(), max.toInt())
+//        }
     }
 
     fun decrement() {
-        when (type) {
-            MenuItemType.INT -> {
-                value = (value as Int) - 1
-            }
-            MenuItemType.DOUBLE -> {
-                value = (value as Double) - 1
-            }
-            MenuItemType.BOOLEAN -> {
-                value = !(value as Boolean)
-            }
+        if (isEditable) {
+            when (type) {
+                MenuItemType.INT -> {
+                    value = (value as Int) - stepSize.toInt()
+                }
 
-            else -> {}
+                MenuItemType.DOUBLE -> {
+                    value = (value as Double) - stepSize
+                }
+
+                MenuItemType.BOOLEAN -> {
+                    value = !(value as Boolean)
+                }
+
+                else -> {}
+            }
         }
+//        if (type == MenuItemType.INT || type == MenuItemType.DOUBLE) {
+//            // Get value within bounds
+//            if (type == MenuItemType.INT) value = Range.clip(value as Double, min, max)
+//            else if (type == MenuItemType.DOUBLE) value = Range.clip(value as Int, min.toInt(), max.toInt())
+//        }
     }
 
     fun enterMenu(previousMenu: MenuItem?) {
