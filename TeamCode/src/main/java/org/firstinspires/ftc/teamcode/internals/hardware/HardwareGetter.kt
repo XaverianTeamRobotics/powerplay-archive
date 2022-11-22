@@ -819,6 +819,12 @@ class Devices {
             expansion_motor1 = Motor("motor1e")
         }
 
+        @JvmStatic
+        fun initializeHandMotors() {
+            expansion_motor2 = Motor("motor2e")
+            expansion_motor2.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        }
+
         /**
          * Initializes all motors on the control hub. Required to use their Motor objects.
          *
