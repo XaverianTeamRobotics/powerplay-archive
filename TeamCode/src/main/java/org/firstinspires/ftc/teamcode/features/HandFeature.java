@@ -21,7 +21,7 @@ public class HandFeature extends Feature implements Buildable {
     @Override
     public void loop() {
         if (controller1.getB())         holdMode = 1;
-        else if (controller1.getX())    holdMode = 2;
+        else if (controller1.getA())    holdMode = 2;
 
         if (controller1.getA())         expansion_motor2.setSpeed( 0.50);
         else if (controller1.getY())    expansion_motor2.setSpeed(-0.25);
