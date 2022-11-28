@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
+package org.firstinspires.ftc.teamcode.trajectorysequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +10,7 @@ public class TrajectorySequence {
     private final List<SequenceSegment> sequenceList;
 
     public TrajectorySequence(List<SequenceSegment> sequenceList) {
-        if (sequenceList.size() == 0) throw new EmptySequenceException();
+        if (sequenceList.size() == 0) throw new org.firstinspires.ftc.teamcode.trajectorysequence.EmptySequenceException();
 
         this.sequenceList = Collections.unmodifiableList(sequenceList);
     }

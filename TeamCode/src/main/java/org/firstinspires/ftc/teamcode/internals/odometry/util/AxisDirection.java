@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.odometry.util;
+package org.firstinspires.ftc.teamcode.util;
 
 /**
  * A direction for an axis to be remapped to

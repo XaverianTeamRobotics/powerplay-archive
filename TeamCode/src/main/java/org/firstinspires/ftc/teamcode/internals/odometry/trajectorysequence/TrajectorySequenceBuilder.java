@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
+package org.firstinspires.ftc.teamcode.trajectorysequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -6,23 +6,14 @@ import com.acmerobotics.roadrunner.path.PathContinuityViolationException;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
-import com.acmerobotics.roadrunner.trajectory.DisplacementMarker;
-import com.acmerobotics.roadrunner.trajectory.DisplacementProducer;
-import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
-import com.acmerobotics.roadrunner.trajectory.SpatialMarker;
-import com.acmerobotics.roadrunner.trajectory.TemporalMarker;
-import com.acmerobotics.roadrunner.trajectory.TimeProducer;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
+import com.acmerobotics.roadrunner.trajectory.*;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.Angle;
-
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TrajectorySegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TurnSegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.WaitSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -492,7 +483,7 @@ public class TrajectorySequenceBuilder {
         currentTrajectoryBuilder = new TrajectoryBuilder(lastPose, tangent, currentVelConstraint, currentAccelConstraint, resolution);
     }
 
-    public TrajectorySequence build() {
+    public org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence build() {
         pushPath();
 
         List<TrajectoryMarker> globalMarkers = convertMarkersToGlobal(
@@ -500,7 +491,7 @@ public class TrajectorySequenceBuilder {
                 temporalMarkers, displacementMarkers, spatialMarkers
         );
 
-        return new TrajectorySequence(projectGlobalMarkersToLocalSegments(globalMarkers, sequenceSegments));
+        return new org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence(projectGlobalMarkersToLocalSegments(globalMarkers, sequenceSegments));
     }
 
     private List<TrajectoryMarker> convertMarkersToGlobal(

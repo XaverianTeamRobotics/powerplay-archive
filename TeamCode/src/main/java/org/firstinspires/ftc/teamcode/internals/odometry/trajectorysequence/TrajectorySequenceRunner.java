@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
+package org.firstinspires.ftc.teamcode.trajectorysequence;
 
 import androidx.annotation.Nullable;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,12 +14,11 @@ import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
-
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TrajectorySegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.util.DashboardUtil;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TurnSegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.WaitSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
+import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
+import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +43,7 @@ public class TrajectorySequenceRunner {
 
     private final NanoClock clock;
 
-    private TrajectorySequence currentTrajectorySequence;
+    private org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence currentTrajectorySequence;
     private double currentSegmentStartTime;
     private int currentSegmentIndex;
     private int lastSegmentIndex;
@@ -69,7 +67,7 @@ public class TrajectorySequenceRunner {
         dashboard.setTelemetryTransmissionInterval(25);
     }
 
-    public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
+    public void followTrajectorySequenceAsync(org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence trajectorySequence) {
         currentTrajectorySequence = trajectorySequence;
         currentSegmentStartTime = clock.seconds();
         currentSegmentIndex = 0;
@@ -200,9 +198,9 @@ public class TrajectorySequenceRunner {
     }
 
     private void draw(
-            Canvas fieldOverlay,
-            TrajectorySequence sequence, SequenceSegment currentSegment,
-            Pose2d targetPose, Pose2d poseEstimate
+        Canvas fieldOverlay,
+        org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence sequence, SequenceSegment currentSegment,
+        Pose2d targetPose, Pose2d poseEstimate
     ) {
         if (sequence != null) {
             for (int i = 0; i < sequence.size(); i++) {
