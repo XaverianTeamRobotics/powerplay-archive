@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment;
+package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import java.util.Collections;
 
-public final class TrajectorySegment extends org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment {
+public final class TrajectorySegment extends SequenceSegment {
     private final Trajectory trajectory;
 
     public TrajectorySegment(Trajectory trajectory) {

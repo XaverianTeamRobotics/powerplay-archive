@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.internals.odometry.util;
 
 import androidx.annotation.Nullable;
 import com.acmerobotics.roadrunner.kinematics.Kinematics;

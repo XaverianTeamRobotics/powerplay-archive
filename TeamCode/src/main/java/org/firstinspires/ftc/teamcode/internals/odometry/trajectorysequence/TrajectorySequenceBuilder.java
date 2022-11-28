@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.trajectorysequence;
+package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -10,10 +10,10 @@ import com.acmerobotics.roadrunner.trajectory.*;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.Angle;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSegment;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TrajectorySegment;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TurnSegment;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.WaitSegment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -483,7 +483,7 @@ public class TrajectorySequenceBuilder {
         currentTrajectoryBuilder = new TrajectoryBuilder(lastPose, tangent, currentVelConstraint, currentAccelConstraint, resolution);
     }
 
-    public org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence build() {
+    public TrajectorySequence build() {
         pushPath();
 
         List<TrajectoryMarker> globalMarkers = convertMarkersToGlobal(
@@ -491,7 +491,7 @@ public class TrajectorySequenceBuilder {
                 temporalMarkers, displacementMarkers, spatialMarkers
         );
 
-        return new org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence(projectGlobalMarkersToLocalSegments(globalMarkers, sequenceSegments));
+        return new TrajectorySequence(projectGlobalMarkersToLocalSegments(globalMarkers, sequenceSegments));
     }
 
     private List<TrajectoryMarker> convertMarkersToGlobal(

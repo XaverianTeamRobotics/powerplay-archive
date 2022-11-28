@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive;
+package org.firstinspires.ftc.teamcode.internals.odometry.drive;
 
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,16 +15,16 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.internals.odometry.util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.*;
+import static org.firstinspires.ftc.teamcode.internals.odometry.drive.DriveConstants.*;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.

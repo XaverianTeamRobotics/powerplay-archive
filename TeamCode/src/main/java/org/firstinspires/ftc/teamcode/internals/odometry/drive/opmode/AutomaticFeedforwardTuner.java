@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.internals.odometry.drive.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -10,14 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.LoggingUtil;
-import org.firstinspires.ftc.teamcode.util.RegressionUtil;
+import org.firstinspires.ftc.teamcode.internals.odometry.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.internals.odometry.util.LoggingUtil;
+import org.firstinspires.ftc.teamcode.internals.odometry.util.RegressionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.*;
+import static org.firstinspires.ftc.teamcode.internals.odometry.drive.DriveConstants.*;
+
 
 /*
  * Op mode for computing kV, kStatic, and kA from various drive routines. For the curious, here's an
