@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.odometry.util;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 
 /**

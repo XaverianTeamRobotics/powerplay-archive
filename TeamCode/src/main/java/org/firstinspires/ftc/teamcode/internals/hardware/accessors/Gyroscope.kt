@@ -23,7 +23,7 @@ class Gyroscope(var name: String) {
         }
 
     /**
-     * The heading of the gyroscope in positive cartiesan degrees (0-360).
+     * The heading of the Z-axis of the gyroscope in positive cartiesan degrees (0-360).
      */
     val heading: Int
         get() {
@@ -31,7 +31,7 @@ class Gyroscope(var name: String) {
         }
 
     /**
-     * The raw orientation data returned by the gyroscope before being computed into the heading.
+     * The raw orientation data returned by the gyroscope before being computed into a heading.
      */
     val raw: IntArray
         get() {

@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.internals.features
+package org.firstinspires.ftc.teamcode.features
 
-import com.michaell.looping.ScriptParameters
+import org.firstinspires.ftc.teamcode.internals.features.Buildable
+import org.firstinspires.ftc.teamcode.internals.features.Feature
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.initializeControlHubMotors
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
-import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 
 /**
 * This is a feature that allows for a mecanum robot to be powered by a gamepad.
@@ -11,7 +13,8 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.contr
  * @param useExpansionHub Whether or not to use the expansion hub to get the motors. Requires that the expansion hub motors be initialized before use
  * @param fieldCentric Whether or not to use field centric controls. The imu must be initialized prior to use.
  */
-class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(), Buildable {
+class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(),
+    Buildable {
 
     private var mecanumDriver: MecanumDriver? = null
 
@@ -20,18 +23,18 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     constructor(drivetrainMapMode: DrivetrainMapMode, useExpansionHub: Boolean) : this(drivetrainMapMode, useExpansionHub, false, false)
 
     override fun build() {
+        initializeControlHubMotors()
         mecanumDriver = MecanumDriver(drivetrainMapMode, useExpansionHub, fieldCentric)
     }
 
     override fun loop() {
         val rot: Double = if (!isRotInverted) {
-            controller1.leftStickX
+            controller1.rightStickX / 2.5
         } else {
-            -controller1.leftStickX
+            -(controller1.rightStickX / 2.5)
         }
-        val x: Double = controller1.rightStickX
-        val y: Double = -controller1.rightStickY
-
+        val x: Double = -controller1.leftStickX / 1.25
+        val y: Double = controller1.leftStickY / 1.25
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }

@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Thomas/StudioProjects/robot/TeamCode/src/main/res/xml/main_config.xml" value="0.26614583333333336" />
+        <entry key="..\:/Users/Thomas/StudioProjects/robot/TeamCode/src/main/res/xml/test.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/micha/AndroidStudioProjects/FtcRobotController/TeamCode/src/main/res/xml/test.xml" value="0.18795289855072464" />
         <entry key="FtcRobotController/src/main/res/layout/activity_ftc_controller.xml" value="0.6619791666666667" />
       </map>

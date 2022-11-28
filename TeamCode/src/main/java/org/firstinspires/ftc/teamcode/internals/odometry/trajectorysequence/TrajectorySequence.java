@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
 
 import java.util.Collections;

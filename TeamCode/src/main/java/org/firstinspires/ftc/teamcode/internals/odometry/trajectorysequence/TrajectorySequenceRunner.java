@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence;
 
 import androidx.annotation.Nullable;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,12 +14,11 @@ import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
-
 import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TrajectorySegment;
-import org.firstinspires.ftc.teamcode.internals.odometry.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.TurnSegment;
 import org.firstinspires.ftc.teamcode.internals.odometry.trajectorysequence.sequencesegment.WaitSegment;
+import org.firstinspires.ftc.teamcode.internals.odometry.util.DashboardUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -200,9 +198,9 @@ public class TrajectorySequenceRunner {
     }
 
     private void draw(
-            Canvas fieldOverlay,
-            TrajectorySequence sequence, SequenceSegment currentSegment,
-            Pose2d targetPose, Pose2d poseEstimate
+        Canvas fieldOverlay,
+        TrajectorySequence sequence, SequenceSegment currentSegment,
+        Pose2d targetPose, Pose2d poseEstimate
     ) {
         if (sequence != null) {
             for (int i = 0; i < sequence.size(); i++) {
