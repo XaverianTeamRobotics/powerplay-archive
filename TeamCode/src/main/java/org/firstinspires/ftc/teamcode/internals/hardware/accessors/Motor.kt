@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.internals.hardware.data.MotorOperation
 import org.firstinspires.ftc.teamcode.internals.hardware.data.StandardMotorParameters
+import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
 
 /**
  * A motor is a big thing that can rotate and drive things. Note that driving to a position is not supported by this API, and that's very much by design. The internal encoder and PID controller of motors both have a horribly low resolution, and thus should never be used when attempting to precisely drive to a position. Use an external encoder and write a custom PID loop for this functionality instead. If absolutely necessary, you can still use the motor's internal position driver via the internal motor accessor in this class.
@@ -32,6 +33,8 @@ class Motor(var name: String) {
         } set(value) {
             field = value
             HardwareGetter.setMotorValue(name, StandardMotorParameters(value, MotorOperation.POWER))
+
+            if (standardMotorID() != null) RDWebSocketServer.setMotorPowerStatic(standardMotorID()!!, value/100.0)
         }
 
     /**
@@ -44,6 +47,8 @@ class Motor(var name: String) {
         } set(value) {
             field = value
             HardwareGetter.setMotorValue(name, StandardMotorParameters(value, MotorOperation.ENCODER_POWER))
+
+            if (standardMotorID() != null) RDWebSocketServer.setMotorPowerStatic(standardMotorID()!!, value/100.0)
         }
 
     /**
@@ -53,4 +58,20 @@ class Motor(var name: String) {
         return HardwareGetter.isMotorBusy(name)
     }
 
+    /**
+     * Return the 0-7 code of the motor if it is one of the stantard motors, or null if it is not.
+     */
+    fun standardMotorID(): Int? {
+        return when (name) {
+            "motor0"    -> 0
+            "motor1"    -> 1
+            "motor2"    -> 2
+            "motor3"    -> 3
+            "motor0e"   -> 4
+            "motor1e"   -> 5
+            "motor2e"   -> 6
+            "motor3e"   -> 7
+            else        -> null
+        }
+    }
 }
