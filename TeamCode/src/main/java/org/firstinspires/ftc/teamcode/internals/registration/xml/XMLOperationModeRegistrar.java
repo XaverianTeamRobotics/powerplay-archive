@@ -58,8 +58,6 @@ public class XMLOperationModeRegistrar {
             log("Checking for autoTransition...", KEY);
             if (xmlParser.rootElement.hasAttribute("autoTransition")) {
                 metaBuilder.setTransitionTarget(xmlParser.rootElement.getAttribute("autoTransition"));
-            } else {
-                metaBuilder.setTransitionTarget(null);
             }
 
             log("Registering...", KEY);

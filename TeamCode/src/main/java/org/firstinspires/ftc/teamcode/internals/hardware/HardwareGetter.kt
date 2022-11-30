@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
+import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
 
 class HardwareGetter {
     companion object {
@@ -811,18 +812,31 @@ class Devices {
             expansion_motor1 = Motor("motor1e")
             expansion_motor2 = Motor("motor2e")
             expansion_motor3 = Motor("motor3e")
+
+            // Web Socket Server
+            RDWebSocketServer.enableMotorStatic(4)
+            RDWebSocketServer.enableMotorStatic(5)
+            RDWebSocketServer.enableMotorStatic(6)
+            RDWebSocketServer.enableMotorStatic(7)
         }
 
         @JvmStatic
         fun initializeArmMotors() {
             expansion_motor0 = Motor("motor0e")
             expansion_motor1 = Motor("motor1e")
+
+            // Web Socket Server
+            RDWebSocketServer.enableMotorStatic(4)
+            RDWebSocketServer.enableMotorStatic(5)
         }
 
         @JvmStatic
         fun initializeHandMotors() {
             expansion_motor2 = Motor("motor2e")
             expansion_motor2.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+
+            // Web Socket Server
+            RDWebSocketServer.enableMotorStatic(6)
         }
 
         /**
@@ -840,6 +854,12 @@ class Devices {
             motor1 = Motor("motor1")
             motor2 = Motor("motor2")
             motor3 = Motor("motor3")
+
+            // Initialize the web server for the motors
+            RDWebSocketServer.enableMotorStatic(0)
+            RDWebSocketServer.enableMotorStatic(1)
+            RDWebSocketServer.enableMotorStatic(2)
+            RDWebSocketServer.enableMotorStatic(3)
         }
 
         /**

@@ -96,7 +96,7 @@ public class XMLRoboscriptParser {
 
     public boolean isTeleOp() {
         if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("teleop")) return true;
-        else if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("data")) return false;
+        else if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("auto")) return false;
         else {
             System.out.println("[XML] Error: mode is unknown (" + rootElement.getElementsByTagName("mode").item(0).getTextContent() + ")");
             throw new RuntimeException("Invalid XML Data");
