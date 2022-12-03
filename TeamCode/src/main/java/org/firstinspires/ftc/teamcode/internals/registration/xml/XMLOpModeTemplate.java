@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.registration.xml;
 
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 
 import java.util.ArrayList;
@@ -11,22 +12,23 @@ public class XMLOpModeTemplate extends OperationMode {
     public ArrayList<XMLCodeLine> xmlCodeLines;
 
     public XMLOpModeTemplate(XMLRoboscriptParser roboscriptParser) {
-        System.out.println("[XML] - Constructing XMLOpModeTemplate");
         this.roboscriptParser = roboscriptParser;
         this.codeBlock = new XMLCodeSegment(roboscriptParser.getCodeBlock());
         this.xmlCodeLines = codeBlock.getContainedCode();
+        environment.init();
     }
 
     @Override
     public void construct() {
-        for (XMLCodeLine n: codeBlock.getContainedCode()) {
-            n.runAction(environment);
-            xmlCodeLines.remove(n);
-        }
+        telemetry.setAutoClear(false);
+        Devices.initializeControlHubMotors();
     }
 
     @Override
     public void run() {
-
+        XMLCodeLine n = xmlCodeLines.get(0);
+        n.runAction(environment);
+        xmlCodeLines.remove(n);
+        sleep(10);
     }
 }

@@ -12,6 +12,8 @@
 // Custom definitions may go here
 plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.21'
+
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 // Include common definitions from above.
@@ -40,4 +42,5 @@ dependencies {
 }
 repositories {
     mavenCentral()
+    google()
 }

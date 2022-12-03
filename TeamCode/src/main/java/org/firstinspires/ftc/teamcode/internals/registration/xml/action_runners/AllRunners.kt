@@ -1,19 +1,21 @@
 package org.firstinspires.ftc.teamcode.internals.registration.xml.action_runners
 
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XMLCodeLine
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlActionMap
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlEvironment
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlVariable
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.telemetry
-import org.w3c.dom.Node
+import org.w3c.dom.Element
 
 class VariableDeclarationRunner : BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        val name = node.attributes.getNamedItem("name").nodeValue
-        val type = node.attributes.getNamedItem("type").nodeValue
-        val value = node.attributes.getNamedItem("value").firstChild
+    override fun run(env: XmlEvironment, node: Element) {
+        val name = node.getElementsByTagName("name").item(0).textContent
+        val value = (node.getElementsByTagName("value").item(0) as Element).getElementsByTagName("expression").item(0)
 
-        XMLCodeLine(value).runAction(env)
+        XMLCodeLine(value as Element).runAction(env)
         val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
         env.resetCachedValues()
 
@@ -22,27 +24,29 @@ class VariableDeclarationRunner : BaseRunner {
 }
 
 class IntegerConstantRunner : BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        env.cacheValue1 = node.nodeValue.toInt()
+    override fun run(env: XmlEvironment, node: Element) {
+        env.cacheValue1 = node.textContent.toInt()
     }
 }
 
 class TelemetryLogLineRunner : BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        val value = node.attributes.getNamedItem("value").firstChild
-        XMLCodeLine(value).runAction(env)
+    override fun run(env: XmlEvironment, node: Element) {
+        val value = (node.getElementsByTagName("content").item(0) as Element).getElementsByTagName("expression").item(0)
+        XMLCodeLine(value as Element).runAction(env)
         val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
         env.resetCachedValues()
 
-        telemetry.addData("Log", computedValue)
+        Logging.logText(computedValue.toString())
+        println(computedValue)
+        Logging.updateLog()
     }
 }
 
 class VariableSetRunner: BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        val name = node.attributes.getNamedItem("reference").nodeValue
-        val value = node.attributes.getNamedItem("value").firstChild
-        XMLCodeLine(value).runAction(env)
+    override fun run(env: XmlEvironment, node: Element) {
+        val name = node.getElementsByTagName("reference").item(0).textContent
+        val value = (node.getElementsByTagName("value").item(0) as Element).getElementsByTagName("expression").item(0)
+        XMLCodeLine(value as Element).runAction(env)
         val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
         env.resetCachedValues()
 
@@ -51,23 +55,23 @@ class VariableSetRunner: BaseRunner {
 }
 
 class VariableUsageRunner: BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
+    override fun run(env: XmlEvironment, node: Element) {
         val name = node.textContent
         env.cacheValue1 = env.variables[name]?.value
     }
 }
 
 class BinaryExpressionRunner: BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        val left = node.childNodes.item(0)
-        val right = node.childNodes.item(1)
+    override fun run(env: XmlEvironment, node: Element) {
+        val left = node.getElementsByTagName("expression").item(0) as Element
+        val right = node.getElementsByTagName("expression").item(1) as Element
         val operator = node.attributes.getNamedItem("operand").nodeValue
 
-        XMLCodeLine(left).runAction(env)
+        XMLCodeLine(left as Element).runAction(env)
         val computedLeft = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: left
         env.resetCachedValues()
 
-        XMLCodeLine(right).runAction(env)
+        XMLCodeLine(right as Element).runAction(env)
         val computedRight = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: right
         env.resetCachedValues()
 
@@ -100,13 +104,61 @@ class BinaryExpressionRunner: BaseRunner {
 }
 
 class ParenthesisRunner: BaseRunner {
-    override fun run(env: XmlEvironment, node: Node) {
-        val value = node.firstChild
-        XMLCodeLine(value).runAction(env)
+    override fun run(env: XmlEvironment, node: Element) {
+        val value = node.getElementsByTagName("expression").item(0)
+        XMLCodeLine(value as Element).runAction(env)
         val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
         env.resetCachedValues()
 
         env.cacheValue1 = computedValue
+    }
+}
+
+class ClearTelemetryRunner: BaseRunner {
+    override fun run(env: XmlEvironment, node: Element) {
+        telemetry.clear()
+        telemetry.update()
+    }
+}
+
+class WaitRunner: BaseRunner {
+    override fun run(env: XmlEvironment, node: Element) {
+        val value = node.getElementsByTagName("expression").item(0)
+        XMLCodeLine(value as Element).runAction(env)
+        val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
+        env.resetCachedValues()
+
+        HardwareGetter.opMode?.sleep(computedValue.toString().toLong())
+    }
+}
+
+class MotorSetRunner: BaseRunner {
+    override fun run(env: XmlEvironment, node: Element) {
+        val motor = node.getElementsByTagName("number").item(0).textContent.toInt()
+        val value = node.getElementsByTagName("expression").item(0)
+        XMLCodeLine(value as Element).runAction(env)
+        val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
+        env.resetCachedValues()
+
+        val motorDevice = when (motor) {
+            0 -> Devices.motor0
+            1 -> Devices.motor1
+            2 -> Devices.motor2
+            3 -> Devices.motor3
+            4 -> Devices.expansion_motor0
+            5 -> Devices.expansion_motor1
+            6 -> Devices.expansion_motor2
+            7 -> Devices.expansion_motor3
+            else -> throw Exception("Invalid motor number $motor")
+        }
+
+        motorDevice.power = computedValue.toString().toDouble()
+    }
+}
+
+class FloatConstantRunner: BaseRunner {
+    override fun run(env: XmlEvironment, node: Element) {
+        env.cacheValue1 = node.textContent.toDouble()
     }
 }
 
@@ -118,4 +170,8 @@ fun addAllRunners(xmlEvironment: XmlEvironment) {
     xmlEvironment.functions[XmlActionMap.VARIABLE_USAGE] = VariableUsageRunner()
     xmlEvironment.functions[XmlActionMap.BINARY_EXPRESSION] = BinaryExpressionRunner()
     xmlEvironment.functions[XmlActionMap.PARENTHESES] = ParenthesisRunner()
+    xmlEvironment.functions[XmlActionMap.CLEAR_TELEMETRY] = ClearTelemetryRunner()
+    xmlEvironment.functions[XmlActionMap.WAIT] = WaitRunner()
+    xmlEvironment.functions[XmlActionMap.MOTOR_SET_POWER] = MotorSetRunner()
+    xmlEvironment.functions[XmlActionMap.FLOAT_CONSTANT] = FloatConstantRunner()
 }
