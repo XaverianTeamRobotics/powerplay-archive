@@ -60,17 +60,17 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
             false -> {
                 when (drivetrainMapMode) {
                     DrivetrainMapMode.FR_BR_FL_BL -> {
-                        Devices.motor0.power = frontRightPower
-                        Devices.motor1.power = backRightPower
-                        Devices.motor2.power = frontLeftPower
-                        Devices.motor3.power = backLeftPower
+                        Devices.motor0.power = frontRightPower * 100
+                        Devices.motor1.power = backRightPower * 100
+                        Devices.motor2.power = frontLeftPower * 100
+                        Devices.motor3.power = backLeftPower * 100
                     }
 
                     DrivetrainMapMode.BL_FL_BR_FR -> {
-                        Devices.motor0.power = backLeftPower
-                        Devices.motor1.power = frontLeftPower
-                        Devices.motor2.power = backRightPower
-                        Devices.motor3.power = frontRightPower
+                        Devices.motor0.power = backLeftPower * 100
+                        Devices.motor1.power = frontLeftPower * 100
+                        Devices.motor2.power = backRightPower * 100
+                        Devices.motor3.power = frontRightPower * 100
                     }
                 }
             }
@@ -78,17 +78,17 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
             true -> {
                 when (drivetrainMapMode) {
                     DrivetrainMapMode.FR_BR_FL_BL -> {
-                        Devices.expansion_motor0.power = frontRightPower
-                        Devices.expansion_motor1.power = backRightPower
-                        Devices.expansion_motor2.power = frontLeftPower
-                        Devices.expansion_motor3.power = backLeftPower
+                        Devices.expansion_motor0.power = frontRightPower * 100
+                        Devices.expansion_motor1.power = backRightPower * 100
+                        Devices.expansion_motor2.power = frontLeftPower * 100
+                        Devices.expansion_motor3.power = backLeftPower * 100
                     }
 
                     DrivetrainMapMode.BL_FL_BR_FR -> {
-                        Devices.expansion_motor0.power = backLeftPower
-                        Devices.expansion_motor1.power = frontLeftPower
-                        Devices.expansion_motor2.power = backRightPower
-                        Devices.expansion_motor3.power = frontRightPower
+                        Devices.expansion_motor0.power = backLeftPower * 100
+                        Devices.expansion_motor1.power = frontLeftPower * 100
+                        Devices.expansion_motor2.power = backRightPower * 100
+                        Devices.expansion_motor3.power = frontRightPower * 100
                     }
                 }
             }
