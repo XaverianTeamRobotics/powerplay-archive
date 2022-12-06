@@ -822,16 +822,26 @@ class Devices {
             camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
         }
 
-        @JvmStatic
-        fun initializeGyroscope() {
-            gyroscope = Gyroscope("gyro")
-        }
-
     }
 }
 
 class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
     override fun run(p0: ScriptParameters?) {
         action(gamepad.request.issueRequest(button) as Double)
+    }
+}
+
+fun initConfigDevices() {
+    val devices = Devices::class.java.declaredFields
+    val map = HardwareGetter.hardwareMap?.getAllNames(HardwareDevice::class.java)
+    for(mappedDevice in map!!) {
+        val device = devices.find { device ->
+            val nameBeginning = device.name.lastIndexOf(".") + 1
+            val name = device.name.substring(nameBeginning)
+            return@find name == mappedDevice
+        }
+        device?.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
+        println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+        // TODO: cameras
     }
 }
