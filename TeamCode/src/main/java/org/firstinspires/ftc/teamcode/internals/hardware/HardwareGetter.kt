@@ -757,54 +757,28 @@ object InitializedDCDevices {
 class Devices {
     companion object {
 
-        @JvmStatic
-        lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
-        @JvmStatic
-        lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
-
-        @JvmStatic
-        lateinit var motor0: Motor
-        @JvmStatic
-        lateinit var motor1: Motor
-        @JvmStatic
-        lateinit var motor2: Motor
-        @JvmStatic
-        lateinit var motor3: Motor
-
-        @JvmStatic
-        lateinit var expansion_motor0: Motor
-        @JvmStatic
-        lateinit var expansion_motor1: Motor
-        @JvmStatic
-        lateinit var expansion_motor2: Motor
-        @JvmStatic
-        lateinit var expansion_motor3: Motor
-
-        @JvmStatic
-        lateinit var camera0: WebcamName
-        @JvmStatic
-        lateinit var camera1: WebcamName
-
-        @JvmStatic
-        lateinit var gyroscope: Gyroscope
-
-        @JvmStatic
-        lateinit var integrated_imu: IMU
+        @JvmStatic lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
+        @JvmStatic lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
+        @JvmStatic lateinit var motor0: Motor
+        @JvmStatic lateinit var motor1: Motor
+        @JvmStatic lateinit var motor2: Motor
+        @JvmStatic lateinit var motor3: Motor
+        @JvmStatic lateinit var expansion_motor0: Motor
+        @JvmStatic lateinit var expansion_motor1: Motor
+        @JvmStatic lateinit var expansion_motor2: Motor
+        @JvmStatic lateinit var expansion_motor3: Motor
+        @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
+        @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
+        @JvmStatic lateinit var camera0: WebcamName
+        @JvmStatic lateinit var camera1: WebcamName
+        @JvmStatic lateinit var gyroscope: Gyroscope
+        @JvmStatic lateinit var integrated_imu: IMU
 
         @JvmStatic
         fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
             HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
         }
 
-        /**
-         * Initializes all motors on the expansion hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0e
-         * - motor1e
-         * - motor2e
-         * - motor3e
-         */
         @JvmStatic
         fun initializeExpansionHubMotors() {
             expansion_motor0 = Motor("motor0e")
@@ -820,20 +794,11 @@ class Devices {
         }
 
         @JvmStatic
-        fun initializeHandMotors() {
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor2.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        fun initializeHandServos() {
+            servo0 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo("servo0")
+            servo1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo("servo1")
         }
 
-        /**
-         * Initializes all motors on the control hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0
-         * - motor1
-         * - motor2
-         * - motor3
-         */
         @JvmStatic
         fun initializeControlHubMotors() {
             motor0 = Motor("motor0")
@@ -842,29 +807,16 @@ class Devices {
             motor3 = Motor("motor3")
         }
 
-        /**
-         * Initializes the IMU on the expansion hub. Required to use the integrated_imu object
-         * Requires the following IMU name:
-         * - imu
-         *
-         * _(This is built into the robot controller on i2c port 0, it just needs to be named in the config)_
-         */
         @JvmStatic
         fun initializeIntegratedIMU() {
             integrated_imu = IMU("imu")
         }
 
-        /**
-         * Initializes camera 0 as a WebcamName.
-         */
         @JvmStatic
         fun initializeCamera0() {
             camera0 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera0")
         }
 
-        /**
-         * Initializes camera 1 as a WebcamName.
-         */
         @JvmStatic
         fun initializeCamera1() {
             camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")

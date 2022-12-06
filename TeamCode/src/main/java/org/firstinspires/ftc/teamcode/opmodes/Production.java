@@ -5,16 +5,16 @@ import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 
-public class MecanumSmallRobot extends OperationMode implements TeleOperation {
+public class Production extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-        MecanumDrivetrainFeature drivetrain = new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, false, false, true);
-        registerFeature(drivetrain);
+        registerFeature(new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, false, false, false));
     }
 
     @Override
     public void run() {
 
     }
+
 }
