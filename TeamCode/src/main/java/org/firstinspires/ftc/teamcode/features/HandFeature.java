@@ -18,7 +18,7 @@ public class HandFeature extends Feature implements Buildable {
 
     @Override
     public void loop() {
-        if(open && Devices.distanceSensor.getDistance() < 33 && NanoClock.system().seconds() < second) {
+        if(open && Devices.distanceSensor.getDistance() < 33 && NanoClock.system().seconds() > second) {
             Devices.servo0.setPosition(88);
             Devices.servo1.setPosition(12);
             open = false;
