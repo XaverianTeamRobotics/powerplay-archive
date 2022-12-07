@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.features
 import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
-import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.initializeControlHubMotors
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
 
@@ -23,7 +22,7 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     constructor(drivetrainMapMode: DrivetrainMapMode, useExpansionHub: Boolean) : this(drivetrainMapMode, useExpansionHub, false, false)
 
     override fun build() {
-        initializeControlHubMotors()
+
         mecanumDriver = MecanumDriver(drivetrainMapMode, useExpansionHub, fieldCentric)
     }
 

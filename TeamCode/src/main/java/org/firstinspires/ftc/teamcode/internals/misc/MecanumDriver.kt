@@ -30,12 +30,12 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
             }
             true -> {
                 // Read inverse IMU heading, as the IMU heading is CW positive
-                val botHeading: Double = -Devices.integrated_imu.orientation.x
+                val botHeading: Double = -Devices.imu.orientation.x
 
                 Logging.logData("Bot Heading", botHeading)
-                Logging.logData("   X", Devices.integrated_imu.orientation.x)
-                Logging.logData("   Y", Devices.integrated_imu.orientation.y)
-                Logging.logData("   Z", Devices.integrated_imu.orientation.z)
+                Logging.logData("   X", Devices.imu.orientation.x)
+                Logging.logData("   Y", Devices.imu.orientation.y)
+                Logging.logData("   Z", Devices.imu.orientation.z)
                 Logging.updateLog()
 
                 val rotX = x * cos(botHeading) - y * sin(botHeading)
@@ -78,17 +78,17 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
             true -> {
                 when (drivetrainMapMode) {
                     DrivetrainMapMode.FR_BR_FL_BL -> {
-                        Devices.expansion_motor0.power = frontRightPower * 100
-                        Devices.expansion_motor1.power = backRightPower * 100
-                        Devices.expansion_motor2.power = frontLeftPower * 100
-                        Devices.expansion_motor3.power = backLeftPower * 100
+                        Devices.motor4.power = frontRightPower * 100
+                        Devices.motor5.power = backRightPower * 100
+                        Devices.motor6.power = frontLeftPower * 100
+                        Devices.motor7.power = backLeftPower * 100
                     }
 
                     DrivetrainMapMode.BL_FL_BR_FR -> {
-                        Devices.expansion_motor0.power = backLeftPower * 100
-                        Devices.expansion_motor1.power = frontLeftPower * 100
-                        Devices.expansion_motor2.power = backRightPower * 100
-                        Devices.expansion_motor3.power = frontRightPower * 100
+                        Devices.motor4.power = backLeftPower * 100
+                        Devices.motor5.power = frontLeftPower * 100
+                        Devices.motor6.power = backRightPower * 100
+                        Devices.motor7.power = frontRightPower * 100
                     }
                 }
             }
@@ -115,12 +115,12 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
 
             true -> {
                 // Read inverse IMU heading, as the IMU heading is CW positive
-                val botHeading: Double = -Devices.integrated_imu.orientation.x
+                val botHeading: Double = -Devices.imu.orientation.x
 
                 Logging.logData("Bot Heading", botHeading)
-                Logging.logData("   X", Devices.integrated_imu.orientation.x)
-                Logging.logData("   Y", Devices.integrated_imu.orientation.y)
-                Logging.logData("   Z", Devices.integrated_imu.orientation.z)
+                Logging.logData("   X", Devices.imu.orientation.x)
+                Logging.logData("   Y", Devices.imu.orientation.y)
+                Logging.logData("   Z", Devices.imu.orientation.z)
                 Logging.updateLog()
 
                 val rotX = x * cos(botHeading) - y * sin(botHeading)

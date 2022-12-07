@@ -6,7 +6,7 @@ import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gyroscope
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
@@ -756,70 +756,35 @@ object InitializedDCDevices {
 
 class Devices {
     companion object {
-
         @JvmStatic lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
         @JvmStatic lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
+
+        /*
+
+        ADDING HARDWARE DEVICES:
+        1. Create a lateinit variable here with the name of the hardware device and annotate it with @JvmStatic
+        2. Set the type to either a type of DeviceAccessor or HardwareDevice
+        3. Go to /src/main/res/xml/main_config.xml and follow the steps there
+
+         */
+
         @JvmStatic lateinit var motor0: Motor
         @JvmStatic lateinit var motor1: Motor
         @JvmStatic lateinit var motor2: Motor
         @JvmStatic lateinit var motor3: Motor
-        @JvmStatic lateinit var expansion_motor0: Motor
-        @JvmStatic lateinit var expansion_motor1: Motor
-        @JvmStatic lateinit var expansion_motor2: Motor
-        @JvmStatic lateinit var expansion_motor3: Motor
+        @JvmStatic lateinit var motor4: Motor
+        @JvmStatic lateinit var motor5: Motor
+        @JvmStatic lateinit var motor6: Motor
+        @JvmStatic lateinit var motor7: Motor
         @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
         @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
         @JvmStatic lateinit var camera0: WebcamName
         @JvmStatic lateinit var camera1: WebcamName
-        @JvmStatic lateinit var gyroscope: Gyroscope
-        @JvmStatic lateinit var integrated_imu: IMU
+        @JvmStatic lateinit var imu: IMU
 
         @JvmStatic
         fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
             HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
-        }
-
-        @JvmStatic
-        fun initializeExpansionHubMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor3 = Motor("motor3e")
-        }
-
-        @JvmStatic
-        fun initializeArmMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-        }
-
-        @JvmStatic
-        fun initializeHandServos() {
-            servo0 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo("servo0")
-            servo1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo("servo1")
-        }
-
-        @JvmStatic
-        fun initializeControlHubMotors() {
-            motor0 = Motor("motor0")
-            motor1 = Motor("motor1")
-            motor2 = Motor("motor2")
-            motor3 = Motor("motor3")
-        }
-
-        @JvmStatic
-        fun initializeIntegratedIMU() {
-            integrated_imu = IMU("imu")
-        }
-
-        @JvmStatic
-        fun initializeCamera0() {
-            camera0 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera0")
-        }
-
-        @JvmStatic
-        fun initializeCamera1() {
-            camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
         }
 
     }
@@ -831,17 +796,28 @@ class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinsp
     }
 }
 
+/**
+ * Initializes devices from Devices.Companion which are found in the current RC configuration. Should be executed by jlooping prior to OperationMode.construct().
+ */
 fun initConfigDevices() {
+    // find our devices
     val devices = Devices::class.java.declaredFields
     val map = HardwareGetter.hardwareMap?.getAllNames(HardwareDevice::class.java)
     for(mappedDevice in map!!) {
+        // for each device in the config, find its corresponding device in Devices.Companion
         val device = devices.find { device ->
             val nameBeginning = device.name.lastIndexOf(".") + 1
             val name = device.name.substring(nameBeginning)
             return@find name == mappedDevice
         }
-        device?.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
-        println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
-        // TODO: cameras
+        // if the device is a DeviceAccessor, lets instantiate it as such, otherwise we fallback to using hardwareMap.get()
+        // if the device isn't a valid device at all (not a DeviceAccessor nor HardwareDevice) we just ignore it. this may actually happen pretty often depending on how the config is written
+        if(device?.type?.isAssignableFrom(DeviceAccessor::class.java) == true) {
+            device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
+            println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+        }else if(device?.type?.isAssignableFrom(HardwareDevice::class.java) == true) {
+            device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type::class.java, mappedDevice))
+            println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+        }
     }
 }

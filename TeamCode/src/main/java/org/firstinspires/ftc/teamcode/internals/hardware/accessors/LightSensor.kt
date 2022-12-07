@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.RawBrightness
 /**
  * A light sensor measures the brightness of light.
  */
-class LightSensor(var name: String) {
+class LightSensor(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.
