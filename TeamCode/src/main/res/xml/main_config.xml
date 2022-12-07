@@ -31,6 +31,9 @@ initialized before your opmode's construct() method executes.
             <goBILDA5202SeriesMotor name="motor6" port="2" />
             <goBILDA5202SeriesMotor name="motor7" port="3" />
             <LynxEmbeddedIMU name="imu1" port="0" bus="0" />
+            <REV_VL53L0X_RANGE_SENSOR name="distanceSensor" port="0" bus="1" />
+            <Servo name="servo0" port="0" />
+            <Servo name="servo1" port="1" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>

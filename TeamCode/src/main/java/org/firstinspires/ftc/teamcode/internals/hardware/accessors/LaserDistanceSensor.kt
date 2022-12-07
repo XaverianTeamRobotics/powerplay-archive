@@ -34,7 +34,7 @@ class LaserDistanceSensor(override var name: String): DeviceAccessor(name) {
         }
 
     /**
-     * The distance recorded by the sensor.
+     * The distance recorded by the sensor. The default is millimeters.
      */
     val distance: Double
         get() {

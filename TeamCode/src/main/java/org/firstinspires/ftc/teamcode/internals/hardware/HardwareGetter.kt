@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.LaserDistanceSensor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
@@ -781,6 +782,7 @@ class Devices {
         @JvmStatic lateinit var camera0: WebcamName
         @JvmStatic lateinit var camera1: WebcamName
         @JvmStatic lateinit var imu: IMU
+        @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
 
         @JvmStatic
         fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
@@ -812,12 +814,14 @@ fun initConfigDevices() {
         }
         // if the device is a DeviceAccessor, lets instantiate it as such, otherwise we fallback to using hardwareMap.get()
         // if the device isn't a valid device at all (not a DeviceAccessor nor HardwareDevice) we just ignore it. this may actually happen pretty often depending on how the config is written
-        if(device?.type?.isAssignableFrom(DeviceAccessor::class.java) == true) {
-            device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
-            println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
-        }else if(device?.type?.isAssignableFrom(HardwareDevice::class.java) == true) {
-            device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type::class.java, mappedDevice))
-            println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+        if(device != null) {
+            if(DeviceAccessor::class.java.isAssignableFrom(device.type)) {
+                device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
+                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+            }else if(HardwareDevice::class.java.isAssignableFrom(device.type)) {
+                device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type::class.java, mappedDevice))
+                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+            }
         }
     }
 }
