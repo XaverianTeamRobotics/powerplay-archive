@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.features;
 
-import com.acmerobotics.roadrunner.util.NanoClock;
 import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
+import org.firstinspires.ftc.teamcode.internals.misc.Clock;
 
 public class HandFeature extends Feature implements Buildable {
 
     private boolean open = true;
-    private double second = 0;
 
     @Override
     public void build() {
         Devices.servo0.setPosition(50);
         Devices.servo1.setPosition(50);
+        Clock.make("hand");
     }
 
     @Override
     public void loop() {
-        if(open && Devices.distanceSensor.getDistance() < 33 && NanoClock.system().seconds() > second) {
+        if(open && Devices.distanceSensor.getDistance() < 33 && Clock.get("hand").elapsed(2)) {
             Devices.servo0.setPosition(88);
             Devices.servo1.setPosition(12);
             open = false;
@@ -26,7 +26,7 @@ public class HandFeature extends Feature implements Buildable {
             Devices.servo0.setPosition(50);
             Devices.servo1.setPosition(50);
             open = true;
-            second = NanoClock.system().seconds() + 2;
+            Clock.get("hand").update();
         }
     }
 
