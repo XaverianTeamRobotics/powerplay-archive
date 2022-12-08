@@ -20,10 +20,10 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.4.3'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'org.firstinspires.ftc:gameAssets-PowerPlay:1.0.0'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.7'
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation 'com.michaell:jlooping:2.0.1'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.7'
 
     testImplementation 'junit:junit:4.13.2'
 }
