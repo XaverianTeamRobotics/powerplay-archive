@@ -26,7 +26,7 @@ public class HandFeature extends Feature implements Buildable {
             Devices.servo0.setPosition(50);
             Devices.servo1.setPosition(50);
             open = true;
-            second = NanoClock.system().seconds() + 1;
+            second = NanoClock.system().seconds() + 2;
         }
     }
 
