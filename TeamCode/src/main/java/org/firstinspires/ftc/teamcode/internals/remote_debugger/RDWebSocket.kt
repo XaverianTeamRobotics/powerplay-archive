@@ -57,6 +57,8 @@ class RDWebSocket(
                 messageSerialized.jsonObject["motor"]!!.jsonPrimitive.content.toInt(),
                 messageSerialized.jsonObject["power"]!!.jsonPrimitive.content.toDouble()
             )
+        else if (type == "telemetry-print")
+            logCallback(messageSerialized.jsonObject["content"]!!.jsonPrimitive.content)
     }
 
     override fun onOpen() {

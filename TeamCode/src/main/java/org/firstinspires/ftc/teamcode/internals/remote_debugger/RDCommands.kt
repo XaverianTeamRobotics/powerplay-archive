@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.motor
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.motor1
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.motor2
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.motor3
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
 import java.text.DateFormat.getDateTimeInstance
 import java.util.*
 
@@ -86,4 +87,12 @@ fun motorPowerCallback(motor: Int, power: Double) {
         6 -> expansion_motor2   .power = power
         7 -> expansion_motor3   .power = power
     }
+}
+
+/*
+ * A callback for adding content to the Logging class
+ */
+fun logCallback(content: String) {
+    Logging.logText(content)
+    Logging.updateLog()
 }
