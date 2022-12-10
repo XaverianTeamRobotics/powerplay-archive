@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.features
 import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
 
@@ -27,13 +28,14 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     }
 
     override fun loop() {
+
         val rot: Double = if (!isRotInverted) {
-            controller1.rightStickX
+            controller1.rightStickX + 0.2 * controller2.rightStickX
         } else {
-            -(controller1.rightStickX)
+            -(controller1.rightStickX + 0.2 * controller2.rightStickX)
         }
-        val x: Double = -controller1.leftStickX
-        val y: Double = controller1.leftStickY
+        val x: Double = -1 * (controller1.leftStickX + 0.2 * controller2.leftStickX)
+        val y: Double = (controller1.leftStickY + 0.2 * controller2.leftStickY)
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }
