@@ -27,10 +27,10 @@ public class ArmFeature extends Feature {
         double powerAll = 0.0;
         double power0 = 0.0;
         double power1 = 0.0;
-        final double FRICTION = 5.0;
+        final double FRICTION = 0; // 5.0 was close
 
-        double rightTriggerSum = rightTrigger1 + 0.2 * rightTrigger2; // 0.2 gives controller 2 fine control
-        double leftTriggerSum = leftTrigger1 + 0.2 * leftTrigger2;
+        double rightTriggerSum = rightTrigger1 + 0.1 * rightTrigger2; // 0.1 gives controller 2 fine control
+        double leftTriggerSum = leftTrigger1 + 0.1 * leftTrigger2;
 
         if (rightTriggerSum > 0) {
             powerAll = 100;
