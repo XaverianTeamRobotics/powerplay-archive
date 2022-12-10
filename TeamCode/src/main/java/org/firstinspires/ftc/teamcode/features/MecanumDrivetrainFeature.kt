@@ -28,12 +28,20 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     }
 
     override fun loop() {
+        /*
+        Right joystick controlls rotation
+        Left joystick controlls forward/backward/left/right movement
+
+        Controller 1 has full power
+        Controller 2 has reduced power (for finer control)
+         */
 
         val rot: Double = if (!isRotInverted) {
             controller1.rightStickX + 0.4 * controller2.rightStickX // 0.4/0.3 are scaling constants for controller 2
         } else {
             -(controller1.rightStickX + 0.4 * controller2.rightStickX)
         }
+
         val x: Double = -1 * (controller1.leftStickX + 0.3 * controller2.leftStickX)
         val y: Double = (controller1.leftStickY + 0.3 * controller2.leftStickY)
         mecanumDriver!!.runMecanum(x, y, rot)
