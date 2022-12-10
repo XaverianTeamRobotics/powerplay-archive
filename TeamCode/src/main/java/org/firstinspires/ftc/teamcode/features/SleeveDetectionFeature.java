@@ -23,7 +23,8 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
     private TelemetryMenu menu;
-    public int spot = 1;
+
+    private int spot = 1;
 
     @Override
     public void build() {
@@ -86,6 +87,10 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
 
         menu.setAnnotation("To change the grayscale presets, set them to the approriate value \n 1 - Low Brightness \n 2 - Medium Brightness \n 3 - High Brightness" +
             "\n\nCurrent gray range: " + GRAY_MIN + " - " + GRAY_MAX + "\n\nCurrent detection ID: " + detectionID);
+    }
+
+    public int getSpot() {
+        return spot;
     }
 
 }

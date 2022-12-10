@@ -36,4 +36,5 @@ initialized before your opmode's construct() method executes.
             <Servo name="servo1" port="1" />
         </LynxModule>
     </LynxUsbDevice>
+    <Webcam name="camera0" serialNumber="23790950" />
 </Robot>
