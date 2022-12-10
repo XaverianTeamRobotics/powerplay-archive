@@ -18,11 +18,14 @@ public class HandFeature extends Feature implements Buildable {
 
     @Override
     public void loop() {
+        /*
+        Pressing x on either controller releases the hand
+         */
         if(open && Devices.distanceSensor.getDistance() < 33 && NanoClock.system().seconds() > second) {
             Devices.servo0.setPosition(88);
             Devices.servo1.setPosition(12);
             open = false;
-        }else if(!open && Devices.controller1.getA()) {
+        }else if(!open && (Devices.controller1.getA() || Devices.controller2.getA())) {
             Devices.servo0.setPosition(50);
             Devices.servo1.setPosition(50);
             open = true;

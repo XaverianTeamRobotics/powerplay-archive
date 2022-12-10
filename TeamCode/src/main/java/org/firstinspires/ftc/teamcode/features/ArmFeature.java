@@ -23,7 +23,7 @@ public class ArmFeature extends Feature {
         double leftTrigger2 = Devices.controller2.getLeftTrigger();
 
         boolean rightBumper = Devices.controller1.getRightBumper();
-        boolean leftBumper = Devices.controller1.getRightBumper();
+        boolean leftBumper = Devices.controller1.getLeftBumper();
 
         double powerAll = 0.0;
         double power0 = 0.0;
