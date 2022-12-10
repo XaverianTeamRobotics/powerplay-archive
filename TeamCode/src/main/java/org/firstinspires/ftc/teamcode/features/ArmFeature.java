@@ -27,10 +27,10 @@ public class ArmFeature extends Feature {
         double powerAll = 0.0;
         double power0 = 0.0;
         double power1 = 0.0;
-        final double FRICTION = 0; // 5.0 was close
+        final double FRICTION = 10; // 5.0 was close
 
-        double rightTriggerSum = rightTrigger1 + 0.1 * rightTrigger2; // 0.1 gives controller 2 fine control
-        double leftTriggerSum = leftTrigger1 + 0.1 * leftTrigger2;
+        double rightTriggerSum = rightTrigger1 + 0.05 * rightTrigger2; // 0.1 gives controller 2 fine control
+        double leftTriggerSum = leftTrigger1 + 0.05 * leftTrigger2;
 
         if (rightTriggerSum > 0) {
             powerAll = 100;
@@ -43,12 +43,12 @@ public class ArmFeature extends Feature {
         }
 
         if (powerAll > 0) {
-            power0 = powerAll;
-            power1 = powerAll - FRICTION;
+            power0 = powerAll - FRICTION;
+            power1 = powerAll;
         }
         else if (powerAll < 0) {
-            power0 = powerAll;
-            power1 = powerAll + FRICTION;
+            power0 = powerAll + FRICTION;
+            power1 = powerAll;
         }
         else {
             power0 = 0;
