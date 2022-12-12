@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
 import org.firstinspires.ftc.teamcode.internals.misc.Clock;
-import org.firstinspires.ftc.teamcode.internals.odometry.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.internals.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 
@@ -14,11 +14,11 @@ public class AutoProduction extends OperationMode implements AutonomousOperation
     private final SleeveDetectionFeature sleeveDetectionFeature = new SleeveDetectionFeature();
     private boolean driving = false;
     Trajectory trajectory;
-    SampleMecanumDrive drive;
+    AutonomousDriver drive;
 
     @Override
     public void construct() {
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new AutonomousDriver(hardwareMap);
         Pose2d startPose = new Pose2d(-63, 36, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
         trajectory = drive.trajectoryBuilder(startPose)
