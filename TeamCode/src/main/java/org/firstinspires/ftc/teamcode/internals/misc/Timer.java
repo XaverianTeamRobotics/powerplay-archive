@@ -14,9 +14,9 @@ public class Timer {
     }
 
     /**
-     * Sets the timer's epoch. Essentially, this resets the timer to 0.
+     * Sets the timer's epoch to the current time. Essentially, this resets the timer to 0.
      */
-    public void update() {
+    public void reset() {
         nanoTime = System.nanoTime();
     }
 
@@ -25,7 +25,7 @@ public class Timer {
     }
 
     /**
-     * Checks if the amount of time specified has elapsed since the last call to {@link #update()}. The time must be in seconds. You can specify sub-second time as a decimal; for example 0.020 for 20 milliseconds or 0.000000001 for 1 nanosecond.
+     * Checks if the amount of time specified has elapsed since the last call to {@link #reset()}. The time must be in seconds. You can specify sub-second time as a decimal; for example 0.020 for 20 milliseconds or 0.000000001 for 1 nanosecond.
      */
     public boolean elapsed(double seconds) {
         return nanoTime / 1e+9D < nanoTime / 1e+9D + seconds;
