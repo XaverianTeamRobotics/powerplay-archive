@@ -21,7 +21,7 @@ class BlinkinRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.
             blinkin.position
         } else {
             blinkin.position = Range.clip(id, 0.2525, 0.7475)
-            0
+            0.0
         }
     }
 

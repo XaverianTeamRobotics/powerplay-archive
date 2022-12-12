@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.ServoOptions
 /**
  * A servo is similar to a motor but can only drive to a specific position.
  */
-class Servo(var name: String) {
+class Servo(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServe
 /**
  * A motor is a big thing that can rotate and drive things. Note that driving to a position is not supported by this API, and that's very much by design. The internal encoder and PID controller of motors both have a horribly low resolution, and thus should never be used when attempting to precisely drive to a position. Use an external encoder and write a custom PID loop for this functionality instead. If absolutely necessary, you can still use the motor's internal position driver via the internal motor accessor in this class.
  */
-class Motor(var name: String) {
+class Motor(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

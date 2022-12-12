@@ -12,6 +12,16 @@ class Logging {
         var dashboardPacket = TelemetryPacket()
 
         @JvmStatic
+        fun log(text: String) {
+            logText(text)
+        }
+
+        @JvmStatic
+        fun log(key: String, value: Any) {
+            logData(key, value)
+        }
+
+        @JvmStatic
         fun logText(text: String) {
             if (isEmulated) {
                 println(text)

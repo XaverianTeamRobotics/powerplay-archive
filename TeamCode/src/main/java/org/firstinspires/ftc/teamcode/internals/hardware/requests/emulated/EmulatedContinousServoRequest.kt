@@ -17,7 +17,7 @@ class EmulatedContinousServoRequest(name: String) : ScriptParameters.Request(nam
             `val` = Range.clip(`val`, -100.0, 100.0)
             power = `val`
             println("Power set to $power.")
-            0
+            0.0
         }
     }
 

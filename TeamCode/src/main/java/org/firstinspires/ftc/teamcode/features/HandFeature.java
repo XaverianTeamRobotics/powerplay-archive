@@ -3,29 +3,34 @@ package org.firstinspires.ftc.teamcode.features;
 import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
+import org.firstinspires.ftc.teamcode.internals.misc.Clock;
 
 import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.controller1;
 import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.expansion_motor2;
 
 public class HandFeature extends Feature implements Buildable {
 
-    private int holdMode = 1;
-    // 1 for force hold
-    // 2 for auto braking mode
+    private boolean open = true;
 
     @Override
     public void build() {
-        Devices.initializeHandMotors();
-    }// code is good - sposored by raid shadow legends
+        Devices.servo0.setPosition(50);
+        Devices.servo1.setPosition(50);
+        Clock.make("hand");
+    }
 
     @Override
     public void loop() {
-        if (controller1.getB())         holdMode = 1;
-        else if (controller1.getA())    holdMode = 2;
-
-        if (controller1.getA())         expansion_motor2.setSpeed( 0.50);
-        else if (controller1.getY())    expansion_motor2.setSpeed(-0.25);
-        else if (holdMode == 1)         expansion_motor2.setSpeed(-0.25);
-        else                            expansion_motor2.setSpeed( 0.00);
+        if(open && Devices.distanceSensor.getDistance() < 33 && Clock.get("hand").elapsed(2)) {
+            Devices.servo0.setPosition(88);
+            Devices.servo1.setPosition(12);
+            open = false;
+        }else if(!open && Devices.controller1.getA()) {
+            Devices.servo0.setPosition(50);
+            Devices.servo1.setPosition(50);
+            open = true;
+            Clock.get("hand").update();
+        }
     }
+
 }

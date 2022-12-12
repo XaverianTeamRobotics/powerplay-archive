@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.Colors
 /**
  * A color sensor can see sounds and hear colors. It is high on multiple psychedelic drugs.
  */
-class ColorSensor(var name: String) {
+class ColorSensor(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

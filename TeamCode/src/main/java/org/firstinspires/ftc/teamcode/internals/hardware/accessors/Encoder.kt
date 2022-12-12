@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.EncoderInput
 /**
  * An encoder tracks the number of rotations of a hex rod and can be used to measure distance.
  */
-class Encoder(var name: String) {
+class Encoder(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

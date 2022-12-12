@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +49,7 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.setJloopingRunner(runner);
             HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
             HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
+            HardwareGetterKt.initConfigDevices();
             HardwareGetter.initStdDevices();
 
             // Set the Caching mode to auto. This allows for faster access of all sensors
@@ -61,7 +63,6 @@ public abstract class OperationMode extends LinearOpMode {
         } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
             throw new RuntimeException(e);
         }
-        // set environment variables
         // tell user-defined code of the opmode to construct itself
         construct();
         // wait until the opmode is executed

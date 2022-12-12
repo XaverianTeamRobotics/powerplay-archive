@@ -7,16 +7,24 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItem;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItemType;
+import org.firstinspires.ftc.teamcode.internals.telemetry.TelemetryMenu;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Objects;
 
+import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.GRAY_MAX;
+import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.GRAY_MIN;
+
 public class SleeveDetectionFeature extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
-    public int spot = 1;
+    private TelemetryMenu menu;
+
+    private int spot = 1;
 
     @Override
     public void build() {
@@ -45,10 +53,24 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
                 Logging.updateLog();
             }
         });
+
+        menu = new TelemetryMenu();
+        MenuItem grayscalePreset = new MenuItem("Grayscale Preset", MenuItemType.INT, true);
+        grayscalePreset.setStepSize(1);
+        grayscalePreset.setMax(3);
+        grayscalePreset.setMin(1);
+        grayscalePreset.setValue(2);
+        menu.addMenuItem(grayscalePreset);
+        menu.runInBackground();
     }
 
     @Override
     public void loop() {
         spot = detector.getDetection();
     }
+
+    public int getSpot() {
+        return spot;
+    }
+
 }

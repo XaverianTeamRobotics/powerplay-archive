@@ -15,7 +15,7 @@ class EmulatedServoRequest(name: String) : ScriptParameters.Request(name) {
         } else {
             pos = vals.position
             println("Position set to $pos.")
-            0
+            0.0
         }
     }
 
