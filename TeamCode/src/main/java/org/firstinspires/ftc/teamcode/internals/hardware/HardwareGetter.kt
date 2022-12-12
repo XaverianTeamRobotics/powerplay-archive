@@ -819,7 +819,7 @@ fun initConfigDevices() {
                 device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
                 println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
             }else if(HardwareDevice::class.java.isAssignableFrom(device.type)) {
-                device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type::class.java, mappedDevice))
+                device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type, mappedDevice))
                 println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
             }
         }
