@@ -30,8 +30,8 @@ public class ArmFeature extends Feature {
         double power1 = 0.0;
         final double FRICTION = 0.0; // Issue with worm gears causes friction to be ignored
 
-        double rightTriggerSum = rightTrigger1 + rightTrigger2;
-        double leftTriggerSum = leftTrigger1 + leftTrigger2;
+        double rightTriggerSum = rightTrigger1 + (rightTrigger2 / 2.0);
+        double leftTriggerSum = leftTrigger1 + (leftTrigger2 / 2.0);
 
         // Sets powerAll based on trigger input
         if (rightTriggerSum > 0) {

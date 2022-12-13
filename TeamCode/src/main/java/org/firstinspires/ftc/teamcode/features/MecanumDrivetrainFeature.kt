@@ -23,10 +23,10 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     for both coordinate and rotational motion. These should be used
     to optimise the driver expereince.
      */
-    var CONTROL1_COORDINATE_MOTION = 0.85
-    var CONTROL2_COORDINATE_MOTION = 0.25
-    var CONTROL1_ROTATIONAL_MOTION = 1.0
-    var CONTROL2_ROTATIONAL_MOTION = 0.25
+    var CONTROL1_COORDINATE_MOTION = 0.65
+    var CONTROL2_COORDINATE_MOTION = 0.23
+    var CONTROL1_ROTATIONAL_MOTION = 0.65
+    var CONTROL2_ROTATIONAL_MOTION = 0.26
 
     constructor() : this(DrivetrainMapMode.FR_BR_FL_BL, false, false, false)
     constructor(drivetrainMapMode: DrivetrainMapMode) : this(drivetrainMapMode, false, false, false)
@@ -47,13 +47,13 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
          */
 
         val rot: Double = if (!isRotInverted) {
-            CONTROL1_COORDINATE_MOTION * controller1.rightStickX + CONTROL2_COORDINATE_MOTION * controller2.rightStickX
+            CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX
         } else {
-            -(CONTROL1_COORDINATE_MOTION * controller1.rightStickX + CONTROL2_COORDINATE_MOTION * controller2.rightStickX)
+            -(CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX)
         }
 
-        val x: Double = -1 * (CONTROL1_ROTATIONAL_MOTION * controller1.leftStickX + CONTROL2_ROTATIONAL_MOTION * controller2.leftStickX)
-        val y: Double = (CONTROL1_ROTATIONAL_MOTION * controller1.leftStickY + CONTROL2_ROTATIONAL_MOTION * controller2.leftStickY)
+        val x: Double = -1 * (CONTROL1_COORDINATE_MOTION * controller1.leftStickX + CONTROL2_COORDINATE_MOTION * controller2.leftStickX)
+        val y: Double = (CONTROL1_COORDINATE_MOTION * controller1.leftStickY + CONTROL2_COORDINATE_MOTION * controller2.leftStickY)
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }
