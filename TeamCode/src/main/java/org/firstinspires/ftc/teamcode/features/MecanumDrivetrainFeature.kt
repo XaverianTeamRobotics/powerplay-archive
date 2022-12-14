@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.features
 import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
 
@@ -17,6 +18,16 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
 
     private var mecanumDriver: MecanumDriver? = null
 
+    /*
+    The following constants dictate the power each controller sends
+    for both coordinate and rotational motion. These should be used
+    to optimise the driver expereince.
+     */
+    var CONTROL1_COORDINATE_MOTION = 0.65
+    var CONTROL2_COORDINATE_MOTION = 0.23
+    var CONTROL1_ROTATIONAL_MOTION = 0.65
+    var CONTROL2_ROTATIONAL_MOTION = 0.26
+
     constructor() : this(DrivetrainMapMode.FR_BR_FL_BL, false, false, false)
     constructor(drivetrainMapMode: DrivetrainMapMode) : this(drivetrainMapMode, false, false, false)
     constructor(drivetrainMapMode: DrivetrainMapMode, useExpansionHub: Boolean) : this(drivetrainMapMode, useExpansionHub, false, false)
@@ -27,13 +38,22 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     }
 
     override fun loop() {
+        /*
+        Right joystick controlls rotation
+        Left joystick controlls forward/backward/left/right movement
+
+        Controller 1 has full power
+        Controller 2 has reduced power (for finer control)
+         */
+
         val rot: Double = if (!isRotInverted) {
-            controller1.rightStickX
+            CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX
         } else {
-            -(controller1.rightStickX)
+            -(CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX)
         }
-        val x: Double = -controller1.leftStickX
-        val y: Double = controller1.leftStickY
+
+        val x: Double = -1 * (CONTROL1_COORDINATE_MOTION * controller1.leftStickX + CONTROL2_COORDINATE_MOTION * controller2.leftStickX)
+        val y: Double = (CONTROL1_COORDINATE_MOTION * controller1.leftStickY + CONTROL2_COORDINATE_MOTION * controller2.leftStickY)
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }
