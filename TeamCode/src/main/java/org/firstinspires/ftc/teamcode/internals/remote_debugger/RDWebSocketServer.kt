@@ -144,9 +144,6 @@ class RDWebSocketServer(address: InetSocketAddress?) :
             if (number > 7 || 0 > number) {
                 throw IllegalArgumentException("number must be between 0 and 7")
             }
-            if (speed > 1 || -1 > speed) {
-                throw IllegalArgumentException("speed must be between -1 and 1")
-            }
 
             motorPowers[number] = speed
         }
