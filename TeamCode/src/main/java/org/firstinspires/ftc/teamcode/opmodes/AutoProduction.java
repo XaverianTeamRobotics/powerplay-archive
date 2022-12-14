@@ -4,8 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
 import org.firstinspires.ftc.teamcode.internals.misc.Clock;
-import org.firstinspires.ftc.teamcode.internals.odometry.drivers.AutonomousDriver;
-import org.firstinspires.ftc.teamcode.internals.odometry.trajectories.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 
