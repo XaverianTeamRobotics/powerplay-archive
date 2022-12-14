@@ -3,53 +3,59 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfig;
 
+/**
+ * Settings for a wheeled odometry implementation. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in wheeled odometry compound continously, so it's important to make sure these values are as precise as possible.
+ * <br><br>
+ * This document makes numerous references to the Strafer v5 chassis by goBILDA. Its SKU is 3209-0001-0005.
+ */
 @Config
 public class OdometrySettings {
 
     /**
-     * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document.
+     * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run count 537.7 ticks per revolution.
      */
-    public static final double TICKS_PER_REV = 537.6;
+    public static final double TICKS_PER_REV = 1;
 
     /**
-     * The maximum RPM of your drive motors. This should come from the motor's specsheet or a similar specification document.
+     * The maximum rotations per minute of your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run at 312 RPM.
      */
-    public static final double MAX_RPM = 312;
+    public static final double MAX_RPM = 1;
 
     /**
-     * The radius of the driving wheels in inches. This should come from the wheel's specsheet or a similar specification document. For example, GoBilda's current Strafer mecanum wheels (SKU 3213-3606-0002) have a radius of 1.8898 inches.
+     * The radius of the driving wheels in inches. This should come from the wheel's specsheet or a similar specification document. For example, the Strafer v5's mecanum wheels have a radius of 1.8898 inches.
      */
-    public static double WHEEL_RADIUS = 1.8898;
+    public static double WHEEL_RADIUS = 2;
 
     /**
-     * The gear ratio between the output (wheel) speed and the input (motor) speed. For example, on a standard GoBilda Strafer this will be 1:1, or just 1.
+     * The gear ratio between the output (wheel) speed and the input (motor) speed. For example, the Strafer v5 has a gear ratio of 1:1, or just 1.
      */
     public static double GEAR_RATIO = 1;
 
     /**
-     * The track width of the driving wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later.
+     * The track width of the driving wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, the Strafer v5's track width is ≈16 inches.
      */
-    public static double TRACK_WIDTH = 13.91; // in
+    public static double TRACK_WIDTH = 1;
 
     /**
      * The PID acceleration variable. This is to be tuned by the manual feedforward tuner.
      */
-    public static double kA = 0.00257;
+    public static double kA = 0;
 
     /**
      * The PID velocity variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kV = 0.01469;
+    public static double kV = 1.0 / ConstantUtils.rpmToVelocity(MAX_RPM);
 
 
     /**
      * The PID static variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kStatic = 0.07398;
+    public static double kStatic = 0;
 
     /**
      * Maximum experimental velocity of your bot. Calculate it using the equation:
@@ -122,14 +128,14 @@ public class OdometrySettings {
     public static double OMEGA_WEIGHT = 1;
 
     /**
-     * The ticks per revolution of the encoder of your dead wheels. This should come from the encoder's specsheet or a similar specification document.
+     * The ticks per revolution of the encoder of your dead wheels. This should come from the encoder's specsheet or a similar specification document. For example, the REV Through Bore Encoder (SKU REV-11-1271) counts 8192 ticks per revolution.
      */
-    public static double ENCODER_TICKS_PER_REV = 8192;
+    public static double ENCODER_TICKS_PER_REV = 1;
 
     /**
-     * The radius of your dead wheels in inches.
+     * The radius of your dead wheels in inches. For example, the Rotacaster 35mm Omni Wheel (SKU R2-0354-99/01) has a radius of 0.688976377953 inches.
      */
-    public static double ENCODER_WHEEL_RADIUS = 0.688976377953;
+    public static double ENCODER_WHEEL_RADIUS = 1;
 
     /**
      * The gear ratio between the output (encoder) speed and input (dead wheel) speed.
@@ -137,14 +143,14 @@ public class OdometrySettings {
     public static double ENCODER_GEAR_RATIO = 1;
 
     /**
-     * The track width of the encoder wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later.
+     * The track width of the encoder wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a track width of ≈16 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_LATERAL_DISTANCE = 10.231324443670594;
+    public static double ENCODER_LATERAL_DISTANCE = 1;
 
     /**
-     * The offset of the middle (strafing) encoder from the center of the robot's rotation. This only matters in the Y axis from a top-down view of the middle encoder, where the wheel is in the X axis.
+     * The offset of the middle (strafing) encoder from the center of the robot's rotation. This value is in the Y axis from a top-down view of the middle encoder, where the wheel's longer side is in the X axis. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a forward offset of ≈4 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_FORWARD_OFFSET = 0.07;
+    public static double ENCODER_FORWARD_OFFSET = 0;
 
     /**
      * The name and direction of the front right motor.
