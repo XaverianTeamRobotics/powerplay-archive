@@ -6,6 +6,7 @@ import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.LaserDistanceSensor
@@ -787,110 +788,6 @@ class Devices {
         @JvmStatic lateinit var camera1: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
-
-        @JvmStatic
-        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
-            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
-        }
-
-        /**
-         * Initializes all motors on the expansion hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0e
-         * - motor1e
-         * - motor2e
-         * - motor3e
-         */
-        @JvmStatic
-        fun initializeExpansionHubMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor3 = Motor("motor3e")
-
-            // Web Socket Server
-            RDWebSocketServer.enableMotorStatic(4)
-            RDWebSocketServer.enableMotorStatic(5)
-            RDWebSocketServer.enableMotorStatic(6)
-            RDWebSocketServer.enableMotorStatic(7)
-        }
-
-        @JvmStatic
-        fun initializeArmMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-
-            // Web Socket Server
-            RDWebSocketServer.enableMotorStatic(4)
-            RDWebSocketServer.enableMotorStatic(5)
-        }
-
-        @JvmStatic
-        fun initializeHandMotors() {
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor2.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-
-            // Web Socket Server
-            RDWebSocketServer.enableMotorStatic(6)
-        }
-
-        /**
-         * Initializes all motors on the control hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0
-         * - motor1
-         * - motor2
-         * - motor3
-         */
-        @JvmStatic
-        fun initializeControlHubMotors() {
-            motor0 = Motor("motor0")
-            motor1 = Motor("motor1")
-            motor2 = Motor("motor2")
-            motor3 = Motor("motor3")
-
-            // Initialize the web server for the motors
-            RDWebSocketServer.enableMotorStatic(0)
-            RDWebSocketServer.enableMotorStatic(1)
-            RDWebSocketServer.enableMotorStatic(2)
-            RDWebSocketServer.enableMotorStatic(3)
-        }
-
-        /**
-         * Initializes the IMU on the expansion hub. Required to use the integrated_imu object
-         * Requires the following IMU name:
-         * - imu
-         *
-         * _(This is built into the robot controller on i2c port 0, it just needs to be named in the config)_
-         */
-        @JvmStatic
-        fun initializeIntegratedIMU() {
-            integrated_imu = IMU("imu")
-        }
-
-        /**
-         * Initializes camera 0 as a WebcamName.
-         */
-        @JvmStatic
-        fun initializeCamera0() {
-            camera0 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera0")
-        }
-
-        /**
-         * Initializes camera 1 as a WebcamName.
-         */
-        @JvmStatic
-        fun initializeCamera1() {
-            camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
-        }
-
-        @JvmStatic
-        fun initializeGyroscope() {
-            gyroscope = Gyroscope("gyro")
-        }
-
     }
 }
 
@@ -906,7 +803,7 @@ class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinsp
 fun initConfigDevices() {
     // find our devices
     val devices = Devices::class.java.declaredFields
-    val map = HardwareGetter.hardwareMap?.getAllNames(HardwareDevice::class.java)
+    val map = hardwareMap?.getAllNames(HardwareDevice::class.java)
     for(mappedDevice in map!!) {
         // for each device in the config, find its corresponding device in Devices.Companion
         val device = devices.find { device ->

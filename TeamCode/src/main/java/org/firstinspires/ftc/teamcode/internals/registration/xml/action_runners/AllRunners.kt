@@ -145,10 +145,10 @@ class MotorSetRunner: BaseRunner {
             1 -> Devices.motor1
             2 -> Devices.motor2
             3 -> Devices.motor3
-            4 -> Devices.expansion_motor0
-            5 -> Devices.expansion_motor1
-            6 -> Devices.expansion_motor2
-            7 -> Devices.expansion_motor3
+            4 -> Devices.motor4
+            5 -> Devices.motor5
+            6 -> Devices.motor6
+            7 -> Devices.motor7
             else -> throw Exception("Invalid motor number $motor")
         }
 

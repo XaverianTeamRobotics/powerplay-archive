@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.internals.registration.xml;
 
-import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class XMLOpModeTemplate extends OperationMode {
     @Override
     public void construct() {
         telemetry.setAutoClear(false);
-        Devices.initializeControlHubMotors();
     }
 
     @Override

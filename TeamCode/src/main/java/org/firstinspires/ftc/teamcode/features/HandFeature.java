@@ -5,9 +5,6 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.misc.Clock;
 
-import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.controller1;
-import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.expansion_motor2;
-
 public class HandFeature extends Feature implements Buildable {
 
     private boolean open = true;

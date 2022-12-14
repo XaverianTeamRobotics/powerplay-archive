@@ -12,6 +12,13 @@ import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServe
  */
 class Motor(override var name: String): DeviceAccessor(name) {
 
+    init {
+        // Check if its a special motor. If it is, add to the RD Server
+        if (standardMotorID() != null) {
+            RDWebSocketServer.enableMotorStatic(standardMotorID()!!)
+        }
+    }
+
     /**
      * The jlooping request managing the underlying hardware.
      */
