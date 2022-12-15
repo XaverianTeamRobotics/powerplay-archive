@@ -42,5 +42,5 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <Servo name="servo1" port="1" />
         </LynxModule>
     </LynxUsbDevice>
-<!--    <Webcam name="camera0" serialNumber="23790950" />-->
+<!--    <Webcam name="camera" serialNumber="23790950" />-->
 </Robot>

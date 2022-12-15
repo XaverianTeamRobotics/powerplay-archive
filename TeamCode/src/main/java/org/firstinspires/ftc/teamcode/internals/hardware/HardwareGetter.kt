@@ -780,8 +780,7 @@ class Devices {
         @JvmStatic lateinit var motor7: Motor
         @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
         @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
-        @JvmStatic lateinit var camera0: WebcamName
-        @JvmStatic lateinit var camera1: WebcamName
+        @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
 
