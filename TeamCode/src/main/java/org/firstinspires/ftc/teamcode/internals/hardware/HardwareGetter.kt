@@ -764,7 +764,7 @@ class Devices {
 
         ADDING HARDWARE DEVICES:
         1. Create a lateinit variable here with the name of the hardware device and annotate it with @JvmStatic
-        2. Set the type to either a type of DeviceAccessor or HardwareDevice
+        2. Set the type to either a subtype of DeviceAccessor or a subtype of HardwareDevice
         3. Go to /src/main/res/xml/main_config.xml and follow the steps there
 
          */
