@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.hardware
 import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
 import com.michaell.looping.ScriptTemplate
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -274,7 +275,7 @@ class HardwareGetter {
          * Get Blinkin from a previously initialized request
          */
         @JvmStatic
-        fun getBlinkinFromRequest(name: String): Servo {
+        fun getBlinkinFromRequest(name: String): RevBlinkinLedDriver {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     throw NullPointerException("This is running in the emulator!")
@@ -288,8 +289,8 @@ class HardwareGetter {
         }
 
         @JvmStatic
-        fun issueBlinkinRequest(name: String, input: BlinkinInput): Double {
-            return jloopingRunner!!.scriptParametersGlobal.issueRequest(input, jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as Double
+        fun issueBlinkinRequest(name: String, input: BlinkinInput): RevBlinkinLedDriver.BlinkinPattern {
+            return jloopingRunner!!.scriptParametersGlobal.issueRequest(input, jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as RevBlinkinLedDriver.BlinkinPattern
         }
 
         /**
