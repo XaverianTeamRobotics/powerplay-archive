@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.contr
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
+import kotlin.math.abs
 
 /**
 * This is a feature that allows for a mecanum robot to be powered by a gamepad.
@@ -13,10 +14,22 @@ import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
  * @param useExpansionHub Whether or not to use the expansion hub to get the motors. Requires that the expansion hub motors be initialized before use
  * @param fieldCentric Whether or not to use field centric controls. The imu must be initialized prior to use.
  */
-class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(),
+class MecanumDrivetrainFeature(
+    private var drivetrainMapMode: DrivetrainMapMode,
+    private var useExpansionHub: Boolean,
+    private var fieldCentric: Boolean,
+    private var isRotInverted: Boolean,
+    private var inputDampening: Boolean
+) : Feature(),
     Buildable {
 
     private var mecanumDriver: MecanumDriver? = null
+
+
+    private var previousX: Double = 0.0
+    private var previousY: Double = 0.0
+    private var previousRot: Double = 0.0
+    private val dampeningFactor = 0.5 // Between 0 and 1, tests have shown 0.5 to be a sweet spot
 
     /*
     The following constants dictate the power each controller sends
@@ -28,9 +41,15 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
     var CONTROL1_ROTATIONAL_MOTION = 0.65
     var CONTROL2_ROTATIONAL_MOTION = 0.26
 
-    constructor() : this(DrivetrainMapMode.FR_BR_FL_BL, false, false, false)
-    constructor(drivetrainMapMode: DrivetrainMapMode) : this(drivetrainMapMode, false, false, false)
-    constructor(drivetrainMapMode: DrivetrainMapMode, useExpansionHub: Boolean) : this(drivetrainMapMode, useExpansionHub, false, false)
+    constructor() : this(DrivetrainMapMode.FR_BR_FL_BL, false, false, false, false)
+    constructor(drivetrainMapMode: DrivetrainMapMode) : this(drivetrainMapMode, false, false, false, false)
+    constructor(drivetrainMapMode: DrivetrainMapMode, useExpansionHub: Boolean) : this(
+        drivetrainMapMode,
+        useExpansionHub,
+        false,
+        false,
+        false
+    )
 
     override fun build() {
 
@@ -46,14 +65,32 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
         Controller 2 has reduced power (for finer control)
          */
 
-        val rot: Double = if (!isRotInverted) {
+        var rot: Double = if (!isRotInverted) {
             CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX
         } else {
             -(CONTROL1_ROTATIONAL_MOTION * controller1.rightStickX + CONTROL2_ROTATIONAL_MOTION * controller2.rightStickX)
         }
 
-        val x: Double = -1 * (CONTROL1_COORDINATE_MOTION * controller1.leftStickX + CONTROL2_COORDINATE_MOTION * controller2.leftStickX)
-        val y: Double = (CONTROL1_COORDINATE_MOTION * controller1.leftStickY + CONTROL2_COORDINATE_MOTION * controller2.leftStickY)
+        var x: Double = -1 * (CONTROL1_COORDINATE_MOTION * controller1.leftStickX + CONTROL2_COORDINATE_MOTION * controller2.leftStickX)
+        var y: Double = (CONTROL1_COORDINATE_MOTION * controller1.leftStickY + CONTROL2_COORDINATE_MOTION * controller2.leftStickY)
+
+        // Apply Dampening (if enabled)
+        if (inputDampening) {
+            x = dampenInput(x, previousX)
+            y = dampenInput(y, previousY)
+            rot = dampenInput(rot, previousRot)
+            previousX = x
+            previousY = y
+            previousRot = rot
+        }
+
         mecanumDriver!!.runMecanum(x, y, rot)
+    }
+
+    private fun dampenInput(x: Double, prev: Double): Double {
+        val step = abs(x - prev) * dampeningFactor
+        return  if          (x > prev)  prev + step
+                else if     (x < prev)  prev - step
+                else                    x
     }
 }

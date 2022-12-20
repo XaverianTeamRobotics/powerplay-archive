@@ -11,7 +11,7 @@ public class ProductionSmallbot extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-        registerFeature(new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL, false, false, false));
+        registerFeature(new MecanumDrivetrainFeature(DrivetrainMapMode.FR_BR_FL_BL));
     }
 
     @Override
