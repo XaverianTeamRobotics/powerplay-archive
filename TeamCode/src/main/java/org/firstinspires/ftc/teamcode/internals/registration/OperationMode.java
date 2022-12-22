@@ -38,6 +38,8 @@ public abstract class OperationMode extends LinearOpMode {
         HardwareGetter.setEmulated(false);
         HardwareGetter.setHardwareMap(hardwareMap);
         HardwareGetter.setOpMode(this);
+        HardwareGetterKt.initConfigDevices();
+        HardwareGetter.initStdDevices();
         ScriptTemplate jloopingScript;
         ScriptRunner runner;
         try {
@@ -49,8 +51,6 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.setJloopingRunner(runner);
             HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
             HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
-            HardwareGetterKt.initConfigDevices();
-            HardwareGetter.initStdDevices();
 
             // Set the Caching mode to auto. This allows for faster access of all sensors
             // The cache gets cleared whenever a call to a sensor is repeated
