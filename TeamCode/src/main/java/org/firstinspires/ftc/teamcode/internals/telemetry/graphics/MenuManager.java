@@ -79,5 +79,22 @@ public class MenuManager {
         }
         return null;
     }
+    /**
+     * Displays and updates the menu once until the OpMode has been stopped or a choice has been made.
+     * @return The choice of the user.
+     */
+    public Item runOnce() {
+        if(!HardwareGetter.getOpMode().isStopRequested()) {
+            frame();
+            input();
+            if(result != null) {
+                Logging.clear();
+                Logging.logText("");
+                Logging.updateLog();
+                return result;
+            }
+        }
+        return null;
+    }
 
 }

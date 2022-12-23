@@ -28,7 +28,7 @@ public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
     public static double TICKS_PER_REV = OdometrySettings.ENCODER_TICKS_PER_REV;
     public static double WHEEL_RADIUS = OdometrySettings.ENCODER_WHEEL_RADIUS;
     public static double GEAR_RATIO = OdometrySettings.ENCODER_GEAR_RATIO;
-    public static double LATERAL_DISTANCE = OdometrySettings.ENCODER_LATERAL_DISTANCE;
+    public static double LATERAL_DISTANCE = OdometrySettings.ENCODER_TRACK_WIDTH;
     public static double FORWARD_OFFSET = OdometrySettings.ENCODER_FORWARD_OFFSET;
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
