@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.InitialTesting;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderForwardOffsetExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderTrackWidthExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
@@ -36,6 +38,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
         registerFeature(new EncoderTrackWidthEstimateTuner());
         registerFeature(new EncoderForwardOffsetEstimateTuner());
         registerFeature(new EncoderTrackWidthExperimentalTuner());
+        registerFeature(new EncoderForwardOffsetExperimentalTuner());
     }
 
     @Override
@@ -55,17 +58,18 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     if(menuManager == null) {
                         menuManager = Questions.askAsync(Devices.controller1, "You should be able to drive your robot around with the second gamepad. Drive the bot and check the dashboard's field viewer. If the bot is driving correctly (in real life) and the \"bot\" drawn on the dashboard seems to roughly line up with the physical bot, select Continue. Otherwise, select Reconfigure and change the names/directions of your motors and encoders.", "Continue", "Reconfigure");
                     }
+                    menuManager.runOnce();
                     // then the drivetrain
                     if(driver == null) {
-                        AutonomousDriver drive = new AutonomousDriver(hardwareMap);
-                        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                        driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     }
                     // and they can drive it
                     driver.setWeightedDrivePower(
                         new Pose2d(
-                            -gamepad2.left_stick_y,
-                            -gamepad2.left_stick_x,
-                            -gamepad2.right_stick_x
+                            -Devices.controller2.getLeftStickY(),
+                            -Devices.controller2.getLeftStickX(),
+                            -Devices.controller2.getRightStickX()
                         )
                     );
                     driver.update();
