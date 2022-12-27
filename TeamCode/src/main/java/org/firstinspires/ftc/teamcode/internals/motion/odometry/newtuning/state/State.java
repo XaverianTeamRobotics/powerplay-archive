@@ -23,6 +23,7 @@ public class State {
     public static Affair beginPhysicalTuning = Affair.FUTURE;
     public static Affair encoderTrackWidthExperimentalTuner = Affair.FUTURE;
     public static Affair encoderForwardOffsetExperimentalTuner = Affair.FUTURE;
+    public static Affair maxVelocityTuner = Affair.FUTURE;
 
     // misc state -- an unordered mess of what we need
     public static InitialTesting initialTesting = InitialTesting.TEST;
