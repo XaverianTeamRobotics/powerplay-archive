@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderForwardOffsetExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderTrackWidthExperimentalTuner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -39,6 +40,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
         registerFeature(new EncoderForwardOffsetEstimateTuner());
         registerFeature(new EncoderTrackWidthExperimentalTuner());
         registerFeature(new EncoderForwardOffsetExperimentalTuner());
+        registerFeature(new MaxVelocityTuner());
     }
 
     @Override
