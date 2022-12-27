@@ -77,6 +77,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                     if(answer.equals("Ok")) {
                         step = Step.DRAW;
                         menuManager = null;
+                        driver.setMotorPowers(0, 0, 0, 0);
                         driver = null;
                     }
                 }
@@ -169,7 +170,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 break;
             case RECONF_CONST:
-                Questions.askC1("Reconfigure your odometry settings now. When you're done, select Ok. You will be able to test your robot again and see if your edits were successful.", "Ok");
+                Questions.askC1("Reconfigure your odometry settings now. When you're done, select Ok. You will be able to test your robot again to see if your edits were successful.", "Ok");
                 // this should be false so they can go through the automatic width tuner again -- if they changed something and need to redo their track width, the robot should try to do it itself before handing it off to the user
                 retuning = false;
                 break;
