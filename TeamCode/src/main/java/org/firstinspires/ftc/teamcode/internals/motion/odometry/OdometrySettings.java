@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
@@ -83,18 +84,20 @@ public class OdometrySettings {
      *  ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.75;
      * </kbd>
      * <br><br>
-     * This calculated value is actually 75% lower than the theoretical maximum velocity of the bot. This is because what is theoretically true is never experimentally true. You can increase this value once your bot is tuned properly and follows paths accurately. Go no higher than 85% of the bot's theoretical maximum velocity unless necessary.
+     * This calculated value is actually only 75% of the theoretical maximum velocity of the bot. This is because what is theoretically true is never experimentally true. You can increase this value once your bot is tuned properly and follows paths accurately. Go no higher than 85% of the bot's theoretical maximum velocity unless necessary.
      * <br><br>
      * I recommend lowering this value as low as possible until the extra velocity is necessary. Basically, run your bot as slow as you can without sacrificing points.
+     * <br><br>
+     * If you don't have the time to calculate the slowest possible maximum velocity, 30 should suffice for most robots.
      */
-    public static double MAX_VEL = 30;
+    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.75;
 
     /**
      * Maximum experimental acceleration of your bot. This is best found through testing, but you should be fine setting it to the same number as your maximum experimental velocity.
      * <br><br>
      * I recommend lowering this value as low as possible until the extra acceleration is necessary. Basically, run your bot as slow as you can without sacrificing points.
      */
-    public static double MAX_ACCEL = 30;
+    public static double MAX_ACCEL = MAX_VEL;
 
     /**
      * Maximum experimental angular (turning) velocity of your bot. Calculate it using the equation:
@@ -106,15 +109,17 @@ public class OdometrySettings {
      * Notice that this value is represented in radians and within the interval <kbd>[-2π, 2π]</kbd>.
      * <br><br>
      * I recommend lowering this value as low as possible until the extra velocity is necessary. Basically, run your bot as slow as you can without sacrificing points.
+     * <br><br>
+     * If you don't have the time to calculate the slowest possible maximum angular velocity, 3 should suffice for most robots.
      */
-    public static double MAX_ANG_VEL = 3;
+    public static double MAX_ANG_VEL = Math.toRadians(Range.clip(MAX_VEL / TRACK_WIDTH * (180 / Math.PI), -360, 360));
 
     /**
      * Maximum experimental angular (turning) acceleration of your bot. This is best found through testing, but you should be fine setting it to the same number as your maximum experimental angular velocity.
      * <br><br>
      * I recommend lowering this value as low as possible until the extra acceleration is necessary. Basically, run your bot as slow as you can without sacrificing points.
      */
-    public static double MAX_ANG_ACCEL = 3;
+    public static double MAX_ANG_ACCEL = MAX_ANG_VEL;
 
     /**
      * The ticks per revolution of the encoder of your dead wheels. This should come from the encoder's specsheet or a similar specification document. For example, the REV Through Bore Encoder (SKU REV-11-1271) counts 8192 ticks per revolution.

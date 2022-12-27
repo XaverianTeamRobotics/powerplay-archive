@@ -23,4 +23,15 @@ public class Clock {
         return timers.get(name);
     }
 
+    /**
+     * Sleeps the current thread synchronously. Avoid this unless your goal is specifically to sleep synchronously. If you can use a timer to do it asynchronously, please do.
+     */
+    public static void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }
