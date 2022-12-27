@@ -148,6 +148,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 break;
             case RETUNE_CONST:
                 Questions.askC1("Reconfigure your odometry settings now. When you're done, select Ok. The offset will be retuned and you will be able to test your robot again to see if your edits were successful.", "Ok");
+                step = Step.TEST;
                 break;
             case NEXT:
                 State.maxVelocityTuner = Affair.PRESENT;
