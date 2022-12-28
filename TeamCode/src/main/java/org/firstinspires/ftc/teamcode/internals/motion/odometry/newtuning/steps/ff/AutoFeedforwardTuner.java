@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Constant
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Shrinker;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
@@ -63,9 +63,9 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
-                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
-                        -Shrinker.shrink(Devices.controller2.getRightStickX())
+                        -Compressor.compress(Devices.controller2.getLeftStickY()),
+                        -Compressor.compress(Devices.controller2.getLeftStickX()),
+                        -Compressor.compress(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();
