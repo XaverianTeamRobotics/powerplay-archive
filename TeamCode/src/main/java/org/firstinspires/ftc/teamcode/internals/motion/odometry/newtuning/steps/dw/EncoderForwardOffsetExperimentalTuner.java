@@ -151,6 +151,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 step = Step.TEST;
                 break;
             case NEXT:
+                State.autoFeedforwardTuner = Affair.PRESENT;
                 State.encoderForwardOffsetExperimentalTuner = Affair.PAST;
                 break;
         }

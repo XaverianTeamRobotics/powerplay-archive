@@ -53,7 +53,7 @@ public class MaxVelocityTuner extends Feature implements Conditional {
             case ALIGN_VEL:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to determine the actual maximum velocity of your robot. First, use the second controller to drive your bot to the start of a 4-5 tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to determine the actual maximum velocity of your robot. First, use the second controller to drive your bot to the start of a long stretch of field tiles (preferably 5+ tiles) facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
