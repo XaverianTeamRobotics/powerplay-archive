@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.kinematics.Kinematics;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
+import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.internals.features.Conditional;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
@@ -14,16 +15,25 @@ import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Shrinker;
+import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
+import java.util.Objects;
+
 public class ManualFeedforwardTuner extends Feature implements Conditional {
 
-    private final double DISTANCE = 72; // in
-    private FtcDashboard dashboard = FtcDashboard.getInstance();
     private MenuManager menuManager = null;
     private AutonomousDriver driver = null;
+    private NanoClock clock = null;
+    private MotionProfile activeProfile = null;
+    private double profileStart = 0.0;
+    private boolean lastTouch = false;
+
+    private final double DISTANCE = 72; // in
+    private boolean movingForward = true;
 
     private enum Step {
         ALIGN,
@@ -41,11 +51,12 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
 
     private Step step = Step.ALIGN;
 
-    private MotionProfile generateProfile(boolean movingForward) {
+    private MotionProfile generateProfile() {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, OdometrySettings.MAX_VEL, OdometrySettings.MAX_ACCEL);
     }
+
 
     @Override
     public boolean when() {
@@ -68,9 +79,9 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Devices.controller2.getLeftStickY(),
-                        -Devices.controller2.getLeftStickX(),
-                        -Devices.controller2.getRightStickX()
+                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                        -Shrinker.shrink(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();
@@ -86,11 +97,101 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 break;
             case INSTRUCT:
-                Questions.askC1("We're going to manually tune and refine kA and kV respectively now. In the Dashboard, graph the measuredVelocity and targetVelocity values now. Your goal is to make the red (measured) velocity match the green (target) velocity as best as you can. Visit bit.ly/graphtuning for some general information. I also highly recommend playing around with the simulator at bit.ly/fftuning and watching bit.ly/fftutorials before starting. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing the touchpad on either controller. When you're ready to begin, select Ok.", "Ok");
+                Questions.askC1("We're going to tune and refine kA and kV manually. In the Dashboard, graph the measuredVelocity, error, and targetVelocity values now. Your goal is to make the red line (measured velocity) match the green line (target velocity) as best you can. Visit bit.ly/graphtuning for some general information. I also highly recommend playing around with the simulator at bit.ly/fftuning and watching bit.ly/fftutorials before starting. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing down on the touchpad on either controller. When you're done tuning, press A on either controller. When you're ready to begin, select Ok.", "Ok");
                 step = Step.MANUAL;
                 break;
-                // todo: make target velo green and measured velo red
-                // todo: touchpad toggle driver control
+            case MANUAL:
+                // inits
+                if(driver == null) {
+                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    clock = NanoClock.system();
+                    activeProfile = generateProfile();
+                    profileStart = clock.seconds();
+                    Logging.clear();
+                    Logging.updateLog();
+                    Logging.getTelemetry().clear();
+                    Logging.getTelemetry().update();
+                }
+                switch(mode) {
+                    case TUNING_MODE:
+                        Logging.getTelemetry().addLine("Running. To stop and enable driver control, press down on the touchpad. When you're done tuning, press A on either controller.");
+                        // toggle logic
+                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                            mode = Mode.DRIVER_MODE;
+                            driver.setMotorPowers(0, 0, 0, 0);
+                            lastTouch = true;
+                            break;
+                        }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
+                            lastTouch = false;
+                        }
+                        // switch direction if we hit the end
+                        double profileTime = clock.seconds() - profileStart;
+                        if(profileTime > activeProfile.duration()) {
+                            // generate a new profile
+                            movingForward = !movingForward;
+                            activeProfile = generateProfile();
+                            profileStart = clock.seconds();
+                        }
+                        // calculate power
+                        MotionState motionState = activeProfile.get(profileTime);
+                        double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), OdometrySettings.kV, OdometrySettings.kA, OdometrySettings.kStatic);
+                        // set the motor power
+                        driver.setDrivePower(new Pose2d(targetPower, 0, 0));
+                        driver.updatePoseEstimate();
+                        Pose2d poseVelo = Objects.requireNonNull(driver.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+                        double currentVelo = poseVelo.getX();
+                        // graph
+                        Logging.getTelemetry().addData("targetVelocity", motionState.getV());
+                        Logging.getTelemetry().addData("measuredVelocity", currentVelo);
+                        Logging.getTelemetry().addData("error", motionState.getV() - currentVelo);
+                        break;
+                    case DRIVER_MODE:
+                        Logging.getTelemetry().addLine("Stopped. To restart and disable driver control, press down on the touchpad. When you're done tuning, press A on either controller.");
+                        // toggle logic
+                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                            mode = Mode.TUNING_MODE;
+                            lastTouch = true;
+                            driver.setMotorPowers(0, 0, 0, 0);
+                            activeProfile = generateProfile();
+                            profileStart = clock.seconds();
+                            break;
+                        }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
+                            lastTouch = false;
+                        }
+                        // driver control
+                        driver.setWeightedDrivePower(
+                            new Pose2d(
+                                -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                                -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                                -Shrinker.shrink(Devices.controller2.getRightStickX())
+                            )
+                        );
+                        // we should continue to update these values, otherwise the graph will break
+                        Logging.getTelemetry().addData("targetVelocity", 0);
+                        Logging.getTelemetry().addData("measuredVelocity", 0);
+                        Logging.getTelemetry().addData("error", 0);
+                        break;
+                }
+                // very very important. required for graphing
+                Logging.getTelemetry().update();
+                // cleanup procedure when user's completely done with tuning
+                if(Devices.controller1.getA() || Devices.controller2.getA()) {
+                    Logging.getTelemetry().addData("targetVelocity", 0);
+                    Logging.getTelemetry().addData("measuredVelocity", 0);
+                    Logging.getTelemetry().addData("error", 0);
+                    Logging.getTelemetry().update();
+                    Logging.getTelemetry().clear();
+                    Logging.getTelemetry().update();
+                    Logging.clear();
+                    Logging.updateLog();
+                    driver.setMotorPowers(0, 0, 0, 0);
+                    driver = null;
+                    mode = Mode.TUNING_MODE;
+                    step = Step.NEXT;
+                }
+            case NEXT:
+                Questions.askC1("Your kA and kV should now be tuned properly. Select Ok when you're ready to continue.", "Ok");
+                State.manualFeedforwardTuner = Affair.PAST;
         }
     }
 

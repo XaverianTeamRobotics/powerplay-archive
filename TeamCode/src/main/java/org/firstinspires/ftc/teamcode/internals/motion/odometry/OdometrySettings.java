@@ -162,6 +162,12 @@ public class OdometrySettings {
      */
     public static double kStatic = 0;
 
+
+    /**
+     * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe test.
+     */
+    public static double LATERAL_MULTIPLIER = 1;
+
     /**
      * The translational PID controller. This is to be tuned by the final back-and-forth and follower PID tuners. Standard values are a kP of 8, kI of 0, and kD of 1. kD generally should be a non-zero value, such as 1.
      */
@@ -171,11 +177,6 @@ public class OdometrySettings {
      * The heading PID controller. This is to be tuned by the final back-and-forth and follower PID tuners. Standard values are a kP of 8, kI of 0, and kD of 1. kD generally should be a non-zero value, such as 1.
      */
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 1);
-
-    /**
-     * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe test.
-     */
-    public static double LATERAL_MULTIPLIER = 1;
 
     /**
      * The X weight used in normalization. This is usually fine being set to 1.
