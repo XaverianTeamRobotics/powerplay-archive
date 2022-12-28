@@ -34,7 +34,7 @@ public abstract class OperationMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        Logging.setTelemetry(telemetry);
+        Logging.setDriverTelemetry(telemetry);
         HardwareGetter.setEmulated(false);
         HardwareGetter.setHardwareMap(hardwareMap);
         HardwareGetter.setOpMode(this);
