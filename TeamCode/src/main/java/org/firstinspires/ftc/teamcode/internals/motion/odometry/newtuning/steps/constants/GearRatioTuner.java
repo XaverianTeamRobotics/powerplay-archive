@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Conditional;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Menu;
 

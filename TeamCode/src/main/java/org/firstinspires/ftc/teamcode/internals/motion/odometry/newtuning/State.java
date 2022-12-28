@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state;
+package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning;
 
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 
@@ -21,11 +21,11 @@ public class State {
     public static Affair encoderTrackWidthTuning = Affair.FUTURE;
     public static Affair encoderForwardOffsetTuning = Affair.FUTURE;
     public static Affair beginPhysicalTuning = Affair.FUTURE;
+    public static Affair maxVelocityTuner = Affair.FUTURE;
     public static Affair encoderTrackWidthExperimentalTuner = Affair.FUTURE;
     public static Affair encoderForwardOffsetExperimentalTuner = Affair.FUTURE;
-    public static Affair maxVelocityTuner = Affair.FUTURE;
 
     // misc state -- an unordered mess of what we need
-    public static InitialTesting initialTesting = InitialTesting.TEST;
+    public static AutoTuning.InitialTesting initialTesting = AutoTuning.InitialTesting.TEST;
 
 }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
@@ -55,7 +55,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
             case DRIVE:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to tune the encoder track width first. Use the second gamepad to drive your bot to a suitable position to make a 360 degree turn, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to tune the encoder track width next. Use the second gamepad to drive your bot to a suitable position to make a 360 degree turn, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot

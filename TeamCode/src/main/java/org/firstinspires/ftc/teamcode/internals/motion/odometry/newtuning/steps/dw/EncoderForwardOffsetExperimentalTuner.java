@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.Clock;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
@@ -151,7 +151,6 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 step = Step.TEST;
                 break;
             case NEXT:
-                State.maxVelocityTuner = Affair.PRESENT;
                 State.encoderForwardOffsetExperimentalTuner = Affair.PAST;
                 break;
         }

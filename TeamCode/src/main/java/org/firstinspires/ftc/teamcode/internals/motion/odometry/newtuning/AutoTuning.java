@@ -6,12 +6,10 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.InitialTesting;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.state.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderForwardOffsetExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderTrackWidthExperimentalTuner;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.MaxVelocityTuner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.xpconstraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -23,6 +21,12 @@ public class AutoTuning extends OperationMode implements TeleOperation {
 
     private MenuManager menuManager = null;
     private AutonomousDriver driver = null;
+
+    public enum InitialTesting {
+        TEST,
+        RETUNE,
+        COMPLETE
+    }
 
     @Override
     public void construct() {
@@ -38,9 +42,9 @@ public class AutoTuning extends OperationMode implements TeleOperation {
         registerFeature(new EncoderGearRatioTuner());
         registerFeature(new EncoderTrackWidthEstimateTuner());
         registerFeature(new EncoderForwardOffsetEstimateTuner());
+        registerFeature(new MaxVelocityTuner());
         registerFeature(new EncoderTrackWidthExperimentalTuner());
         registerFeature(new EncoderForwardOffsetExperimentalTuner());
-        registerFeature(new MaxVelocityTuner());
     }
 
     @Override
@@ -97,7 +101,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
             // now lets start the actual physical tuning
             Questions.ask(new Menu.MenuBuilder().setDescription("Ok, now that you've tested your initial values we can begin physical tuning! Select Start Tuning when you're ready.").addItem("Start Tuning").build(), Devices.controller1);
             State.beginPhysicalTuning = Affair.PAST;
-            State.encoderTrackWidthExperimentalTuner = Affair.PRESENT;
+            State.maxVelocityTuner = Affair.PRESENT;
         }
     }
 
