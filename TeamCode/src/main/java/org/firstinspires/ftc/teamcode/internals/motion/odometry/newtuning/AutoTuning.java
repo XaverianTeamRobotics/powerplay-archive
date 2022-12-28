@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.AutoFeedforwardTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.ManualFeedforwardTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.xpconstraints.MaxVelocityTuner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Shrinker;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -77,9 +78,9 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     // and they can drive it
                     driver.setWeightedDrivePower(
                         new Pose2d(
-                            -Devices.controller2.getLeftStickY(),
-                            -Devices.controller2.getLeftStickX(),
-                            -Devices.controller2.getRightStickX()
+                            -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                            -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                            -Shrinker.shrink(Devices.controller2.getRightStickX())
                         )
                     );
                     driver.update();

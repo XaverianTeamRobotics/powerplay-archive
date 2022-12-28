@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Shrinker;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
@@ -65,9 +66,9 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Devices.controller2.getLeftStickY(),
-                        -Devices.controller2.getLeftStickX(),
-                        -Devices.controller2.getRightStickX()
+                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                        -Shrinker.shrink(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();
@@ -96,7 +97,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                     driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
                 }
                 // spinning logic from RR's quickstart tracking wheel lat. dist. tuner
-                Pose2d vel = new Pose2d(0, 0, -Devices.controller2.getRightStickX());
+                Pose2d vel = new Pose2d(0, 0, -Shrinker.shrink(Devices.controller2.getRightStickX()));
                 driver.setDrivePower(vel);
                 driver.update();
                 double heading = driver.getPoseEstimate().getHeading();
@@ -148,9 +149,9 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Devices.controller2.getLeftStickY(),
-                        -Devices.controller2.getLeftStickX(),
-                        -Devices.controller2.getRightStickX()
+                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                        -Shrinker.shrink(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();

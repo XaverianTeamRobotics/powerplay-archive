@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Shrinker;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
@@ -63,9 +64,9 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Devices.controller2.getLeftStickY(),
-                        -Devices.controller2.getLeftStickX(),
-                        -Devices.controller2.getRightStickX()
+                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                        -Shrinker.shrink(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();
@@ -121,9 +122,9 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 driver.setWeightedDrivePower(
                     new Pose2d(
-                        -Devices.controller2.getLeftStickY(),
-                        -Devices.controller2.getLeftStickX(),
-                        -Devices.controller2.getRightStickX()
+                        -Shrinker.shrink(Devices.controller2.getLeftStickY()),
+                        -Shrinker.shrink(Devices.controller2.getLeftStickX()),
+                        -Shrinker.shrink(Devices.controller2.getRightStickX())
                     )
                 );
                 driver.update();
