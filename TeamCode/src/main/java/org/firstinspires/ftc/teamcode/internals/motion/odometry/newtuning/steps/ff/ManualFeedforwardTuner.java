@@ -242,6 +242,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 acceptable = false;
             case NEXT:
                 Questions.askC1("Your kA and kV should now be tuned properly. Select Ok when you're ready to continue.", "Ok");
+                State.lateralMultiplierTuning = Affair.PRESENT;
                 State.manualFeedforwardTuner = Affair.PAST;
                 break;
         }

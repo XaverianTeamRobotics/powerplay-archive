@@ -26,6 +26,7 @@ public class State {
     public static Affair encoderForwardOffsetExperimentalTuner = Affair.FUTURE;
     public static Affair autoFeedforwardTuner = Affair.FUTURE;
     public static Affair manualFeedforwardTuner = Affair.FUTURE;
+    public static Affair lateralMultiplierTuning = Affair.FUTURE;
 
     // misc state -- an unordered mess of what we need
     public static AutoTuning.InitialTesting initialTesting = AutoTuning.InitialTesting.TEST;
