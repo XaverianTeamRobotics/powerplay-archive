@@ -156,15 +156,13 @@ public class OdometrySettings {
      */
     public static double kV = 1.0 / ConstantUtils.rpmToVelocity(MAX_RPM);
 
-
     /**
      * The PID static variable. This is to be tuned by the automatic feedforward tuner.
      */
     public static double kStatic = 0;
 
-
     /**
-     * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe test.
+     * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe tuner.
      */
     public static double LATERAL_MULTIPLIER = 1;
 

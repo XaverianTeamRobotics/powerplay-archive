@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.AutoFeedforwardTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.LateralMultiplierTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.ManualFeedforwardTuner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.TrackWidthTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.xpconstraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
@@ -52,6 +53,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
         registerFeature(new AutoFeedforwardTuner());
         registerFeature(new ManualFeedforwardTuner());
         registerFeature(new LateralMultiplierTuner());
+        registerFeature(new TrackWidthTuner());
     }
 
     @Override
