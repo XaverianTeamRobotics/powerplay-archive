@@ -70,6 +70,11 @@ class Logging {
         }
 
         @JvmStatic
+        fun update() {
+            updateLog();
+        }
+
+        @JvmStatic
         fun clear() {
             if (!isEmulated) {
                 driverTelemetry.clear()

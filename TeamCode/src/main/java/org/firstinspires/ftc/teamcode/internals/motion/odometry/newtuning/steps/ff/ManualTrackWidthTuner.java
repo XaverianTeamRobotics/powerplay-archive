@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.MovingStatistics;
-import org.firstinspires.ftc.robotcore.internal.system.Misc;
 import org.firstinspires.ftc.teamcode.internals.features.Conditional;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
-import org.firstinspires.ftc.teamcode.internals.misc.Clock;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -20,19 +15,19 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
-public class TrackWidthTuner extends Feature implements Conditional {
+public class ManualTrackWidthTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
     private AutonomousDriver driver = null;
     private final double ANGLE = 180; // deg
-    private final int NUM_TRIALS = 5;
-    private final int DELAY = 1000; // ms
+    private double heading = 0.0;
     private String str = "";
 
     private enum Step {
         ALIGN,
-        RUN,
+        TEST,
         SHOW,
+        TUNE,
         NEXT
     }
 
@@ -40,7 +35,7 @@ public class TrackWidthTuner extends Feature implements Conditional {
 
     @Override
     public boolean when() {
-        return State.driveTrackWidthExperimentalTuning == Affair.PRESENT;
+        return State.manualDriveTrackWidthExperimentalTuning == Affair.PRESENT;
     }
 
     @Override
@@ -49,7 +44,7 @@ public class TrackWidthTuner extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to tune the drive track width now. Use the second gamepad to drive your bot to a suitable position to make a 360 degree turn, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to confirm the drive track width was tuned properly. Use the second gamepad to drive your bot to a suitable position to make a 360 degree turn, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -69,57 +64,47 @@ public class TrackWidthTuner extends Feature implements Conditional {
                 // then we stop if the user's done
                 if(answer != null) {
                     if(answer.equals("Ok")) {
-                        step = Step.RUN;
+                        step = Step.TEST;
                         menuManager = null;
                         driver.setMotorPowers(0, 0, 0, 0);
                         driver = null;
                     }
                 }
                 break;
-            case RUN:
-                Logging.log("Tuning track width...");
-                Logging.updateLog();
+            case TEST:
+                Logging.log("Testing...");
+                Logging.update();
                 driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
-                MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
-                for(int i = 0; i < NUM_TRIALS; i++) {
-                    driver.setPoseEstimate(new Pose2d());
-
-                    // it is important to handle heading wraparounds
-                    double headingAccumulator = 0;
-                    double lastHeading = 0;
-
-                    driver.turnAsync(Math.toRadians(ANGLE));
-
-                    while(!HardwareGetter.getOpMode().isStopRequested() && driver.isBusy()) {
-                        double heading = driver.getPoseEstimate().getHeading();
-                        headingAccumulator += Angle.normDelta(heading - lastHeading);
-                        lastHeading = heading;
-
-                        driver.update();
-                    }
-
-                    double trackWidth = OdometrySettings.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
-                    trackWidthStats.add(trackWidth);
-
-                    Clock.sleep(DELAY);
+                driver.turn(Math.toRadians(ANGLE));
+                heading = driver.getPoseEstimate().getHeading();
+                if(Math.abs(Math.abs(ANGLE) - Math.abs(heading)) <= 3) {
+                    str = " Since this is accurate to ±3 degrees of " + ANGLE + ", I recommend selecting Continue to move on to the next step, although you may select Reconfigure to manually edit your drive track width.";
+                }else{
+                    str = " Since this isn't accurate to ±3 degrees of " + ANGLE + ", I recommend selecting Reconfigure to manually edit your drive track width.";
                 }
-                str = Misc.formatInvariant("Your effective track width was calculated to be %.2f (SE = %.3f)",
-                    trackWidthStats.getMean(),
-                    trackWidthStats.getStandardDeviation() / Math.sqrt(NUM_TRIALS));
-                // we should clean up things at the end, just to make sure everythings safe
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
                 Logging.clear();
-                Logging.updateLog();
+                Logging.update();
                 step = Step.SHOW;
                 break;
             case SHOW:
-                Questions.askC1(str + " Set your TRACK_WIDTH to this value, then select Continue.", "Continue");
-                step = Step.NEXT;
+                Item i = Questions.askC1("Your robot turned " + heading + " degrees when asked to turn " + ANGLE + " degrees." + str, "Continue", "Reconfigure");
+                heading = 0.0;
+                str = "";
+                if(i.equals("Continue")) {
+                    step = Step.NEXT;
+                }else{
+                    step = Step.TUNE;
+                }
+                break;
+            case TUNE:
+                Questions.askC1("If your heading is lower than " + ANGLE + ", raise TRACK_WIDTH. If it's higher, lower TRACK_WIDTH. Select Continue when you're ready to retest your track width.", "Continue");
+                step = Step.TEST;
                 break;
             case NEXT:
-                State.manualDriveTrackWidthExperimentalTuning = Affair.PRESENT;
-                State.driveTrackWidthExperimentalTuning = Affair.PAST;
+
+                State.manualDriveTrackWidthExperimentalTuning = Affair.PAST;
                 break;
         }
     }
