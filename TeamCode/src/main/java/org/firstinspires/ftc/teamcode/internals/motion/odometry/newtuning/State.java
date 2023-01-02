@@ -30,6 +30,7 @@ public class State {
     public static Affair driveTrackWidthExperimentalTuning = Affair.FUTURE;
     public static Affair manualDriveTrackWidthExperimentalTuning = Affair.FUTURE;
     public static Affair followerTuning = Affair.FUTURE;
+    public static Affair spline = Affair.FUTURE;
 
     // misc state -- an unordered mess of what we need
     public static AutoTuning.InitialTesting initialTesting = AutoTuning.InitialTesting.TEST;
