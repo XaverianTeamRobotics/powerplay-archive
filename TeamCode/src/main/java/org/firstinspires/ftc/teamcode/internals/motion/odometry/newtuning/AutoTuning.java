@@ -34,6 +34,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
+        registerFeature(new Directions());
         registerFeature(new MotorConfigSetup());
         registerFeature(new RPMTuner());
         registerFeature(new TickTuner());
@@ -113,6 +114,8 @@ public class AutoTuning extends OperationMode implements TeleOperation {
             Questions.ask(new Menu.MenuBuilder().setDescription("Ok, now that you've tested your initial values we can begin physical tuning! Select Start Tuning when you're ready.").addItem("Start Tuning").build(), Devices.controller1);
             State.beginPhysicalTuning = Affair.PAST;
             State.maxVelocityTuner = Affair.PRESENT;
+        }else if(State.endTuning == Affair.PRESENT) {
+
         }
     }
 
