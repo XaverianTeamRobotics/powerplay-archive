@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following.FollowerTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following.SplineTest;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.xpconstraints.MaxVelocityTuner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
@@ -115,7 +115,14 @@ public class AutoTuning extends OperationMode implements TeleOperation {
             State.beginPhysicalTuning = Affair.PAST;
             State.maxVelocityTuner = Affair.PRESENT;
         }else if(State.endTuning == Affair.PRESENT) {
-
+            // we're done!!1
+            // TODO:
+            //  - save to file, load from file
+            //  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
+            //  - odometry wrappers for easy usage
+            //  - remove old tuning opmodes
+            //  - refactor normal and field centric driving to use the odometry system/autonomous driver
+            //  - maybe refactor autonomous driver to just be normal driver or something
         }
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.xpconstraints;
+package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
