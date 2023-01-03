@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 
 public class SleeveDetectionTest extends OperationMode implements AutonomousOperation {
 
@@ -17,12 +16,11 @@ public class SleeveDetectionTest extends OperationMode implements AutonomousOper
     @Override
     public void construct() {
         detector = new SleeveDetectionFeature();
+        detector.setDebugEnabled(true);
         registerFeature(detector);
     }
 
     @Override
     public void run() {
-        Logging.logData("Detected Spot:", detector.getSpot());
-        Logging.updateLog();
     }
 }

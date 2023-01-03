@@ -57,4 +57,8 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
         return spot;
     }
 
+    public void setDebugEnabled(boolean enabled) {
+        detector.setDebugEnabled(enabled);
+    }
+
 }

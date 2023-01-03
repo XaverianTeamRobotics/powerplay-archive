@@ -40,16 +40,16 @@ public class SleeveColorDetection extends OpenCvPipeline {
         cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
 
         cvtColor(processedMat, processedMat, Imgproc.COLOR_RGB2HSV);
-
-        // Define the colors that we want to detect
-        Scalar redLowHSV = new Scalar(RED_H_MIN, RED_S_MIN, RED_V_MIN);
-        Scalar redHighHSV = new Scalar(RED_H_MAX, RED_S_MAX, RED_V_MAX);
-
-        Scalar blueLowHSV = new Scalar(BLUE_H_MIN, BLUE_S_MIN, BLUE_V_MIN);
-        Scalar blueHighHSV = new Scalar(BLUE_H_MAX, BLUE_S_MAX, BLUE_V_MAX);
-
-        Scalar greenLowHSV = new Scalar(GREEN_H_MIN, GREEN_S_MIN, GREEN_V_MIN);
-        Scalar greenHighHSV = new Scalar(GREEN_H_MAX, GREEN_S_MAX, GREEN_V_MAX);
+        
+        // Define the colors needed
+        Scalar magentaLowHSV = new Scalar(MAGENTA_H_MIN, MAGENTA_S_MIN, MAGENTA_V_MIN);
+        Scalar magentaHighHSV = new Scalar(MAGENTA_H_MAX, MAGENTA_S_MAX, MAGENTA_V_MAX);
+        
+        Scalar orangeLowHSV = new Scalar(ORANGE_H_MIN, ORANGE_S_MIN, ORANGE_V_MIN);
+        Scalar orangeHighHSV = new Scalar(ORANGE_H_MAX, ORANGE_S_MAX, ORANGE_V_MAX);
+        
+        Scalar greenLowHSV = new Scalar(GREEN2_H_MIN, GREEN2_S_MIN, GREEN2_V_MIN);
+        Scalar greenHighHSV = new Scalar(GREEN2_H_MAX, GREEN2_S_MAX, GREEN2_V_MAX);
 
         // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
         inRange(
@@ -69,16 +69,16 @@ public class SleeveColorDetection extends OpenCvPipeline {
         cvtColor(processedMat, processedMat, COLOR_RGB2HSV);
 
         // Find the average colors of the original image
-        double redAverage = processForColor(processedMat, redLowHSV, redHighHSV, "red");
-        double blueAverage = processForColor(processedMat, blueLowHSV, blueHighHSV, "blue");
+        double magentaAverage = processForColor(processedMat, magentaLowHSV, magentaHighHSV, "magenta");
+        double orangeAverage = processForColor(processedMat, orangeLowHSV, orangeHighHSV, "orange");
         double greenAverage = processForColor(processedMat, greenLowHSV, greenHighHSV, "green");
 
-        double largestVal = Math.max(redAverage, Math.max(blueAverage, greenAverage));
-        if (largestVal == redAverage) {
+        double largestVal = Math.max(magentaAverage, Math.max(orangeAverage, greenAverage));
+        if (largestVal == magentaAverage) {
             detection = 1;
         } else if (largestVal == greenAverage) {
             detection = 2;
-        } else if (largestVal == blueAverage) {
+        } else if (largestVal == orangeAverage) {
             detection = 3;
         } else {
             detection = 0;
@@ -87,13 +87,13 @@ public class SleeveColorDetection extends OpenCvPipeline {
         if (debugEnabled) {
             switch (detection) {
                 case 1:
-                    Logging.logData("Detected Color", "Red");
+                    Logging.logData("Detected Color", "Magenta");
                     break;
                 case 2:
-                    Logging.logData("Detected Color", "Green");
+                    Logging.logData("Detected Color", "Orange");
                     break;
                 case 3:
-                    Logging.logData("Detected Color", "Blue");
+                    Logging.logData("Detected Color", "Green");
                     break;
                 default:
                     Logging.logData("Detected Color", "None");
