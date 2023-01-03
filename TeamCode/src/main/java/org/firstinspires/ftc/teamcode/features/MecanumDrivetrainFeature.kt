@@ -13,6 +13,8 @@ import kotlin.math.abs
 * @param drivetrainMapMode The motor layout of the drivetrain.
  * @param useExpansionHub Whether or not to use the expansion hub to get the motors. Requires that the expansion hub motors be initialized before use
  * @param fieldCentric Whether or not to use field centric controls. The imu must be initialized prior to use.
+ * @param isRotInverted Whether or not to invert the rotation controls. Required for our second robot.
+ * @param inputDampening Whether or not to smooth the acceleration of the motors
  */
 class MecanumDrivetrainFeature(
     private var drivetrainMapMode: DrivetrainMapMode,
