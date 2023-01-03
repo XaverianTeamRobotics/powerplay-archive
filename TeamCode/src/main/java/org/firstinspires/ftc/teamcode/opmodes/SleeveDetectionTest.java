@@ -17,6 +17,7 @@ public class SleeveDetectionTest extends OperationMode implements AutonomousOper
     @Override
     public void construct() {
         detector = new SleeveDetectionFeature();
+        registerFeature(detector);
     }
 
     @Override
