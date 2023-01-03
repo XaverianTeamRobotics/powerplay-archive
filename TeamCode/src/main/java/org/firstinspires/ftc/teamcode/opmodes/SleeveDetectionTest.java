@@ -23,5 +23,6 @@ public class SleeveDetectionTest extends OperationMode implements AutonomousOper
     @Override
     public void run() {
         Logging.logData("Detected Spot:", detector.getSpot());
+        Logging.updateLog();
     }
 }
