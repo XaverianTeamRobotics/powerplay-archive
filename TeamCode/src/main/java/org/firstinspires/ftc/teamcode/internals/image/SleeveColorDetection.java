@@ -84,6 +84,18 @@ public class SleeveColorDetection extends OpenCvPipeline {
             detection = 0;
         }
 
+        grayScale.release();
+
+        cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
+        printOutcome();
+        // add the number of the color to the image
+        Imgproc.putText(processedMat, String.valueOf(detection), new Point(10, 50), FONT_HERSHEY_SIMPLEX, 2, new Scalar(255, 255, 255), 2);
+        input = processedMat.clone();
+        processedMat.release();
+        return input; // Useful for previewing the final output
+    }
+
+    private void printOutcome() {
         if (debugEnabled) {
             switch (detection) {
                 case 1:
@@ -101,13 +113,6 @@ public class SleeveColorDetection extends OpenCvPipeline {
             }
             Logging.updateLog();
         }
-
-        grayScale.release();
-
-        cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
-        input = processedMat.clone();
-        processedMat.release();
-        return input; // Useful for previewing the final output
     }
 
     /**
