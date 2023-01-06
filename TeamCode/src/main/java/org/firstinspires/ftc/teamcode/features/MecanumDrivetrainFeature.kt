@@ -28,12 +28,12 @@ class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode,
 
     override fun loop() {
         val rot: Double = if (!isRotInverted) {
-            controller1.rightStickX
+            controller1.rightStickX / 100
         } else {
-            -(controller1.rightStickX)
+            -(controller1.rightStickX / 100)
         }
-        val x: Double = -controller1.leftStickX
-        val y: Double = controller1.leftStickY
+        val x: Double = -controller1.leftStickX / 100
+        val y: Double = controller1.leftStickY / 100
         mecanumDriver!!.runMecanum(x, y, rot)
     }
 }
