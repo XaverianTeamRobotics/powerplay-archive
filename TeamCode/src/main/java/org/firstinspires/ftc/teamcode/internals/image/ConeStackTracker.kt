@@ -31,8 +31,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         // Convert to HSV
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV)
 
-        // Generate a mask of whatever the team's color is
-        val mask1 = input.clone()
+        // Define some colors
 
         val blueLowerBound = Scalar(ImageProcessingConstants.BLUE_H_MIN, ImageProcessingConstants.BLUE_S_MIN, ImageProcessingConstants.BLUE_V_MIN)
         val blueUpperBound = Scalar(ImageProcessingConstants.BLUE_H_MAX, ImageProcessingConstants.BLUE_S_MAX, ImageProcessingConstants.BLUE_V_MAX)
@@ -40,25 +39,51 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val redLowerBound = Scalar(ImageProcessingConstants.RED_H_MIN, ImageProcessingConstants.RED_S_MIN, ImageProcessingConstants.RED_V_MIN)
         val redUpperBound = Scalar(ImageProcessingConstants.RED_H_MAX, ImageProcessingConstants.RED_S_MAX, ImageProcessingConstants.RED_V_MAX)
 
-        if (isBlueTeam) {
-            Core.inRange(mask1, blueLowerBound, blueUpperBound, mask1)
-        } else {
-            Core.inRange(mask1, redLowerBound, redUpperBound, mask1)
-        }
+        // Apply an edge detector to just get the cones
+        val lowerBound = if (isBlueTeam) blueLowerBound else redLowerBound
+        val upperBound = if (isBlueTeam) blueUpperBound else redUpperBound
+        Core.inRange(input, lowerBound, upperBound, input)
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
 
-        // Run a blob detector on the mask to find all the blobs
-        val params = SimpleBlobDetector_Params()
-        params._filterByColor = false
-        val detector = SimpleBlobDetector.create(params)
-        val keypoints = MatOfKeyPoint()
-        detector.detect(mask1, keypoints)
-        mask1.release()
-        detectedCones = keypoints
+        // Run a Canny edge detector
+        Imgproc.Canny(input, input, 100.0, 200.0)
+
+        // Detect the areas within the edges created by the Canny edge detector
+        // Find the contours in the image
+        val contours = mutableListOf<MatOfPoint>()
+        val hierarchy = Mat()
+        Imgproc.findContours(input, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+
+        // Clear and reinitialize the detected cones list
+        detectedCones.release()
+        detectedCones = MatOfKeyPoint()
+
+        // Iterate through the contours
+        for (contour in contours) {
+            // Approximate the contour as a polygon
+            val epsilon = 0.01 * Imgproc.arcLength(contour as MatOfPoint2f, true)
+            val approx = MatOfPoint2f()
+            Imgproc.approxPolyDP(MatOfPoint2f(*contour.toArray()), approx, epsilon, true)
+
+            // Create a keypoint using a rectangle that fits the polygon
+            val rect = Imgproc.boundingRect(approx)
+            val keyPoint = KeyPoint(
+                (rect.x + rect.width / 2.0).toFloat(),      // x
+                (rect.y + rect.height / 2.0).toFloat(),     // y
+                rect.width.toDouble().toFloat()             // size
+            )
+
+            // Add keypoint to the mat of keypoints
+            val keyPoints = detectedCones.toArray().toList().toMutableList()
+            keyPoints.add(keyPoint)
+            detectedCones.fromList(keyPoints)
+        }
 
         // Draw the keypoints on the image as boxes with a number in them
         val color = Scalar(255.0, 255.0, 255.0)
-        for (i in keypoints.toArray().indices) {
-            val keypoint = keypoints.toArray()[i]
+        for (i in detectedCones.toArray().indices) {
+            val keypoint = detectedCones.toArray()[i]
             val rect = Rect(keypoint.pt.x.toInt() - 10, keypoint.pt.y.toInt() - 10, 20, 20)
             Imgproc.rectangle(input, rect, color, 2)
             var text = "#$i"
@@ -70,7 +95,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         }
 
         // Clean up and return the output
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_GRAY2RGB)
         return input
     }
 
