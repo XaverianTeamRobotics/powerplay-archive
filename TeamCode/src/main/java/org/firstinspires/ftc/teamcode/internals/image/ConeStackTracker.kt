@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companio
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.logData
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.updateLog
 import org.opencv.core.*
-import org.opencv.features2d.SimpleBlobDetector
-import org.opencv.features2d.SimpleBlobDetector_Params
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
@@ -43,8 +41,8 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val lowerBound = if (isBlueTeam) blueLowerBound else redLowerBound
         val upperBound = if (isBlueTeam) blueUpperBound else redUpperBound
         Core.inRange(input, lowerBound, upperBound, input)
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
 
         // Run a Canny edge detector
         Imgproc.Canny(input, input, 100.0, 200.0)

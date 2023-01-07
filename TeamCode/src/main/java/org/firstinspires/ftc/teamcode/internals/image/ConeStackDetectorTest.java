@@ -6,9 +6,10 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.opencv.core.KeyPoint;
 
 public class ConeStackDetectorTest extends OperationMode implements AutonomousOperation {
-    ConeStackTracker detector = new ConeStackTracker(true, true);
+    ConeStackTracker detector;
     @Override
     public void construct() {
+        detector = new ConeStackTracker(true, true);
         detector.startStreaming();
     }
 
