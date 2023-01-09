@@ -6,16 +6,18 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.opencv.core.KeyPoint;
 
 public class ConeStackDetectorTest extends OperationMode implements AutonomousOperation {
-    ConeStackTracker detector = new ConeStackTracker(true, true);
+    ConeStackTracker detector;
+
     @Override
     public void construct() {
+        detector = new ConeStackTracker(true, true);
         detector.startStreaming();
     }
 
     @Override
     public void run() {
         // Print every detected cone
-        for (KeyPoint keypoint : detector.getDetectedCones().toArray()) {
+        for (KeyPoint keypoint : detector.getDetectedCones()) {
             Logging.logText(keypoint.pt.toString());
             Logging.logText(String.valueOf(detector.getAngleToTarget(keypoint)));
         }

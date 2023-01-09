@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companio
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.logData
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.updateLog
 import org.opencv.core.*
-import org.opencv.features2d.SimpleBlobDetector
-import org.opencv.features2d.SimpleBlobDetector_Params
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
@@ -18,7 +16,7 @@ import kotlin.math.atan2
 import kotlin.math.tan
 
 class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boolean): OpenCvPipeline() {
-    var detectedCones: MatOfKeyPoint = MatOfKeyPoint()
+    var detectedCones: MutableList<KeyPoint> = mutableListOf()
     override fun processFrame(input: Mat): Mat {
 
         //Logging.logData("Input Height", input.height());
@@ -43,8 +41,6 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val lowerBound = if (isBlueTeam) blueLowerBound else redLowerBound
         val upperBound = if (isBlueTeam) blueUpperBound else redUpperBound
         Core.inRange(input, lowerBound, upperBound, input)
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
 
         // Run a Canny edge detector
         Imgproc.Canny(input, input, 100.0, 200.0)
@@ -54,10 +50,6 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val contours = mutableListOf<MatOfPoint>()
         val hierarchy = Mat()
         Imgproc.findContours(input, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
-
-        // Clear and reinitialize the detected cones list
-        detectedCones.release()
-        detectedCones = MatOfKeyPoint()
 
         // Iterate through the contours
         for (contour in contours) {
@@ -74,16 +66,13 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
                 rect.width.toDouble().toFloat()             // size
             )
 
-            // Add keypoint to the mat of keypoints
-            val keyPoints = detectedCones.toArray().toList().toMutableList()
-            keyPoints.add(keyPoint)
-            detectedCones.fromList(keyPoints)
+            detectedCones.add(keyPoint)
         }
 
         // Draw the keypoints on the image as boxes with a number in them
         val color = Scalar(255.0, 255.0, 255.0)
-        for (i in detectedCones.toArray().indices) {
-            val keypoint = detectedCones.toArray()[i]
+        for (i in detectedCones.indices) {
+            val keypoint = detectedCones[i]
             val rect = Rect(keypoint.pt.x.toInt() - 10, keypoint.pt.y.toInt() - 10, 20, 20)
             Imgproc.rectangle(input, rect, color, 2)
             var text = "#$i"
@@ -136,7 +125,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
 
     fun returnBiggestCone(): KeyPoint? {
         var biggestCone: KeyPoint? = null
-        for (cone in detectedCones.toArray()) {
+        for (cone in detectedCones) {
             if (biggestCone == null || cone.size > biggestCone.size) {
                 biggestCone = cone
             }
