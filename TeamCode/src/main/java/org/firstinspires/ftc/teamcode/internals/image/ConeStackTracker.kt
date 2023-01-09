@@ -41,6 +41,8 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val lowerBound = if (isBlueTeam) blueLowerBound else redLowerBound
         val upperBound = if (isBlueTeam) blueUpperBound else redUpperBound
         Core.inRange(input, lowerBound, upperBound, input)
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
 
         // Run a Canny edge detector
         Imgproc.Canny(input, input, 100.0, 200.0)
