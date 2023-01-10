@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -106,8 +107,9 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 break;
             case SHOW_VEL:
-                Questions.askC1("Your maximum velocity is " + velMax + " and that means you should set your MAX_VEL to no more than " + velMax * 0.75 + ". Once you've done that, select Continue.", "Continue");
-                step = Step.ALIGN_ANG;
+                AsyncQuestionExecutor.askC1("Your maximum velocity is " + velMax + " and that means you should set your MAX_VEL to no more than " + velMax * 0.75 + ". Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
+                    step = Step.ALIGN_ANG;
+                });
                 break;
             case ALIGN_ANG:
                 // now, the user needs to position the robot -- so lets tell them to do that
@@ -164,8 +166,9 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 break;
             case SHOW_ANG:
-                Questions.askC1("Your maximum angular velocity is " + angMax + " radians (" + Math.toDegrees(angMax) + "°) and that means you should set your MAX_ANG_VEL to no more than " + angMax * 0.75 + " radians ( " + Math.toDegrees(angMax * 0.75) + "°). Once you've done that, select Continue.", "Continue");
-                step = Step.NEXT;
+                AsyncQuestionExecutor.askC1("Your maximum angular velocity is " + angMax + " radians (" + Math.toDegrees(angMax) + "°) and that means you should set your MAX_ANG_VEL to no more than " + angMax * 0.75 + " radians ( " + Math.toDegrees(angMax * 0.75) + "°). Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
+                    step = Step.NEXT;
+                });
                 break;
             case NEXT:
                 State.encoderTrackWidthExperimentalTuner = Affair.PRESENT;
