@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -93,13 +94,14 @@ public class SplineTest extends Feature implements Conditional {
                 Logging.update();
                 break;
             case RECON:
-                Item i = Questions.askC1("If everything went well, select Continue. Otherwise, attempt to fix the problem and select Test Again. You can find a troubleshooting guide at bit.ly/splinetest. It might be easier to select Continue and restart the tuning process from scratch, so do that if you think its a good idea.", "Continue", "Test Again");
-                if(i.equals("Continue")) {
-                    step = Step.NEXT;
-                }else{
-                    step = Step.ALIGN;
-                    firstMsg = "Realign your bot with";
-                }
+                AsyncQuestionExecutor.askC1("If everything went well, select Continue. Otherwise, attempt to fix the problem and select Test Again. You can find a troubleshooting guide at bit.ly/splinetest. It might be easier to select Continue and restart the tuning process from scratch, so do that if you think its a good idea.", new String[] {"Continue", "Test Again"}, a -> {
+                    if(a.equals("Continue")) {
+                        step = Step.NEXT;
+                    }else{
+                        step = Step.ALIGN;
+                        firstMsg = "Realign your bot with";
+                    }
+                });
                 break;
             case NEXT:
                 State.endTuning = Affair.PRESENT;

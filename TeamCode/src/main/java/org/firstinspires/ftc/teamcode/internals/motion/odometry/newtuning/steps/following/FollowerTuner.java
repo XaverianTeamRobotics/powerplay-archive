@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
@@ -50,8 +51,9 @@ public class FollowerTuner extends Feature implements Conditional {
     public void loop() {
         switch(step) {
             case INSTRUCT:
-                Questions.askC1("Now we're going to tune the follower PID controllers. Watch the tutorial at bit.ly/followerpid before starting. It will go over the basics of tuning the follower PID. We're going to tune the values of the HEADING_PID and TRANSLATIONAL_PID settings, so make sure they're open in the Dashboard. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller. Select Ok when you're ready.", "Ok");
-                step = Step.ALIGN_BF;
+                AsyncQuestionExecutor.askC1("Now we're going to tune the follower PID controllers. Watch the tutorial at bit.ly/followerpid before starting. It will go over the basics of tuning the follower PID. We're going to tune the values of the HEADING_PID and TRANSLATIONAL_PID settings, so make sure they're open in the Dashboard. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller. Select Ok when you're ready.", new String[] {"Ok"}, a -> {
+                    step = Step.ALIGN_BF;
+                });
                 break;
             case ALIGN_BF:
                 // first, the user needs to position the robot -- so lets tell them to do that
