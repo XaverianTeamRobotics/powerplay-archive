@@ -2,18 +2,22 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.Clock;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderForwardOffsetExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderTrackWidthExperimentalTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.ff.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following.FollowerTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following.SplineTest;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoader;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoaderFailureException;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -34,6 +38,17 @@ public class AutoTuning extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
+        if(State.firstTime) {
+            State.firstTime = false;
+        }else{
+            RobotLog.clearGlobalWarningMsg();
+            RobotLog.addGlobalWarningMessage("The tuning OpMode has been executed before, but the robot must restart between runs of this OpMode. Restarting bot...");
+            Clock.sleep(10000);
+            RobotLog.clearGlobalWarningMsg();
+            RobotLog.addGlobalWarningMessage("If the robot doesn't restart within a minute, do it manually in real life, i.e. flipping the power switch off for a few seconds.");
+            Clock.sleep(5000);
+            reboot();
+        }
         registerFeature(new Directions());
         registerFeature(new MotorConfigSetup());
         registerFeature(new RPMTuner());
@@ -115,14 +130,28 @@ public class AutoTuning extends OperationMode implements TeleOperation {
             State.beginPhysicalTuning = Affair.PAST;
             State.maxVelocityTuner = Affair.PRESENT;
         }else if(State.endTuning == Affair.PRESENT) {
+            boolean saved = true;
+            try {
+                SettingLoader.save();
+            } catch(SettingLoaderFailureException e) {
+                System.out.println("Saving settings failed! " + e.getMessage());
+                e.printStackTrace();
+                System.out.println(e.toString());
+                saved = false;
+            }
             // we're done!!1
             // TODO:
-            //  - save to file, load from file
+            //  - clear global err message
             //  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
             //  - odometry wrappers for easy usage
             //  - remove old tuning opmodes
             //  - refactor normal and field centric driving to use the odometry system/autonomous driver
             //  - maybe refactor autonomous driver to just be normal driver or something
+            if(saved) {
+                Questions.askC1("\uD83C\uDF89 You're done! Your odometry settings have been saved and will persist between OpModes and restarts.", "Exit");
+            }else{
+                Questions.askC1("\uD83C\uDF89 You're done! However, your odometry settings did NOT save. You need to manually edit the settings yourself in the source code. Connect to ADB and check logcat for more details. Select Exit when you're done.", "Exit");
+            }
         }
     }
 

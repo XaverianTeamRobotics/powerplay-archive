@@ -35,5 +35,6 @@ public class State {
 
     // misc state -- an unordered mess of what we need
     public static AutoTuning.InitialTesting initialTesting = AutoTuning.InitialTesting.TEST;
+    public static boolean firstTime = true;
 
 }

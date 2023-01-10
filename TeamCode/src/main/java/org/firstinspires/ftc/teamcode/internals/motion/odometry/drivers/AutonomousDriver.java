@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers;
 
 import androidx.annotation.NonNull;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Config
 public class AutonomousDriver extends MecanumDrive {
 
 

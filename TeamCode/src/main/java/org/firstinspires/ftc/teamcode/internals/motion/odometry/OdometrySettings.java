@@ -55,12 +55,12 @@ public class OdometrySettings {
     /**
      * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run count 537.7 ticks per revolution.
      */
-    public static final double TICKS_PER_REV = 1;
+    public static double TICKS_PER_REV = 1;
 
     /**
      * The maximum rotations per minute of your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run at 312 RPM.
      */
-    public static final double MAX_RPM = 1;
+    public static double MAX_RPM = 1;
 
     /**
      * The radius of the driving wheels in inches. This should come from the wheel's specsheet or a similar specification document. For example, the Strafer v5's mecanum wheels have a radius of 1.8898 inches.

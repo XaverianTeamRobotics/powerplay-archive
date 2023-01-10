@@ -18,7 +18,7 @@ public class EncoderForwardOffsetEstimateTuner extends Feature implements Condit
     @Override
     public void loop() {
         Questions.ask(new Menu.MenuBuilder().setDescription("Set the ENCODER_FORWARD_OFFSET to an estimate of your middle encoder offset from the center of rotation in inches, then select Ok.").addItem("Ok").build(), Devices.controller1);
-        State.encoderTrackWidthTuning = Affair.PAST;
+        State.encoderForwardOffsetTuning = Affair.PAST;
         State.beginPhysicalTuning = Affair.PRESENT;
     }
 

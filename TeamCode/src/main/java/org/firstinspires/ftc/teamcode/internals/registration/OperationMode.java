@@ -7,10 +7,14 @@ import com.michaell.looping.builtin.ConvertToScript;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
+import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoader;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoaderFailureException;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,49 +37,67 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        Logging.setDriverTelemetry(telemetry);
-        HardwareGetter.setEmulated(false);
-        HardwareGetter.setHardwareMap(hardwareMap);
-        HardwareGetter.setOpMode(this);
-        HardwareGetterKt.initConfigDevices();
-        HardwareGetter.initStdDevices();
-        ScriptTemplate jloopingScript;
-        ScriptRunner runner;
         try {
-            jloopingScript = new ConvertToScript(this.getClass().getName(), this,
-                "absolutelyNothing", "run");
-            runner = new ScriptRunner();
-            runner.addScript(jloopingScript);
-            this.environment = runner.scriptParametersGlobal;
-            HardwareGetter.setJloopingRunner(runner);
-            HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
-            HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
+            // formatting for questions api
+            telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+            Logging.setDriverTelemetry(telemetry);
+            HardwareGetter.setEmulated(false);
+            HardwareGetter.setHardwareMap(hardwareMap);
+            HardwareGetter.setOpMode(this);
+            ScriptTemplate jloopingScript;
+            ScriptRunner runner;
+            try {
+                jloopingScript = new ConvertToScript(this.getClass().getName(), this,
+                    "absolutelyNothing", "run");
+                runner = new ScriptRunner();
+                runner.addScript(jloopingScript);
+                this.environment = runner.scriptParametersGlobal;
+                HardwareGetter.setJloopingRunner(runner);
+                HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
+                HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
 
-            // Set the Caching mode to auto. This allows for faster access of all sensors
-            // The cache gets cleared whenever a call to a sensor is repeated
-            // This does NOT effect writing data to a device
-            List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+                // Set the Caching mode to auto. This allows for faster access of all sensors
+                // The cache gets cleared whenever a call to a sensor is repeated
+                // This does NOT effect writing data to a device
+                List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
-            for (LynxModule hub : allHubs) {
-                hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+                for (LynxModule hub : allHubs) {
+                    hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+                }
+            } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
+                throw new RuntimeException(e);
             }
-        } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
-            throw new RuntimeException(e);
-        }
-        // tell user-defined code of the opmode to construct itself
-        construct();
-        // wait until the opmode is executed
-        waitForStart();
-        resetRuntime();
-        // run the opmode using jlooping
-        while (opModeIsActive()) {
-            runner.runOneScript();
-            this.environment = runner.scriptParametersGlobal;
-        }
+            HardwareGetterKt.initConfigDevices();
+            HardwareGetter.initStdDevices();
+            // attempt to load odo settings
+            boolean loaded = true;
+            try {
+                SettingLoader.load();
+            } catch(SettingLoaderFailureException e) {
+                System.out.println("Loading settings failed! " + e.getMessage());
+                e.printStackTrace();
+                System.out.println(e.toString());
+                loaded = false;
+            }
+            if(!loaded) {
+                RobotLog.addGlobalWarningMessage("Odometry settings failed to load from the most recent save! Does a save exist? Check logcat for more details.");
+            }
+            // tell user-defined code of the opmode to construct itself
+            construct();
+            // wait until the opmode is executed
+            waitForStart();
+            resetRuntime();
+            // run the opmode using jlooping
+            while (opModeIsActive()) {
+                runner.runOneScript();
+                this.environment = runner.scriptParametersGlobal;
+            }
 
-        // tell the app to stop this opmode
-        requestOpModeStop();
+            // tell the app to stop this opmode
+            requestOpModeStop();
+        } catch(RobotRebootException e) {
+            throw new InterruptedException(e.getMessage());
+        }
     }
 
     /**
@@ -102,6 +124,20 @@ public abstract class OperationMode extends LinearOpMode {
         } catch (ScriptRunner.DuplicateScriptException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Call this whenever you need to reboot the robot.
+     */
+    public static void reboot() {
+        throw new RobotRebootException();
+    }
+
+    /**
+     * Call this whenever you need to reboot the robot.
+     */
+    public static void reboot(String reason) {
+        throw new RobotRebootException(reason);
     }
 
 }
