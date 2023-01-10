@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.misc;
+package org.firstinspires.ftc.teamcode.internals.time;
 
 import java.util.HashMap;
 

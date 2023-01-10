@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.misc;
+package org.firstinspires.ftc.teamcode.internals.time;
 
 /**
  * A timer tracks the elapsed time since an arbitrary epoch at a sub-nanosecond resolution.

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
-import org.firstinspires.ftc.teamcode.internals.misc.Clock;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints.MaxVelocityTuner;
@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Menu;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
 public class AutoTuning extends OperationMode implements TeleOperation {
 
@@ -31,9 +32,16 @@ public class AutoTuning extends OperationMode implements TeleOperation {
     private AutonomousDriver driver = null;
 
     public enum InitialTesting {
+        BEFORE,
         TEST,
         RETUNE,
         COMPLETE
+    }
+
+    public enum EndOfTuning {
+        SAVE,
+        Q1,
+        Q2
     }
 
     @Override
@@ -78,13 +86,18 @@ public class AutoTuning extends OperationMode implements TeleOperation {
     public void run() {
         if(State.beginningDirections == Affair.PRESENT) {
             // first we go through all the constants
-            Questions.ask(new Menu.MenuBuilder().setDescription("This OpMode will go through a series of tuning stages to set up your odometry system. First, navigate to http://192.168.43.1:8080/dash and open the OdometrySettings dropdown. You'll need to edit those values throughout the tuning process. The values you set there will be saved at the end of the tuning process. Place your bot on an empty square of field tiles. Make sure you're using a freshly-charged battery. Connect two controllers to the Driver Station. All interactions with the menu will be made with the first gamepad, and all interactions with the robot will be made with the second gamepad. When you're ready, select Start Tuning.").addItem("Start Tuning").build(), Devices.controller1);
-            State.beginningDirections = Affair.PAST;
-            State.constantDirections = Affair.PRESENT;
+            AsyncQuestionExecutor.askC1(new Menu.MenuBuilder().setDescription("This OpMode will go through a series of tuning stages to set up your odometry system. First, navigate to http://192.168.43.1:8080/dash and open the OdometrySettings dropdown. You'll need to edit those values throughout the tuning process. The values you set there will be saved at the end of the tuning process. Place your bot on an empty square of field tiles. Make sure you're using a freshly-charged battery. Connect two controllers to the Driver Station. All interactions with the menu will be made with the first gamepad, and all interactions with the robot will be made with the second gamepad. When you're ready, select Start Tuning.").addItem("Start Tuning").build(), a -> {
+                State.beginningDirections = Affair.PAST;
+                State.constantDirections = Affair.PRESENT;
+            });
         }else if(State.beginPhysicalTuning == Affair.PRESENT) {
-            // now we need to start doing physical tuning, but first we need to test the constant motor and encoder values are right
-            Questions.ask(new Menu.MenuBuilder().setDescription("You're done defining the initial values! Soon we will begin physically tuning the robot. Before that though, we're going to do a test to make sure your values are correct. When you're ready, select Ok.").addItem("Ok").build(), Devices.controller1);
             switch(State.initialTesting) {
+                case BEFORE:
+                    // now we need to start doing physical tuning, but first we need to test the constant motor and encoder values are right
+                    AsyncQuestionExecutor.askC1(new Menu.MenuBuilder().setDescription("You're done defining the initial values! Soon we will begin physically tuning the robot. Before that though, we're going to do a test to make sure your values are correct. When you're ready, select Ok.").addItem("Ok").build(), a -> {
+                        State.initialTesting = InitialTesting.TEST;
+                    });
+                    break;
                 case TEST:
                     // so, we let the user run the robot around a bit and if they think something needs to be retuned, they can retune it
                     // we first init the fancy async menu (needs to be async so they can control the bot at the same time as the menu)
@@ -121,38 +134,55 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     break;
                 case RETUNE:
                     // we dont need to do as much stuff here, just let the user do their things
-                    Questions.ask(new Menu.MenuBuilder().setDescription("Update your drive and encoder motor names and directions in the settings, then select Ok.").addItem("Ok").build(), Devices.controller1);
-                    State.initialTesting = InitialTesting.TEST;
+                    AsyncQuestionExecutor.ask(new Menu.MenuBuilder().setDescription("Update your drive and encoder motor names and directions in the settings, then select Ok.").addItem("Ok").build(), Devices.controller1, a -> {
+                        State.initialTesting = InitialTesting.TEST;
+                    });
+                    break;
+                case COMPLETE:
+                    // now lets start the actual physical tuning
+                    AsyncQuestionExecutor.ask(new Menu.MenuBuilder().setDescription("Ok, now that you've tested your initial values we can begin physical tuning! Select Start Tuning when you're ready.").addItem("Start Tuning").build(), Devices.controller1, a -> {
+                        State.beginPhysicalTuning = Affair.PAST;
+                        State.maxVelocityTuner = Affair.PRESENT;
+                    });
                     break;
             }
-            // now lets start the actual physical tuning
-            Questions.ask(new Menu.MenuBuilder().setDescription("Ok, now that you've tested your initial values we can begin physical tuning! Select Start Tuning when you're ready.").addItem("Start Tuning").build(), Devices.controller1);
-            State.beginPhysicalTuning = Affair.PAST;
-            State.maxVelocityTuner = Affair.PRESENT;
         }else if(State.endTuning == Affair.PRESENT) {
-            boolean saved = true;
-            try {
-                SettingLoader.save();
-            } catch(SettingLoaderFailureException e) {
-                System.out.println("Saving settings failed! " + e.getMessage());
-                e.printStackTrace();
-                System.out.println(e.toString());
-                saved = false;
-            }
-            // we're done!!1
-            // TODO:
-            //  - clear global err message
-            //  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
-            //  - odometry wrappers for easy usage
-            //  - remove old tuning opmodes
-            //  - refactor normal and field centric driving to use the odometry system/autonomous driver
-            //  - maybe refactor autonomous driver to just be normal driver or something
-            if(saved) {
-                Questions.askC1("\uD83C\uDF89 You're done! Your odometry settings have been saved and will persist between OpModes and restarts.", "Exit");
-            }else{
-                Questions.askC1("\uD83C\uDF89 You're done! However, your odometry settings did NOT save. You need to manually edit the settings yourself in the source code. Connect to ADB and check logcat for more details. Select Exit when you're done.", "Exit");
+            switch(State.endOfTuning) {
+                case SAVE:
+                    boolean saved = true;
+                    try {
+                        SettingLoader.save();
+                    } catch(SettingLoaderFailureException e) {
+                        System.out.println("Saving settings failed! " + e.getMessage());
+                        e.printStackTrace();
+                        System.out.println(e.toString());
+                        saved = false;
+                    }
+                    if(saved) {
+                        State.endOfTuning = EndOfTuning.Q1;
+                    }else{
+                        State.endOfTuning = EndOfTuning.Q2;
+                    }
+                    break;
+                // we're done!!1
+                case Q1:
+                    AsyncQuestionExecutor.askC1("\uD83C\uDF89 You're done! Your odometry settings have been saved and will persist between OpModes and restarts.", new String[] {"Exit"}, a -> {
+                        requestOpModeStop();
+                    });
+                    break;
+                case Q2:
+                    AsyncQuestionExecutor.askC1("\uD83C\uDF89 You're done! However, your odometry settings did NOT save. You need to manually edit the settings yourself in the source code. Connect to ADB and check logcat for more details. Select Exit when you're done.", new String[] {"Exit"}, a -> {
+                        requestOpModeStop();
+                });
             }
         }
     }
 
 }
+
+// TODO:
+//  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
+//  - odometry wrappers for easy usage
+//  - remove old tuning opmodes
+//  - refactor normal and field centric driving to use the odometry system/autonomous driver
+//  - maybe refactor autonomous driver to just be normal driver or something

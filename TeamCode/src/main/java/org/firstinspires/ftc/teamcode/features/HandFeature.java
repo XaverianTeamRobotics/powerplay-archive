@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.features;
 import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
-import org.firstinspires.ftc.teamcode.internals.misc.Clock;
+import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
 public class HandFeature extends Feature implements Buildable {
 
