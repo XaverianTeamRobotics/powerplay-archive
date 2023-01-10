@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
@@ -113,8 +114,9 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 step = Step.VIEW;
                 break;
             case VIEW:
-                Questions.askC1(offset + " Set your ENCODER_FORWARD_OFFSET to this value, and then select Continue.", "Continue");
-                step = Step.CONFIRM;
+                AsyncQuestionExecutor.askC1(offset + " Set your ENCODER_FORWARD_OFFSET to this value, and then select Continue.", new String[] {"Continue"}, a -> {
+                    step = Step.CONFIRM;
+                });
                 break;
             case CONFIRM:
                 if(menuManager == null) {
@@ -148,8 +150,9 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 }
                 break;
             case RETUNE_CONST:
-                Questions.askC1("Reconfigure your odometry settings now. When you're done, select Ok. The offset will be retuned and you will be able to test your robot again to see if your edits were successful.", "Ok");
-                step = Step.TEST;
+                AsyncQuestionExecutor.askC1("Reconfigure your odometry settings now. When you're done, select Ok. The offset will be retuned and you will be able to test your robot again to see if your edits were successful.", new String[] {"Ok"}, a -> {
+                    step = Step.TEST;
+                });
                 break;
             case NEXT:
                 State.autoFeedforwardTuner = Affair.PRESENT;

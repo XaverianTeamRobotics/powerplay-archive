@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
@@ -84,8 +85,9 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 break;
             case DRAW:
-                Questions.ask(Devices.controller1, "Now, make a mark on your bot and make a similar mark at the same place on your field. These marks should line up. You can also use any other method of lining the robot up with a theoretical line, you just need to keep track of the robot's current heading somehow. Once you're done, select Ok.", "Ok");
-                step = Step.SPIN;
+                AsyncQuestionExecutor.ask(Devices.controller1, "Now, make a mark on your bot and make a similar mark at the same place on your field. These marks should line up. You can also use any other method of lining the robot up with a theoretical line, you just need to keep track of the robot's current heading somehow. Once you're done, select Ok.", new String[] {"Ok"}, a -> {
+                    step = Step.SPIN;
+                });
                 break;
             case SPIN:
                 // instructions
@@ -115,27 +117,37 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 break;
             case SHOW:
-                Item i;
                 if(!retuning) {
-                    i = Questions.ask(Devices.controller1, "Your robot seemed to turn " + headingAccumulator + " degrees. Your encoder track width should be " + width + " inches. If this seems incorrect, select Reconfigure. Otherwise, set your ENCODER_TRACK_WIDTH to the value displayed and select Continue.", "Continue", "Reconfigure");
+                    AsyncQuestionExecutor.ask(Devices.controller1, "Your robot seemed to turn " + headingAccumulator + " degrees. Your encoder track width should be " + width + " inches. If this seems incorrect, select Reconfigure. Otherwise, set your ENCODER_TRACK_WIDTH to the value displayed and select Continue.", new String[] {"Continue", "Reconfigure"}, a -> {
+                        if(a.equals("Continue")) {
+                            step = Step.FINISH;
+                        }else{
+                            step = Step.RETUNE;
+                        }
+                        headingAccumulator = 0;
+                        lastHeading = 0;
+                        width = 0;
+                    });
                 }else{
                     // allow for retuning, it might be necessary
-                    i = Questions.ask(Devices.controller1, "Your robot seemed to turn " + headingAccumulator + " degrees. Did the Dashboard bot match your physical bot? If so, select Continue. Otherwise, select Reconfigure.", "Continue", "Reconfigure");
+                    AsyncQuestionExecutor.ask(Devices.controller1, "Your robot seemed to turn " + headingAccumulator + " degrees. Did the Dashboard bot match your physical bot? If so, select Continue. Otherwise, select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
+                        if(a.equals("Continue")) {
+                            step = Step.FINISH;
+                        }else{
+                            step = Step.RETUNE;
+                        }
+                        headingAccumulator = 0;
+                        lastHeading = 0;
+                        width = 0;
+                    });
                 }
-                if(i.equals("Continue")) {
-                    step = Step.FINISH;
-                }else{
-                    step = Step.RETUNE;
-                }
-                headingAccumulator = 0;
-                lastHeading = 0;
-                width = 0;
                 break;
             case RETUNE:
-                Questions.askC1("Manually set your ENCODER_TRACK_WIDTH to what you think it should be. You'll run the same tuning process again, but this time pay careful attention to the bot rendered on the Dashboard. Make sure its heading matches your robot's heading. If it turns slower than the physical bot, decrease the ENCODER_TRACK_WIDTH the next time you retune. If it turns faster, increase the ENCODER_TRACK_WIDTH the next time you retune. Keep doing this until the headings match. Select Ok when you're ready.", "Ok");
-                // reset and loop back to tuning
-                retuning = true;
-                step = Step.SPIN;
+                AsyncQuestionExecutor.askC1("Manually set your ENCODER_TRACK_WIDTH to what you think it should be. You'll run the same tuning process again, but this time pay careful attention to the bot rendered on the Dashboard. Make sure its heading matches your robot's heading. If it turns slower than the physical bot, decrease the ENCODER_TRACK_WIDTH the next time you retune. If it turns faster, increase the ENCODER_TRACK_WIDTH the next time you retune. Keep doing this until the headings match. Select Ok when you're ready.", new String[] {"Ok"}, a -> {
+                    // reset and loop back to tuning
+                    retuning = true;
+                    step = Step.SPIN;
+                });
                 break;
             case FINISH:
                 if(menuManager == null) {
@@ -171,9 +183,10 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 break;
             case RECONF_CONST:
-                Questions.askC1("Reconfigure your odometry settings now. When you're done, select Ok. You will be able to test your robot again to see if your edits were successful.", "Ok");
-                // this should be false so they can go through the automatic width tuner again -- if they changed something and need to redo their track width, the robot should try to do it itself before handing it off to the user
-                retuning = false;
+                AsyncQuestionExecutor.askC1("Reconfigure your odometry settings now. When you're done, select Ok. You will be able to test your robot again to see if your edits were successful.", new String[] {"Ok"}, a -> {
+                    // this should be false so they can go through the automatic width tuner again -- if they changed something and need to redo their track width, the robot should try to do it itself before handing it off to the user
+                    retuning = false;
+                });
                 break;
             case NEXT:
                 State.encoderForwardOffsetExperimentalTuner = Affair.PRESENT;
