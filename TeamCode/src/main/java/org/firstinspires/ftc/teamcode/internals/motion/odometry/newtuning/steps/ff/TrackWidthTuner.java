@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
@@ -114,8 +115,9 @@ public class TrackWidthTuner extends Feature implements Conditional {
                 step = Step.SHOW;
                 break;
             case SHOW:
-                Questions.askC1(str + " Set your TRACK_WIDTH to this value, then select Continue.", "Continue");
-                step = Step.NEXT;
+                AsyncQuestionExecutor.askC1(str + " Set your TRACK_WIDTH to this value, then select Continue.", new String[] {"Continue"}, a -> {
+                    step = Step.NEXT;
+                });
                 break;
             case NEXT:
                 State.manualDriveTrackWidthExperimentalTuning = Affair.PRESENT;

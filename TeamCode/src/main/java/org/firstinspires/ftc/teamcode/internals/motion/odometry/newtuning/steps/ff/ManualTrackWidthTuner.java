@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -99,11 +100,12 @@ public class ManualTrackWidthTuner extends Feature implements Conditional {
                 }
                 break;
             case TUNE:
-                Questions.askC1("If your heading is lower than " + ANGLE + ", raise TRACK_WIDTH. If it's higher, lower TRACK_WIDTH. Select Continue when you're ready to retest your track width.", "Continue");
-                step = Step.TEST;
+                AsyncQuestionExecutor.askC1("If your heading is lower than " + ANGLE + ", raise TRACK_WIDTH. If it's higher, lower TRACK_WIDTH. Select Continue when you're ready to retest your track width.", new String[] {"Continue"}, a -> {
+                    step = Step.TEST;
+                });
                 break;
             case NEXT:
-
+                State.followerTuning = Affair.PRESENT;
                 State.manualDriveTrackWidthExperimentalTuning = Affair.PAST;
                 break;
         }

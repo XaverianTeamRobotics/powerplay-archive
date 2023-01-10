@@ -9,13 +9,14 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
@@ -125,8 +126,9 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                 step = Step.SHOW;
                 break;
             case SHOW:
-                Questions.askC1(result + " Set your kV and kStatic settings to these numbers, then select Continue.", "Continue");
-                step = Step.NEXT;
+                AsyncQuestionExecutor.askC1(result + " Set your kV and kStatic settings to these numbers, then select Continue.", new String[] {"Continue"}, a -> {
+                    step = Step.NEXT;
+                });
                 break;
             case NEXT:
                 State.manualFeedforwardTuner = Affair.PRESENT;

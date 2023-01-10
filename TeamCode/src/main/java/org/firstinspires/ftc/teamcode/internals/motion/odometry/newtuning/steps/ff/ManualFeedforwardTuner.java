@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
+import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
@@ -108,8 +109,9 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 break;
             case INSTRUCT:
-                Questions.askC1("In the Dashboard, graph the measuredVelocity, error, and targetVelocity values now. Your goal is to make the red line (measured velocity) match the green line (target velocity) as best you can. Visit bit.ly/graphtuning for some general information. I also highly recommend playing around with the simulator at bit.ly/fftuning and watching bit.ly/fftutorials before starting. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing down on the touchpad on either controller. When you're done tuning, press A on either controller. When you're ready to begin, select Ok.", "Ok");
-                step = Step.MANUAL;
+                AsyncQuestionExecutor.askC1("In the Dashboard, graph the measuredVelocity, error, and targetVelocity values now. Your goal is to make the red line (measured velocity) match the green line (target velocity) as best you can. Visit bit.ly/graphtuning for some general information. I also highly recommend playing around with the simulator at bit.ly/fftuning and watching bit.ly/fftutorials before starting. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing down on the touchpad on either controller. When you're done tuning, press A on either controller. When you're ready to begin, select Ok.", new String[] {"Ok"}, a -> {
+                    step = Step.MANUAL;
+                });
                 break;
             case MANUAL:
                 // inits
@@ -224,26 +226,38 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 break;
             case SHOW:
-                Item ans;
                 // let the user know whether they tuned well enough and that they should probably continue if it is good enough or reconfigure if it isnt
                 if(acceptable) {
-                    ans = Questions.askC1("Your feedforward gains seem to be accurate within 16%, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches. You should not need to tune your feedforward values further. If you want to continue, select Continue, otherwise select Reconfigure.", "Continue", "Reconfigure");
+                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be accurate within 16%, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches. You should not need to tune your feedforward values further. If you want to continue, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
+                        if(a.equals("Continue")) {
+                            step = Step.NEXT;
+                        }else{
+                            step = Step.INSTRUCT;
+                        }
+                        // cleanup
+                        testStep = 1;
+                        avg = 0.0;
+                        acceptable = false;
+                    });
                 }else{
-                    ans = Questions.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >16% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", "Continue", "Reconfigure");
+                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >16% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
+                        if(a.equals("Continue")) {
+                            step = Step.NEXT;
+                        }else{
+                            step = Step.INSTRUCT;
+                        }
+                        // cleanup
+                        testStep = 1;
+                        avg = 0.0;
+                        acceptable = false;
+                    });
                 }
-                if(ans.equals("Continue")) {
-                    step = Step.NEXT;
-                }else{
-                    step = Step.INSTRUCT;
-                }
-                // cleanup
-                testStep = 1;
-                avg = 0.0;
-                acceptable = false;
+                break;
             case NEXT:
-                Questions.askC1("Your kA and kV should now be tuned properly. Select Ok when you're ready to continue.", "Ok");
-                State.lateralMultiplierTuning = Affair.PRESENT;
-                State.manualFeedforwardTuner = Affair.PAST;
+                AsyncQuestionExecutor.askC1("Your kA and kV should now be tuned properly. Select Ok when you're ready to continue.", new String[] {"Ok"}, a -> {
+                    State.lateralMultiplierTuning = Affair.PRESENT;
+                    State.manualFeedforwardTuner = Affair.PAST;
+                });
                 break;
         }
     }
