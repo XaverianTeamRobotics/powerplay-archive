@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoader;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoaderFailureException;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public abstract class OperationMode extends LinearOpMode {
             // formatting for questions api
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
             Logging.setDriverTelemetry(telemetry);
+            SafeLogging.setTelemetry(telemetry);
             HardwareGetter.setEmulated(false);
             HardwareGetter.setHardwareMap(hardwareMap);
             HardwareGetter.setOpMode(this);
