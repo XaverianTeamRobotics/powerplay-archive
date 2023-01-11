@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.image;
 
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -87,19 +87,19 @@ public class SleeveColorDetection extends OpenCvPipeline {
         if (debugEnabled) {
             switch (detection) {
                 case 1:
-                    Logging.logData("Detected Color", "Red");
+                    SafeLogging.logData("Detected Color", "Red");
                     break;
                 case 2:
-                    Logging.logData("Detected Color", "Green");
+                    SafeLogging.logData("Detected Color", "Green");
                     break;
                 case 3:
-                    Logging.logData("Detected Color", "Blue");
+                    SafeLogging.logData("Detected Color", "Blue");
                     break;
                 default:
-                    Logging.logData("Detected Color", "None");
+                    SafeLogging.logData("Detected Color", "None");
                     break;
             }
-            Logging.updateLog();
+            SafeLogging.update();
         }
 
         grayScale.release();
@@ -129,8 +129,8 @@ public class SleeveColorDetection extends OpenCvPipeline {
 
         // Log all values used in calculation for verification purposes
         if (debugEnabled) {
-            Logging.logData(name + " - Average", averageValue * 100 + "%");
-            Logging.updateLog();
+            SafeLogging.logData(name + " - Average", averageValue * 100 + "%");
+            SafeLogging.update();
         }
 
         mat.release();

@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
@@ -87,8 +87,8 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 if(driver == null) {
                     driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    Logging.log("Finding maximum velocity...");
-                    Logging.updateLog();
+                    SafeLogging.log("Finding maximum velocity...");
+                    SafeLogging.update();
                     driver.setDrivePower(new Pose2d(1, 0, 0));
                     vel_timer = new ElapsedTime();
                 }
@@ -101,8 +101,8 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                     // and lastly we just clean everything up and move on
                     driver.setDrivePower(new Pose2d());
                     driver = null;
-                    Logging.clear();
-                    Logging.updateLog();
+                    SafeLogging.clear();
+                    SafeLogging.update();
                     step = Step.SHOW_VEL;
                 }
                 break;
@@ -146,8 +146,8 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 if(driver == null) {
                     AutonomousDriver driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    Logging.log("Finding maximum angular velocity...");
-                    Logging.updateLog();
+                    SafeLogging.log("Finding maximum angular velocity...");
+                    SafeLogging.update();
                     driver.setDrivePower(new Pose2d(0, 0, 1));
                     ang_timer = new ElapsedTime();
                 }
@@ -160,8 +160,8 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                     // and lastly one more "just clean everything up and move on"
                     driver.setDrivePower(new Pose2d());
                     driver = null;
-                    Logging.clear();
-                    Logging.updateLog();
+                    SafeLogging.clear();
+                    SafeLogging.update();
                     step = Step.SHOW_ANG;
                 }
                 break;

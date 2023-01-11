@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
@@ -120,14 +120,15 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     clock = NanoClock.system();
                     activeProfile = generateProfile();
                     profileStart = clock.seconds();
-                    Logging.clear();
-                    Logging.updateLog();
-                    Logging.getTelemetry().clear();
-                    Logging.getTelemetry().update();
+                    SafeLogging.clear();
+                    SafeLogging.update();
+                    SafeLogging.clear();
+                    SafeLogging.update();
                 }
                 switch(mode) {
                     case TUNING_MODE:
-                        Logging.getTelemetry().addLine("Running. To stop and enable driver control, press down on the touchpad. When you're done tuning, press A on either controller.");
+                        SafeLogging.log("Running. To stop and enable driver control, press down on the " +
+                            "touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
                         if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.DRIVER_MODE;
@@ -154,12 +155,13 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         Pose2d poseVelo = Objects.requireNonNull(driver.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
                         double currentVelo = poseVelo.getX();
                         // graph
-                        Logging.getTelemetry().addData("targetVelocity", motionState.getV());
-                        Logging.getTelemetry().addData("measuredVelocity", currentVelo);
-                        Logging.getTelemetry().addData("error", motionState.getV() - currentVelo);
+                        SafeLogging.log("targetVelocity", motionState.getV());
+                        SafeLogging.log("measuredVelocity", currentVelo);
+                        SafeLogging.log("error", motionState.getV() - currentVelo);
                         break;
                     case DRIVER_MODE:
-                        Logging.getTelemetry().addLine("Stopped. To restart and disable driver control, press down on the touchpad. When you're done tuning, press A on either controller.");
+                        SafeLogging.log("Stopped. To restart and disable driver control, press down on " +
+                            "the touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
                         if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.TUNING_MODE;
@@ -180,23 +182,21 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                             )
                         );
                         // we should continue to update these values, otherwise the graph will break
-                        Logging.getTelemetry().addData("targetVelocity", 0);
-                        Logging.getTelemetry().addData("measuredVelocity", 0);
-                        Logging.getTelemetry().addData("error", 0);
+                        SafeLogging.log("targetVelocity", 0);
+                        SafeLogging.log("measuredVelocity", 0);
+                        SafeLogging.log("error", 0);
                         break;
                 }
                 // very very important. required for graphing
-                Logging.getTelemetry().update();
+                SafeLogging.update();
                 // cleanup procedure when user's completely done with tuning
                 if(Devices.controller1.getA() || Devices.controller2.getA()) {
-                    Logging.getTelemetry().addData("targetVelocity", 0);
-                    Logging.getTelemetry().addData("measuredVelocity", 0);
-                    Logging.getTelemetry().addData("error", 0);
-                    Logging.getTelemetry().update();
-                    Logging.getTelemetry().clear();
-                    Logging.getTelemetry().update();
-                    Logging.clear();
-                    Logging.updateLog();
+                    SafeLogging.log("targetVelocity", 0);
+                    SafeLogging.log("measuredVelocity", 0);
+                    SafeLogging.log("error", 0);
+                    SafeLogging.update();
+                    SafeLogging.clear();
+                    SafeLogging.update();
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     mode = Mode.TUNING_MODE;

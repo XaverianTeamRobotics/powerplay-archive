@@ -6,9 +6,9 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItem;
 import org.firstinspires.ftc.teamcode.internals.telemetry.MenuItemType;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.TelemetryMenu;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -49,8 +49,8 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
                  * This will be called if the camera could not be opened
                  */
 
-                Logging.logData("Camera error", errorCode);
-                Logging.updateLog();
+                SafeLogging.logData("Camera error", errorCode);
+                SafeLogging.update();
             }
         });
 

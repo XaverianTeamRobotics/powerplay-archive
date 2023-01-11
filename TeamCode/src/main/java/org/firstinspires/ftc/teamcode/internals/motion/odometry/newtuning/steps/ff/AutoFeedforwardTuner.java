@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
+import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
@@ -84,8 +84,8 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
             case AUTO:
                 // i would rather this be async, buuuuuuut the logic works out a bit easier this way and tbqh accuracy is so important here im a bit worried that pausing execution for other vthreads would be bad
                 // therefore, synchronous!
-                Logging.log("Tuning kV and kStatic...");
-                Logging.updateLog();
+                SafeLogging.log("Tuning kV and kStatic...");
+                SafeLogging.update();
                 // inits
                 driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
                 NanoClock clock = NanoClock.system();
