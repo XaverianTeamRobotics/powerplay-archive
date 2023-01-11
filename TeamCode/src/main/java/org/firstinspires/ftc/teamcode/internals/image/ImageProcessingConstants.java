@@ -37,7 +37,7 @@ public class ImageProcessingConstants {
 
 
     // The new values for the Magenta + Orange + Green Cone
-    public static double MAGENTA_H_MIN = 190;
+    public static double MAGENTA_H_MIN = 160;
     public static double MAGENTA_S_MIN = 53;
     public static double MAGENTA_V_MIN = 73;
 
@@ -63,7 +63,8 @@ public class ImageProcessingConstants {
     public static double GREEN2_S_MAX = 255;
     public static double GREEN2_V_MAX = 255;
 
-
+    public static double CANNY_1 = 100;
+    public static double CANNY_2 = 200;
 
     public static double GAUSSIAN_BLUR_SIZE = 15;
     public static double GRAYSCALE_BLOB_MIN_AREA = 100;

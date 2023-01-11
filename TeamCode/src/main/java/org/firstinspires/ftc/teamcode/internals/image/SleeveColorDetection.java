@@ -6,7 +6,8 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.*;
-import static org.opencv.core.Core.*;
+import static org.opencv.core.Core.inRange;
+import static org.opencv.core.Core.sumElems;
 import static org.opencv.imgproc.Imgproc.*;
 
 public class SleeveColorDetection extends OpenCvPipeline {
@@ -21,7 +22,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
         //Logging.logData("Input Height", input.height());
         //Logging.logData("Input Width", input.width());
 
-        Mat processedMat, grayScale;
+        Mat processedMat;
 
         double cropRatio = CROP_RATIO;
 
@@ -35,12 +36,8 @@ public class SleeveColorDetection extends OpenCvPipeline {
         Size blurSize = new Size(GAUSSIAN_BLUR_SIZE, GAUSSIAN_BLUR_SIZE);
         GaussianBlur(processedMat, processedMat, blurSize, 0);
 
-        // Convert to grayscale
-        grayScale = processedMat.clone();
-        cvtColor(grayScale, grayScale, Imgproc.COLOR_RGB2GRAY);
-
         cvtColor(processedMat, processedMat, Imgproc.COLOR_RGB2HSV);
-        
+
         // Define the colors needed
         Scalar magentaLowHSV = new Scalar(MAGENTA_H_MIN, MAGENTA_S_MIN, MAGENTA_V_MIN);
         Scalar magentaHighHSV = new Scalar(MAGENTA_H_MAX, MAGENTA_S_MAX, MAGENTA_V_MAX);
@@ -51,23 +48,6 @@ public class SleeveColorDetection extends OpenCvPipeline {
         Scalar greenLowHSV = new Scalar(GREEN2_H_MIN, GREEN2_S_MIN, GREEN2_V_MIN);
         Scalar greenHighHSV = new Scalar(GREEN2_H_MAX, GREEN2_S_MAX, GREEN2_V_MAX);
 
-        // Remove the background from the gray image and just get the cone to use as a mask and then convert back to hsv
-        inRange(
-            grayScale,
-            new Scalar(GRAY_MIN),
-            new Scalar(GRAY_MAX),
-            grayScale
-        );
-        // Set the GRAY_MIN and GRAY_MAX values to 0 and 255, respectively, to disable the feature
-
-        // Use the grayscale image with the background removed to get rid of the background in the color image
-        cvtColor(grayScale, grayScale, COLOR_GRAY2RGB);
-        cvtColor(processedMat, processedMat, COLOR_HSV2RGB);
-
-        bitwise_and(processedMat, grayScale, processedMat);
-
-        cvtColor(processedMat, processedMat, COLOR_RGB2HSV);
-
         // Find the average colors of the original image
         double magentaAverage = processForColor(processedMat, magentaLowHSV, magentaHighHSV, "magenta");
         double orangeAverage = processForColor(processedMat, orangeLowHSV, orangeHighHSV, "orange");
@@ -76,15 +56,13 @@ public class SleeveColorDetection extends OpenCvPipeline {
         double largestVal = Math.max(magentaAverage, Math.max(orangeAverage, greenAverage));
         if (largestVal == magentaAverage) {
             detection = 1;
-        } else if (largestVal == greenAverage) {
-            detection = 2;
         } else if (largestVal == orangeAverage) {
+            detection = 2;
+        } else if (largestVal == greenAverage) {
             detection = 3;
         } else {
             detection = 0;
         }
-
-        grayScale.release();
 
         cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
         printOutcome();

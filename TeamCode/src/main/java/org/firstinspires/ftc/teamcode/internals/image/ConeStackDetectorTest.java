@@ -10,7 +10,7 @@ public class ConeStackDetectorTest extends OperationMode implements AutonomousOp
 
     @Override
     public void construct() {
-        detector = new ConeStackTracker(true, true);
+        detector = new ConeStackTracker(false, true);
         detector.startStreaming();
     }
 

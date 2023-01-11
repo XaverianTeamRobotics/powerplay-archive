@@ -13,6 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvPipeline
 import kotlin.math.atan2
+import kotlin.math.roundToInt
 import kotlin.math.tan
 
 class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boolean): OpenCvPipeline() {
@@ -23,7 +24,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         //Logging.logData("Input Width", input.width());
 
         // Blur the image to reduce noise
-        val blurSize = Size(ImageProcessingConstants.GAUSSIAN_BLUR_SIZE, ImageProcessingConstants.GAUSSIAN_BLUR_SIZE)
+        val blurSize = Size(55.0,55.0)
         Imgproc.GaussianBlur(input, input, blurSize, 0.0)
 
         // Convert to HSV
@@ -40,12 +41,14 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         // Apply an edge detector to just get the cones
         val lowerBound = if (isBlueTeam) blueLowerBound else redLowerBound
         val upperBound = if (isBlueTeam) blueUpperBound else redUpperBound
-        Core.inRange(input, lowerBound, upperBound, input)
-//        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
-//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
+        val mask1 = Mat()
+        Core.inRange(input, lowerBound, upperBound, mask1)
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_HSV2RGB)
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY)
+        Core.bitwise_and(input, mask1, input)
 
         // Run a Canny edge detector
-        Imgproc.Canny(input, input, 100.0, 200.0)
+        Imgproc.Canny(input, input, ImageProcessingConstants.CANNY_1, ImageProcessingConstants.CANNY_2)
 
         // Detect the areas within the edges created by the Canny edge detector
         // Find the contours in the image
@@ -53,10 +56,14 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         val hierarchy = Mat()
         Imgproc.findContours(input, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
 
+        detectedCones.clear()
         // Iterate through the contours
         for (contour in contours) {
             // Approximate the contour as a polygon
-            val epsilon = 0.01 * Imgproc.arcLength(contour as MatOfPoint2f, true)
+            val points = MatOfPoint2f()
+            points.fromList(contour.toList().toMutableList())
+            val epsilon = 0.01 * Imgproc.arcLength(points, true)
+            points.release()
             val approx = MatOfPoint2f()
             Imgproc.approxPolyDP(MatOfPoint2f(*contour.toArray()), approx, epsilon, true)
 
@@ -80,7 +87,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
             var text = "#$i"
             if (enableDisplayOfAngles) {
                 val angle = getAngleToTarget(keypoint)
-                text += " ${angle.toInt()}°"
+                text += " ${angle.toInt()}*"
             }
             Imgproc.putText(input, text, keypoint.pt, Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, color, 2)
         }
@@ -120,9 +127,9 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
         return this
     }
 
-    fun getAngleToTarget(keyPoint: KeyPoint): Double {
+    fun getAngleToTarget(keyPoint: KeyPoint): Int {
         val center = keyPoint.pt
-        return Math.toDegrees(atan2(center.x - 160, 160 / tan(Math.toRadians(60.0))))
+        return (Math.toDegrees(atan2(center.x - 160, 160 / tan(Math.toRadians(60.0)))) * (1.0/3.0)).roundToInt()
     }
 
     fun returnBiggestCone(): KeyPoint? {
