@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.internals.time.Clock;
 public class EncoderForwardOffsetExperimentalTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
 
     private double angle = 180;
     private int trials = 5;
@@ -59,7 +59,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -84,7 +84,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
             case TEST:
                 SafeLogging.log("Tuning offset...");
                 SafeLogging.update();
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 MovingStatistics forwardOffsetStats = new MovingStatistics(trials);
                 for(int i = 0; i < trials; i++) {
                     driver.setPoseEstimate(new Pose2d());
@@ -125,7 +125,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 // let them test it out
                 menuManager.runOnce();
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(

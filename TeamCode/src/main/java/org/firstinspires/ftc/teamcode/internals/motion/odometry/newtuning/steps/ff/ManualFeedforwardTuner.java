@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -29,7 +29,7 @@ import java.util.Objects;
 public class ManualFeedforwardTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
     private NanoClock clock = null;
     private String firstMsg = "We're going to manually tune the KA feedforward value and manually refine the kV value.";
 
@@ -86,7 +86,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -116,7 +116,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             case MANUAL:
                 // inits
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     clock = NanoClock.system();
                     activeProfile = generateProfile();
                     profileStart = clock.seconds();
@@ -275,7 +275,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             menuManager.runOnce();
             // we let them drive to the right spot
             if(driver == null) {
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
             driver.setWeightedDrivePower(
@@ -298,7 +298,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             }
         }else{
             // drive TEST_DISTANCE inches and record error
-            driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+            driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
             Trajectory trajectory = driver.trajectoryBuilder(new Pose2d())
                 .forward(TEST_DISTANCE)
                 .build();

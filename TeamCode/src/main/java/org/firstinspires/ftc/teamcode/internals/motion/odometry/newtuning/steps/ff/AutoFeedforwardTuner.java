@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -28,7 +28,7 @@ import java.util.List;
 public class AutoFeedforwardTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
 
     private final double MAX_POWER = 0.7;
     private final double DISTANCE = 100; // in
@@ -59,7 +59,7 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -87,7 +87,7 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                 SafeLogging.log("Tuning kV and kStatic...");
                 SafeLogging.update();
                 // inits
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 NanoClock clock = NanoClock.system();
                 double maxVel = ConstantUtils.rpmToVelocity(OdometrySettings.MAX_RPM);
                 double finalVel = MAX_POWER * maxVel;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 public class ManualTrackWidthTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
     private final double ANGLE = 180; // deg
     private double heading = 0.0;
     private String str = "";
@@ -50,7 +50,7 @@ public class ManualTrackWidthTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -75,7 +75,7 @@ public class ManualTrackWidthTuner extends Feature implements Conditional {
             case TEST:
                 SafeLogging.log("Testing...");
                 SafeLogging.update();
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 driver.turn(Math.toRadians(ANGLE));
                 heading = driver.getPoseEstimate().getHeading();
                 if(Math.abs(Math.abs(ANGLE) - Math.abs(heading)) <= 3) {

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 public class LateralMultiplierTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
     private String firstMsg = "Mecanum drivetrains often exhibit less torque while strafing, so we're going to tune your strafing multiplier. First, use the second controller to drive";
     private String manMult = "multiplier";
 
@@ -58,7 +58,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -83,7 +83,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 break;
             case RUN:
                 // strafe
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 Trajectory trajectory = driver.trajectoryBuilder(new Pose2d())
                     .strafeRight(DISTANCE)
                     .build();
@@ -108,7 +108,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -132,7 +132,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 break;
             case RERUN:
                 // strafe
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 Trajectory traj2 = driver.trajectoryBuilder(new Pose2d())
                     .strafeRight(DISTANCE)
                     .build();
@@ -162,7 +162,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -186,7 +186,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 break;
             case MANUALTEST:
                 // strafe
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 Trajectory traj3 = driver.trajectoryBuilder(new Pose2d())
                     .strafeRight(DISTANCE)
                     .build();

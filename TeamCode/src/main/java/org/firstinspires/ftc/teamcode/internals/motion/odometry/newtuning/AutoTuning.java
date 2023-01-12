@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constants.*;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.constraints.MaxVelocityTuner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.dw.EncoderForwardOffsetExperimentalTuner;
@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.internals.time.Clock;
 public class AutoTuning extends OperationMode implements TeleOperation {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
 
     public enum InitialTesting {
         BEFORE,
@@ -107,7 +107,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     menuManager.runOnce();
                     // then the drivetrain
                     if(driver == null) {
-                        driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                        driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                         driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     }
                     // and they can drive it

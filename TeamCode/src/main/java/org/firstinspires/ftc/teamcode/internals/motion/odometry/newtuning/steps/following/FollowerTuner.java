@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 public class FollowerTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
     private final double DISTANCE_BF = 50; // in
     private final double DISTANCE_HEAD = 48; // in
     private Trajectory bfTrajectoryForward = null;
@@ -63,7 +63,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -100,7 +100,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 break;
             case BF:
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     SafeLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
                         "driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller.");
                     SafeLogging.update();
@@ -152,7 +152,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -189,7 +189,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 break;
             case HEAD:
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     SafeLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
                         "driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller.");
                     SafeLogging.update();

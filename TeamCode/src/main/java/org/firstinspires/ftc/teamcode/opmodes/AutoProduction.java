@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
@@ -18,11 +18,11 @@ public class AutoProduction extends OperationMode implements AutonomousOperation
     TrajectorySequence trajectory2;
     TrajectorySequence trajectory3;
     TrajectorySequence[] trajectories = new TrajectorySequence[3];
-    AutonomousDriver drive;
+    AutonomousDrivetrain drive;
 
     @Override
     public void construct() {
-        drive = new AutonomousDriver();
+        drive = new AutonomousDrivetrain();
         Pose2d startPose = new Pose2d(-58, 35, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
         trajectory1 = drive.trajectorySequenceBuilder(new Pose2d(-58, 35, 0))

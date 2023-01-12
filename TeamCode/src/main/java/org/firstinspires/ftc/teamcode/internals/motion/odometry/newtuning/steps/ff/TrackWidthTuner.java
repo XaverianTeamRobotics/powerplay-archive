@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.internals.time.Clock;
 public class TrackWidthTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
     private final double ANGLE = 180; // deg
     private final int NUM_TRIALS = 5;
     private final int DELAY = 1000; // ms
@@ -55,7 +55,7 @@ public class TrackWidthTuner extends Feature implements Conditional {
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -80,7 +80,7 @@ public class TrackWidthTuner extends Feature implements Conditional {
             case RUN:
                 SafeLogging.log("Tuning track width...");
                 SafeLogging.update();
-                driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
                 for(int i = 0; i < NUM_TRIALS; i++) {
                     driver.setPoseEstimate(new Pose2d());

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDriver;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 public class EncoderTrackWidthExperimentalTuner extends Feature implements Conditional {
 
     private MenuManager menuManager = null;
-    private AutonomousDriver driver = null;
+    private AutonomousDrivetrain driver = null;
 
     private double headingAccumulator = 0;
     private double lastHeading = 0;
@@ -62,7 +62,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 menuManager.runOnce();
                 // we let them drive to the right spot
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(
@@ -96,7 +96,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 }
                 menuManager.runOnce();
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 }
                 // spinning logic from RR's quickstart tracking wheel lat. dist. tuner
                 Pose2d vel = new Pose2d(0, 0, -Compressor.compress(Devices.controller2.getRightStickX()));
@@ -156,7 +156,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 // let them test it out
                 menuManager.runOnce();
                 if(driver == null) {
-                    driver = new AutonomousDriver(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
                 driver.setWeightedDrivePower(

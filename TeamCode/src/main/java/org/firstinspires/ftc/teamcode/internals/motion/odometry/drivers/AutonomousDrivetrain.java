@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AutonomousDriver extends MecanumDrive {
+public class AutonomousDrivetrain extends MecanumDrive {
 
 
     /*
@@ -59,11 +59,11 @@ public class AutonomousDriver extends MecanumDrive {
 
      */
 
-    public AutonomousDriver() {
+    public AutonomousDrivetrain() {
         this(HardwareGetter.getHardwareMap());
     }
 
-    public AutonomousDriver(HardwareMap hardwareMap) {
+    public AutonomousDrivetrain(HardwareMap hardwareMap) {
         super(OdometrySettings.kV, OdometrySettings.kA, OdometrySettings.kStatic, OdometrySettings.TRACK_WIDTH, OdometrySettings.TRACK_WIDTH, LATERAL_MULTIPLIER);
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
