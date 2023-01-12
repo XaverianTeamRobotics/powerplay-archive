@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.BlinkinOptions
 /**
  * A Blinkin manages a Blinkin-compatible LED strip.
  */
-class Blinkin(var name: String) {
+class Blinkin(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

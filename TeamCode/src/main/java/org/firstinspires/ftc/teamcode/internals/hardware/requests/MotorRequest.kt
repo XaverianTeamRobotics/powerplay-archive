@@ -27,13 +27,13 @@ open class MotorRequest(name: String, hardwareMap: HardwareMap) : ScriptParamete
                 if(motor.mode != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
                     motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
                 }
-                motor.power = Range.clip(input.value, -100.0, 100.0)
+                motor.power = Range.clip(input.value, -100.0, 100.0) / 100
             }
             MotorOperation.ENCODER_POWER -> {
                 if(motor.mode != DcMotor.RunMode.RUN_USING_ENCODER) {
                     motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
                 }
-                motor.power = Range.clip(input.value, -100.0, 100.0)
+                motor.power = Range.clip(input.value, -100.0, 100.0) / 100
             }
         }
         return 0

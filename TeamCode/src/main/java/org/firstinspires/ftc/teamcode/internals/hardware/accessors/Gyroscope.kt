@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 /**
  * A gyroscope measures its direction, somewhat like a compass.
  */
-class Gyroscope(var name: String) {
+class Gyroscope(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

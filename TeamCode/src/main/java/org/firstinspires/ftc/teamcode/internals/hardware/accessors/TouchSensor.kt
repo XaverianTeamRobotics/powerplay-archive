@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 /**
  * A touch sensor can detect touch.
  */
-class TouchSensor(var name: String) {
+class TouchSensor(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

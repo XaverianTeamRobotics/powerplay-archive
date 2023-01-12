@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.GamepadRequestInpu
 /**
  * A gamepad is simply a controller that a human uses to control the robot.
  */
-class Gamepad(var name: String) {
+class Gamepad(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

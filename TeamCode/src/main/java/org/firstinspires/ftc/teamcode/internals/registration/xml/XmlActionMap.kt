@@ -7,7 +7,11 @@ enum class XmlActionMap {
     VARIABLE_DECLARE,
     INT_CONSTANT,
     BINARY_EXPRESSION,
-    PARENTHESES,;
+    PARENTHESES,
+    CLEAR_TELEMETRY,
+    MOTOR_SET_POWER,
+    FLOAT_CONSTANT,
+    WAIT;
 
     companion object {
         @JvmStatic
@@ -20,6 +24,10 @@ enum class XmlActionMap {
                 "IntegerConstant" -> INT_CONSTANT
                 "BinaryOperation" -> BINARY_EXPRESSION
                 "ParenthesizedExpression" -> PARENTHESES
+                "TelemetryClear" -> CLEAR_TELEMETRY
+                "WaitStatement" -> WAIT
+                "MotorSetStatement" -> MOTOR_SET_POWER
+                "FloatingPointConstant" -> FLOAT_CONSTANT
                 else -> throw IllegalArgumentException("Unknown action $s")
             }
         }

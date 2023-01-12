@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 /**
  * A voltage sensor can detect a voltage.
  */
-class VoltageSensor(var name: String) {
+class VoltageSensor(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

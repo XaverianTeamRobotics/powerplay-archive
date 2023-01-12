@@ -6,13 +6,16 @@ import com.michaell.looping.ScriptTemplate
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gyroscope
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.LaserDistanceSensor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
+import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
 
 class HardwareGetter {
     companion object {
@@ -762,124 +765,62 @@ class Devices {
         @JvmStatic
         lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
 
-        @JvmStatic
-        lateinit var motor0: Motor
-        @JvmStatic
-        lateinit var motor1: Motor
-        @JvmStatic
-        lateinit var motor2: Motor
-        @JvmStatic
-        lateinit var motor3: Motor
+        /*
 
-        @JvmStatic
-        lateinit var expansion_motor0: Motor
-        @JvmStatic
-        lateinit var expansion_motor1: Motor
-        @JvmStatic
-        lateinit var expansion_motor2: Motor
-        @JvmStatic
-        lateinit var expansion_motor3: Motor
+        ADDING HARDWARE DEVICES:
+        1. Create a lateinit variable here with the name of the hardware device and annotate it with @JvmStatic
+        2. Set the type to either a type of DeviceAccessor or HardwareDevice
+        3. Go to /src/main/res/xml/main_config.xml and follow the steps there
 
-        @JvmStatic
-        lateinit var camera0: WebcamName
-        @JvmStatic
-        lateinit var camera1: WebcamName
-
-        @JvmStatic
-        lateinit var gyroscope: Gyroscope
-
-        @JvmStatic
-        lateinit var integrated_imu: IMU
-
-        @JvmStatic
-        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
-            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
-        }
-
-        /**
-         * Initializes all motors on the expansion hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0e
-         * - motor1e
-         * - motor2e
-         * - motor3e
          */
-        @JvmStatic
-        fun initializeExpansionHubMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor3 = Motor("motor3e")
-        }
 
-        @JvmStatic
-        fun initializeArmMotors() {
-            expansion_motor0 = Motor("motor0e")
-            expansion_motor1 = Motor("motor1e")
-        }
-
-        @JvmStatic
-        fun initializeHandMotors() {
-            expansion_motor2 = Motor("motor2e")
-            expansion_motor2.motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        }
-
-        /**
-         * Initializes all motors on the control hub. Required to use their Motor objects.
-         *
-         * Requires the following motor names:
-         * - motor0
-         * - motor1
-         * - motor2
-         * - motor3
-         */
-        @JvmStatic
-        fun initializeControlHubMotors() {
-            motor0 = Motor("motor0")
-            motor1 = Motor("motor1")
-            motor2 = Motor("motor2")
-            motor3 = Motor("motor3")
-        }
-
-        /**
-         * Initializes the IMU on the expansion hub. Required to use the integrated_imu object
-         * Requires the following IMU name:
-         * - imu
-         *
-         * _(This is built into the robot controller on i2c port 0, it just needs to be named in the config)_
-         */
-        @JvmStatic
-        fun initializeIntegratedIMU() {
-            integrated_imu = IMU("imu")
-        }
-
-        /**
-         * Initializes camera 0 as a WebcamName.
-         */
-        @JvmStatic
-        fun initializeCamera0() {
-            camera0 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera0")
-        }
-
-        /**
-         * Initializes camera 1 as a WebcamName.
-         */
-        @JvmStatic
-        fun initializeCamera1() {
-            camera1 = HardwareGetter.hardwareMap!!.get(WebcamName::class.java, "camera1")
-        }
-
-        @JvmStatic
-        fun initializeGyroscope() {
-            gyroscope = Gyroscope("gyro")
-        }
-
+        @JvmStatic lateinit var motor0: Motor
+        @JvmStatic lateinit var motor1: Motor
+        @JvmStatic lateinit var motor2: Motor
+        @JvmStatic lateinit var motor3: Motor
+        @JvmStatic lateinit var motor4: Motor
+        @JvmStatic lateinit var motor5: Motor
+        @JvmStatic lateinit var motor6: Motor
+        @JvmStatic lateinit var motor7: Motor
+        @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
+        @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
+        @JvmStatic lateinit var camera0: WebcamName
+        @JvmStatic lateinit var camera1: WebcamName
+        @JvmStatic lateinit var imu: IMU
+        @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
     }
 }
 
 class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
     override fun run(p0: ScriptParameters?) {
         action(gamepad.request.issueRequest(button) as Double)
+    }
+}
+
+/**
+ * Initializes devices from Devices.Companion which are found in the current RC configuration. Should be executed by jlooping prior to OperationMode.construct().
+ */
+fun initConfigDevices() {
+    // find our devices
+    val devices = Devices::class.java.declaredFields
+    val map = hardwareMap?.getAllNames(HardwareDevice::class.java)
+    for(mappedDevice in map!!) {
+        // for each device in the config, find its corresponding device in Devices.Companion
+        val device = devices.find { device ->
+            val nameBeginning = device.name.lastIndexOf(".") + 1
+            val name = device.name.substring(nameBeginning)
+            return@find name == mappedDevice
+        }
+        // if the device is a DeviceAccessor, lets instantiate it as such, otherwise we fallback to using hardwareMap.get()
+        // if the device isn't a valid device at all (not a DeviceAccessor nor HardwareDevice) we just ignore it. this may actually happen pretty often depending on how the config is written
+        if(device != null) {
+            if(DeviceAccessor::class.java.isAssignableFrom(device.type)) {
+                device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
+                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+            }else if(HardwareDevice::class.java.isAssignableFrom(device.type)) {
+                device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type, mappedDevice))
+                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+            }
+        }
     }
 }

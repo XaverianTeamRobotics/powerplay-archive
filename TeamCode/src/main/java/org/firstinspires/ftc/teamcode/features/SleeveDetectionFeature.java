@@ -16,7 +16,8 @@ import java.util.Objects;
 public class SleeveDetectionFeature extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
-    public int spot = 1;
+
+    private int spot = 1;
 
     @Override
     public void build() {
@@ -51,4 +52,13 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
     public void loop() {
         spot = detector.getDetection();
     }
+
+    public int getSpot() {
+        return spot;
+    }
+
+    public void setDebugEnabled(boolean enabled) {
+        detector.setDebugEnabled(enabled);
+    }
+
 }

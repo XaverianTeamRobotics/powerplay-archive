@@ -22,6 +22,6 @@ public class AutonomousConfigMenuTest extends OperationMode implements Autonomou
 
     @Override
     public Class<? extends OperationMode> getNext() {
-        return ArmMecanumSmallRobot.class;
+        return null;
     }
 }

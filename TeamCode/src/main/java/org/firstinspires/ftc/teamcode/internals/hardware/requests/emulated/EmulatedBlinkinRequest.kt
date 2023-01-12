@@ -14,7 +14,7 @@ class EmulatedBlinkinRequest(name: String) : ScriptParameters.Request(name) {
         } else {
             pos = id
             println("Set ID to $id.")
-            0
+            0.0
         }
     }
 
