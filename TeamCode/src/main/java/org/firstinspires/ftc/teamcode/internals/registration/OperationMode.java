@@ -7,14 +7,11 @@ import com.michaell.looping.builtin.ConvertToScript;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
 import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoader;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.SettingLoaderFailureException;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.jetbrains.annotations.NotNull;
@@ -71,19 +68,6 @@ public abstract class OperationMode extends LinearOpMode {
             }
             HardwareGetterKt.initConfigDevices();
             HardwareGetter.initStdDevices();
-            // attempt to load odo settings
-            boolean loaded = true;
-            try {
-                SettingLoader.load();
-            } catch(SettingLoaderFailureException e) {
-                System.out.println("Loading settings failed! " + e.getMessage());
-                e.printStackTrace();
-                System.out.println(e.toString());
-                loaded = false;
-            }
-            if(!loaded) {
-                RobotLog.addGlobalWarningMessage("Odometry settings failed to load from the most recent save! Does a save exist? Check logcat for more details.");
-            }
             // tell user-defined code of the opmode to construct itself
             construct();
             // wait until the opmode is executed

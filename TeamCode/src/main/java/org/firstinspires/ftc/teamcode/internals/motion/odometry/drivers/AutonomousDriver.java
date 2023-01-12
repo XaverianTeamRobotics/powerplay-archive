@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.*;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceBuilder;
@@ -58,6 +59,9 @@ public class AutonomousDriver extends MecanumDrive {
 
      */
 
+    public AutonomousDriver() {
+        this(HardwareGetter.getHardwareMap());
+    }
 
     public AutonomousDriver(HardwareMap hardwareMap) {
         super(OdometrySettings.kV, OdometrySettings.kA, OdometrySettings.kStatic, OdometrySettings.TRACK_WIDTH, OdometrySettings.TRACK_WIDTH, LATERAL_MULTIPLIER);

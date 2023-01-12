@@ -22,7 +22,7 @@ public class AutoProduction extends OperationMode implements AutonomousOperation
 
     @Override
     public void construct() {
-        drive = new AutonomousDriver(hardwareMap);
+        drive = new AutonomousDriver();
         Pose2d startPose = new Pose2d(-58, 35, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
         trajectory1 = drive.trajectorySequenceBuilder(new Pose2d(-58, 35, 0))

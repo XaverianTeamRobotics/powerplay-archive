@@ -4,10 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfig;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.*;
 
 /**
  * Settings for a wheeled odometry implementation. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in wheeled odometry compound continously, so it's important to make sure these values are as precise as possible.
@@ -16,6 +15,21 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfi
  */
 @Config
 public class OdometrySettings {
+
+    // this is so interesting. java has a static constructor. why did i not know this until now
+    // it also has INIT BLOCKS?? which i thought were only a kotlin thing. theyre just blocks with no keyword. weird
+    static {
+        try {
+            SettingLoader.load();
+            System.out.println("Odometry settings OK.");
+        } catch(SettingLoaderFailureException e) {
+            System.out.println("Odometry settings OKNT.");
+            System.out.println("Loading settings failed! " + e.getMessage());
+            e.printStackTrace();
+            System.out.println(e.toString());
+            RobotLog.addGlobalWarningMessage("Odometry settings failed to load from the most recent save! Does a save exist? Check logcat for more details.");
+        }
+    }
 
     /**
      * The name and direction of the front right motor.
