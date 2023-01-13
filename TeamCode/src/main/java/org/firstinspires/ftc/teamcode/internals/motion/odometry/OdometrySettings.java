@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.*;
 
 /**
@@ -69,17 +67,17 @@ public class OdometrySettings {
     /**
      * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run count 537.7 ticks per revolution.
      */
-    public static double TICKS_PER_REV = 1;
+    public static double TICKS_PER_REV = 537.7;
 
     /**
      * The maximum rotations per minute of your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run at 312 RPM.
      */
-    public static double MAX_RPM = 1;
+    public static double MAX_RPM = 312;
 
     /**
      * The radius of the driving wheels in inches. This should come from the wheel's specsheet or a similar specification document. For example, the Strafer v5's mecanum wheels have a radius of 1.8898 inches.
      */
-    public static double WHEEL_RADIUS = 2;
+    public static double WHEEL_RADIUS = 1.8898;
 
     /**
      * The gear ratio between the output (wheel) speed and the input (motor) speed. For example, the Strafer v5 has a gear ratio of 1:1, or just 1.
@@ -89,7 +87,7 @@ public class OdometrySettings {
     /**
      * The track width of the driving wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, the Strafer v5's track width is ≈16 inches.
      */
-    public static double TRACK_WIDTH = 1;
+    public static double TRACK_WIDTH = 13;
 
     /**
      * Maximum experimental velocity of your bot. Calculate it using the equation:
@@ -104,7 +102,7 @@ public class OdometrySettings {
      * <br><br>
      * If you don't have the time to calculate the slowest possible maximum velocity, 30 should suffice for most robots.
      */
-    public static double MAX_VEL = ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.75;
+    public static double MAX_VEL = 30;
 
     /**
      * Maximum experimental acceleration of your bot. This is best found through testing, but you should be fine setting it to the same number as your maximum experimental velocity.
@@ -126,7 +124,7 @@ public class OdometrySettings {
      * <br><br>
      * If you don't have the time to calculate the slowest possible maximum angular velocity, 3 should suffice for most robots.
      */
-    public static double MAX_ANG_VEL = Math.toRadians(Range.clip(MAX_VEL / TRACK_WIDTH * (180 / Math.PI), -360, 360));
+    public static double MAX_ANG_VEL = 2;
 
     /**
      * Maximum experimental angular (turning) acceleration of your bot. This is best found through testing, but you should be fine setting it to the same number as your maximum experimental angular velocity.
@@ -138,12 +136,12 @@ public class OdometrySettings {
     /**
      * The ticks per revolution of the encoder of your dead wheels. This should come from the encoder's specsheet or a similar specification document. For example, the REV Through Bore Encoder (SKU REV-11-1271) counts 8192 ticks per revolution.
      */
-    public static double ENCODER_TICKS_PER_REV = 1;
+    public static double ENCODER_TICKS_PER_REV = 8192;
 
     /**
      * The radius of your dead wheels in inches. For example, the Rotacaster 35mm Omni Wheel (SKU R2-0354-99/01) has a radius of 0.688976377953 inches.
      */
-    public static double ENCODER_WHEEL_RADIUS = 1;
+    public static double ENCODER_WHEEL_RADIUS = 0.688976377953;
 
     /**
      * The gear ratio between the output (encoder) speed and input (dead wheel) speed.
@@ -153,12 +151,12 @@ public class OdometrySettings {
     /**
      * The track width of the encoder wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a track width of ≈16 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_TRACK_WIDTH = 1;
+    public static double ENCODER_TRACK_WIDTH = 10;
 
     /**
      * The offset of the middle (strafing) encoder from the center of the robot's rotation in the Z axis (where the X axis is the track width's axis and the Y axis is vertical). The X axis offset of the middle encoder isn't important; the kinematics work the same regardless of where the middle encoder lies on the X axis. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a forward offset of ≈4 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_FORWARD_OFFSET = 0;
+    public static double ENCODER_FORWARD_OFFSET = 0.10;
 
     /**
      * The PID acceleration variable. This is to be tuned by the manual feedforward tuner.
@@ -168,7 +166,7 @@ public class OdometrySettings {
     /**
      * The PID velocity variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kV = 1.0 / ConstantUtils.rpmToVelocity(MAX_RPM);
+    public static double kV = 0;
 
     /**
      * The PID static variable. This is to be tuned by the automatic feedforward tuner.
