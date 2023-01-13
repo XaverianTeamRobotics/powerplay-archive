@@ -81,7 +81,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -267,9 +267,9 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             // first, the user needs to position the robot -- so lets tell them to do that
             if(menuManager == null) {
                 if(first) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to test your feedforward constants a few times to confirm they're accurate enough. First, use the second controller to drive your bot to the start of a " + Math.ceil(TEST_DISTANCE / 24.0) + " (over " + TEST_DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to test your feedforward constants a few times to confirm they're accurate enough. First, use the second controller to drive your bot to the start of a " + Math.ceil(TEST_DISTANCE / 24.0) + 2 + " (over " + TEST_DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }else{
-                    menuManager = Questions.askAsync(Devices.controller1, "Drive your bot back to the start of a " + Math.ceil(TEST_DISTANCE / 24.0) + " (over " + TEST_DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "Drive your bot back to the start of a " + Math.ceil(TEST_DISTANCE / 24.0) + 2 + " (over " + TEST_DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
             }
             menuManager.runOnce();

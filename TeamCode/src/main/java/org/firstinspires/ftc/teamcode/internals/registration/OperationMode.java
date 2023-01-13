@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
 import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +41,7 @@ public abstract class OperationMode extends LinearOpMode {
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
             Logging.setDriverTelemetry(telemetry);
             SafeLogging.setTelemetry(telemetry);
+            MenuLogging.setTelemetry(telemetry);
             HardwareGetter.setEmulated(false);
             HardwareGetter.setHardwareMap(hardwareMap);
             HardwareGetter.setOpMode(this);

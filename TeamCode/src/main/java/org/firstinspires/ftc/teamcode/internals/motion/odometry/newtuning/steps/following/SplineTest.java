@@ -45,7 +45,7 @@ public class SplineTest extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " the bottom right corner of a " + Math.ceil(30 / 24.0) + " by " + Math.ceil(30 / 24.0) + " (over " + 30 + " by " + 30 + " inch) tile square of field tiles facing forward towards the top right corner of the square. Open the Dashboard and watch the field to make sure the bot is following the path properly. It should follow an S-shaped path when the test is ran. If something goes wrong, check the troubleshooting guide at bit.ly/splinetest. When you're ready, select Ok.","Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " the bottom right corner of a " + Math.ceil(30 / 24.0) + 2 + " by " + Math.ceil(30 / 24.0) + 2 + " (over " + 30 + " by " + 30 + " inch) tile square of field tiles facing forward towards the top right corner of the square. Open the Dashboard and watch the field to make sure the bot is following the path properly. It should follow an S-shaped path when the test is ran. If something goes wrong, check the troubleshooting guide at bit.ly/splinetest. When you're ready, select Ok.","Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot

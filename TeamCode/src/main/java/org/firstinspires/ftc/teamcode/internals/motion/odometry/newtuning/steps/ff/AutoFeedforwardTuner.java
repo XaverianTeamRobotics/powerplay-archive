@@ -54,7 +54,7 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
             case ALIGN_AUTO:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to automatically tune the kV and kStatic feedforward values. First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to automatically tune the kV and kStatic feedforward values. First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot

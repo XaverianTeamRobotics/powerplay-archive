@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.telemetry.graphics;
 
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.MenuLogging;
 
 /**
  * A MenuManager is a little MVC framework which allows a driver to have simple interactions with the robot via a GUI.
@@ -57,9 +57,9 @@ public class MenuManager {
      */
     private void frame() {
         String frame = MENU.draw();
-        SafeLogging.clear();
-        SafeLogging.log(frame);
-        SafeLogging.update();
+        MenuLogging.clear();
+        MenuLogging.log(frame);
+        MenuLogging.update();
     }
 
     /**
@@ -71,9 +71,9 @@ public class MenuManager {
             frame();
             input();
             if(result != null) {
-                SafeLogging.clear();
-                SafeLogging.log("");
-                SafeLogging.update();
+                MenuLogging.clear();
+                MenuLogging.log("");
+                MenuLogging.update();
                 return result;
             }
         }
@@ -88,9 +88,9 @@ public class MenuManager {
             frame();
             input();
             if(result != null) {
-                SafeLogging.clear();
-                SafeLogging.log("");
-                SafeLogging.update();
+                MenuLogging.clear();
+                MenuLogging.log("");
+                MenuLogging.update();
                 return result;
             }
         }

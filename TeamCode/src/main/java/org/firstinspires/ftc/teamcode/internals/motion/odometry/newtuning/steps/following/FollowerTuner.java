@@ -58,7 +58,7 @@ public class FollowerTuner extends Feature implements Conditional {
             case ALIGN_BF:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "Use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE_BF / 24.0) + " (over " + DISTANCE_BF + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "Use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE_BF / 24.0) + 2 + " (over " + DISTANCE_BF + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -147,7 +147,7 @@ public class FollowerTuner extends Feature implements Conditional {
             case ALIGN_HEAD:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "Use the second controller to drive your bot to the bottom right corner of a " + Math.ceil(DISTANCE_HEAD / 24.0) + " by " + Math.ceil(DISTANCE_HEAD / 24.0) + " (over " + DISTANCE_HEAD + " by " + DISTANCE_HEAD + " inch) tile square of field tiles facing forward towards the top right corner of the square, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "Use the second controller to drive your bot to the bottom right corner of a " + Math.ceil(DISTANCE_HEAD / 24.0) + 2 + " by " + Math.ceil(DISTANCE_HEAD / 24.0) + 2 + " (over " + DISTANCE_HEAD + " by " + DISTANCE_HEAD + " inch) tile square of field tiles facing forward towards the top right corner of the square, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot

@@ -55,7 +55,7 @@ public class MaxVelocityTuner extends Feature implements Conditional {
             case ALIGN_VEL:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to determine the actual maximum velocity of your robot. First, use the second controller to drive your bot to the start of a long stretch of field tiles (preferably 5+ tiles) facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to determine the actual maximum velocity of your robot. First, use the second controller to drive your bot to the start of a long stretch of field tiles (preferably 7+ tiles) facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -107,7 +107,7 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 break;
             case SHOW_VEL:
-                AsyncQuestionExecutor.askC1("Your maximum velocity is " + velMax + " and that means you should set your MAX_VEL to no more than " + velMax * 0.75 + ". Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
+                AsyncQuestionExecutor.askC1("Your maximum velocity is " + velMax + " and that means you should set your MAX_VEL and MAX_ACCEL to no more than " + velMax * 0.75 + ". Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
                     step = Step.ALIGN_ANG;
                 });
                 break;
@@ -144,7 +144,7 @@ public class MaxVelocityTuner extends Feature implements Conditional {
             case DO_ANG:
                 // setup
                 if(driver == null) {
-                    AutonomousDrivetrain driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
+                    driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                     driver.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     SafeLogging.log("Finding maximum angular velocity...");
                     SafeLogging.update();
@@ -166,7 +166,7 @@ public class MaxVelocityTuner extends Feature implements Conditional {
                 }
                 break;
             case SHOW_ANG:
-                AsyncQuestionExecutor.askC1("Your maximum angular velocity is " + angMax + " radians (" + Math.toDegrees(angMax) + "°) and that means you should set your MAX_ANG_VEL to no more than " + angMax * 0.75 + " radians ( " + Math.toDegrees(angMax * 0.75) + "°). Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
+                AsyncQuestionExecutor.askC1("Your maximum angular velocity is " + angMax + " radians (" + Math.toDegrees(angMax) + "°) and that means you should set your MAX_ANG_VEL and MAX_ANG_ACCEL to no more than " + angMax * 0.75 + " radians ( " + Math.toDegrees(angMax * 0.75) + "°). Once you've done that, select Continue.", new String[] {"Continue"}, a -> {
                     step = Step.NEXT;
                 });
                 break;
