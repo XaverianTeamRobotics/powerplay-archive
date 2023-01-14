@@ -18,12 +18,11 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -79,6 +78,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
 
     @Override
     public void loop() {
+        jump:
         switch(step) {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
@@ -146,7 +146,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
-                            break;
+                            break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
                         }
@@ -181,7 +181,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
-                            break;
+                            break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
                         }
