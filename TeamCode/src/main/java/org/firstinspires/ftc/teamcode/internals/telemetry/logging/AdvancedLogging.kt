@@ -23,7 +23,7 @@ class AdvancedLogging {
                 if(!Companion::_telemetry.isInitialized) {
                     _telemetry = MultipleTelemetry(driverTelemetry, FtcDashboard.getInstance().telemetry)
                 }
-                return telemetry
+                return _telemetry
             }
 
         @JvmStatic
