@@ -18,9 +18,11 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
             case ALIGN_AUTO:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, "We're going to automatically tune the kV and kStatic feedforward values. First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, "We're going to automatically tune the kV and kStatic feedforward values. First, use the second controller to drive your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -84,8 +86,8 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
             case AUTO:
                 // i would rather this be async, buuuuuuut the logic works out a bit easier this way and tbqh accuracy is so important here im a bit worried that pausing execution for other vthreads would be bad
                 // therefore, synchronous!
-                SafeLogging.log("Tuning kV and kStatic...");
-                SafeLogging.update();
+                MenuLogging.log("Tuning kV and kStatic...");
+                MenuLogging.update();
                 // inits
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 NanoClock clock = NanoClock.system();
@@ -124,6 +126,8 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                     rampResult.kV, rampResult.kStatic, rampResult.rSquare);
                 driver = null;
                 step = Step.SHOW;
+                MenuLogging.clear();
+                MenuLogging.update();
                 break;
             case SHOW:
                 AsyncQuestionExecutor.askC1(result + " Set your kV and kStatic settings to these numbers, then select Continue.", new String[] {"Continue"}, a -> {

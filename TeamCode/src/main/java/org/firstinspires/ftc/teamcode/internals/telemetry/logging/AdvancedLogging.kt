@@ -1,14 +1,12 @@
-package org.firstinspires.ftc.teamcode.internals.telemetry
+package org.firstinspires.ftc.teamcode.internals.telemetry.logging
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
-import com.vuforia.Vuforia.isInitialized
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.isEmulated
 
-class Logging {
+class AdvancedLogging {
     companion object {
 
         @JvmStatic
@@ -19,10 +17,10 @@ class Logging {
         @JvmStatic
         val telemetry: Telemetry
             get() {
-                if(!::driverTelemetry.isInitialized) {
+                if(!Companion::driverTelemetry.isInitialized) {
                     throw UninitializedPropertyAccessException("driverTelemetry must be initialized to access telemetry!")
                 }
-                if(!::_telemetry.isInitialized) {
+                if(!Companion::_telemetry.isInitialized) {
                     _telemetry = MultipleTelemetry(driverTelemetry, FtcDashboard.getInstance().telemetry)
                 }
                 return telemetry

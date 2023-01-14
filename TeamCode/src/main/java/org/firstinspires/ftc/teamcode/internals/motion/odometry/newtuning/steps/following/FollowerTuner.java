@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following;
 
+import android.view.Menu;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,9 +15,11 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 
 public class FollowerTuner extends Feature implements Conditional {
 
@@ -80,8 +83,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     lastX = true;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
@@ -101,9 +104,9 @@ public class FollowerTuner extends Feature implements Conditional {
             case BF:
                 if(driver == null) {
                     driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
-                    SafeLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
+                    MenuLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
                         "driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller.");
-                    SafeLogging.update();
+                    MenuLogging.update();
                     bfTrajectoryForward = driver.trajectoryBuilder(new Pose2d())
                         .forward(DISTANCE_BF)
                         .build();
@@ -116,8 +119,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     step = Step.ALIGN_BF;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }
                 if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
@@ -125,8 +128,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     lastX = true;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
@@ -169,8 +172,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     lastX = true;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
@@ -190,9 +193,9 @@ public class FollowerTuner extends Feature implements Conditional {
             case HEAD:
                 if(driver == null) {
                     driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
-                    SafeLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
+                    MenuLogging.log("If you need to manually reposition the robot during tuning, you can toggle " +
                         "driver control by pressing B on either controller. Press X on either controller to switch between the coarse and fine tuning modes. When you're done tuning, press down on the touchpad on either controller.");
-                    SafeLogging.update();
+                    MenuLogging.update();
                     Pose2d startPose = new Pose2d(-DISTANCE_HEAD / 2, -DISTANCE_HEAD / 2, 0);
                     driver.setPoseEstimate(startPose);
                     headTrajectory = driver.trajectorySequenceBuilder(startPose)
@@ -211,8 +214,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     step = Step.ALIGN_HEAD;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }
                 if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
@@ -220,8 +223,8 @@ public class FollowerTuner extends Feature implements Conditional {
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     lastX = true;
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                     break;
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
@@ -247,8 +250,8 @@ public class FollowerTuner extends Feature implements Conditional {
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
             }
-            SafeLogging.clear();
-            SafeLogging.update();
+            MenuLogging.clear();
+            MenuLogging.update();
             step = Step.NEXT;
         }
     }

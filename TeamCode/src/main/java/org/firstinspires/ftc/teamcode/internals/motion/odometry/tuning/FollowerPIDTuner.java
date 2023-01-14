@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.Tra
  * If you are using SampleTankDrive, you should be tuning AXIAL_PID, CROSS_TRACK_PID, and HEADING_PID.
  * These coefficients can be tuned live in dashboard.
  */
-@Config
-@Disabled
+
+
 @Autonomous(group = "drive")
 public class FollowerPIDTuner extends LinearOpMode {
     public static double DISTANCE = 48; // in

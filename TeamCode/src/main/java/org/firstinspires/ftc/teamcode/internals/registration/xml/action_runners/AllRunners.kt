@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.internals.registration.xml.XMLCodeLine
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlActionMap
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlEvironment
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlVariable
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.driverTelemetry
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging.Companion.driverTelemetry
 import org.w3c.dom.Node
 
 class VariableDeclarationRunner : BaseRunner {

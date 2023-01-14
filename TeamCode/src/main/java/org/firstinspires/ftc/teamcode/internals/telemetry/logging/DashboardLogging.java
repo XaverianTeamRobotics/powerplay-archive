@@ -1,16 +1,11 @@
-package org.firstinspires.ftc.teamcode.internals.telemetry;
+package org.firstinspires.ftc.teamcode.internals.telemetry.logging;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class SafeLogging {
+public class DashboardLogging {
 
-    public static MultipleTelemetry TELEMETRY;
-
-    public static void setTelemetry(Telemetry driver) {
-        TELEMETRY = new MultipleTelemetry(driver, FtcDashboard.getInstance().getTelemetry());
-    }
+    public static Telemetry TELEMETRY = FtcDashboard.getInstance().getTelemetry();
 
     public static void update() {
         TELEMETRY.update();

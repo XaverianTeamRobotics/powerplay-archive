@@ -16,9 +16,11 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
 public class EncoderForwardOffsetExperimentalTuner extends Feature implements Conditional {
@@ -82,8 +84,8 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 }
                 break;
             case TEST:
-                SafeLogging.log("Tuning offset...");
-                SafeLogging.update();
+                MenuLogging.log("Tuning offset...");
+                MenuLogging.update();
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 MovingStatistics forwardOffsetStats = new MovingStatistics(trials);
                 for(int i = 0; i < trials; i++) {
@@ -109,8 +111,8 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 // we should clean up things at the end, just to make sure everythings safe
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
-                SafeLogging.clear();
-                SafeLogging.update();
+                MenuLogging.clear();
+                MenuLogging.update();
                 step = Step.VIEW;
                 break;
             case VIEW:
@@ -155,7 +157,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                 });
                 break;
             case NEXT:
-                State.autoFeedforwardTuner = Affair.PRESENT;
+                State.lateralMultiplierTuning = Affair.PRESENT;
                 State.encoderForwardOffsetExperimentalTuner = Affair.PAST;
                 break;
         }

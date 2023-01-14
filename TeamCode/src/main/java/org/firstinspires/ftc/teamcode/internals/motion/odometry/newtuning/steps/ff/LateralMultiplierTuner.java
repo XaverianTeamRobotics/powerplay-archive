@@ -53,7 +53,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -103,7 +103,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
             case REALIGN:
                 // the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -157,7 +157,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
             case MANUALALIGN:
                 // the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot

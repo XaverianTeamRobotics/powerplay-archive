@@ -12,9 +12,10 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
 import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.MenuLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Loggers;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,9 +40,7 @@ public abstract class OperationMode extends LinearOpMode {
         try {
             // formatting for questions api
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-            Logging.setDriverTelemetry(telemetry);
-            SafeLogging.setTelemetry(telemetry);
-            MenuLogging.setTelemetry(telemetry);
+            Loggers.init(telemetry);
             HardwareGetter.setEmulated(false);
             HardwareGetter.setHardwareMap(hardwareMap);
             HardwareGetter.setOpMode(this);

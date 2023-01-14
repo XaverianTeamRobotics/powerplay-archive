@@ -18,8 +18,10 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 
@@ -81,7 +83,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " First, use the second controller to drive your bot to the start of a " + Math.ceil(DISTANCE / 24.0) + 2 + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " First, use the second controller to drive your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 5) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -105,6 +107,8 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         menuManager = null;
                         driver.setMotorPowers(0, 0, 0, 0);
                         driver = null;
+                        DashboardLogging.clear();
+                        DashboardLogging.update();
                     }
                 }
                 break;
@@ -112,27 +116,35 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 AsyncQuestionExecutor.askC1("In the Dashboard, graph the measuredVelocity, error, and targetVelocity values now. Your goal is to make the red line (measured velocity) match the green line (target velocity) as best you can. Visit bit.ly/graphtuning for some general information. I also highly recommend playing around with the simulator at bit.ly/fftuning and watching bit.ly/fftutorials before starting. If you need to manually reposition the robot during tuning, you can toggle driver control by pressing down on the touchpad on either controller. When you're done tuning, press A on either controller. When you're ready to begin, select Ok.", new String[] {"Ok"}, a -> {
                     step = Step.MANUAL;
                 });
+                DashboardLogging.log("targetVelocity", 0);
+                DashboardLogging.log("measuredVelocity", 0);
+                DashboardLogging.log("error", 0);
+                DashboardLogging.update();
                 break;
             case MANUAL:
                 // inits
                 if(driver == null) {
                     driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
+                    driver.setMotorPowers(0, 0, 0, 0);
                     clock = NanoClock.system();
                     activeProfile = generateProfile();
                     profileStart = clock.seconds();
-                    SafeLogging.clear();
-                    SafeLogging.update();
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    DashboardLogging.log("targetVelocity", 0);
+                    DashboardLogging.log("measuredVelocity", 0);
+                    DashboardLogging.log("error", 0);
+                    DashboardLogging.update();
+                    MenuLogging.clear();
+                    MenuLogging.update();
                 }
                 switch(mode) {
                     case TUNING_MODE:
-                        SafeLogging.log("Running. To stop and enable driver control, press down on the " +
+                        MenuLogging.log("Running. To stop and enable driver control, press down on the " +
                             "touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
                         if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.DRIVER_MODE;
                             driver.setMotorPowers(0, 0, 0, 0);
+                            driver = null;
                             lastTouch = true;
                             break;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
@@ -155,20 +167,20 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         Pose2d poseVelo = Objects.requireNonNull(driver.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
                         double currentVelo = poseVelo.getX();
                         // graph
-                        SafeLogging.log("targetVelocity", motionState.getV());
-                        SafeLogging.log("measuredVelocity", currentVelo);
-                        SafeLogging.log("error", motionState.getV() - currentVelo);
+                        DashboardLogging.log("targetVelocity", motionState.getV());
+                        DashboardLogging.log("measuredVelocity", currentVelo);
+                        DashboardLogging.log("error", motionState.getV() - currentVelo);
                         break;
                     case DRIVER_MODE:
-                        SafeLogging.log("Stopped. To restart and disable driver control, press down on " +
+                        MenuLogging.log("Stopped. To restart and disable driver control, press down on " +
                             "the touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
                         if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.TUNING_MODE;
                             lastTouch = true;
                             driver.setMotorPowers(0, 0, 0, 0);
-                            activeProfile = generateProfile();
-                            profileStart = clock.seconds();
+                            driver = null;
+                            lastTouch = true;
                             break;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
@@ -182,21 +194,22 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                             )
                         );
                         // we should continue to update these values, otherwise the graph will break
-                        SafeLogging.log("targetVelocity", 0);
-                        SafeLogging.log("measuredVelocity", 0);
-                        SafeLogging.log("error", 0);
+                        DashboardLogging.log("targetVelocity", 0);
+                        DashboardLogging.log("measuredVelocity", 0);
+                        DashboardLogging.log("error", 0);
                         break;
                 }
                 // very very important. required for graphing
-                SafeLogging.update();
+                DashboardLogging.update();
+                MenuLogging.update();
                 // cleanup procedure when user's completely done with tuning
                 if(Devices.controller1.getA() || Devices.controller2.getA()) {
-                    SafeLogging.log("targetVelocity", 0);
-                    SafeLogging.log("measuredVelocity", 0);
-                    SafeLogging.log("error", 0);
-                    SafeLogging.update();
-                    SafeLogging.clear();
-                    SafeLogging.update();
+                    DashboardLogging.log("targetVelocity", 0);
+                    DashboardLogging.log("measuredVelocity", 0);
+                    DashboardLogging.log("error", 0);
+                    DashboardLogging.update();
+                    DashboardLogging.clear();
+                    DashboardLogging.update();
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     mode = Mode.TUNING_MODE;
@@ -208,13 +221,15 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 // run the test 3 times, allowing for a loop of other vthreads in between
                 switch(testStep) {
                     case 1:
-                        test(true);
-                        testStep++;
+                        if(test(true)) {
+                            testStep++;
+                        }
                         break;
                     case 2:
                     case 3:
-                        test(false);
-                        testStep++;
+                        if(test(false)) {
+                            testStep++;
+                        }
                         break;
                 }
                 // find the average distance when we're done and determine if its ok to continue
@@ -255,14 +270,14 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 break;
             case NEXT:
                 AsyncQuestionExecutor.askC1("Your kA and kV should now be tuned properly. Select Ok when you're ready to continue.", new String[] {"Ok"}, a -> {
-                    State.lateralMultiplierTuning = Affair.PRESENT;
+                    State.encoderForwardOffsetExperimentalTuner = Affair.PRESENT;
                     State.manualFeedforwardTuner = Affair.PAST;
                 });
                 break;
         }
     }
 
-    private void test(boolean first) {
+    private boolean test(boolean first) {
         if(testStepFirstHalf) {
             // first, the user needs to position the robot -- so lets tell them to do that
             if(menuManager == null) {
@@ -307,7 +322,13 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
             // cleanup
             testStepFirstHalf = true;
             driver = null;
+            return true;
         }
+        return false;
     }
 
 }
+
+// TODO:
+//  - set some values for measuredVel error and targetVel before we start so you can graph them
+//  - concat all the field tile lengths to ints

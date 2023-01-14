@@ -34,8 +34,8 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
  * for the forward offset. You can run this procedure as many times as necessary until a
  * satisfactory result is produced.
  */
-@Disabled
-@Config
+
+
 @Autonomous(group="drive")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.telemetry.graphics;
 
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad;
-import org.firstinspires.ftc.teamcode.internals.telemetry.MenuLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 
 /**
  * A MenuManager is a little MVC framework which allows a driver to have simple interactions with the robot via a GUI.

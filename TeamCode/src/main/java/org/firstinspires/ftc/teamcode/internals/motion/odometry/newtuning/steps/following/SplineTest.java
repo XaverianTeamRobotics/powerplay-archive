@@ -14,9 +14,10 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
 public class SplineTest extends Feature implements Conditional {
@@ -73,8 +74,8 @@ public class SplineTest extends Feature implements Conditional {
                 }
                 break;
             case TEST:
-                SafeLogging.log("Running test...");
-                SafeLogging.update();
+                MenuLogging.log("Running test...");
+                MenuLogging.update();
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 Trajectory traj = driver.trajectoryBuilder(new Pose2d())
                     .splineTo(new Vector2d(30, 30), 0)
@@ -90,8 +91,8 @@ public class SplineTest extends Feature implements Conditional {
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
                 step = Step.RECON;
-                SafeLogging.clear();
-                SafeLogging.update();
+                MenuLogging.clear();
+                MenuLogging.update();
                 break;
             case RECON:
                 AsyncQuestionExecutor.askC1("If everything went well, select Continue. Otherwise, attempt to fix the problem and select Test Again. You can find a troubleshooting guide at bit.ly/splinetest. It might be easier to select Continue and restart the tuning process from scratch, so do that if you think its a good idea.", new String[] {"Continue", "Test Again"}, a -> {

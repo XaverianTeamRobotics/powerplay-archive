@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.misc
 
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
-import org.firstinspires.ftc.teamcode.internals.telemetry.SafeLogging
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max
@@ -32,11 +32,11 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
                 // Read inverse IMU heading, as the IMU heading is CW positive
                 val botHeading: Double = -Devices.imu.orientation.x
 
-                SafeLogging.log("Bot Heading", botHeading)
-                SafeLogging.log("   X", Devices.imu.orientation.x)
-                SafeLogging.log("   Y", Devices.imu.orientation.y)
-                SafeLogging.log("   Z", Devices.imu.orientation.z)
-                SafeLogging.update()
+                Logging.log("Bot Heading", botHeading)
+                Logging.log("   X", Devices.imu.orientation.x)
+                Logging.log("   Y", Devices.imu.orientation.y)
+                Logging.log("   Z", Devices.imu.orientation.z)
+                Logging.update()
 
                 val rotX = x * cos(botHeading) - y * sin(botHeading)
                 val rotY = x * sin(botHeading) + y * cos(botHeading)
@@ -117,11 +117,11 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
                 // Read inverse IMU heading, as the IMU heading is CW positive
                 val botHeading: Double = -Devices.imu.orientation.x
 
-                SafeLogging.log("Bot Heading", botHeading)
-                SafeLogging.log("   X", Devices.imu.orientation.x)
-                SafeLogging.log("   Y", Devices.imu.orientation.y)
-                SafeLogging.log("   Z", Devices.imu.orientation.z)
-                SafeLogging.update()
+                Logging.log("Bot Heading", botHeading)
+                Logging.log("   X", Devices.imu.orientation.x)
+                Logging.log("   Y", Devices.imu.orientation.y)
+                Logging.log("   Z", Devices.imu.orientation.z)
+                Logging.update()
 
                 val rotX = x * cos(botHeading) - y * sin(botHeading)
                 val rotY = x * sin(botHeading) + y * cos(botHeading)

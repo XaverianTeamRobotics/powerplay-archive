@@ -189,7 +189,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 });
                 break;
             case NEXT:
-                State.encoderForwardOffsetExperimentalTuner = Affair.PRESENT;
+                State.autoFeedforwardTuner = Affair.PRESENT;
                 State.encoderTrackWidthExperimentalTuner = Affair.PAST;
                 break;
         }
