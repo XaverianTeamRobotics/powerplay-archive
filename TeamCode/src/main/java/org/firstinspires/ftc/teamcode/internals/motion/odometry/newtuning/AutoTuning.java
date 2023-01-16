@@ -181,7 +181,5 @@ public class AutoTuning extends OperationMode implements TeleOperation {
 }
 
 // TODO:
-//  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
-//  - odometry wrappers for easy usage
+//  - make settings opmodes (this tuner, reset odo tuning, motor direction debugger), maybe they could have no image too? like how the dashboard does it. and in the same group as the dashboard opmode maybe if thats possible idk maybe it doesnt even have a group Who Knows not me!
 //  - remove old tuning opmodes
-//  - maybe refactor autonomous driver to just be normal driver or something
