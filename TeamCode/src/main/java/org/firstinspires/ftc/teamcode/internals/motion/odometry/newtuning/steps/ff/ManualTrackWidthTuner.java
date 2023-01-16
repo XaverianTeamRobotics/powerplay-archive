@@ -12,11 +12,9 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging;
 
 public class ManualTrackWidthTuner extends Feature implements Conditional {
 
@@ -75,8 +73,8 @@ public class ManualTrackWidthTuner extends Feature implements Conditional {
                 }
                 break;
             case TEST:
-                MenuLogging.log("Testing...");
-                MenuLogging.update();
+                DSLogging.log("Testing...");
+                DSLogging.update();
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 driver.turn(Math.toRadians(ANGLE));
                 heading = driver.getPoseEstimate().getHeading();
@@ -87,8 +85,8 @@ public class ManualTrackWidthTuner extends Feature implements Conditional {
                 }
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
-                MenuLogging.clear();
-                MenuLogging.update();
+                DSLogging.clear();
+                DSLogging.update();
                 step = Step.SHOW;
                 break;
             case SHOW:

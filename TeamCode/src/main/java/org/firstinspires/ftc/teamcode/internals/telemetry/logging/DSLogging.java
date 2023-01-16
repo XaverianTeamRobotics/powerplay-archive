@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.telemetry.logging;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MenuLogging {
+public class DSLogging {
 
     public static Telemetry TELEMETRY;
 

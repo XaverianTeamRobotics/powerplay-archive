@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.Tra
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.PoseBucket;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,6 +96,7 @@ public class AutonomousDrivetrain extends MecanumDrive {
         rightFront.setDirection(OdometrySettings.DRIVE_FRONT_RIGHT.DIRECTION);
         setLocalizer(new AutonomousLocalizer(hardwareMap));
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+        setPoseEstimate(PoseBucket.getPose());
     }
 
 
@@ -115,6 +117,7 @@ public class AutonomousDrivetrain extends MecanumDrive {
         updatePoseEstimate();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
+        PoseBucket.setPose(getPoseEstimate());
     }
 
     public void waitForIdle() {

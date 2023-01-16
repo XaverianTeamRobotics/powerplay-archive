@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.PoseBucket;
 
 /**
- * A mecanum drivetrain. This relies on odometry. Use {@link MecanumDrivetrainFeature} if you don't have odometry.
+ * A mecanum drivetrain. This relies on odometry. Use {@link NativeMecanumDrivetrain} if you don't have odometry.
  */
 public class MecanumDrivetrain extends Feature implements Buildable {
 

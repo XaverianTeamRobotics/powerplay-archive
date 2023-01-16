@@ -18,11 +18,9 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +84,8 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
             case AUTO:
                 // i would rather this be async, buuuuuuut the logic works out a bit easier this way and tbqh accuracy is so important here im a bit worried that pausing execution for other vthreads would be bad
                 // therefore, synchronous!
-                MenuLogging.log("Tuning kV and kStatic...");
-                MenuLogging.update();
+                DSLogging.log("Tuning kV and kStatic...");
+                DSLogging.update();
                 // inits
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 NanoClock clock = NanoClock.system();
@@ -126,8 +124,8 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                     rampResult.kV, rampResult.kStatic, rampResult.rSquare);
                 driver = null;
                 step = Step.SHOW;
-                MenuLogging.clear();
-                MenuLogging.update();
+                DSLogging.clear();
+                DSLogging.update();
                 break;
             case SHOW:
                 AsyncQuestionExecutor.askC1(result + " Set your kV and kStatic settings to these numbers, then select Continue.", new String[] {"Continue"}, a -> {

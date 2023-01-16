@@ -184,5 +184,4 @@ public class AutoTuning extends OperationMode implements TeleOperation {
 //  - make settings opmode (enable/disable dash, this tuner, reset odo tuning, motor direction debugger)
 //  - odometry wrappers for easy usage
 //  - remove old tuning opmodes
-//  - refactor normal and field centric driving to use the odometry system/autonomous driver
 //  - maybe refactor autonomous driver to just be normal driver or something

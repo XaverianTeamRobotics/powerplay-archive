@@ -7,12 +7,12 @@ import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode
 import org.firstinspires.ftc.teamcode.internals.misc.MecanumDriver
 
 /**
-* This is a feature that allows for a mecanum robot to be powered by a gamepad.
-* @param drivetrainMapMode The motor layout of the drivetrain.
+* A mecanum drivetrain&mdash;this doesn't require odometry, hence it being "native" by not relying on external libraries. If you have odometry, use MecanumDrivetrain
+ * @param drivetrainMapMode The motor layout of the drivetrain.
  * @param useExpansionHub Whether or not to use the expansion hub to get the motors. Requires that the expansion hub motors be initialized before use
  * @param fieldCentric Whether or not to use field centric controls. The imu must be initialized prior to use.
  */
-class MecanumDrivetrainFeature(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(),
+class NativeMecanumDrivetrain(private var drivetrainMapMode: DrivetrainMapMode, private var useExpansionHub: Boolean, private var fieldCentric: Boolean, private var isRotInverted: Boolean) : Feature(),
     Buildable {
 
     private var mecanumDriver: MecanumDriver? = null
