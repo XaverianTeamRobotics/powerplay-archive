@@ -141,11 +141,16 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         MenuLogging.log("Running. To stop and enable driver control, press down on the " +
                             "touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
-                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                        if(Devices.controller1.getTouchpad() && !lastTouch || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.DRIVER_MODE;
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
+                            DashboardLogging.log("targetVelocity", 0);
+                            DashboardLogging.log("measuredVelocity", 0);
+                            DashboardLogging.log("error", 0);
+                            DashboardLogging.update();
+                            MenuLogging.update();
                             break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
@@ -175,12 +180,17 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         MenuLogging.log("Stopped. To restart and disable driver control, press down on " +
                             "the touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
-                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                        if(Devices.controller1.getTouchpad() && !lastTouch || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.TUNING_MODE;
                             lastTouch = true;
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
+                            DashboardLogging.log("targetVelocity", 0);
+                            DashboardLogging.log("measuredVelocity", 0);
+                            DashboardLogging.log("error", 0);
+                            DashboardLogging.update();
+                            MenuLogging.update();
                             break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
@@ -328,7 +338,3 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     }
 
 }
-
-// TODO:
-//  - set some values for measuredVel error and targetVel before we start so you can graph them
-//  - concat all the field tile lengths to ints
