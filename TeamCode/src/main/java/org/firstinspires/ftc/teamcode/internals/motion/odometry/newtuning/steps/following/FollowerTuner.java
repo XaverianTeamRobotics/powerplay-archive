@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.steps.following;
 
-import android.view.Menu;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,8 +14,6 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
@@ -78,7 +75,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 );
                 driver.update();
                 // toggle logic
-                if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
+                if(Devices.controller1.getX() && !lastX || Devices.controller2.getX() && !lastX) {
                     step = Step.ALIGN_HEAD;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
@@ -123,7 +120,7 @@ public class FollowerTuner extends Feature implements Conditional {
                     MenuLogging.update();
                     break;
                 }
-                if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
+                if(Devices.controller1.getX() && !lastX || Devices.controller2.getX() && !lastX) {
                     step = Step.ALIGN_HEAD;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
@@ -167,7 +164,7 @@ public class FollowerTuner extends Feature implements Conditional {
                 );
                 driver.update();
                 // toggle logic
-                if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
+                if(Devices.controller1.getX() && !lastX || Devices.controller2.getX() && !lastX) {
                     step = Step.ALIGN_BF;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
@@ -218,7 +215,7 @@ public class FollowerTuner extends Feature implements Conditional {
                     MenuLogging.update();
                     break;
                 }
-                if(Devices.controller1.getX() || Devices.controller2.getX() && !lastX) {
+                if(Devices.controller1.getX() && !lastX || Devices.controller2.getX() && !lastX) {
                     step = Step.ALIGN_BF;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
