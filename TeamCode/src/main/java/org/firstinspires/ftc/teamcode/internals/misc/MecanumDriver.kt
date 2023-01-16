@@ -12,10 +12,10 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
     constructor(drivetrainMapMode: DrivetrainMapMode) : this(drivetrainMapMode, false, false)
 
     fun runMecanum(x: Double, y: Double, rot: Double) {
-        val backLeftPower: Double
-        val frontLeftPower: Double
-        val backRightPower: Double
-        val frontRightPower: Double
+        var backLeftPower: Double      = 0.0
+        var frontLeftPower: Double     = 0.0
+        var backRightPower: Double     = 0.0
+        var frontRightPower: Double    = 0.0
 
         when (fieldCentric) {
             false -> {

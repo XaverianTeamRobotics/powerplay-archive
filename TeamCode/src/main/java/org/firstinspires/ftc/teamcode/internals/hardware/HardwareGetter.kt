@@ -7,6 +7,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.LaserDistanceSensor
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
+import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
 
 class HardwareGetter {
     companion object {
@@ -758,8 +760,11 @@ object InitializedDCDevices {
 
 class Devices {
     companion object {
-        @JvmStatic lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
-        @JvmStatic lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
+
+        @JvmStatic
+        lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
+        @JvmStatic
+        lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
 
         /*
 
@@ -783,12 +788,6 @@ class Devices {
         @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
-
-        @JvmStatic
-        fun bind(button: GamepadRequestInput, gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, lambda: (Double) -> Unit) {
-            HardwareGetter.jloopingRunner!!.addScript(GamepadBinding(button, gamepad, lambda))
-        }
-
     }
 }
 
@@ -804,7 +803,7 @@ class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinsp
 fun initConfigDevices() {
     // find our devices
     val devices = Devices::class.java.declaredFields
-    val map = HardwareGetter.hardwareMap?.getAllNames(HardwareDevice::class.java)
+    val map = hardwareMap?.getAllNames(HardwareDevice::class.java)
     for(mappedDevice in map!!) {
         // for each device in the config, find its corresponding device in Devices.Companion
         val device = devices.find { device ->

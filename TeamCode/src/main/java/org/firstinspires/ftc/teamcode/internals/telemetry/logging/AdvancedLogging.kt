@@ -47,7 +47,7 @@ class AdvancedLogging {
         }
 
         @JvmStatic
-        fun logData(key: String, value: Any) {
+        fun logData(key: String, value: Any?) {
             if (isEmulated) {
                 println("$key: $value")
             } else {

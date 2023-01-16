@@ -9,12 +9,15 @@ public class Production extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-        registerFeature(new NativeMecanumDrivetrain(DrivetrainMapMode.FR_BR_FL_BL, false, false, false));
+        registerFeature(new NativeMecanumDrivetrain(
+            DrivetrainMapMode.FR_BR_FL_BL,
+            false, true,
+            false, true));
     }
 
     @Override
     public void run() {
-        
+
     }
 
 }
