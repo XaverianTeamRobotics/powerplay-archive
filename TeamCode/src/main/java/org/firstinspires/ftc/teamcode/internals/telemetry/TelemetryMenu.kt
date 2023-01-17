@@ -11,6 +11,7 @@ import kotlin.math.min
  * Create a menu in the telemetry interface (using the Logging class) to allow for configuration during a match
  * Use controllers as inputs to navigate the menu
  */
+@Deprecated("Use the new MenuManager and Menu classes instead")
 class TelemetryMenu {
     var dPadUpHeld: Boolean = false
     var dPadDownHeld: Boolean = false

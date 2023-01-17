@@ -15,7 +15,7 @@ public class Loggers {
             Logging.setTelemetry(driver);
             AdvancedLogging.setDriverTelemetry(driver);
             AdvancedLogging.getTelemetry();
-            MenuLogging.setTelemetry(driver);
+            DSLogging.setTelemetry(driver);
         }
     }
 

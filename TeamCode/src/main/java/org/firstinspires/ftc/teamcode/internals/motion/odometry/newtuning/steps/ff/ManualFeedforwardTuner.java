@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.MenuLogging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -133,19 +133,24 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     DashboardLogging.log("measuredVelocity", 0);
                     DashboardLogging.log("error", 0);
                     DashboardLogging.update();
-                    MenuLogging.clear();
-                    MenuLogging.update();
+                    DSLogging.clear();
+                    DSLogging.update();
                 }
                 switch(mode) {
                     case TUNING_MODE:
-                        MenuLogging.log("Running. To stop and enable driver control, press down on the " +
+                        DSLogging.log("Running. To stop and enable driver control, press down on the " +
                             "touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
-                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                        if(Devices.controller1.getTouchpad() && !lastTouch || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.DRIVER_MODE;
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
+                            DashboardLogging.log("targetVelocity", 0);
+                            DashboardLogging.log("measuredVelocity", 0);
+                            DashboardLogging.log("error", 0);
+                            DashboardLogging.update();
+                            DSLogging.update();
                             break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
@@ -172,15 +177,20 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         DashboardLogging.log("error", motionState.getV() - currentVelo);
                         break;
                     case DRIVER_MODE:
-                        MenuLogging.log("Stopped. To restart and disable driver control, press down on " +
+                        DSLogging.log("Stopped. To restart and disable driver control, press down on " +
                             "the touchpad. When you're done tuning, press A on either controller.");
                         // toggle logic
-                        if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad() && !lastTouch) {
+                        if(Devices.controller1.getTouchpad() && !lastTouch || Devices.controller2.getTouchpad() && !lastTouch) {
                             mode = Mode.TUNING_MODE;
                             lastTouch = true;
                             driver.setMotorPowers(0, 0, 0, 0);
                             driver = null;
                             lastTouch = true;
+                            DashboardLogging.log("targetVelocity", 0);
+                            DashboardLogging.log("measuredVelocity", 0);
+                            DashboardLogging.log("error", 0);
+                            DashboardLogging.update();
+                            DSLogging.update();
                             break jump;
                         }else if(!Devices.controller1.getTouchpad() && !Devices.controller2.getTouchpad()) {
                             lastTouch = false;
@@ -201,7 +211,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 // very very important. required for graphing
                 DashboardLogging.update();
-                MenuLogging.update();
+                DSLogging.update();
                 // cleanup procedure when user's completely done with tuning
                 if(Devices.controller1.getA() || Devices.controller2.getA()) {
                     DashboardLogging.log("targetVelocity", 0);
@@ -328,7 +338,3 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     }
 
 }
-
-// TODO:
-//  - set some values for measuredVel error and targetVel before we start so you can graph them
-//  - concat all the field tile lengths to ints

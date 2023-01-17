@@ -51,22 +51,30 @@ public class XMLOperationModeRegistrar {
             }
             OpModeMeta.Builder metaBuilder = new OpModeMeta.Builder();
             metaBuilder.setFlavor(flavor);
+            log("OpMode Flavor: " + flavor, KEY);
             metaBuilder.setGroup(xmlParser.getGroup());
+            log("OpMode Group: " + xmlParser.getGroup(), KEY);
             metaBuilder.setName(xmlParser.getName());
+            log("OpMode Name: " + xmlParser.getName(), KEY);
             metaBuilder.setSource(OpModeMeta.Source.EXTERNAL_LIBRARY);
 
             log("Checking for autoTransition...", KEY);
             if (xmlParser.rootElement.hasAttribute("autoTransition")) {
                 metaBuilder.setTransitionTarget(xmlParser.rootElement.getAttribute("autoTransition"));
-            } else {
-                metaBuilder.setTransitionTarget(null);
             }
 
             log("Registering...", KEY);
-            XMLOpModeTemplate template = new XMLOpModeTemplate(xmlParser);
-            manager.register(metaBuilder.build(), template);
-            log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
-                " registered! Moving on...", KEY);
+            try {
+                XMLOpModeTemplate template = new XMLOpModeTemplate(xmlParser);
+                log("Building meta...", KEY);
+                manager.register(metaBuilder.build(), template);
+                log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
+                    " registered! Moving on...", KEY);
+            } catch (Exception e) {
+                log("Operation Mode " + xmlParser.getName() + " from " + xmlParser.filePath +
+                    " failed to register! Moving on...", KEY);
+                e.printStackTrace();
+            }
         }
     }
 }

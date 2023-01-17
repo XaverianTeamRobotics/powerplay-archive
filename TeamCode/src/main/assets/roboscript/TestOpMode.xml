@@ -7,6 +7,8 @@
   <code>    
     <expression type="VariableStatement">      
       <name>myVar</name>
+      <type>IntegerType</type>
+      
       <value>
         <expression type="BinaryOperation" operand="+">
           <expression type="IntegerConstant">5</expression>
@@ -16,6 +18,8 @@
     </expression>
     <expression type="VariableStatement">      
       <name>2ndVar</name>
+      <type>DoubleType</type>
+      
       <value>
         <expression type="IntegerConstant">7</expression>
       </value>
@@ -45,5 +49,16 @@
         <expression type="VariableUsageExpression">myVar</expression>
       </content>
     </expression>
+    <expression type="WaitStatement">
+      <expression type="IntegerConstant">5000</expression>
+    </expression>
+    <expression type="MotorSetStatement">
+      <number>0</number>
+      <value>
+        <expression type="FloatingPointConstant">50.0</expression>
+      </value>
+      
+    </expression>
+    <expression type="TelemetryClear"></expression>
   </code>
 </roboscript>
