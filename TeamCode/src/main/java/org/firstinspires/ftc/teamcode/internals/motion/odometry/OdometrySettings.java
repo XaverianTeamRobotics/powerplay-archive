@@ -161,17 +161,17 @@ public class OdometrySettings {
     /**
      * The PID acceleration variable. This is to be tuned by the manual feedforward tuner.
      */
-    public static double kA = 0;
+    public static double kA = 0.00257;
 
     /**
      * The PID velocity variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kV = 0;
+    public static double kV = 0.01469;
 
     /**
      * The PID static variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kStatic = 0;
+    public static double kStatic = 0.07398;
 
     /**
      * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe tuner.

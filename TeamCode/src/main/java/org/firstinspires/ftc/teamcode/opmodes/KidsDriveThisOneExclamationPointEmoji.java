@@ -12,7 +12,7 @@ public class KidsDriveThisOneExclamationPointEmoji extends OperationMode impleme
         registerFeature(new NativeMecanumDrivetrain(
             DrivetrainMapMode.FR_BR_FL_BL,
             false, true,
-            false, true));
+            false, false));
     }
 
     @Override
