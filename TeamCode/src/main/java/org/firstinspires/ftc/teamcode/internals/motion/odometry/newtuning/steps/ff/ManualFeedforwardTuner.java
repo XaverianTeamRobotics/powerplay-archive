@@ -242,7 +242,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 if(DISTANCES.size() == 3) {
                     avg = (DISTANCES.get(0) + DISTANCES.get(1) + DISTANCES.get(2)) / 3.0;
                     // muke fix this pls :D
-                    // it is supposed to determine if the average distance is <=15% of the test distance, but it is not Doing That. i Do Not Know Why. i am not good enough at math for this i am literally only in calculus 1 as a senior like how does that even happe-
+                    // it is supposed to determine if the average distance is within 15% of the test distance, but it is not Doing That. i Do Not Know Why. i am not good enough at math for this i am literally only in calculus 1 as a senior like how does that even happe-
                     acceptable = avg >= TEST_DISTANCE * 0.75 - TEST_DISTANCE && avg <= TEST_DISTANCE * 0.75 + TEST_DISTANCE;
                     DISTANCES.clear();
                     step = Step.SHOW;
