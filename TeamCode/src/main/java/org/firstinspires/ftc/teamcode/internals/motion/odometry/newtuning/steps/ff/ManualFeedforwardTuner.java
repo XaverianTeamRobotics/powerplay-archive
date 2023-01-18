@@ -47,6 +47,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     private double avg = 0.0;
     private int testStep = 1;
     private boolean testStepFirstHalf = true;
+    private boolean isHeld = true;
 
     private enum Mode {
         DRIVER_MODE,
@@ -211,10 +212,14 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     DashboardLogging.update();
                     DashboardLogging.clear();
                     DashboardLogging.update();
+                    DSLogging.clear();
+                    DSLogging.update();
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;
                     mode = Mode.TUNING_MODE;
                     firstMsg = "We're going to manually tune your feedforward constants again.";
+                    menuManager = null;
+                    testStepFirstHalf = true;
                     step = Step.TEST;
                 }
                 break;
@@ -235,8 +240,8 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 }
                 // find the average distance when we're done and determine if its ok to continue
                 if(DISTANCES.size() == 3) {
-                    avg = (DISTANCES.get(0) + DISTANCES.get(1) + DISTANCES.get(2)) / 3;
-                    acceptable = avg >= TEST_DISTANCE * 0.75 - TEST_DISTANCE && avg <= TEST_DISTANCE * 0.75 + TEST_DISTANCE;
+                    avg = (DISTANCES.get(0) + DISTANCES.get(1) + DISTANCES.get(2)) / 3.0;
+                    acceptable = avg >= TEST_DISTANCE * 0.75 - TEST_DISTANCE && avg <= TEST_DISTANCE * 0.75 + TEST_DISTANCE; // muke fix this pls :D
                     DISTANCES.clear();
                     step = Step.SHOW;
                 }
@@ -280,6 +285,9 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
 
     private boolean test(boolean first) {
         if(testStepFirstHalf) {
+            if(!Devices.controller1.getA() && isHeld) {
+                isHeld = false;
+            }
             // first, the user needs to position the robot -- so lets tell them to do that
             if(menuManager == null) {
                 if(first) {
@@ -288,7 +296,9 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     menuManager = Questions.askAsync(Devices.controller1, "Drive your bot back to the start of a " + Math.ceil(TEST_DISTANCE / 24.0) + 2 + " (over " + TEST_DISTANCE + " inch) tile long stretch of field tiles facing forward towards the stretch, then select Ok.", "Ok");
                 }
             }
-            menuManager.runOnce();
+            if(!isHeld) {
+                menuManager.runOnce();
+            }
             // we let them drive to the right spot
             if(driver == null) {
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
@@ -302,14 +312,16 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                 )
             );
             driver.update();
-            Item answer = menuManager.runOnce();
-            // then we stop if the user's done
-            if(answer != null) {
-                if(answer.equals("Ok")) {
-                    menuManager = null;
-                    driver.setMotorPowers(0, 0, 0, 0);
-                    driver = null;
-                    testStepFirstHalf = false;
+            if(!isHeld) {
+                Item answer = menuManager.runOnce();
+                // then we stop if the user's done
+                if(answer != null) {
+                    if(answer.equals("Ok")) {
+                        menuManager = null;
+                        driver.setMotorPowers(0, 0, 0, 0);
+                        driver = null;
+                        testStepFirstHalf = false;
+                    }
                 }
             }
         }else{
@@ -331,5 +343,4 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
 }
 
 // TODO:
-//  - set some values for measuredVel error and targetVel before we start so you can graph them
-//  - concat all the field tile lengths to ints
+//  - fix "your ff vals are within 16%" even when they are clearly Not Within 16%

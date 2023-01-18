@@ -131,6 +131,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 }
                 break;
             case RERUN:
+            case MANUALTEST:
                 // strafe
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 Trajectory traj2 = driver.trajectoryBuilder(new Pose2d())
@@ -141,7 +142,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 // cleanup
                 driver.setMotorPowers(0, 0, 0, 0);
                 driver = null;
-                step = Step.CALC;
+                step = Step.MANUALCALC;
                 break;
             case MANUALCALC:
                 AsyncQuestionExecutor.askC1("With the " + manMult + " applied, your bot drove a distance of " + dist + " inches. If this is accurate to a few percent, you can move on. Otherwise, select Reconfigure to manually bump your multiplier higher or lower.", new String[] {"Continue", "Reconfigure"}, a -> {
@@ -154,6 +155,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                         });
                     }
                 });
+                break;
             case MANUALALIGN:
                 // the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
@@ -184,19 +186,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                     }
                 }
                 break;
-            case MANUALTEST:
-                // strafe
-                driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
-                Trajectory traj3 = driver.trajectoryBuilder(new Pose2d())
-                    .strafeRight(DISTANCE)
-                    .build();
-                driver.followTrajectory(traj3);
-                dist = driver.getPoseEstimate().getY();
-                // cleanup
-                driver.setMotorPowers(0, 0, 0, 0);
-                driver = null;
-                step = Step.MANUALCALC;
-                break;
+            // cleanup
             case NEXT:
                 AsyncQuestionExecutor.askC1("Your multiplier has now been tuned properly. Select Ok when you're ready to move on to the next step.", new String[] {"Ok"}, a -> {
                     State.driveTrackWidthExperimentalTuning = Affair.PRESENT;
