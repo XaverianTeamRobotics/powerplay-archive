@@ -265,7 +265,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         acceptable = false;
                     });
                 }else{
-                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >16% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
+                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >15% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
                         if(a.equals("Continue")) {
                             step = Step.NEXT;
                         }else{

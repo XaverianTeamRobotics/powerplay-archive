@@ -6,6 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.*;
 
+/*
+
+new bot drive width: 350mm
+new bot encoder width: ???
+
+ */
+
 /**
  * Settings for a wheeled odometry implementation. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in wheeled odometry compound continously, so it's important to make sure these values are as precise as possible.
  * <br><br>
@@ -176,7 +183,7 @@ public class OdometrySettings {
     /**
      * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe tuner.
      */
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 3;
 
 
     /**

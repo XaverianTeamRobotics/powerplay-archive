@@ -40,7 +40,7 @@ public class FollowerTuner extends Feature implements Conditional {
         NEXT
     }
 
-    private Step step = Step.ALIGN_BF;
+    private Step step = Step.INSTRUCT;
 
     @Override
     public boolean when() {
@@ -131,7 +131,9 @@ public class FollowerTuner extends Feature implements Conditional {
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
                 }
-                exit();
+                if(exit()) {
+                    break;
+                }
                 // drive
                 if(!driver.isBusy()) {
                     if(bfForward) {
@@ -175,7 +177,9 @@ public class FollowerTuner extends Feature implements Conditional {
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
                 }
-                exit();
+                if(exit()) {
+                    break;
+                }
                 Item answer1 = menuManager.runOnce();
                 // then we stop if the user's done
                 if(answer1 != null) {
@@ -226,7 +230,9 @@ public class FollowerTuner extends Feature implements Conditional {
                 }else if(!Devices.controller1.getX() && !Devices.controller2.getX()) {
                     lastX = false;
                 }
-                exit();
+                if(exit()) {
+                    break;
+                }
                 // drive
                 if(!driver.isBusy()) {
                     driver.followTrajectorySequenceAsync(headTrajectory);
@@ -241,7 +247,7 @@ public class FollowerTuner extends Feature implements Conditional {
         }
     }
 
-    private void exit() {
+    private boolean exit() {
         if(Devices.controller1.getTouchpad() || Devices.controller2.getTouchpad()) {
             if(driver != null) {
                 driver.setMotorPowers(0, 0, 0, 0);
@@ -250,7 +256,9 @@ public class FollowerTuner extends Feature implements Conditional {
             DSLogging.clear();
             DSLogging.update();
             step = Step.NEXT;
+            return true;
         }
+        return false;
     }
 
 }
