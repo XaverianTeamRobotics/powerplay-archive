@@ -345,6 +345,3 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     }
 
 }
-
-// TODO:
-//  - fix "your ff vals are within 16%" even when they are clearly Not Within 16%
