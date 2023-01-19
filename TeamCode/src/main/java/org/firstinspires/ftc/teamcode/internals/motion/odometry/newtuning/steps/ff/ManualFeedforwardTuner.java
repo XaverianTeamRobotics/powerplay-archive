@@ -244,6 +244,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     // muke fix this pls :D
                     // it is supposed to determine if the average distance is within 15% of the test distance, but it is not Doing That. i Do Not Know Why. i am not good enough at math for this i am literally only in calculus 1 as a senior like how does that even happe-
                     // hey tom, muke here. (i think) i fixed it. it was a simple mistake. First you said you wanted 15% error, when you multiplied by 0.75, which allowed a 25% error. Then you did some bad math.
+                    // yeah this is fixed ty muke
                     acceptable = (avg >= TEST_DISTANCE * 0.85) && (avg <= TEST_DISTANCE * 1.15);
                     DISTANCES.clear();
                     step = Step.SHOW;
