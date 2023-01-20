@@ -244,6 +244,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                     // muke fix this pls :D
                     // it is supposed to determine if the average distance is within 15% of the test distance, but it is not Doing That. i Do Not Know Why. i am not good enough at math for this i am literally only in calculus 1 as a senior like how does that even happe-
                     // hey tom, muke here. (i think) i fixed it. it was a simple mistake. First you said you wanted 15% error, when you multiplied by 0.75, which allowed a 25% error. Then you did some bad math.
+                    // yeah this is fixed ty muke
                     acceptable = (avg >= TEST_DISTANCE * 0.85) && (avg <= TEST_DISTANCE * 1.15);
                     DISTANCES.clear();
                     step = Step.SHOW;
@@ -264,7 +265,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         acceptable = false;
                     });
                 }else{
-                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >16% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
+                    AsyncQuestionExecutor.askC1("Your feedforward gains seem to be inadequate for odometry, with an average distance of " + avg + " inches over " + testStep + " trials when tasked with driving " + TEST_DISTANCE + " inches, which is over the >15% of error required for proper path following. I highly recommend retuning your gains. If you want to continue without retuning, select Continue, otherwise select Reconfigure.", new String[] {"Continue", "Reconfigure"}, a -> {
                         if(a.equals("Continue")) {
                             step = Step.NEXT;
                         }else{
@@ -344,6 +345,3 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     }
 
 }
-
-// TODO:
-//  - fix "your ff vals are within 16%" even when they are clearly Not Within 16%

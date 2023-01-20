@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.utils;
 
-import android.os.Environment;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 public class SettingLoader {
 
-    public static final String PATH = String.format("%s" + File.pathSeparator + "FIRST" + File.pathSeparator + "data" + File.pathSeparator + "settings.odometry", Environment.getExternalStorageDirectory().getAbsolutePath());
+    public static final String PATH = AppUtil.ROOT_FOLDER + File.pathSeparator + "odo7" + File.pathSeparator + "settings.odometry";
 
     /**
      * Write to the odometry settings file.
@@ -26,6 +26,7 @@ public class SettingLoader {
     private static boolean write() {
         try {
             File file = new File(PATH);
+            file.getParentFile().mkdirs();
             file.createNewFile();
             FileWriter writer = new FileWriter(file, false);
             writer.write(makeString());

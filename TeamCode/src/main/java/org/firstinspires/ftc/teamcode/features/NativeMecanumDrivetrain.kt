@@ -21,7 +21,7 @@ class NativeMecanumDrivetrain(
     private var useExpansionHub: Boolean,
     private var fieldCentric: Boolean,
     private var isRotInverted: Boolean,
-    private var inputDampening: Boolean
+    private var inputDampening: Boolean,
 ) : Feature(),
     Buildable {
 
@@ -32,6 +32,7 @@ class NativeMecanumDrivetrain(
     private var previousY: Double = 0.0
     private var previousRot: Double = 0.0
     private val dampeningFactor = 0.5 // Between 0 and 1, tests have shown 0.5 to be a sweet spot
+    private var speedMultiplier = 0.5
 
     /*
     The following constants dictate the power each controller sends
@@ -86,7 +87,7 @@ class NativeMecanumDrivetrain(
             previousRot = rot
         }
 
-        mecanumDriver!!.runMecanum(x, y, rot)
+        mecanumDriver!!.runMecanum(x * speedMultiplier, y * speedMultiplier, rot * speedMultiplier)
     }
 
     private fun dampenInput(x: Double, prev: Double): Double {
