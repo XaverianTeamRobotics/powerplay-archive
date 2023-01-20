@@ -1,38 +1,40 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.utils;
 
+import android.os.Build;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class SettingLoader {
 
-    public static final String PATH = AppUtil.ROOT_FOLDER + File.pathSeparator + "odo7" + File.pathSeparator + "settings.odometry";
+    public static final String PATH = AppUtil.ROOT_FOLDER + "/odo7/";
 
     /**
      * Write to the odometry settings file.
      * @return true if the file was successfully written to, false if something went wrong
      */
     private static boolean write() {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            System.out.println("API level too low to save odometry!");
+            return false;
+        }
         try {
-            File file = new File(PATH);
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            FileWriter writer = new FileWriter(file, false);
-            writer.write(makeString());
-            writer.close();
+            Files.createDirectories(Paths.get(PATH));
+            Path path = Files.createFile(Paths.get(PATH, "settings.odometry"));
+            Files.write(path, makeString().getBytes());
             return true;
         } catch(IOException exception) {
+            exception.printStackTrace();
             return false;
         }
     }
@@ -120,16 +122,15 @@ public class SettingLoader {
      * @return the settings as a string, null if something went wrong
      */
     private static String read() {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            System.out.println("API level too low to read odometry!");
+            return null;
+        }
         try {
-            StringBuilder builder = new StringBuilder();
-            File file = new File("filename.txt");
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                builder.append(scanner.nextLine());
-            }
-            scanner.close();
-            return builder.toString();
-        } catch(FileNotFoundException exception) {
+            byte[] bytes = Files.readAllBytes(Paths.get(PATH + "settings.odometry"));
+            return new String(bytes);
+        } catch(IOException exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -222,7 +223,9 @@ public class SettingLoader {
      */
     public static void save() {
         try {
-            write();
+            if(!write()) {
+                throw new SettingLoaderFailureException("Saving settings failed from IO exception. Check logcat for more details.");
+            }
         } catch(Exception e) {
             throw new SettingLoaderFailureException("Saving settings failed.", e);
         }

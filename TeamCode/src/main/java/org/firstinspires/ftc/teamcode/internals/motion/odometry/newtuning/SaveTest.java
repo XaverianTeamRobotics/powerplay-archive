@@ -11,7 +11,7 @@ public class SaveTest extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-
+        System.out.println("running");
     }
 
     @Override
