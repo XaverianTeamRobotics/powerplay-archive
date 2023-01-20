@@ -111,7 +111,7 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Call this whenever you need to reboot the robot.
+     * Call this whenever you need to reboot the robot. Sometimes it works.
      */
     public static void reboot() {
         throw new RobotRebootException();
