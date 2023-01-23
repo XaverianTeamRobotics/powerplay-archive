@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.internals.remote_debugger;
+package org.firstinspires.ftc.teamcode.internals.debug.remote_debugger;
 
-import org.firstinspires.ftc.teamcode.features.Debugger;
+import org.firstinspires.ftc.teamcode.internals.debug.Debugger;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation;
 

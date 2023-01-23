@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
-import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
 
 class HardwareGetter {
     companion object {

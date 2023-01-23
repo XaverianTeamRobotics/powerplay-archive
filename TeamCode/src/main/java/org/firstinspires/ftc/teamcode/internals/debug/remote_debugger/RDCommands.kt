@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.remote_debugger
+package org.firstinspires.ftc.teamcode.internals.debug.remote_debugger
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject

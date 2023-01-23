@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.internals.debug
 
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
@@ -7,13 +7,12 @@ import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Menu
-import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging
 
 /*
  * A menu to allow the hardware team to quickly check basic functionality, like the installation of motors and servos.
  */
-class RobotMaintenanceMenu: OperationMode(), TeleOperation {
+class RobotMaintenance: OperationMode(), TeleOperation {
     lateinit var rootMenu: Menu
     lateinit var motorMenu: Menu
     lateinit var stickSelectMenu: Menu
