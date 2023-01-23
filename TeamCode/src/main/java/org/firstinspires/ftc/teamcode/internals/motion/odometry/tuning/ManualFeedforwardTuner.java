@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.kinematics.Kinematics;
@@ -10,11 +9,10 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 
@@ -56,7 +54,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     private static MotionProfile generateProfile(boolean movingForward) {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
-        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, OdometrySettings.MAX_VEL, OdometrySettings.MAX_ACCEL);
+        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, OdometrySettingsDashboardConfiguration.MAX_VEL, OdometrySettingsDashboardConfiguration.MAX_ACCEL);
     }
 
     @Override
@@ -107,7 +105,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), OdometrySettings.kV, OdometrySettings.kA, OdometrySettings.kStatic);
+                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), OdometrySettingsDashboardConfiguration.kV, OdometrySettingsDashboardConfiguration.kA, OdometrySettingsDashboardConfiguration.kStatic);
 
                     drive.setDrivePower(new Pose2d(targetPower, 0, 0));
                     drive.updatePoseEstimate();

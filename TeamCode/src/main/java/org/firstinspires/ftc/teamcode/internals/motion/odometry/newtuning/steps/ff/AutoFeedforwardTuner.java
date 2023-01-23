@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
@@ -89,7 +89,7 @@ public class AutoFeedforwardTuner extends Feature implements Conditional {
                 // inits
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
                 NanoClock clock = NanoClock.system();
-                double maxVel = ConstantUtils.rpmToVelocity(OdometrySettings.MAX_RPM);
+                double maxVel = ConstantUtils.rpmToVelocity(OdometrySettingsDashboardConfiguration.MAX_RPM);
                 double finalVel = MAX_POWER * maxVel;
                 double accel = (finalVel * finalVel) / (2.0 * DISTANCE);
                 double rampTime = Math.sqrt(2.0 * DISTANCE / accel);

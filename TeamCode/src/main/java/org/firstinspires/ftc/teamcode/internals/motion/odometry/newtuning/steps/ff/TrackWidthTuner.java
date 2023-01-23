@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -99,7 +99,7 @@ public class TrackWidthTuner extends Feature implements Conditional {
                         driver.update();
                     }
 
-                    double trackWidth = OdometrySettings.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
+                    double trackWidth = OdometrySettingsDashboardConfiguration.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
                     trackWidthStats.add(trackWidth);
 
                     Clock.sleep(DELAY);

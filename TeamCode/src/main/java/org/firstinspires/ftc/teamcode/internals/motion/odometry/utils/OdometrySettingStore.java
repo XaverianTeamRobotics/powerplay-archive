@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.utils;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.DefaultOdometrySettings;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Manages the state of {@link OdometrySettings} fields before being loaded into the dashboard.
+ * Manages the state of {@link OdometrySettingsDashboardConfiguration} fields before being loaded into the dashboard.
  */
 public class OdometrySettingStore {
 

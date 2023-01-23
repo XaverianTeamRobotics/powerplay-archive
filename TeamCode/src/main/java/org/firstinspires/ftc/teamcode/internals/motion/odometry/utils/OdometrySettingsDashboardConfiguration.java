@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.motion.odometry;
+package org.firstinspires.ftc.teamcode.internals.motion.odometry.utils;
 
 import android.content.Context;
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -6,9 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.ftccommon.external.OnCreate;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfig;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingStore;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.DefaultOdometrySettings;
 
 /*
 
@@ -18,7 +16,7 @@ new bot encoder width: ???
  */
 
 @Config
-public class OdometrySettings {
+public class OdometrySettingsDashboardConfiguration {
 
 
     /**

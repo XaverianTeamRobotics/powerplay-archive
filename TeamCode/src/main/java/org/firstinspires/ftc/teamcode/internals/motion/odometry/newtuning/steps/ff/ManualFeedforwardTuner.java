@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.newtuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
@@ -69,7 +69,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
     private MotionProfile generateProfile() {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
-        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, OdometrySettings.MAX_VEL, OdometrySettings.MAX_ACCEL);
+        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, OdometrySettingsDashboardConfiguration.MAX_VEL, OdometrySettingsDashboardConfiguration.MAX_ACCEL);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ManualFeedforwardTuner extends Feature implements Conditional {
                         }
                         // calculate power
                         MotionState motionState = activeProfile.get(profileTime);
-                        double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), OdometrySettings.kV, OdometrySettings.kA, OdometrySettings.kStatic);
+                        double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), OdometrySettingsDashboardConfiguration.kV, OdometrySettingsDashboardConfiguration.kA, OdometrySettingsDashboardConfiguration.kStatic);
                         // set the motor power
                         driver.setDrivePower(new Pose2d(targetPower, 0, 0));
                         driver.updatePoseEstimate();

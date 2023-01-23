@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -50,7 +49,7 @@ public class SettingLoader {
         StringBuilder builder = new StringBuilder();
         builder.append(";");
 
-        for(Field field : OdometrySettings.class.getFields()) {
+        for(Field field : OdometrySettingsDashboardConfiguration.class.getFields()) {
             try {
                 String str = makeEntry(field);
                 // Entries are delimited by a semicolon
