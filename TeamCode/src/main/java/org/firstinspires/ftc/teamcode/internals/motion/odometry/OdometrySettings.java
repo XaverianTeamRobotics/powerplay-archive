@@ -23,22 +23,22 @@ public class OdometrySettings {
     /**
      * The name and direction of the front right motor.
      */
-    public static MotorConfig DRIVE_FRONT_RIGHT = new MotorConfig("motor0", DcMotorSimple.Direction.FORWARD);
+    public static MotorConfig DRIVE_FRONT_RIGHT = new MotorConfig("motor0", DcMotorSimple.Direction.REVERSE);
 
     /**
      * The name and direction of the back right motor.
      */
-    public static MotorConfig DRIVE_BACK_RIGHT = new MotorConfig("motor1", DcMotorSimple.Direction.FORWARD);
+    public static MotorConfig DRIVE_BACK_RIGHT = new MotorConfig("motor1", DcMotorSimple.Direction.REVERSE);
 
     /**
      * The name and direction of the front left motor.
      */
-    public static MotorConfig DRIVE_FRONT_LEFT = new MotorConfig("motor2", DcMotorSimple.Direction.REVERSE);
+    public static MotorConfig DRIVE_FRONT_LEFT = new MotorConfig("motor2", DcMotorSimple.Direction.FORWARD);
 
     /**
      * The name and direction of the back left motor.
      */
-    public static MotorConfig DRIVE_BACK_LEFT = new MotorConfig("motor3", DcMotorSimple.Direction.REVERSE);
+    public static MotorConfig DRIVE_BACK_LEFT = new MotorConfig("motor3", DcMotorSimple.Direction.FORWARD);
 
     /**
      * The name and direction of the right encoder.
