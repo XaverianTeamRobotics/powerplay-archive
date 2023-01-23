@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.utils;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.DefaultOdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class OdometrySettingStore {
     }
 
     /**
-     * Imports the current configuration from a file or from {@link DefaultOdometrySettings}.
+     * Imports the current configuration from a file or from {@link OdometrySettings}.
      */
     private static void makeConfig() {
         // we also want to make sure this never gets regenerated AFTER app load...that would be very bad
@@ -48,7 +48,7 @@ public class OdometrySettingStore {
         // the defaults are stored in DefaultOdometrySettings, so we use some basic reflection to put them into the hashmap
         // calling reflection basic is a crime punishible to the highest degree but i work with it so much im getting good at it now... D:
         HashMap<String, SettingLoader.Value> kvals = new HashMap<>();
-        for(Field field : DefaultOdometrySettings.class.getDeclaredFields()) {
+        for(Field field : OdometrySettings.class.getDeclaredFields()) {
             try {
                 kvals.put(field.getName(), new SettingLoader.Value(field.get(null), field.getType()));
             } catch(IllegalAccessException e) {

@@ -6,12 +6,19 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfig;
 
+/*
+
+new bot drive width: 350mm
+new bot encoder width: ???
+
+ */
+
 /**
  * Settings for a wheeled odometry implementation. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in wheeled odometry compound continously, so it's important to make sure these values are as precise as possible.
  * <br><br>
  * This document makes numerous references to the Strafer v5 chassis by goBILDA. Its SKU is 3209-0001-0005.
  */
-public class DefaultOdometrySettings {
+public class OdometrySettings {
 
     /**
      * The name and direction of the front right motor.

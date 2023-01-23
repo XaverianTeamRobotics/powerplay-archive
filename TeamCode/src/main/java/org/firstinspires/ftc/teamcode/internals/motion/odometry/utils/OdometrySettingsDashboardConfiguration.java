@@ -6,16 +6,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.ftccommon.external.OnCreate;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.DefaultOdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 
-/*
-
-new bot drive width: 350mm
-new bot encoder width: ???
-
- */
-
-@Config
+@Config(value = "OdometrySettings")
 public class OdometrySettingsDashboardConfiguration {
 
 
@@ -26,7 +19,7 @@ public class OdometrySettingsDashboardConfiguration {
      |                                                                                                                      |
      |                                                      !!STOP!!                                                        |
      |                                                                                                                      |
-     |   If you're going to edit the odometry settings in the source code, check {@link DefaultOdometrySettings} instead!   |
+     |   If you're going to edit the odometry settings file in the source code, go edit {@link OdometrySettings} instead!   |
      |                                                                                                                      |
      +----------------------------------------------------------------------------------------------------------------------+
 
