@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 
-class FourMotorArmFeature: Feature(), Buildable {
+class FourMotorArm: Feature(), Buildable {
 
     override fun build() {}
 

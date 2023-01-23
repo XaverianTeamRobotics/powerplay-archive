@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import org.firstinspires.ftc.teamcode.features.FourMotorArmFeature;
+import org.firstinspires.ftc.teamcode.features.FourMotorArm;
 import org.firstinspires.ftc.teamcode.features.NativeMecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.misc.DrivetrainMapMode;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
@@ -14,7 +14,7 @@ public class SmallBotProduction extends OperationMode implements TeleOperation {
             DrivetrainMapMode.FR_BR_FL_BL,
             false, true,
             false, false));
-        registerFeature(new FourMotorArmFeature());
+        registerFeature(new FourMotorArm());
     }
 
     @Override

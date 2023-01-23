@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 
-public class ArmFeature extends Feature implements Buildable {
+public class TwoMotorArm extends Feature implements Buildable {
 
     @Override
     public void build() {

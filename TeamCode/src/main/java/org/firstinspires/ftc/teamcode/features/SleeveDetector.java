@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Objects;
 
-public class SleeveDetectionFeature extends Feature implements Buildable {
+public class SleeveDetector extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
 

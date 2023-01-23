@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import org.firstinspires.ftc.teamcode.features.SleeveDetectionFeature;
+import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 
 public class SleeveDetectionTest extends OperationMode implements AutonomousOperation {
 
-    SleeveDetectionFeature detector;
+    SleeveDetector detector;
 
     @Override
     public Class<? extends OperationMode> getNext() {
@@ -15,7 +15,7 @@ public class SleeveDetectionTest extends OperationMode implements AutonomousOper
 
     @Override
     public void construct() {
-        detector = new SleeveDetectionFeature();
+        detector = new SleeveDetector();
         registerFeature(detector);
     }
 

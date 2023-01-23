@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 
-class HandFeature : Feature(), Buildable {
+class Hand : Feature(), Buildable {
     private var open = true
     private var second = 0.0
     override fun build() {

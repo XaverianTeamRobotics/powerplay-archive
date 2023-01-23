@@ -4,10 +4,9 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 import org.firstinspires.ftc.teamcode.internals.remote_debugger.RDWebSocketServer
-import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging
 
-class WebServerFeature: Feature(), Buildable {
+class Debugger: Feature(), Buildable {
     val webServer: RDWebSocketServer = RDWebSocketServer.initializeWebsocketServer()
 
     override fun build() {
