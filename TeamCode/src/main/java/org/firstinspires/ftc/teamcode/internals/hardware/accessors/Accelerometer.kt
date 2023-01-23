@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
 /**
  * An accelerometer measures acceleration.
  */
-class Accelerometer(var name: String) {
+class Accelerometer(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

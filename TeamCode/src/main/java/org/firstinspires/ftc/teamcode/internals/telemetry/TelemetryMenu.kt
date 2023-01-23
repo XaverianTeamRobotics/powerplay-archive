@@ -2,18 +2,16 @@ package org.firstinspires.ftc.teamcode.internals.telemetry
 
 import com.michaell.looping.ScriptTemplate
 import com.michaell.looping.builtin.ConvertToScript
-import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
-import java.lang.System.lineSeparator
-import kotlin.math.max
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
 import kotlin.math.min
 
 /**
  * Create a menu in the telemetry interface (using the Logging class) to allow for configuration during a match
  * Use controllers as inputs to navigate the menu
  */
+@Deprecated("Use the new MenuManager and Menu classes instead")
 class TelemetryMenu {
     var dPadUpHeld: Boolean = false
     var dPadDownHeld: Boolean = false
@@ -97,16 +95,16 @@ class TelemetryMenu {
     }
 
     private fun display() {
-        Logging.clear()
-        Logging.logText("Telemetry Menu")
-        Logging.logText(" ")
-        Logging.logText("Use the D-Pad to navigate the menu")
-        Logging.logText(" ")
-        Logging.logText("Current Menu: ${currentMenu.name}")
-        Logging.logText(" ")
+        AdvancedLogging.clear()
+        AdvancedLogging.logText("Telemetry Menu")
+        AdvancedLogging.logText(" ")
+        AdvancedLogging.logText("Use the D-Pad to navigate the menu")
+        AdvancedLogging.logText(" ")
+        AdvancedLogging.logText("Current Menu: ${currentMenu.name}")
+        AdvancedLogging.logText(" ")
         if (currentMenu.name != "Main Menu") {
-            Logging.logText("Press CIRLE or B to go back")
-            Logging.logText(" ")
+            AdvancedLogging.logText("Press CIRLE or B to go back")
+            AdvancedLogging.logText(" ")
         }
         for (i in (currentMenu.value as MutableList<MenuItem>).indices) {
             val item = (currentMenu.value as MutableList<MenuItem>)[i]
@@ -117,12 +115,12 @@ class TelemetryMenu {
             } else {
                 text += "  >>>"
             }
-            Logging.logText(text)
+            AdvancedLogging.logText(text)
         }
 
-        Logging.logText(" ")
-        Logging.logText(annotation)
-        Logging.updateLog()
+        AdvancedLogging.logText(" ")
+        AdvancedLogging.logText(annotation)
+        AdvancedLogging.updateLog()
     }
 
     private fun onBackButton() {

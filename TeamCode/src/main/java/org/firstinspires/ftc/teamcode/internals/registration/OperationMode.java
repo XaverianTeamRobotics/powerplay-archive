@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetterKt;
+import org.firstinspires.ftc.teamcode.internals.misc.RobotRebootException;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Loggers;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,49 +34,54 @@ public abstract class OperationMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        Logging.setTelemetry(telemetry);
-        HardwareGetter.setEmulated(false);
-        HardwareGetter.setHardwareMap(hardwareMap);
-        HardwareGetter.setOpMode(this);
-        ScriptTemplate jloopingScript;
-        ScriptRunner runner;
         try {
-            jloopingScript = new ConvertToScript(this.getClass().getName(), this,
-                "absolutelyNothing", "run");
-            runner = new ScriptRunner();
-            runner.addScript(jloopingScript);
-            this.environment = runner.scriptParametersGlobal;
-            HardwareGetter.setJloopingRunner(runner);
-            HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
-            HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
-            HardwareGetter.initStdDevices();
+            // formatting for questions api
+            telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+            Loggers.init(telemetry);
+            HardwareGetter.setEmulated(false);
+            HardwareGetter.setHardwareMap(hardwareMap);
+            HardwareGetter.setOpMode(this);
+            ScriptTemplate jloopingScript;
+            ScriptRunner runner;
+            try {
+                jloopingScript = new ConvertToScript(this.getClass().getName(), this,
+                    "absolutelyNothing", "run");
+                runner = new ScriptRunner();
+                runner.addScript(jloopingScript);
+                this.environment = runner.scriptParametersGlobal;
+                HardwareGetter.setJloopingRunner(runner);
+                HardwareGetter.makeGamepadRequest("gamepad1", gamepad1);
+                HardwareGetter.makeGamepadRequest("gamepad2", gamepad2);
 
-            // Set the Caching mode to auto. This allows for faster access of all sensors
-            // The cache gets cleared whenever a call to a sensor is repeated
-            // This does NOT effect writing data to a device
-            List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+                // Set the Caching mode to auto. This allows for faster access of all sensors
+                // The cache gets cleared whenever a call to a sensor is repeated
+                // This does NOT effect writing data to a device
+                List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
-            for (LynxModule hub : allHubs) {
-                hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+                for (LynxModule hub : allHubs) {
+                    hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+                }
+            } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
+                throw new RuntimeException(e);
             }
-        } catch (NoSuchMethodException | ScriptRunner.DuplicateScriptException e) {
-            throw new RuntimeException(e);
-        }
-        // set environment variables
-        // tell user-defined code of the opmode to construct itself
-        construct();
-        // wait until the opmode is executed
-        waitForStart();
-        resetRuntime();
-        // run the opmode using jlooping
-        while (opModeIsActive()) {
-            runner.runOneScript();
-            this.environment = runner.scriptParametersGlobal;
-        }
+            HardwareGetterKt.initConfigDevices();
+            HardwareGetter.initStdDevices();
+            // tell user-defined code of the opmode to construct itself
+            construct();
+            // wait until the opmode is executed
+            waitForStart();
+            resetRuntime();
+            // run the opmode using jlooping
+            while (opModeIsActive()) {
+                runner.runOneScript();
+                this.environment = runner.scriptParametersGlobal;
+            }
 
-        // tell the app to stop this opmode
-        requestOpModeStop();
+            // tell the app to stop this opmode
+            requestOpModeStop();
+        } catch(RobotRebootException e) {
+            throw new InterruptedException(e.getMessage());
+        }
     }
 
     /**
@@ -101,6 +108,20 @@ public abstract class OperationMode extends LinearOpMode {
         } catch (ScriptRunner.DuplicateScriptException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Call this whenever you need to reboot the robot. Sometimes it works.
+     */
+    public static void reboot() {
+        throw new RobotRebootException();
+    }
+
+    /**
+     * Call this whenever you need to reboot the robot.
+     */
+    public static void reboot(String reason) {
+        throw new RobotRebootException(reason);
     }
 
 }

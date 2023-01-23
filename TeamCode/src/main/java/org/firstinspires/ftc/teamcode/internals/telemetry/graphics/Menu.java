@@ -73,6 +73,14 @@ public class Menu {
         }
 
         /**
+         * Adds an {@link Item}, or choice, to this menu represented by a {@link String}. This {@link String} will be used to build the {@link Item} supplied to the menu.
+         */
+        public MenuBuilder addItem(String item) {
+            ITEMS.add(new Item(item));
+            return this;
+        }
+
+        /**
          * Sets the description of this menu. The description is displayed at the top of the menu above the choices and should indicate to the user what the choices in this menu mean and why they're important.
          */
         public MenuBuilder setDescription(String description) {

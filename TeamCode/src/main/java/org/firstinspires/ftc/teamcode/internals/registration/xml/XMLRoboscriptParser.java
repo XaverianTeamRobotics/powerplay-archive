@@ -4,7 +4,6 @@ import android.content.res.AssetManager;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -96,7 +95,7 @@ public class XMLRoboscriptParser {
 
     public boolean isTeleOp() {
         if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("teleop")) return true;
-        else if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("data")) return false;
+        else if (rootElement.getElementsByTagName("mode").item(0).getTextContent().equals("auto")) return false;
         else {
             System.out.println("[XML] Error: mode is unknown (" + rootElement.getElementsByTagName("mode").item(0).getTextContent() + ")");
             throw new RuntimeException("Invalid XML Data");
@@ -111,7 +110,7 @@ public class XMLRoboscriptParser {
         return rootElement.getElementsByTagName("name").item(0).getTextContent();
     }
 
-    public Node getCodeBlock() {
-        return rootElement.getElementsByTagName("code").item(0);
+    public Element getCodeBlock() {
+        return (Element) rootElement.getElementsByTagName("code").item(0);
     }
 }

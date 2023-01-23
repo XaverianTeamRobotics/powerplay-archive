@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.GamepadRequestInpu
 /**
  * A gamepad is simply a controller that a human uses to control the robot.
  */
-class Gamepad(var name: String) {
+class Gamepad(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.
@@ -16,32 +16,32 @@ class Gamepad(var name: String) {
 
     val leftStickX: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_STICK_X)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_STICK_X) * 100
         }
 
     val leftStickY: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_STICK_Y)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_STICK_Y) * 100
         }
 
     val rightStickX: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_STICK_X)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_STICK_X) * 100
         }
 
     val rightStickY: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_STICK_Y)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_STICK_Y) * 100
         }
 
     val leftTrigger: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_TRIGGER)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.LEFT_TRIGGER) * 100
         }
 
     val rightTrigger: Double
         get() {
-            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_TRIGGER)
+            return HardwareGetter.getGamepadValue(name, GamepadRequestInput.RIGHT_TRIGGER) * 100
         }
 
     val dpadUp: Boolean

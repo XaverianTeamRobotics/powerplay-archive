@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.telemetry.graphics;
 
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging;
 
 /**
  * A MenuManager is a little MVC framework which allows a driver to have simple interactions with the robot via a GUI.
@@ -57,9 +57,9 @@ public class MenuManager {
      */
     private void frame() {
         String frame = MENU.draw();
-        Logging.clear();
-        Logging.logText(frame);
-        Logging.updateLog();
+        DSLogging.clear();
+        DSLogging.log(frame);
+        DSLogging.update();
     }
 
     /**
@@ -71,9 +71,26 @@ public class MenuManager {
             frame();
             input();
             if(result != null) {
-                Logging.clear();
-                Logging.logText("");
-                Logging.updateLog();
+                DSLogging.clear();
+                DSLogging.log("");
+                DSLogging.update();
+                return result;
+            }
+        }
+        return null;
+    }
+    /**
+     * Displays and updates the menu once until the OpMode has been stopped or a choice has been made.
+     * @return The choice of the user.
+     */
+    public Item runOnce() {
+        if(!HardwareGetter.getOpMode().isStopRequested()) {
+            frame();
+            input();
+            if(result != null) {
+                DSLogging.clear();
+                DSLogging.log("");
+                DSLogging.update();
                 return result;
             }
         }

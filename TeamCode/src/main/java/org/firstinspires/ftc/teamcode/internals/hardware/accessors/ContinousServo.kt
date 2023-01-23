@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.data.ContinousServoOpti
 /**
  * A continous servo is a servo that can run in a direction forever but cannot drive to a specific position nor report its position data.
  */
-class ContinousServo(var name: String) {
+class ContinousServo(override var name: String): DeviceAccessor(name) {
 
     /**
      * The jlooping request managing the underlying hardware.

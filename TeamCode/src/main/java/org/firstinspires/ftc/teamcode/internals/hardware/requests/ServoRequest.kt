@@ -19,12 +19,12 @@ class ServoRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Re
     override fun issueRequest(o: Any): Any {
         val vals = o as ServoInput
         return if (vals.type === ServoOptions.GET) {
-            servo.position * 100
+            servo.position * 100.0
         } else {
             var `val` = vals.position
             `val` = Range.clip(`val`, 0.0, 100.0)
             servo.position = `val` / 100
-            0
+            0.0
         }
     }
 

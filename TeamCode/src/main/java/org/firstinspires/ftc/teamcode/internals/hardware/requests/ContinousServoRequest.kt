@@ -25,7 +25,7 @@ class ContinousServoRequest(name: String, hardwareMap: HardwareMap) : ScriptPara
             var `val` = input.power
             `val` = Range.clip(`val`, -100.0, 100.0)
             servo.power = `val` / 100
-            0
+            0.0
         }
     }
 
