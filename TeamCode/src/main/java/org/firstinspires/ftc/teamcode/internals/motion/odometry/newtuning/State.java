@@ -34,8 +34,8 @@ public class State {
     public static Affair endTuning = Affair.FUTURE;
 
     // misc state -- an unordered mess of what we need
-    public static AutoTuning.InitialTesting initialTesting = AutoTuning.InitialTesting.BEFORE;
+    public static OdometryTuner.InitialTesting initialTesting = OdometryTuner.InitialTesting.BEFORE;
     public static boolean firstTime = true;
-    public static AutoTuning.EndOfTuning endOfTuning = AutoTuning.EndOfTuning.SAVE;
+    public static OdometryTuner.EndOfTuning endOfTuning = OdometryTuner.EndOfTuning.SAVE;
 
 }

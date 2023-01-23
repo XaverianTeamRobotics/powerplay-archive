@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Menu;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.MenuManager;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
-public class AutoTuning extends OperationMode implements TeleOperation {
+public class OdometryTuner extends OperationMode implements TeleOperation {
 
     private MenuManager menuManager = null;
     private AutonomousDrivetrain driver = null;
