@@ -155,7 +155,6 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     } catch(SettingLoaderFailureException e) {
                         System.out.println("Saving settings failed! " + e.getMessage());
                         e.printStackTrace();
-                        System.out.println(e.toString());
                         saved = false;
                     }
                     if(saved) {
@@ -171,7 +170,7 @@ public class AutoTuning extends OperationMode implements TeleOperation {
                     });
                     break;
                 case Q2:
-                    AsyncQuestionExecutor.askC1("\uD83C\uDF89 You're done! However, your odometry settings did NOT save. You need to manually edit the settings yourself in the source code and then delete the file sdcard/odo7/settings.odometry. Connect to ADB to access the filesystem and check logcat for more details. Select Exit when you're done.", new String[] {"Exit"}, a -> {
+                    AsyncQuestionExecutor.askC1("\uD83C\uDF89 You're done! However, your odometry settings did NOT save. You need to manually edit the settings yourself in the source code and then delete the file sdcard/odo7/settings.odo7. Connect to ADB to access the filesystem and check logcat for more details. Select Exit when you're done.", new String[] {"Exit"}, a -> {
                         requestOpModeStop();
                 });
             }
