@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
 
 import java.util.Arrays;
@@ -23,11 +23,11 @@ public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
      */
 
 
-    public static double TICKS_PER_REV = OdometrySettings.ENCODER_TICKS_PER_REV;
-    public static double WHEEL_RADIUS = OdometrySettings.ENCODER_WHEEL_RADIUS;
-    public static double GEAR_RATIO = OdometrySettings.ENCODER_GEAR_RATIO;
-    public static double LATERAL_DISTANCE = OdometrySettings.ENCODER_TRACK_WIDTH;
-    public static double FORWARD_OFFSET = OdometrySettings.ENCODER_FORWARD_OFFSET;
+    public static double TICKS_PER_REV = OdometrySettingsDashboardConfiguration.ENCODER_TICKS_PER_REV;
+    public static double WHEEL_RADIUS = OdometrySettingsDashboardConfiguration.ENCODER_WHEEL_RADIUS;
+    public static double GEAR_RATIO = OdometrySettingsDashboardConfiguration.ENCODER_GEAR_RATIO;
+    public static double LATERAL_DISTANCE = OdometrySettingsDashboardConfiguration.ENCODER_TRACK_WIDTH;
+    public static double FORWARD_OFFSET = OdometrySettingsDashboardConfiguration.ENCODER_FORWARD_OFFSET;
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
 
@@ -47,13 +47,13 @@ public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettings.ENCODER_LEFT.NAME));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettings.ENCODER_RIGHT.NAME));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettings.ENCODER_MIDDLE.NAME));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_LEFT.NAME));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_RIGHT.NAME));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_MIDDLE.NAME));
 
-        leftEncoder.setDirection(OdometrySettings.ENCODER_LEFT.DIRECTION);
-        rightEncoder.setDirection(OdometrySettings.ENCODER_RIGHT.DIRECTION);
-        frontEncoder.setDirection(OdometrySettings.ENCODER_MIDDLE.DIRECTION);
+        leftEncoder.setDirection(OdometrySettingsDashboardConfiguration.ENCODER_LEFT.DIRECTION);
+        rightEncoder.setDirection(OdometrySettingsDashboardConfiguration.ENCODER_RIGHT.DIRECTION);
+        frontEncoder.setDirection(OdometrySettingsDashboardConfiguration.ENCODER_MIDDLE.DIRECTION);
     }
 
     public static double encoderTicksToInches(double ticks) {
