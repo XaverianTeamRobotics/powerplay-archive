@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.image;
 
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 import org.opencv.core.KeyPoint;
 
 public class ConeStackDetectorTest extends OperationMode implements AutonomousOperation {
@@ -18,8 +18,8 @@ public class ConeStackDetectorTest extends OperationMode implements AutonomousOp
     public void run() {
         // Print every detected cone
         for (KeyPoint keypoint : detector.getDetectedCones()) {
-            Logging.logText(keypoint.pt.toString());
-            Logging.logText(String.valueOf(detector.getAngleToTarget(keypoint)));
+            AdvancedLogging.logText(keypoint.pt.toString());
+            AdvancedLogging.logText(String.valueOf(detector.getAngleToTarget(keypoint)));
         }
     }
 

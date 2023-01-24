@@ -1,3 +1,5 @@
 package org.firstinspires.ftc.teamcode.internals.hardware.data
 
-data class BlinkinInput(val id: Double, val type: BlinkinOptions)
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern
+
+data class BlinkinInput(val id: BlinkinPattern, val type: BlinkinOptions)

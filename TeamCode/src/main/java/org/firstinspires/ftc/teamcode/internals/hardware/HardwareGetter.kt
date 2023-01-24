@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.hardware
 import com.michaell.looping.ScriptParameters
 import com.michaell.looping.ScriptRunner
 import com.michaell.looping.ScriptTemplate
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.*
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -276,7 +277,7 @@ class HardwareGetter {
          * Get Blinkin from a previously initialized request
          */
         @JvmStatic
-        fun getBlinkinFromRequest(name: String): Servo {
+        fun getBlinkinFromRequest(name: String): RevBlinkinLedDriver {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     throw NullPointerException("This is running in the emulator!")
@@ -290,8 +291,8 @@ class HardwareGetter {
         }
 
         @JvmStatic
-        fun issueBlinkinRequest(name: String, input: BlinkinInput): Double {
-            return jloopingRunner!!.scriptParametersGlobal.issueRequest(input, jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as Double
+        fun issueBlinkinRequest(name: String, input: BlinkinInput): RevBlinkinLedDriver.BlinkinPattern {
+            return jloopingRunner!!.scriptParametersGlobal.issueRequest(input, jloopingRunner!!.scriptParametersGlobal.getRequest(name)) as RevBlinkinLedDriver.BlinkinPattern
         }
 
         /**
@@ -769,7 +770,7 @@ class Devices {
 
         ADDING HARDWARE DEVICES:
         1. Create a lateinit variable here with the name of the hardware device and annotate it with @JvmStatic
-        2. Set the type to either a type of DeviceAccessor or HardwareDevice
+        2. Set the type to either a subtype of DeviceAccessor or a subtype of HardwareDevice
         3. Go to /src/main/res/xml/main_config.xml and follow the steps there
 
          */
@@ -784,8 +785,7 @@ class Devices {
         @JvmStatic lateinit var motor7: Motor
         @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
         @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
-        @JvmStatic lateinit var camera0: WebcamName
-        @JvmStatic lateinit var camera1: WebcamName
+        @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
     }

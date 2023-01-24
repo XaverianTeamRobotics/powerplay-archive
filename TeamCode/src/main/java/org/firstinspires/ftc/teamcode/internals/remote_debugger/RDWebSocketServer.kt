@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotserver.internal.webserver.websockets.FtcWebSoc
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.WebSocketManagerImpl
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.WebSocketNamespaceHandlerRegistry
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.tootallnate.TooTallWebSocket
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
@@ -76,8 +76,8 @@ class RDWebSocketServer(address: InetSocketAddress?) :
 
     override fun onStart() {
         logger.log(LogRecord(FINE, "Remote debugger started on port $port"))
-        Logging.logText("Started Web Server")
-        Logging.updateLog()
+        AdvancedLogging.logText("Started Web Server")
+        AdvancedLogging.updateLog()
     }
 
     override fun getWebSocketManager(): WebSocketManager {

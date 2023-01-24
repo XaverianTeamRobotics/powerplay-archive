@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.internals.registration.xml.XMLCodeLine
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlActionMap
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlEvironment
 import org.firstinspires.ftc.teamcode.internals.registration.xml.XmlVariable
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.telemetry
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging.Companion.telemetry
 import org.w3c.dom.Element
 
 class VariableDeclarationRunner : BaseRunner {
@@ -36,9 +36,9 @@ class TelemetryLogLineRunner : BaseRunner {
         val computedValue = env.cacheValue1 ?: env.cacheValue2 ?: env.cacheValue3 ?: env.cacheValue4 ?: value
         env.resetCachedValues()
 
-        Logging.logText(computedValue.toString())
+        AdvancedLogging.logText(computedValue.toString())
         println(computedValue)
-        Logging.updateLog()
+        AdvancedLogging.updateLog()
     }
 }
 

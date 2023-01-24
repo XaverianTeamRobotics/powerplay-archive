@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.image;
 
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -89,7 +89,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
                     Logging.logData("Detected Color", "None");
                     break;
             }
-            Logging.updateLog();
+            Logging.update();
         }
     }
 
@@ -113,7 +113,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
         // Log all values used in calculation for verification purposes
         if (debugEnabled) {
             Logging.logData(name + " - Average", averageValue * 100 + "%");
-            Logging.updateLog();
+            Logging.update();
         }
 
         mat.release();

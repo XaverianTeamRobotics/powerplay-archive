@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
 import org.firstinspires.ftc.teamcode.internals.telemetry.UserConfiguredConstants;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 
 import static org.firstinspires.ftc.teamcode.internals.telemetry.AutonomousConfigMenuKt.autoConfigMenu;
 
@@ -15,9 +15,9 @@ public class AutonomousConfigMenuTest extends OperationMode implements Autonomou
 
     @Override
     public void run() {
-        Logging.logData("Starting Code", UserConfiguredConstants.getStartingCode());
-        Logging.logData("Show TeleOp Objective Reminder", UserConfiguredConstants.getShowTeleOpObjectiveReminder());
-        Logging.updateLog();
+        AdvancedLogging.logData("Starting Code", UserConfiguredConstants.getStartingCode());
+        AdvancedLogging.logData("Show TeleOp Objective Reminder", UserConfiguredConstants.getShowTeleOpObjectiveReminder());
+        AdvancedLogging.updateLog();
     }
 
     @Override

@@ -1,32 +1,32 @@
 package org.firstinspires.ftc.teamcode.internals.hardware.requests
 
 import com.michaell.looping.ScriptParameters
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.Servo
-import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.internals.hardware.data.BlinkinInput
 import org.firstinspires.ftc.teamcode.internals.hardware.data.BlinkinOptions
 
 class BlinkinRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
-    val blinkin: Servo
+    val blinkin: RevBlinkinLedDriver
+    private var position: Int = 0
 
     init {
-        blinkin = hardwareMap.get(Servo::class.java, name)
+        blinkin = hardwareMap.get(RevBlinkinLedDriver::class.java, name)
         blinkin.resetDeviceConfigurationForOpMode()
     }
 
     override fun issueRequest(o: Any): Any {
         val (id, type) = o as BlinkinInput
         return if (type === BlinkinOptions.GET) {
-            blinkin.position
+            RevBlinkinLedDriver.BlinkinPattern.fromNumber(position)
         } else {
-            blinkin.position = Range.clip(id, 0.2525, 0.7475)
-            0.0
+            blinkin.setPattern(id)
+            RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE // rgb go zoom zoom!! gaming pc vibes. super fast. 37 ghz
         }
     }
 
     override fun getOutputType(): Class<*>? {
-        return Double::class.javaPrimitiveType
+        return RevBlinkinLedDriver.BlinkinPattern::class.javaPrimitiveType
     }
 
     override fun getInputType(): Class<*> {

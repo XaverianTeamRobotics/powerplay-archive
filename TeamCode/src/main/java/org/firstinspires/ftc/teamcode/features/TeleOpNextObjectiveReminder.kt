@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.features
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.telemetry
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
 
 /*
  * This allows for the driver station to remind the driver of the next best objective.
@@ -68,15 +67,15 @@ class TeleOpNextObjectiveReminder: Feature(){
             }
         }
         // Display the current objective on the driver station. We should always do this for code cleanliness
-        Logging.logData(
+        AdvancedLogging.logData(
             "Next Objective",
             if (currentObjective != null) currentObjective else "No more tasks"
         )
         // Say how much of that objective is remaining
         if (currentObjective != null) {
-            Logging.logData("Remaining times for this objective", objectiveCounts[currentObjective!!]!!)
+            AdvancedLogging.logData("Remaining times for this objective", objectiveCounts[currentObjective!!]!!)
         }
-        Logging.logText("Press OPTIONS to mark the current objective as complete")
-        Logging.updateLog()
+        AdvancedLogging.logText("Press OPTIONS to mark the current objective as complete")
+        AdvancedLogging.updateLog()
     }
 }

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -22,7 +22,7 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
     @Override
     public void build() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId);
 
         detector = new SleeveColorDetection();
 
@@ -42,8 +42,8 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
                  * This will be called if the camera could not be opened
                  */
 
-                Logging.logData("Camera error", errorCode);
-                Logging.updateLog();
+                AdvancedLogging.logData("Camera error", errorCode);
+                AdvancedLogging.update();
             }
         });
     }

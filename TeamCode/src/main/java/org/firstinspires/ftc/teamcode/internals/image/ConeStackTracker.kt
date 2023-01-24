@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.internals.image
 import com.acmerobotics.dashboard.FtcDashboard
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.logData
-import org.firstinspires.ftc.teamcode.internals.telemetry.Logging.Companion.updateLog
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging.Companion.logData
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging.Companion.updateLog
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvCamera
@@ -20,8 +20,8 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
     var detectedCones: MutableList<KeyPoint> = mutableListOf()
     override fun processFrame(input: Mat): Mat {
 
-        //Logging.logData("Input Height", input.height());
-        //Logging.logData("Input Width", input.width());
+        //AdvancedLogging.logData("Input Height", input.height());
+        //AdvancedLogging.logData("Input Width", input.width());
 
         // Blur the image to reduce noise
         val blurSize = Size(55.0,55.0)
@@ -103,7 +103,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
             "id",
             hardwareMap!!.appContext.packageName
         )
-        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0,
+        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera,
             cameraMonitorViewId!!
         )
 
