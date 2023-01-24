@@ -63,7 +63,7 @@ public class AutoProduction extends OperationMode implements AutonomousOperation
 
     @Override
     public Class<? extends OperationMode> getNext() {
-        return KidsDriveThisOneExclamationPointEmoji.class;
+        return BigbotFullOpMode.class;
     }
 
 }
