@@ -5,13 +5,15 @@ import com.michaell.looping.ScriptRunner
 import com.michaell.looping.ScriptTemplate
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.*
+import com.qualcomm.robotcore.hardware.LightSensor
+import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.TouchSensor
+import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.DeviceAccessor
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.*
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.LaserDistanceSensor
-import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Motor
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
@@ -787,6 +789,8 @@ class Devices {
         @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
+        @JvmStatic lateinit var encoder1: Encoder
+        @JvmStatic lateinit var encoder2: Encoder
     }
 }
 
