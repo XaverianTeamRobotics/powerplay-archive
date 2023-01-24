@@ -29,8 +29,6 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <goBILDA5202SeriesMotor name="motor3" port="3" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
-    </LynxUsbDevice>
-    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ4XDCN9" parentModuleAddress="2">
         <LynxModule name="Expansion Hub 2" port="2">
             <goBILDA5202SeriesMotor name="motor4" port="0" />
             <goBILDA5202SeriesMotor name="motor5" port="1" />
