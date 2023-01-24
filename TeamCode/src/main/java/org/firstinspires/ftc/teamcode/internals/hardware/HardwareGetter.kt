@@ -822,4 +822,17 @@ fun initConfigDevices() {
             }
         }
     }
+    // temporary workaround to init encoders, just inits them if they have the same number as a motor that exists (i.e. encoder0 is instantiated with the dcmotor name motor0, encoder1 with motor1, etc...)
+    for(device in devices) {
+        try {
+            if(device.name.startsWith("encoder") && device.name.get(device.name.length - 1).toString().toInt() < 8 && device.name.get(device.name.length - 1).toString().toInt() > -1) {
+                val motor: String? = map.first {
+                    try {
+                        it.last().toString().toInt() == device.name.last().toString().toInt()
+                    } catch(_: NumberFormatException) {false}
+                }
+                device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(motor))
+            }
+        } catch(_: NumberFormatException) {}
+    }
 }
