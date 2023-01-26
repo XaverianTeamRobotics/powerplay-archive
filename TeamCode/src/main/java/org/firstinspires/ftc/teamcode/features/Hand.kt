@@ -6,11 +6,9 @@ import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 
 class Hand : Feature(), Buildable {
-    private var open = true
-    private var second = 0.0
     override fun build() {
-        Devices.servo0.position = 100.0
-        Devices.servo1.position = 0.0
+        Devices.servo0.position = homePosLeft
+        Devices.servo1.position = homePosRight
     }
 
     override fun loop() {
@@ -27,17 +25,19 @@ class Hand : Feature(), Buildable {
     companion object {
         private var open = true
         private var second = 0.0
+        private val homePosLeft = 65.0
+        private val homePosRight = 42.5
         @JvmStatic
         fun manualOpen() {
-            Devices.servo0.position = 100.0
-            Devices.servo1.position = 0.0
+            Devices.servo0.position = homePosLeft
+            Devices.servo1.position = homePosRight
             open = true
             second = NanoClock.system().seconds() + 2
         }
         @JvmStatic
         fun manualClose() {
-            Devices.servo0.position = 0.0
-            Devices.servo1.position = 100.0
+            Devices.servo0.position = homePosLeft + 20
+            Devices.servo1.position = homePosRight - 20
             open = false
         }
     }
