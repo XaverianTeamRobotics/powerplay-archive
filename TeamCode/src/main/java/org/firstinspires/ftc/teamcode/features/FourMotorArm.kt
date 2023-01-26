@@ -12,10 +12,9 @@ class FourMotorArm: Feature(), Buildable {
 
     override fun loop() {
         // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
-        val powerL = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
-        val powerR = if (controller2.rightTrigger > 25 || controller2.leftTrigger > 25) {
-            controller2.rightTrigger - (controller2.leftTrigger * 0.5)
-        } else powerL
+        val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
+        val powerL = if (controller1.dpadLeft) 25.0 else power
+        val powerR = if (controller1.dpadRight) 25.0 else power
 
         Devices.motor4.speed = powerL
         Devices.motor5.speed = -powerL
