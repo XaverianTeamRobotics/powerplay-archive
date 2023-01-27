@@ -12,11 +12,13 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging
 
 class FourMotorArm: Feature(), Buildable {
     lateinit var encoderR: Encoder
+    lateinit var encoderL: Encoder
 
     override fun build() {
         // The encoder for the right side is on motor6
-        // There is currently no left side encoder
+        // The encoder for the left side is on motor7
         encoderR = Encoder("motor6")
+        encoderL = Encoder("motor7")
     }
 
     override fun loop() {
@@ -32,6 +34,7 @@ class FourMotorArm: Feature(), Buildable {
 
         // Log the encoder values
         DSLogging.log("EncoderR", -encoderR.position)
+        DSLogging.log("EncoderL", encoderL.position)
         DSLogging.update()
     }
 }
