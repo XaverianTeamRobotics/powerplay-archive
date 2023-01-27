@@ -32,12 +32,6 @@ class MecanumDriver(val drivetrainMapMode: DrivetrainMapMode, val useExpansionHu
                 // Read inverse IMU heading, as the IMU heading is CW positive
                 val botHeading: Double = -Devices.imu.orientation.x
 
-                DSLogging.log("Bot Heading", botHeading)
-                DSLogging.log("   X", Devices.imu.orientation.x)
-                DSLogging.log("   Y", Devices.imu.orientation.y)
-                DSLogging.log("   Z", Devices.imu.orientation.z)
-                DSLogging.update()
-
                 val rotX = x * cos(botHeading) - y * sin(botHeading)
                 val rotY = x * sin(botHeading) + y * cos(botHeading)
 
