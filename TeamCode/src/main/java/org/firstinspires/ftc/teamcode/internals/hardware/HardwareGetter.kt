@@ -6,18 +6,20 @@ import com.michaell.looping.ScriptTemplate
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.hardware.LightSensor
-import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter.Companion.hardwareMap
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.*
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
 import org.firstinspires.ftc.teamcode.internals.hardware.accessors.IMU
+import org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
 import org.firstinspires.ftc.teamcode.internals.hardware.data.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.*
 import org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated.*
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
+import com.qualcomm.robotcore.hardware.Servo as QualcommServo
 
 class HardwareGetter {
     companion object {
@@ -593,7 +595,7 @@ class HardwareGetter {
          * Get Servo from a previously initialized request
          */
         @JvmStatic
-        fun getServoFromRequest(name: String): Servo {
+        fun getServoFromRequest(name: String): QualcommServo {
             if (hardwareMap == null || jloopingRunner == null) {
                 if (isEmulated && jloopingRunner != null) {
                     throw NullPointerException("This is running in the emulator!")
@@ -733,8 +735,8 @@ class HardwareGetter {
          */
         @JvmStatic
         fun initStdDevices() {
-            Devices.controller1 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad1")
-            Devices.controller2 = org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad("gamepad2")
+            Devices.controller1 = Gamepad("gamepad1")
+            Devices.controller2 = Gamepad("gamepad2")
         }
 
     }
@@ -762,11 +764,6 @@ object InitializedDCDevices {
 class Devices {
     companion object {
 
-        @JvmStatic
-        lateinit var controller1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
-        @JvmStatic
-        lateinit var controller2: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad
-
         /*
 
         ADDING HARDWARE DEVICES:
@@ -776,6 +773,8 @@ class Devices {
 
          */
 
+        @JvmStatic lateinit var controller1: Gamepad
+        @JvmStatic lateinit var controller2: Gamepad
         @JvmStatic lateinit var motor0: Motor
         @JvmStatic lateinit var motor1: Motor
         @JvmStatic lateinit var motor2: Motor
@@ -784,17 +783,17 @@ class Devices {
         @JvmStatic lateinit var motor5: Motor
         @JvmStatic lateinit var motor6: Motor
         @JvmStatic lateinit var motor7: Motor
-        @JvmStatic lateinit var servo0: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
-        @JvmStatic lateinit var servo1: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Servo
+        @JvmStatic lateinit var servo0: Servo
+        @JvmStatic lateinit var servo1: Servo
         @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
-        @JvmStatic lateinit var encoder1: Encoder
-        @JvmStatic lateinit var encoder2: Encoder
+        @JvmStatic lateinit var encoder5: Encoder
+        @JvmStatic lateinit var encoder6: Encoder
     }
 }
 
-class GamepadBinding(val button: GamepadRequestInput, val gamepad: org.firstinspires.ftc.teamcode.internals.hardware.accessors.Gamepad, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
+class GamepadBinding(val button: GamepadRequestInput, val gamepad: Gamepad, val action: (Double) -> Unit) : ScriptTemplate("GamepadBinding${gamepad.name}$button", false) {
     override fun run(p0: ScriptParameters?) {
         action(gamepad.request.issueRequest(button) as Double)
     }
@@ -841,7 +840,7 @@ fun initConfigDevices() {
         for(cdevice in deviceArr) {
             if(cdevice.device != null && cdevice.name != null) {
                 val device = cdevice.device!!
-                val name = device.name
+                val name = cdevice.name
                 if(DeviceAccessor::class.java.isAssignableFrom(device.type)) {
                     device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(name))
                     println("$device from $Devices initialized by $name from ${HardwareGetter.hardwareMap}")
