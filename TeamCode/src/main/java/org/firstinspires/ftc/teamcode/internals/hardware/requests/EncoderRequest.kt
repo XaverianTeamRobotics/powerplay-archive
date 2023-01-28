@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.internals.hardware.InitializedDCDevices
 import org.firstinspires.ftc.teamcode.internals.hardware.data.EncoderInput
 
-class EncoderRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request(name) {
+class EncoderRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.Request("encoder$name") {
     val encoder: DcMotor
     private var offset: Int
 

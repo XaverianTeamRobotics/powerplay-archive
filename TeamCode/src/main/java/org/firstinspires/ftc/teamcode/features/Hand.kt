@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 
 class Hand : Feature(), Buildable {
     override fun build() {
-        Devices.servo0.position = homePosLeft
-        Devices.servo1.position = homePosRight
+        Devices.servo1.position = homePosLeft
+        Devices.servo0.position = homePosRight
     }
 
     override fun loop() {
@@ -29,15 +29,15 @@ class Hand : Feature(), Buildable {
         private val homePosRight = 42.5
         @JvmStatic
         fun manualOpen() {
-            Devices.servo0.position = homePosLeft
-            Devices.servo1.position = homePosRight
+            Devices.servo1.position = homePosLeft
+            Devices.servo0.position = homePosRight
             open = true
             second = NanoClock.system().seconds() + 2
         }
         @JvmStatic
         fun manualClose() {
-            Devices.servo0.position = homePosLeft + 20
-            Devices.servo1.position = homePosRight - 20
+            Devices.servo1.position = homePosLeft + 20
+            Devices.servo0.position = homePosRight - 20
             open = false
         }
     }

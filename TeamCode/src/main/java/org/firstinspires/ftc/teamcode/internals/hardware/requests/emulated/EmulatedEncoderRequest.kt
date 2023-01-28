@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.hardware.requests.emulated
 import com.michaell.looping.ScriptParameters
 import org.firstinspires.ftc.teamcode.internals.hardware.data.EncoderInput
 
-class EmulatedEncoderRequest(name: String) : ScriptParameters.Request(name) {
+class EmulatedEncoderRequest(name: String) : ScriptParameters.Request("encoder$name") {
 
     override fun issueRequest(p0: Any?): Any {
         val input = p0 as EncoderInput
