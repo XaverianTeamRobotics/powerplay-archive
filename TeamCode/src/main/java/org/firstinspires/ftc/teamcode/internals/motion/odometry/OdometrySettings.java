@@ -53,7 +53,7 @@ public class OdometrySettings {
     /**
      * The name and direction of the middle encoder.
      */
-    public static EncoderConfig ENCODER_MIDDLE = new EncoderConfig("motor7", Encoder.Direction.REVERSE);
+    public static EncoderConfig ENCODER_MIDDLE = new EncoderConfig("motor7", Encoder.Direction.FORWARD);
 
     /**
      * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run count 537.7 ticks per revolution.
@@ -78,7 +78,7 @@ public class OdometrySettings {
     /**
      * The track width of the driving wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, the Strafer v5's track width is ≈16 inches.
      */
-    public static double TRACK_WIDTH = 13;
+    public static double TRACK_WIDTH = 13.7795;
 
     /**
      * Maximum experimental velocity of your bot. Calculate it using the equation:
@@ -142,32 +142,32 @@ public class OdometrySettings {
     /**
      * The track width of the encoder wheels in inches. Track width is the lateral distance from the center of one wheel to the center of another wheel. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a track width of ≈16 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_TRACK_WIDTH = 10;
+    public static double ENCODER_TRACK_WIDTH = 9.40945;
 
     /**
      * The offset of the middle (strafing) encoder from the center of the robot's rotation in the Z axis (where the X axis is the track width's axis and the Y axis is vertical). The X axis offset of the middle encoder isn't important; the kinematics work the same regardless of where the middle encoder lies on the X axis. Only a rough estimate is needed originally as it will be tuned later. For example, <a href="https://openodometry.weebly.com/">OpenOdometry v3</a> has a forward offset of ≈4 inches when using the default assembly compatible with the Strafer v5.
      */
-    public static double ENCODER_FORWARD_OFFSET = 0.10;
+    public static double ENCODER_FORWARD_OFFSET = 0.08;
 
     /**
      * The PID acceleration variable. This is to be tuned by the manual feedforward tuner.
      */
-    public static double kA = 0.00257;
+    public static double kA = 0.0033;
 
     /**
      * The PID velocity variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kV = 0.01469;
+    public static double kV = 0.01578;
 
     /**
      * The PID static variable. This is to be tuned by the automatic feedforward tuner.
      */
-    public static double kStatic = 0.07398;
+    public static double kStatic = 0.06238;
 
     /**
      * Mecanum wheels often exhibit less torque strafing than they do going straigt. This is to be tuned by the strafe tuner.
      */
-    public static double LATERAL_MULTIPLIER = 3;
+    public static double LATERAL_MULTIPLIER = 1;
 
 
     /**

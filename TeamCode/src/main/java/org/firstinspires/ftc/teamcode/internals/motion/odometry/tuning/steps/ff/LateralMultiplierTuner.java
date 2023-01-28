@@ -55,7 +55,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
             case ALIGN:
                 // first, the user needs to position the robot -- so lets tell them to do that
                 if(menuManager == null) {
-                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok.", "Ok");
+                    menuManager = Questions.askAsync(Devices.controller1, firstMsg + " your bot to the start of a " + ((int) Math.ceil(DISTANCE / 24.0) + 2) + " (over " + DISTANCE + " inch) tile long stretch of field tiles facing to the right relative to the stretch (270 degrees), then select Ok. (Note: this step of the tuning process is a bit buggy. If it doesn't seem to be working, just say it's good and move on. When you complete tuning, enable the RRQS StrafeTest OpMode and manually tune the multiplier. You'll need to run the ManuallySaveOdo OpMode and reboot the robot every time you edit the multiplier.)", "Ok");
                 }
                 menuManager.runOnce();
                 // we let them drive to the right spot
@@ -136,6 +136,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
             case MANUALTEST:
                 // strafe
                 driver = new AutonomousDrivetrain(HardwareGetter.getHardwareMap());
+                driver.setPoseEstimate(new Pose2d(0, 0, 0));
                 Trajectory traj2 = driver.trajectoryBuilder(new Pose2d())
                     .strafeRight(DISTANCE)
                     .build();
@@ -159,6 +160,7 @@ public class LateralMultiplierTuner extends Feature implements Conditional {
                 }else{
                     AsyncQuestionExecutor.askC1("Manually bump your multiplier now, then select Ok.", new String[] {"Ok"}, b -> {
                         manMult = "updated multiplier";
+                        redo = false;
                         step = Step.MANUALALIGN;
                     });
                 }
