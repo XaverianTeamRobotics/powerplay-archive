@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 
 import java.util.Objects;
 
@@ -79,6 +79,6 @@ public class MaxVelocityTuner extends LinearOpMode {
     }
 
     private double veloInchesToTicks(double inchesPerSec) {
-        return inchesPerSec / (2 * Math.PI * OdometrySettings.WHEEL_RADIUS) / OdometrySettings.GEAR_RATIO * OdometrySettings.TICKS_PER_REV;
+        return inchesPerSec / (2 * Math.PI * OdometrySettingsDashboardConfiguration.WHEEL_RADIUS) / OdometrySettingsDashboardConfiguration.GEAR_RATIO * OdometrySettingsDashboardConfiguration.TICKS_PER_REV;
     }
 }

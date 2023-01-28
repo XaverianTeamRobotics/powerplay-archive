@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.OdometrySettings;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.ConstantUtils;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LoggingUtil;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.RegressionUtil;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
         telemetry.addLine("Running...");
         telemetry.update();
 
-        double maxVel = ConstantUtils.rpmToVelocity(OdometrySettings.MAX_RPM);
+        double maxVel = ConstantUtils.rpmToVelocity(OdometrySettingsDashboardConfiguration.MAX_RPM);
         double finalVel = MAX_POWER * maxVel;
         double accel = (finalVel * finalVel) / (2.0 * DISTANCE);
         double rampTime = Math.sqrt(2.0 * DISTANCE / accel);
