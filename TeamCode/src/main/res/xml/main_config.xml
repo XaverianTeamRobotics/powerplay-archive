@@ -27,7 +27,7 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <goBILDA5202SeriesMotor name="motor1" port="1" />
             <goBILDA5202SeriesMotor name="motor2" port="2" />
             <goBILDA5202SeriesMotor name="motor3" port="3" />
-            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <LynxEmbeddedIMU name="imu1" port="0" bus="0" />
             <Servo name="servo0" port="0" />
             <Servo name="servo1" port="1" />
         </LynxModule>
