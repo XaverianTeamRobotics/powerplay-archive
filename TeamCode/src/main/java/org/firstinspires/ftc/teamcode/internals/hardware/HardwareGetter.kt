@@ -807,36 +807,49 @@ fun initConfigDevices() {
     // find our devices
     val devices = Devices::class.java.declaredFields
     val map = hardwareMap?.getAllNames(HardwareDevice::class.java)
+    val deviceArr = arrayOf(DeviceToMake(null, null), DeviceToMake(null, null))
     for(mappedDevice in map!!) {
-        // for each device in the config, find its corresponding device in Devices.Companion
-        val device = devices.find { device ->
-            val nameBeginning = device.name.lastIndexOf(".") + 1
-            val name = device.name.substring(nameBeginning)
-            return@find name == mappedDevice
+        // handle dual encoder/motor instances--we delimit the names with "-" because we can't use that in fields
+        if(mappedDevice.contains("-")) {
+            val deviceM = devices.find { device ->
+                val nameBeginning = device.name.lastIndexOf(".") + 1
+                val name = device.name.substring(nameBeginning)
+                return@find name == mappedDevice.split("-")[0]
+            }
+            val deviceE = devices.find { device ->
+                val nameBeginning = device.name.lastIndexOf(".") + 1
+                val name = device.name.substring(nameBeginning)
+                return@find name == mappedDevice.split("-")[1]
+            }
+            deviceArr[0].device = deviceM
+            deviceArr[0].name = mappedDevice.split("-")[0]
+            deviceArr[1].device = deviceE
+            deviceArr[1].name = mappedDevice.split("-")[1]
+        }else{
+            // for each device in the config, find its corresponding device in Devices.Companion
+            val deviceN = devices.find { device ->
+                val nameBeginning = device.name.lastIndexOf(".") + 1
+                val name = device.name.substring(nameBeginning)
+                return@find name == mappedDevice
+            }
+            deviceArr[0].device = deviceN
+            deviceArr[0].name = mappedDevice
         }
+        // for each device:
         // if the device is a DeviceAccessor, lets instantiate it as such, otherwise we fallback to using hardwareMap.get()
         // if the device isn't a valid device at all (not a DeviceAccessor nor HardwareDevice) we just ignore it. this may actually happen pretty often depending on how the config is written
-        if(device != null) {
-            if(DeviceAccessor::class.java.isAssignableFrom(device.type)) {
-                device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(mappedDevice))
-                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
-            }else if(HardwareDevice::class.java.isAssignableFrom(device.type)) {
-                device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type, mappedDevice))
-                println("$device from $Devices initialized by $mappedDevice from ${HardwareGetter.hardwareMap}")
+        for(cdevice in deviceArr) {
+            if(cdevice.device != null && cdevice.name != null) {
+                val device = cdevice.device!!
+                val name = device.name
+                if(DeviceAccessor::class.java.isAssignableFrom(device.type)) {
+                    device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(name))
+                    println("$device from $Devices initialized by $name from ${HardwareGetter.hardwareMap}")
+                }else if(HardwareDevice::class.java.isAssignableFrom(device.type)) {
+                    device.set(Devices.Companion, HardwareGetter.hardwareMap!!.get(device.type, name))
+                    println("$device from $Devices initialized by $name from ${HardwareGetter.hardwareMap}")
+                }
             }
         }
-    }
-    // temporary workaround to init encoders, just inits them if they have the same number as a motor that exists (i.e. encoder0 is instantiated with the dcmotor name motor0, encoder1 with motor1, etc...)
-    for(device in devices) {
-        try {
-            if(device.name.startsWith("encoder") && device.name.get(device.name.length - 1).toString().toInt() < 8 && device.name.get(device.name.length - 1).toString().toInt() > -1) {
-                val motor: String? = map.first {
-                    try {
-                        it.last().toString().toInt() == device.name.last().toString().toInt()
-                    } catch(_: NumberFormatException) {false}
-                }
-                device.set(Devices.Companion, device.type.getConstructor(String::class.java).newInstance(motor))
-            }
-        } catch(_: NumberFormatException) {}
     }
 }
