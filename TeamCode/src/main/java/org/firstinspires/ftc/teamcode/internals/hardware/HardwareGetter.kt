@@ -806,8 +806,8 @@ fun initConfigDevices() {
     // find our devices
     val devices = Devices::class.java.declaredFields
     val map = hardwareMap?.getAllNames(HardwareDevice::class.java)
-    val deviceArr = arrayOf(DeviceToMake(null, null), DeviceToMake(null, null))
     for(mappedDevice in map!!) {
+        val deviceArr = arrayOf(DeviceToMake(null, null), DeviceToMake(null, null))
         // handle dual encoder/motor instances--we delimit the names with "-" because we can't use that in fields
         if(mappedDevice.contains("-")) {
             val deviceM = devices.find { device ->
