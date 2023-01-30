@@ -14,6 +14,10 @@ public class PoseBucket {
         }
     }
 
+    public static void forceSetPose(Pose2d pose) {
+        PoseBucket.pose = pose;
+    }
+
     public static Pose2d getPose() {
         return pose;
     }
