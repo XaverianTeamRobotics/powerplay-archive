@@ -11,7 +11,11 @@ class EncoderRequest(name: String, hardwareMap: HardwareMap) : ScriptParameters.
     private var offset: Int
 
     init {
-        encoder = hardwareMap.get(DcMotor::class.java, name)
+        var newName = name
+        if(name.startsWith("-")) {
+            newName = name.substring(1)
+        }
+        encoder = hardwareMap.get(DcMotor::class.java, newName)
         if(!InitializedDCDevices.has(name)) {
             encoder.resetDeviceConfigurationForOpMode()
             encoder.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER

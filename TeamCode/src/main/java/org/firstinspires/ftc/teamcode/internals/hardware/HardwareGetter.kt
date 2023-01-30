@@ -823,7 +823,7 @@ fun initConfigDevices() {
             deviceArr[0].device = deviceM
             deviceArr[0].name = mappedDevice
             deviceArr[1].device = deviceE
-            deviceArr[1].name = mappedDevice
+            deviceArr[1].name = "-$mappedDevice"
         }else{
             // for each device in the config, find its corresponding device in Devices.Companion
             val deviceN = devices.find { device ->
