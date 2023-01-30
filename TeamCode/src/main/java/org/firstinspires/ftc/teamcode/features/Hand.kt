@@ -36,8 +36,8 @@ class Hand : Feature(), Buildable {
         }
         @JvmStatic
         fun manualClose() {
-            Devices.servo1.position = homePosLeft + 2.5
-            Devices.servo0.position = homePosRight - 2.5
+            Devices.servo1.position = homePosLeft + 5
+            Devices.servo0.position = homePosRight - 5
             open = false
         }
     }
