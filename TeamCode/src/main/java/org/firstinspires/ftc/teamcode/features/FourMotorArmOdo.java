@@ -33,7 +33,7 @@ public class FourMotorArmOdo extends Feature implements Buildable {
         Devices.encoder6.reset();
         Devices.motor5.setPower(0);
         Devices.motor6.setPower(0);
-        pid.setTolerance(0, 0);
+        pid.setTolerance(0.2, 0);
         DashboardLogging.logData("sp", f____pos);
         DashboardLogging.logData("encoder2", -Devices.encoder5.getPosition());
         DashboardLogging.logData("encoder1", Devices.encoder6.getPosition());
@@ -54,12 +54,18 @@ public class FourMotorArmOdo extends Feature implements Buildable {
         if(Devices.controller1.getX() || Devices.controller2.getX()) {
             g____run = true;
         }
+        if(Devices.controller1.getTouchpad()) {
+            Devices.encoder5.reset();
+            Devices.encoder6.reset();
+            pid.reset();
+        }
         double output2 = 0.0;
         double output1 = 0.0;
         updatePID();
         if(g____run && !pid.atSetpoint()) {
-            output2 = pid.calculate(-Devices.encoder5.getPosition());
+//            output2 = pid.calculate(-Devices.encoder5.getPosition());
             output1 = pid.calculate(Devices.encoder6.getPosition());
+            output2 = output1;
         }else if(!g____run && pid.atSetpoint()) {
 //            pid.reset();
         }

@@ -40,6 +40,10 @@ public class MecanumDrivetrain extends Feature implements Buildable {
         double x = Devices.controller1.getLeftStickX();
         double y = Devices.controller1.getLeftStickY();
         double r = Devices.controller1.getRightStickX();
+        boolean reset = Devices.controller1.getTouchpad();
+        if(reset) {
+            drivetrain.setPoseEstimate(new Pose2d(0, 0, 0));
+        }
         // dampen if assist is enabled
         if(DRIVER_ASSIST) {
             double b = 0.3;
