@@ -1,42 +1,96 @@
 package org.firstinspires.ftc.teamcode.features
 
+import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller1
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices.Companion.controller2
+import org.firstinspires.ftc.teamcode.internals.motion.pid.basic.BasicPositionInputFilter
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging
 
-class FourMotorArm: Feature() {
+class FourMotorArm: Feature(), Buildable {
+
+    override fun build() {
+        Devices.encoder5.reset();
+        Devices.encoder6.reset(); // Right side
+        Devices.motor5.power = 0.0;
+        Devices.motor6.power = 0.0;
+    }
 
     companion object {
-        var run = false
+        // Used by the autonomous modes to prevent the driver from moving the arm
+        // When false, manual control can be used
+        @JvmStatic
+        var autonomousOverride: Boolean = false
+
+        // Used by the driver or internal logic to prevent the autonomous modes from moving the arm
+        // Whenever the button is pressed or this function is called, this is set to true
+        // But when the auto is inactave, this acts as a safety against bad code
+        @JvmStatic
+        var permitAutonomous: Boolean = false
+
+        val basicPositionInputFilter = BasicPositionInputFilter(0.1, 100.0)
+
+        @JvmStatic
+        fun autoRunArm(height: Double) {
+            basicPositionInputFilter.targetPosition = height
+            autonomousOverride = true
+            permitAutonomous = true
+        }
+
+        @JvmStatic
+        fun autoRunArm(position: ArmPosition) {
+            autoRunArm(position.height)
+        }
+
+        enum class ArmPosition(val height: Double) {
+            JNCT_GND    (50.0   ),
+            JNCT_LOW    (100.0  ),
+            JNCT_MED    (200.0  ),
+            JNCT_HIGH   (300.0  ),
+            CONE_LOW    (50.0   ),
+            CONE_MED    (75.0   ),
+            CONE_HIGH   (100.0  ),
+            RESET       (0.0    ),
+        }
     }
 
     override fun loop() {
+        var powerL = 0.0
+        var powerR = 0.0
+        if (!autonomousOverride) {
+            // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
+            val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
+            powerL = if (controller1.dpadLeft) -25.0 else power
+            powerR = if (controller1.dpadRight) -25.0 else power
 
-        // Toggle dc on and off with B, Y
-        if(controller1.b) {
-            run = true
+            // Log the encoder values
+            DSLogging.log("encoder2", Devices.encoder5.position)
+            DSLogging.log("encoder1", Devices.encoder6.position)
+            DSLogging.update()
         }
-        if(controller1.y) {
-            run = false
+        else if (permitAutonomous) {
+            powerL = basicPositionInputFilter.calculate(Devices.encoder6.position.toDouble())
+            powerR = basicPositionInputFilter.calculate(Devices.encoder5.position.toDouble())
+            if (powerL == 0.0 && powerR == 0.0) {
+                permitAutonomous = false
+                autonomousOverride = false
+            }
         }
-        if(!run) {
-            return
-        }
-
-        // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
-        val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
-        val powerL = if (controller1.dpadLeft) -25.0 else power
-        val powerR = if (controller1.dpadRight) -25.0 else power
 
         Devices.motor4.speed = -powerL
         Devices.motor5.speed = powerL
         Devices.motor6.speed = -powerR
         Devices.motor7.speed = powerR
 
-        // Log the encoder values
-        DSLogging.log("encoder2", Devices.encoder5.position)
-        DSLogging.log("encoder1", Devices.encoder6.position)
-        DSLogging.update()
+        // Some gamepad binds
+        if      (controller2.   a)         autoRunArm(ArmPosition.JNCT_HIGH)
+        else if (controller2.   b)         autoRunArm(ArmPosition.JNCT_GND)
+        else if (controller2.   x)         autoRunArm(ArmPosition.JNCT_MED)
+        else if (controller2.   y)         autoRunArm(ArmPosition.JNCT_LOW)
+        else if (controller2.   dpadLeft)  autoRunArm(ArmPosition.CONE_LOW)
+        else if (controller2.   dpadRight) autoRunArm(ArmPosition.CONE_MED)
+        else if (controller2.   dpadUp)    autoRunArm(ArmPosition.CONE_HIGH)
+        else if (controller2.   dpadDown)  autoRunArm(ArmPosition.RESET)
     }
 }

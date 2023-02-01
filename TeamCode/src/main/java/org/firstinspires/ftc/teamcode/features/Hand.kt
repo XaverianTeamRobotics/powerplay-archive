@@ -15,7 +15,7 @@ class Hand : Feature(), Buildable {
         /*
         Pressing x on either controller releases the hand
          */
-        if ((open && Devices.distanceSensor.distance < 33 && NanoClock.system().seconds() > second) || (open && Devices.controller1.x)) {
+        if ((open && Devices.distanceSensor.distance < 33 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
             manualClose()
         } else if (!open && Devices.controller1.a) {
             manualOpen()
