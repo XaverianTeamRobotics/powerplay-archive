@@ -25,8 +25,8 @@ class Hand : Feature(), Buildable {
     companion object {
         private var open = true
         private var second = 0.0
-        private val homePosLeft = 65.0
-        private val homePosRight = 42.5
+        private const val homePosLeft = 67.5
+        private const val homePosRight = 37.5
         @JvmStatic
         fun manualOpen() {
             Devices.servo1.position = homePosLeft
@@ -36,8 +36,8 @@ class Hand : Feature(), Buildable {
         }
         @JvmStatic
         fun manualClose() {
-            Devices.servo1.position = homePosLeft + 20
-            Devices.servo0.position = homePosRight - 20
+            Devices.servo1.position = homePosLeft + 5
+            Devices.servo0.position = homePosRight - 5
             open = false
         }
     }
