@@ -99,8 +99,8 @@ class FourMotorArm: Feature(), Buildable {
         }
 
         // Log the encoder values
-        DSLogging.log("encoder2", -Devices.encoder5.position)
-        DSLogging.log("encoder1", Devices.encoder6.position)
+        DSLogging.log("encoder2", Devices.encoder5.position)
+        DSLogging.log("encoder1", -Devices.encoder6.position)
         DSLogging.update()
     }
 }
