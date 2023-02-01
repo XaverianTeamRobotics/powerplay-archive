@@ -15,22 +15,25 @@ public class Prod3 extends Bot {
         return new DefaultBotBuilder(Environment.MEEP)
             .setColorScheme(new ColorSchemeBlueDark())
             .setConstraints(30, 30, 3, 3, 13.90)
-            .followTrajectorySequence(drive ->
-                drive.trajectorySequenceBuilder(new Pose2d(39.25, 61.50, Math.toRadians(-90.00)))
-                .lineTo(new Vector2d(36.00, 61.25))
-                .lineTo(new Vector2d(34.78, 47.28))
-                .lineTo(new Vector2d(37.49, 34.78))
-                .lineToLinearHeading(new Pose2d(33.96, 19.56, Math.toRadians(230.00)))
-                .lineTo(new Vector2d(32.00, 13.00))
-                .lineTo(new Vector2d(29.50, 10.00))
-                .lineTo(new Vector2d(34.23, 13.31))
-                .lineToLinearHeading(new Pose2d(42.66, 14.13, Math.toRadians(0.00)))
-                .lineToLinearHeading(new Pose2d(53.00, 10.00, Math.toRadians(354.00)))
-                .lineToSplineHeading(new Pose2d(38.31, 14.94, Math.toRadians(0.00)))
-                .splineToSplineHeading(new Pose2d(29.89, 10.32, Math.toRadians(226.00)), Math.toRadians(226.00))
-                .lineToSplineHeading(new Pose2d(35.59, 17.93, Math.toRadians(61.70)))
-                .splineTo(new Vector2d(35.00, 39.00), Math.toRadians(90.00))
-                .build());
+            .setDimensions(14, 14)
+            .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(39.25, 61.50, Math.toRadians(-90.00)))
+                    .splineTo(new Vector2d(36.96, 56.48), Math.toRadians(250.00))
+                    .splineTo(new Vector2d(35.62, 23.94), Math.toRadians(-88.75))
+                    .splineTo(new Vector2d(32.00, 13.00), Math.toRadians(230.00))
+                    .splineTo(new Vector2d(29.50, 10.00), Math.toRadians(230.00))
+                    .splineToLinearHeading(new Pose2d(32, 13.00, Math.toRadians(230)), Math.toRadians(230))
+                    .lineToLinearHeading(new Pose2d(59.00, 10.00, Math.toRadians(354)))
+                    .lineToSplineHeading(new Pose2d(32, 13.00, Math.toRadians(230)))
+                    .splineToConstantHeading(new Vector2d(29.50, 10.00), Math.toRadians(230.00))
+                    .splineToLinearHeading(new Pose2d(32, 13.00, Math.toRadians(230)), Math.toRadians(230))
+                    .lineToSplineHeading(new Pose2d(36, 25, Math.toRadians(-90)))
+                    // 2
+                    .splineToConstantHeading(new Vector2d(36, 35),  Math.toRadians(60))
+                    // 3
+                    .lineToLinearHeading(new Pose2d(12.04, 35, Math.toRadians(90)))
+                    // 1
+                    .lineToLinearHeading(new Pose2d(58.04, 35, Math.toRadians(180)))
+                    .build());
     }
 
 }
