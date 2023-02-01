@@ -63,25 +63,20 @@ class FourMotorArm: Feature(), Buildable {
             val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
             powerL = if (controller1.dpadLeft) -25.0 else power
             powerR = if (controller1.dpadRight) -25.0 else power
-
-            // Log the encoder values
-            DSLogging.log("encoder2", Devices.encoder5.position)
-            DSLogging.log("encoder1", Devices.encoder6.position)
-            DSLogging.update()
         }
         else if (permitAutonomous) {
             powerL = basicPositionInputFilter.calculate(Devices.encoder6.position.toDouble())
-            powerR = basicPositionInputFilter.calculate(Devices.encoder5.position.toDouble())
+            powerR = basicPositionInputFilter.calculate(-Devices.encoder5.position.toDouble())
             if (powerL == 0.0 && powerR == 0.0) {
                 permitAutonomous = false
                 autonomousOverride = false
             }
         }
 
-        Devices.motor4.speed = -powerL
-        Devices.motor5.speed = powerL
-        Devices.motor6.speed = -powerR
-        Devices.motor7.speed = powerR
+        Devices.motor4.speed = powerL
+        Devices.motor5.speed = -powerL
+        Devices.motor6.speed = powerR
+        Devices.motor7.speed = -powerR
 
         // Some gamepad binds
         if      (controller2.   a)         autoRunArm(ArmPosition.JNCT_HIGH)
@@ -92,5 +87,16 @@ class FourMotorArm: Feature(), Buildable {
         else if (controller2.   dpadRight) autoRunArm(ArmPosition.CONE_MED)
         else if (controller2.   dpadUp)    autoRunArm(ArmPosition.CONE_HIGH)
         else if (controller2.   dpadDown)  autoRunArm(ArmPosition.RESET)
+
+        // manual override: any bumper will stop auto mode
+        if (controller2.leftBumper || controller2.rightBumper || controller1.leftBumper || controller1.rightBumper) {
+            permitAutonomous = false
+            autonomousOverride = false
+        }
+
+        // Log the encoder values
+        DSLogging.log("encoder2", Devices.encoder5.position)
+        DSLogging.log("encoder1", -Devices.encoder6.position)
+        DSLogging.update()
     }
 }
