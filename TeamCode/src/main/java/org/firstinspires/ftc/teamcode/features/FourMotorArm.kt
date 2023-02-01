@@ -61,17 +61,21 @@ class FourMotorArm: Feature(), Buildable {
         if (!autonomousOverride) {
             // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
             val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
-            powerL = if (controller1.dpadLeft) -25.0 else power
-            powerR = if (controller1.dpadRight) -25.0 else power
+            powerL = if (controller1.dpadLeft) + 75.0 else power
+            powerR = if (controller1.dpadRight) + 75.0 else power
         }
         else if (permitAutonomous) {
-            powerL = basicPositionInputFilter.calculate(Devices.encoder6.position.toDouble())
-            powerR = basicPositionInputFilter.calculate(-Devices.encoder5.position.toDouble())
+            powerL = basicPositionInputFilter.calculate(-Devices.encoder6.position.toDouble())
+            powerR = basicPositionInputFilter.calculate(Devices.encoder5.position.toDouble())
             if (powerL == 0.0 && powerR == 0.0) {
                 permitAutonomous = false
                 autonomousOverride = false
             }
         }
+
+        // Cap powerL and powerR and 100 and -100
+        powerL = powerL.coerceIn(-100.0, 100.0)
+        powerR = powerR.coerceIn(-100.0, 100.0)
 
         Devices.motor4.speed = powerL
         Devices.motor5.speed = -powerL
@@ -95,8 +99,8 @@ class FourMotorArm: Feature(), Buildable {
         }
 
         // Log the encoder values
-        DSLogging.log("encoder2", Devices.encoder5.position)
-        DSLogging.log("encoder1", -Devices.encoder6.position)
+        DSLogging.log("encoder2", -Devices.encoder5.position)
+        DSLogging.log("encoder1", Devices.encoder6.position)
         DSLogging.update()
     }
 }

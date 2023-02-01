@@ -15,7 +15,7 @@ class Hand : Feature(), Buildable {
         /*
         Pressing x on either controller releases the hand
          */
-        if ((open && Devices.distanceSensor.distance < 33 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
+        if ((open && Devices.distanceSensor.distance < 40 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
             manualClose()
         } else if (!open && Devices.controller1.a) {
             manualOpen()
@@ -36,8 +36,8 @@ class Hand : Feature(), Buildable {
         }
         @JvmStatic
         fun manualClose() {
-            Devices.servo1.position = homePosLeft + 5
-            Devices.servo0.position = homePosRight - 5
+            Devices.servo1.position = homePosLeft + 7.5
+            Devices.servo0.position = homePosRight - 7.5
             open = false
         }
     }
