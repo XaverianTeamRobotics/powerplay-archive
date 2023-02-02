@@ -13,8 +13,7 @@ class FourMotorArm: Feature(), Buildable {
     override fun build() {
         Devices.encoder5.reset();
         Devices.encoder6.reset(); // Right side
-        Devices.motor5.power = 0.0;
-        Devices.motor6.power = 0.0;
+        resumeManualControlInstantly()
     }
 
     companion object {
@@ -43,6 +42,16 @@ class FourMotorArm: Feature(), Buildable {
             autoRunArm(position.height)
         }
 
+        @JvmStatic
+        fun resumeManualControlInstantly() {
+            permitAutonomous = false
+            autonomousOverride = false
+            Devices.motor4.power = 0.0
+            Devices.motor5.power = 0.0
+            Devices.motor6.power = 0.0
+            Devices.motor7.power = 0.0
+        }
+
         enum class ArmPosition(val height: Double) {
             JNCT_GND    (50.0   ),
             JNCT_LOW    (100.0  ),
@@ -68,8 +77,7 @@ class FourMotorArm: Feature(), Buildable {
             powerL = basicPositionInputFilter.calculate(-Devices.encoder6.position.toDouble())
             powerR = basicPositionInputFilter.calculate(Devices.encoder5.position.toDouble())
             if (powerL == 0.0 && powerR == 0.0) {
-                permitAutonomous = false
-                autonomousOverride = false
+                resumeManualControlInstantly()
             }
         }
 
@@ -94,8 +102,7 @@ class FourMotorArm: Feature(), Buildable {
 
         // manual override: any bumper will stop auto mode
         if (controller2.leftBumper || controller2.rightBumper || controller1.leftBumper || controller1.rightBumper) {
-            permitAutonomous = false
-            autonomousOverride = false
+            resumeManualControlInstantly()
         }
 
         // Log the encoder values
