@@ -5,12 +5,21 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable
 import org.firstinspires.ftc.teamcode.internals.features.Feature
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 
-class Hand : Feature(), Buildable {
+class Hand() : Feature(), Buildable {
 
-    private var toOpen = false
+    private var auto = false
 
-    fun open() {
-        toOpen = true
+    constructor(auto: Boolean) : this() {
+        this.auto = auto
+        manualClose()
+    }
+
+    fun requestOpen() {
+        manualOpen()
+    }
+
+    fun requestClose() {
+        manualClose()
     }
 
     override fun build() {
@@ -22,11 +31,12 @@ class Hand : Feature(), Buildable {
         /*
         Pressing x on either controller releases the hand
          */
-        if ((open && Devices.distanceSensor.distance < 40 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
-            manualClose()
-        } else if (!open && Devices.controller1.a || toOpen) {
-            manualOpen()
-            toOpen = false
+        if(!auto) {
+            if ((open && Devices.distanceSensor.distance < 40 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
+                manualClose()
+            } else if (!open && Devices.controller1.a) {
+                manualOpen()
+            }
         }
     }
 

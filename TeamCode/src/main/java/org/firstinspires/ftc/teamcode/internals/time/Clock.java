@@ -12,8 +12,10 @@ public class Clock {
     /**
      * Makes a new timer. If a timer with this name already exists, it will be overwritten.
      */
-    public static void make(String name) {
-        timers.put(name, new Timer(name));
+    public static Timer make(String name) {
+        Timer timer = new Timer(name);
+        timers.put(name, timer);
+        return timer;
     }
 
     /**
