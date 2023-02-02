@@ -11,15 +11,17 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class SleeveDetector extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
 
-    private boolean init = false;
-
     private int spot = 0;
+    private final ArrayList<Integer> previousSpots = new ArrayList<>();
+    private int averageSpot = 1;
+    private boolean init = false;
 
     public SleeveDetector() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
@@ -60,10 +62,17 @@ public class SleeveDetector extends Feature implements Buildable {
     @Override
     public void loop() {
         spot = detector.getDetection();
+        previousSpots.add(spot);
+        // Get the average spot out of all spots, then round it
+        averageSpot = (int) Math.round(previousSpots.stream().mapToInt(Integer::intValue).average().orElse(0));
     }
 
     public int getSpot() {
         return spot;
+    }
+
+    public int getAverageSpot() {
+        return averageSpot;
     }
 
     public boolean isReady() {
