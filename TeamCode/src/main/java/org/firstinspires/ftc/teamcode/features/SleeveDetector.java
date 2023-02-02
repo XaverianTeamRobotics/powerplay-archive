@@ -20,7 +20,7 @@ public class SleeveDetector extends Feature implements Buildable {
 
     private int spot = 0;
     private final ArrayList<Integer> previousSpots = new ArrayList<>();
-    private int averageSpot = 1;
+    private int averageSpot = 0;
     private boolean init = false;
 
     public SleeveDetector() {

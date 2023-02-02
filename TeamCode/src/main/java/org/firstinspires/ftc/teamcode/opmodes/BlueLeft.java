@@ -208,7 +208,7 @@ public class BlueLeft extends OperationMode implements AutonomousOperation {
 
     private void processSleeve(Pose2d pose) {
         Clock.block(sleeve::isReady);
-        int spot = sleeve.getSpot();
+        int spot = sleeve.getAverageSpot();
         TrajectorySequence one = drivetrain.trajectorySequenceBuilder(pose)
             .splineToConstantHeading(new Vector2d(36, 37),  Math.toRadians(60))
             .lineToLinearHeading(new Pose2d(58.04, 37, Math.toRadians(180)))
