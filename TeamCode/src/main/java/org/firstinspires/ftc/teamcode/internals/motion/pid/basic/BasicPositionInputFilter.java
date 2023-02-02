@@ -20,7 +20,7 @@ public class BasicPositionInputFilter {
     /**
      * Creates a new BasicPositionInputFilter with the specified parameters.
      *
-     * @param acceptableError The acceptable error for the motor/encoder. Expressed as a percentage between 0 and 1
+     * @param acceptableError The acceptable error for the motor/encoder.
      * @param power           The power to output to the motor. This value will be clamped between -100 and 100
      *                        It will also never change, as basic controllers simply output a constant power.
      *                        The side effect is for sensitive motors, a constant oscillation will occur
@@ -33,7 +33,7 @@ public class BasicPositionInputFilter {
      * Creates a new BasicPositionInputFilter with the specified parameters.
      * @param targetPosition The target position for the motor/encoder
      * @param currentPosition The current position of the motor/encoder
-     * @param acceptableError The acceptable error for the motor/encoder. Expressed as a percentage between 0 and 1
+     * @param acceptableError The acceptable error for the motor/encoder.
      * @param power The power to output to the motor. This value will be clamped between -100 and 100
      *              It will also never change, as basic controllers simply output a constant power.
      *              The side effect is for sensitive motors, a constant oscillation will occur
@@ -78,8 +78,8 @@ public class BasicPositionInputFilter {
     }
 
     public double calculate() {
-        // Calculate the percent error of the target and current positions and compare it to the acceptable error
-        if (Math.abs((targetPosition - currentPosition) / targetPosition) < acceptableError) {
+        // Calculate the error of the target and current positions and compare it to the acceptable error
+        if (Math.abs((targetPosition - currentPosition)) < acceptableError) {
             return 0;
         } else if (targetPosition > currentPosition) {
             return power;

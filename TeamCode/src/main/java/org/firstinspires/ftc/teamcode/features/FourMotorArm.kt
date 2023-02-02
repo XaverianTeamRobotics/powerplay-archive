@@ -28,7 +28,7 @@ class FourMotorArm: Feature(), Buildable {
         @JvmStatic
         var permitAutonomous: Boolean = false
 
-        val basicPositionInputFilter = BasicPositionInputFilter(0.1, 100.0)
+        val basicPositionInputFilter = BasicPositionInputFilter(25.0, 100.0)
 
         @JvmStatic
         fun autoRunArm(height: Double) {
@@ -57,17 +57,21 @@ class FourMotorArm: Feature(), Buildable {
             Devices.motor7.power = 0.0
         }
 
+        @JvmStatic
+        fun autoLevelArm() {
+            autoRunArm(Devices.encoder5.position.toDouble())
+        }
     }
 
     enum class ArmPosition(val height: Double) {
-        JNCT_GND    (50.0   ),
-        JNCT_LOW    (100.0  ),
-        JNCT_MED    (200.0  ),
-        JNCT_HIGH   (300.0  ),
-        CONE_LOW    (50.0   ),
-        CONE_MED    (75.0   ),
-        CONE_HIGH   (100.0  ),
-        RESET       (0.0    ),
+        JNCT_GND    (209.0   ),
+        JNCT_LOW    (840.0  ),
+        JNCT_MED    (1410.0  ),
+        JNCT_HIGH   (2000.0  ),
+        CONE_LOW    (90.0   ),
+        CONE_MED    (300.0   ),
+        CONE_HIGH   (425.0  ),
+        RESET       (20.0    ),
     }
 
     override fun loop() {
@@ -75,9 +79,9 @@ class FourMotorArm: Feature(), Buildable {
         var powerR = 0.0
         if (!autonomousOverride) {
             // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
-            val power = controller1.rightTrigger - (controller1.leftTrigger * 0.5)
-            powerL = if (controller1.dpadLeft) + 75.0 else power
-            powerR = if (controller1.dpadRight) + 75.0 else power
+            val power = controller2.rightTrigger - (controller2.leftTrigger * 0.5)
+            powerL = if (controller2.leftStickY > 25 || controller2.leftStickY < -25) + 75.0 else power
+            powerR = if (controller1.rightStickY > 25 || controller2.rightStickY < -25) + 75.0 else power
         }
         else if (permitAutonomous) {
             powerL = basicPositionInputFilter.calculate(-Devices.encoder6.position.toDouble())
@@ -97,14 +101,16 @@ class FourMotorArm: Feature(), Buildable {
         Devices.motor7.speed = -powerR
 
         // Some gamepad binds
-        if      (controller2.   a)         autoRunArm(ArmPosition.JNCT_HIGH)
-        else if (controller2.   b)         autoRunArm(ArmPosition.JNCT_GND)
-        else if (controller2.   x)         autoRunArm(ArmPosition.JNCT_MED)
-        else if (controller2.   y)         autoRunArm(ArmPosition.JNCT_LOW)
-        else if (controller2.   dpadLeft)  autoRunArm(ArmPosition.CONE_LOW)
-        else if (controller2.   dpadRight) autoRunArm(ArmPosition.CONE_MED)
-        else if (controller2.   dpadUp)    autoRunArm(ArmPosition.CONE_HIGH)
+        if      (controller2.   triangle)  autoRunArm(ArmPosition.JNCT_HIGH)
+        else if (controller2.   cross)     autoRunArm(ArmPosition.JNCT_GND)
+        else if (controller2.   circle)    autoRunArm(ArmPosition.JNCT_MED)
+        else if (controller2.   square)    autoRunArm(ArmPosition.JNCT_LOW)
+        else if (controller2.   dpadLeft)  autoRunArm(ArmPosition.CONE_LOW) // 1 cone
+        else if (controller2.   dpadRight) autoRunArm(ArmPosition.CONE_MED) // 3 cones
+        else if (controller2.   dpadUp)    autoRunArm(ArmPosition.CONE_HIGH) // 5 cones
         else if (controller2.   dpadDown)  autoRunArm(ArmPosition.RESET)
+
+        if (controller2.share || controller1.share) autoLevelArm()
 
         // manual override: any bumper will stop auto mode
         if (controller2.leftBumper || controller2.rightBumper || controller1.leftBumper || controller1.rightBumper) {
