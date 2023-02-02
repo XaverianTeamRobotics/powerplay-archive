@@ -94,6 +94,14 @@ public class BasicPositionInputFilter {
         return calculate();
     }
 
+    public boolean atSetpoint() {
+        return Math.abs((targetPosition - currentPosition) / targetPosition) < acceptableError;
+    }
+
+    public boolean atGoal() {
+        return atSetpoint();
+    }
+
     public double getPercentError() {
         return Math.abs((targetPosition - currentPosition) / targetPosition);
     }

@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.internals.time;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 /**
  * Manages {@link Timer}s.
  */
 public class Clock {
+
+    private static final Timer internalTimer = new Timer("");
 
     private static final HashMap<String, Timer> timers = new HashMap<>();
 
@@ -34,6 +37,13 @@ public class Clock {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    /**
+     * Blocks the current thread until the given supplier returns true. Avoid this unless your goal is specifically to block synchronously. If you can use a timer to do it asynchronously, please do.
+     */
+    public static void block(Supplier<Boolean> until) {
+        while(!until.get());
     }
 
 }

@@ -17,10 +17,11 @@ public class SleeveDetector extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
 
-    private int spot = 1;
+    private boolean init = false;
 
-    @Override
-    public void build() {
+    private int spot = 0;
+
+    public SleeveDetector() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId);
 
@@ -34,7 +35,10 @@ public class SleeveDetector extends Feature implements Buildable {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
-            public void onOpened() { camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT); }
+            public void onOpened() {
+                init = true;
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
             @Override
             public void onError(int errorCode)
             {
@@ -49,12 +53,21 @@ public class SleeveDetector extends Feature implements Buildable {
     }
 
     @Override
+    public void build() {
+
+    }
+
+    @Override
     public void loop() {
         spot = detector.getDetection();
     }
 
     public int getSpot() {
         return spot;
+    }
+
+    public boolean isReady() {
+        return init;
     }
 
     public void setDebugEnabled(boolean enabled) {

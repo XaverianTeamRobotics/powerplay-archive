@@ -43,6 +43,11 @@ class FourMotorArm: Feature(), Buildable {
             autoRunArm(position.height)
         }
 
+        @JvmStatic
+        fun autoComplete(): Boolean {
+            return !permitAutonomous
+        }
+
     }
 
     enum class ArmPosition(val height: Double) {
