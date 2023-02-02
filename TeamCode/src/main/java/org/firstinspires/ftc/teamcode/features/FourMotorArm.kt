@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DSLogging
 class FourMotorArm: Feature(), Buildable {
 
     override fun build() {
-        Devices.encoder5.reset();
-        Devices.encoder6.reset(); // Right side
+        Devices.encoder5.reset()
+        Devices.encoder6.reset() // Right side
         resumeManualControlInstantly()
     }
 
