@@ -43,16 +43,17 @@ class FourMotorArm: Feature(), Buildable {
             autoRunArm(position.height)
         }
 
-        enum class ArmPosition(val height: Double) {
-            JNCT_GND    (50.0   ),
-            JNCT_LOW    (100.0  ),
-            JNCT_MED    (200.0  ),
-            JNCT_HIGH   (300.0  ),
-            CONE_LOW    (50.0   ),
-            CONE_MED    (75.0   ),
-            CONE_HIGH   (100.0  ),
-            RESET       (0.0    ),
-        }
+    }
+
+    enum class ArmPosition(val height: Double) {
+        JNCT_GND    (50.0   ),
+        JNCT_LOW    (100.0  ),
+        JNCT_MED    (200.0  ),
+        JNCT_HIGH   (300.0  ),
+        CONE_LOW    (50.0   ),
+        CONE_MED    (75.0   ),
+        CONE_HIGH   (100.0  ),
+        RESET       (0.0    ),
     }
 
     override fun loop() {
