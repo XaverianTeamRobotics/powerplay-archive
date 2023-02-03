@@ -92,7 +92,7 @@ public class <a id="opModeName">OpModeName</a> extends OperationMode implements 
 
      To change a motor's power, use the following command.
      <pre class="code" id="motorUsage">
-Devices.getMotor<a id="motorPortPower">0</a>.setPower(<a id="motorPower">1.0</a>); // Set the power of the motor</pre>
+Devices.motor<a id="motorPortPower">0</a>.setPower(<a id="motorPower">1.0</a>); // Set the power of the motor</pre>
      <br>
      Motor Port: <select id="motorPortPowerInput">
           <option value="0">0</option>
@@ -113,7 +113,7 @@ Devices.getMotor<a id="motorPortPower">0</a>.setPower(<a id="motorPower">1.0</a>
 
      To change a motor's operation type, use the following command.
      <pre class="code" id="motorOperation">
-Devices.getMotor<a id="motorPortOperation">0</a>.setOperation(<a id="motorOperationType">OperationType</a>); // Set the operation type of the motor</pre>
+Devices.motor<a id="motorPortOperation">0</a>.setOperation(<a id="motorOperationType">OperationType</a>); // Set the operation type of the motor</pre>
      <br>
      Motor Port: <select id="motorPortOperationInput">
           <option value="0">0</option>
@@ -248,12 +248,12 @@ PLAYSTATION-ONLY AXES
      below:
 
      <pre class="code" id="gamepadExample">
-Devices.getGamepad<a id="gamepadNameSample">1</a>.get<a
+Devices.controller<a id="gamepadNameSample">1</a>.get<a
                id="gamepadButtonSample">DpadUp</a>();</pre>
      <br>
      Gamepad Name: <select id="gamepadNameInputID" name="gamepadNameInput">
-          <option value="1">gamepad1</option>
-          <option value="2">gamepad2</option>
+          <option value="1">controller1</option>
+          <option value="2">controller2</option>
      </select>
      <br>
      <button onclick='changeField("gamepadNameInputID", "gamepadNameSample")'>Apply</button>
