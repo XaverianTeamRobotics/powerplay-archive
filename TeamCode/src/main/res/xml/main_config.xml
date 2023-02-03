@@ -40,5 +40,5 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <LynxEmbeddedIMU name="imu1" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>
-<!--    <Webcam name="camera" serialNumber="23790950" />-->
+    <Webcam name="camera" serialNumber="54DE4F40" />
 </Robot>

@@ -48,7 +48,7 @@ public class BlueLeft extends OperationMode implements AutonomousOperation {
         armCommands.add(ArmCommand.CLOSE);
         armCommands.add(ArmCommand.JNCT_HIGH);
         armCommands.add(ArmCommand.OPEN);
-        armCommands.add(ArmCommand.JNCT_LOW);
+        armCommands.add(ArmCommand.CONE_LOW);
         drivetrain = new AutonomousDrivetrain();
         drivetrain.setPoseEstimate(new Pose2d(39.25, 61.50, Math.toRadians(-90.00)));
 
@@ -60,30 +60,30 @@ public class BlueLeft extends OperationMode implements AutonomousOperation {
             })
             .splineTo(new Vector2d(36.96, 56.48), Math.toRadians(250.00))
             .splineTo(new Vector2d(35.62, 23.94), Math.toRadians(-88.75))
-            .splineTo(new Vector2d(32.00, 13.00), Math.toRadians(230.00))
+            .splineTo(new Vector2d(36.00, 16.00), Math.toRadians(230.00))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq0));
         driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 
         // drive to the cone dropoff point, then drop the cone off
         TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
-            .splineToConstantHeading(new Vector2d(29, 4), Math.toRadians(230.00))
-            .addDisplacementMarker(() -> {
-                lastArmCommand = currentArmCommand;
-                currentArmCommand = armCommands.poll();
-            })
+            .splineToConstantHeading(new Vector2d(32, 11), Math.toRadians(230.00))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq1));
+        driveCommands.add(new DriveCommand.Do(() -> {
+            lastArmCommand = currentArmCommand;
+            currentArmCommand = armCommands.poll();
+        }));
         driveCommands.add(new DriveCommand.Wait(() -> handTimer.elapsed(1)));
 
         // drive back where its safe to lower the arm, then begin lowering it, and drive to the cone pickup location
         TrajectorySequence seq2 = drivetrain.trajectorySequenceBuilder(seq1.end())
-            .lineToLinearHeading(new Pose2d(32, 15.00, Math.toRadians(230)))
+            .lineToLinearHeading(new Pose2d(36, 16.00, Math.toRadians(230)))
             .addDisplacementMarker(() -> {
                 lastArmCommand = currentArmCommand;
                 currentArmCommand = armCommands.poll();
             })
-            .lineToLinearHeading(new Pose2d(60.00, 11.50, Math.toRadians(354)))
+            .lineToLinearHeading(new Pose2d(59, 11.50, Math.toRadians(354)))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq2));
         driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
@@ -97,18 +97,18 @@ public class BlueLeft extends OperationMode implements AutonomousOperation {
 
         // start raising the arm again and drive to the high jnct
         TrajectorySequence seq3 = drivetrain.trajectorySequenceBuilder(seq2.end())
-            .addDisplacementMarker(() -> {
-                lastArmCommand = currentArmCommand;
-                currentArmCommand = armCommands.poll();
-            })
-            .lineToSplineHeading(new Pose2d(32, 13.00, Math.toRadians(230)))
+            .lineToSplineHeading(new Pose2d(36, 16.00, Math.toRadians(230)))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq3));
+        driveCommands.add(new DriveCommand.Do(() -> {
+            lastArmCommand = currentArmCommand;
+            currentArmCommand = armCommands.poll();
+        }));
         driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 
         // drive to the cone dropoff point, then drop the cone off again
         TrajectorySequence seq4 = drivetrain.trajectorySequenceBuilder(seq3.end())
-            .splineToConstantHeading(new Vector2d(29, 4), Math.toRadians(230.00))
+            .splineToConstantHeading(new Vector2d(33, 9), Math.toRadians(230.00))
             .addDisplacementMarker(() -> {
                 lastArmCommand = currentArmCommand;
                 currentArmCommand = armCommands.poll();
@@ -119,7 +119,7 @@ public class BlueLeft extends OperationMode implements AutonomousOperation {
 
         // drive back where its safe to lower the arm, then begin lowering it, and continue driving to the parking location
         TrajectorySequence seq5 = drivetrain.trajectorySequenceBuilder(seq4.end())
-            .lineToLinearHeading(new Pose2d(32, 15.00, Math.toRadians(230)))
+            .lineToLinearHeading(new Pose2d(36, 16.00, Math.toRadians(230)))
             .addDisplacementMarker(() -> {
                 lastArmCommand = currentArmCommand;
                 currentArmCommand = armCommands.poll();

@@ -81,7 +81,7 @@ class FourMotorArm: Feature(), Buildable {
             // Motor config: 4 - TL, 5 - BL, 6 - TR, 7 - BR
             val power = controller2.rightTrigger - (controller2.leftTrigger * 0.5)
             powerL = if (controller2.leftStickY > 25 || controller2.leftStickY < -25) + 75.0 else power
-            powerR = if (controller1.rightStickY > 25 || controller2.rightStickY < -25) + 75.0 else power
+            powerR = if (controller2.rightStickY > 25 || controller2.rightStickY < -25) + 75.0 else power
         }
         else if (permitAutonomous) {
             powerL = basicPositionInputFilter.calculate(-Devices.encoder6.position.toDouble())
