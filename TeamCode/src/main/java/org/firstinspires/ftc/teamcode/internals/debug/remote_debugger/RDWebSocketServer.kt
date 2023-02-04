@@ -1,21 +1,14 @@
-package org.firstinspires.ftc.teamcode.internals.remote_debugger
+package org.firstinspires.ftc.teamcode.internals.debug.remote_debugger
 
-import android.util.Log
-import com.qualcomm.robotcore.util.RobotLog
-import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.internal.webserver.websockets.CloseCode
 import org.firstinspires.ftc.robotcore.internal.webserver.websockets.WebSocketManager
-import org.firstinspires.ftc.robotserver.internal.webserver.websockets.FtcWebSocketImpl.RawWebSocket
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.FtcWebSocketServer
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.WebSocketManagerImpl
 import org.firstinspires.ftc.robotserver.internal.webserver.websockets.WebSocketNamespaceHandlerRegistry
-import org.firstinspires.ftc.robotserver.internal.webserver.websockets.tootallnate.TooTallWebSocket
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
-import org.slf4j.event.Level
-import java.lang.IllegalArgumentException
 import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Level.FINE

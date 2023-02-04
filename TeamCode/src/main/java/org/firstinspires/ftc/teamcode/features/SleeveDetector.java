@@ -11,16 +11,19 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class SleeveDetectionFeature extends Feature implements Buildable {
+public class SleeveDetector extends Feature implements Buildable {
 
     private SleeveColorDetection detector;
 
-    private int spot = 1;
+    private int spot = 0;
+    private final ArrayList<Integer> previousSpots = new ArrayList<>();
+    private int averageSpot = 0;
+    private boolean init = false;
 
-    @Override
-    public void build() {
+    public SleeveDetector() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId);
 
@@ -34,7 +37,10 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
-            public void onOpened() { camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT); }
+            public void onOpened() {
+                init = true;
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
             @Override
             public void onError(int errorCode)
             {
@@ -49,12 +55,28 @@ public class SleeveDetectionFeature extends Feature implements Buildable {
     }
 
     @Override
+    public void build() {
+
+    }
+
+    @Override
     public void loop() {
         spot = detector.getDetection();
+        previousSpots.add(spot);
+        // Get the average spot out of all spots, then round it
+        averageSpot = (int) Math.round(previousSpots.stream().mapToInt(Integer::intValue).average().orElse(0));
     }
 
     public int getSpot() {
         return spot;
+    }
+
+    public int getAverageSpot() {
+        return averageSpot;
+    }
+
+    public boolean isReady() {
+        return init;
     }
 
     public void setDebugEnabled(boolean enabled) {

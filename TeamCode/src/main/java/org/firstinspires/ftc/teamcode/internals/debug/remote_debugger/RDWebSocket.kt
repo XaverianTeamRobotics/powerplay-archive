@@ -1,7 +1,5 @@
-package org.firstinspires.ftc.teamcode.internals.remote_debugger
+package org.firstinspires.ftc.teamcode.internals.debug.remote_debugger
 
-import com.google.gson.Gson
-import com.qualcomm.robotcore.util.RobotLog
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive

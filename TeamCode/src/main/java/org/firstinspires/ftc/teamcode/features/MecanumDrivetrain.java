@@ -16,10 +16,13 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.PoseBucket
 public class MecanumDrivetrain extends Feature implements Buildable {
 
     private final boolean FIELD_CENTRIC;
+    private final boolean DRIVER_ASSIST;
     private AutonomousDrivetrain drivetrain;
+    private double lx = 0, ly = 0, lr = 0;
 
-    public MecanumDrivetrain(boolean fieldCentric) {
+    public MecanumDrivetrain(boolean fieldCentric, boolean driverAssist) {
         FIELD_CENTRIC = fieldCentric;
+        DRIVER_ASSIST = driverAssist;
     }
 
     @Override
@@ -33,18 +36,33 @@ public class MecanumDrivetrain extends Feature implements Buildable {
     public void loop() {
         // Read current pose
         Pose2d poseEstimate = drivetrain.getPoseEstimate();
+        // Get gamepad inputs
+        double x = Devices.controller1.getLeftStickX() * 0.9;
+        double y = Devices.controller1.getLeftStickY() * 0.9;
+        double r = Devices.controller1.getRightStickX() * 0.6;
+        boolean reset = Devices.controller1.getTouchpad();
+        if(reset) {
+            drivetrain.setPoseEstimate(new Pose2d(0, 0, 0));
+        }
+        // dampen if assist is enabled
+        if(DRIVER_ASSIST) {
+            double b = 0.3;
+            x = dampen(x, lx, b);
+            y = dampen(y, ly, b);
+            r = dampen(r, lr, b);
+        }
         // Create a vector from the gamepad x/y inputs
         // Then, rotate that vector by the inverse of that heading if we're using field centric--otherwise we'll just assume the heading is 0
         Vector2d input;
         if(FIELD_CENTRIC) {
             input = new Vector2d(
-                -Compressor.compress(Devices.controller1.getLeftStickY()),
-                -Compressor.compress(Devices.controller1.getLeftStickX())
+                -Compressor.compress(y),
+                -Compressor.compress(x)
             ).rotated(-poseEstimate.getHeading());
         }else{
             input = new Vector2d(
-                -Compressor.compress(Devices.controller1.getLeftStickY()),
-                -Compressor.compress(Devices.controller1.getLeftStickX())
+                -Compressor.compress(y),
+                -Compressor.compress(x)
             );
         }
         // Pass in the rotated input + right stick value for rotation
@@ -53,11 +71,25 @@ public class MecanumDrivetrain extends Feature implements Buildable {
             new Pose2d(
                 input.getX(),
                 input.getY(),
-                -Compressor.compress(Devices.controller1.getRightStickX())
+                -Compressor.compress(r)
             )
         );
         // Update everything. Odometry. Etc.
         drivetrain.update();
+        lx = x;
+        ly = y;
+        lr = r;
+    }
+
+    private double dampen(double a, double la, double b) {
+        double step = Math.abs(a - la) * b;
+        if(a > la) {
+            return la + step;
+        }else if(a < la) {
+            return la - step;
+        }else{
+            return a;
+        }
     }
 
 }
