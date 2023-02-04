@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.rrqs;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.Tra
  * These coefficients can be tuned live in dashboard.
  */
 
-
+@Disabled
 @Autonomous(group = "drive")
 public class FollowerPIDTuner extends LinearOpMode {
     public static double DISTANCE = 48; // in

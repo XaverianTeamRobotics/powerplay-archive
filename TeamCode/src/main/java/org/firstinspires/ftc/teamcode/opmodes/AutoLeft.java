@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-public class BlueLeft extends OperationMode implements AutonomousOperation {
+public class AutoLeft extends OperationMode implements AutonomousOperation {
 
     private AutonomousDrivetrain drivetrain;
     private ArmCommand currentArmCommand = null;
