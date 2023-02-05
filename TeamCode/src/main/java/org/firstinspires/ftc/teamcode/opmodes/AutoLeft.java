@@ -77,7 +77,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
 
 
 
-        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(new Pose2d(36.29, 61.50, Math.toRadians(-90.00)))
+        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
             // to straight
             .lineToConstantHeading(new Vector2d(14.5, 58))
             .addDisplacementMarker(() -> {

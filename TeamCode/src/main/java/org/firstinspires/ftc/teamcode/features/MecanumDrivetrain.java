@@ -37,8 +37,8 @@ public class MecanumDrivetrain extends Feature implements Buildable {
         // Read current pose
         Pose2d poseEstimate = drivetrain.getPoseEstimate();
         // Get gamepad inputs
-        double x = Devices.controller1.getLeftStickX() * 0.9;
-        double y = Devices.controller1.getLeftStickY() * 0.9;
+        double x = Devices.controller1.getLeftStickX() * 0.65;
+        double y = Devices.controller1.getLeftStickY() * 0.65;
         double r = Devices.controller1.getRightStickX() * 0.6;
         boolean reset = Devices.controller1.getTouchpad();
         if(reset) {

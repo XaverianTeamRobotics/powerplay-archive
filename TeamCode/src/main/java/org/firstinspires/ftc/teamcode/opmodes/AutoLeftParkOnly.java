@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-public class AutoRight extends OperationMode implements AutonomousOperation {
+public class AutoLeftParkOnly extends OperationMode implements AutonomousOperation {
 
     private AutonomousDrivetrain drivetrain;
     private ArmCommand currentArmCommand = null;
@@ -56,7 +56,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
         armCommands.add(ArmCommand.CONE_LOW);
         armCommands.add(ArmCommand.ALIGN);
         drivetrain = new AutonomousDrivetrain();
-        drivetrain.setPoseEstimate(new Pose2d(-39.25, 61.50, Math.toRadians(-90.00)));
+        drivetrain.setPoseEstimate(new Pose2d(39.25, 61.50, Math.toRadians(-90.00)));
 
 
 
@@ -64,9 +64,9 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
 
 
 
-        TrajectorySequence seq0 = drivetrain.trajectorySequenceBuilder(new Pose2d(-36.29, 61.50, Math.toRadians(-90.00)))
+        TrajectorySequence seq0 = drivetrain.trajectorySequenceBuilder(new Pose2d(36.29, 61.50, Math.toRadians(-90.00)))
             // leave wall
-            .lineToConstantHeading(new Vector2d(-36.29, 58))
+            .lineToConstantHeading(new Vector2d(36.29, 58))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq0));
         driveCommands.add(new DriveCommand.Do(() -> {
@@ -79,50 +79,44 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
 
         TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
             // to straight
-            .lineToConstantHeading(new Vector2d(-14.5, 58))
-            .addDisplacementMarker(() -> {
-                lastArmCommand = currentArmCommand;
-                currentArmCommand = armCommands.poll();
-            })
+            .lineToConstantHeading(new Vector2d(14.5, 58))
             .turn(Math.toRadians(5))
-            // to middle, turn
-            .lineToConstantHeading(new Vector2d(-17, 9))
-            .turn(Math.toRadians(50))
-            .forward(5)
+            .lineToConstantHeading(new Vector2d(14, 12.50))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq1));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-
-
-
-//        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
-//            // dropoff
-//            .lineToConstantHeading(new Vector2d(13, 0))
+//        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
+//
+//
+//
+////        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
+////            // dropoff
+////            .lineToConstantHeading(new Vector2d(13, 0))
+////            .build();
+////        driveCommands.add(new DriveCommand.Drive(seq1));
+//        driveCommands.add(new DriveCommand.Do(() -> {
+//            lastArmCommand = currentArmCommand;
+//            currentArmCommand = armCommands.poll();
+//        }));
+//        driveCommands.add(new DriveCommand.Wait(() -> handTimer.elapsed(1)));
+//        driveCommands.add(new DriveCommand.Do(() -> {
+//            lastArmCommand = currentArmCommand;
+//            currentArmCommand = armCommands.poll();
+//        }));
+//        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
+//
+//
+//
+//        TrajectorySequence seq2 = drivetrain.trajectorySequenceBuilder(seq1.end())
+//            // go to straight to pickup
+//            .lineToConstantHeading(new Vector2d(14, 12.50))
+//            .turn(Math.toRadians(45))
 //            .build();
-//        driveCommands.add(new DriveCommand.Drive(seq1));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(() -> handTimer.elapsed(1)));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-
-
-        TrajectorySequence seq2 = drivetrain.trajectorySequenceBuilder(seq1.end())
-            // go to straight to pickup
-            .lineToConstantHeading(new Vector2d(-14, 12.50))
-            .turn(Math.toRadians(45))
-            .build();
-        driveCommands.add(new DriveCommand.Drive(seq2));
+//        driveCommands.add(new DriveCommand.Drive(seq2));
+//        driveCommands.add(new DriveCommand.Do(() -> {
+//            lastArmCommand = currentArmCommand;
+//            currentArmCommand = armCommands.poll();
+//        }));
+//        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 // end
 
 
@@ -140,11 +134,11 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
 
 
 
-        TrajectorySequence sleeveOne = drivetrain.trajectorySequenceBuilder(seq2.end())
-            .lineToConstantHeading(new Vector2d(-61, 12.50))
+        TrajectorySequence sleeveOne = drivetrain.trajectorySequenceBuilder(seq1.end())
+            .lineToConstantHeading(new Vector2d(61, 12.50))
             .build();
-        TrajectorySequence sleeveTwo = drivetrain.trajectorySequenceBuilder(seq2.end())
-            .lineToConstantHeading(new Vector2d(-37, 12.50))
+        TrajectorySequence sleeveTwo = drivetrain.trajectorySequenceBuilder(seq1.end())
+            .lineToConstantHeading(new Vector2d(37, 12.50))
             .build();
          processSleeve(sleeveOne, sleeveTwo);
 
