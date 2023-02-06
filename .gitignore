@@ -4,7 +4,7 @@
 *.ap_
 *.aab
 
-!HelpPage/apk/bin/*.apk
+#!HelpPage/apk/bin/*.apk
 
 !libs/*.aar
 
