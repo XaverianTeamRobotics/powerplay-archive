@@ -48,7 +48,7 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
-!.idea\runConfigurations
+!.idea/runConfigurations
 # Android Studio 3 in .gitignore file.
 .idea/caches
 .idea/modules.xml
@@ -92,4 +92,4 @@ lint/tmp/
 # big profiling
 *.hprof
 *hprof*/
-#!.idea/scopes/19460.xml
+!.idea/scopes
