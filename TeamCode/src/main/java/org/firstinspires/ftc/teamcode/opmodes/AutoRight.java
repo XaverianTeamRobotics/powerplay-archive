@@ -212,11 +212,11 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
                 FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH);
                 break;
             case OPEN:
-                hand.requestOpen();
+                Hand.manualOpen();
                 handTimer.reset();
                 break;
             case CLOSE:
-                hand.requestClose();
+                Hand.manualClose();
                 handTimer.reset();
                 break;
             case ALIGN:

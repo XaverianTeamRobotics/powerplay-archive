@@ -2,23 +2,22 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LocalizationType;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdoEncoder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.EncoderConfig;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.MotorConfig;
 
-/*
-
-new bot drive width: 350mm
-new bot encoder width: ???
-
- */
-
 /**
- * Settings for a wheeled odometry implementation. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in wheeled odometry compound continously, so it's important to make sure these values are as precise as possible.
+ * Settings for an odometry implementation using three odometry pods or two odometry pods and an intertial measurement unit. Tuning this is incredibly important for SLAM applications like autonomous driving or field-centric driving. Errors in this implementation compound continously, so it's important to make sure these values are as precise as possible.
  * <br><br>
  * This document makes numerous references to the Strafer v5 chassis by goBILDA. Its SKU is 3209-0001-0005.
  */
 public class OdometrySettings {
+
+    /**
+     * The type of localization in use.
+     */
+    public static LocalizationType LOCALIZATION_TYPE = LocalizationType.POD;
 
     /**
      * The name and direction of the front right motor.
@@ -43,17 +42,22 @@ public class OdometrySettings {
     /**
      * The name and direction of the right encoder.
      */
-    public static EncoderConfig ENCODER_RIGHT = new EncoderConfig("motor3", Encoder.Direction.FORWARD);
+    public static EncoderConfig ENCODER_RIGHT = new EncoderConfig("motor3", OdoEncoder.Direction.FORWARD);
 
     /**
      * The name and direction of the left encoder.
      */
-    public static EncoderConfig ENCODER_LEFT = new EncoderConfig("motor0", Encoder.Direction.FORWARD);
+    public static EncoderConfig ENCODER_LEFT = new EncoderConfig("motor0", OdoEncoder.Direction.FORWARD);
 
     /**
      * The name and direction of the middle encoder.
      */
-    public static EncoderConfig ENCODER_MIDDLE = new EncoderConfig("motor7", Encoder.Direction.FORWARD);
+    public static EncoderConfig ENCODER_MIDDLE = new EncoderConfig("motor7", OdoEncoder.Direction.FORWARD);
+
+    /**
+     * The name of the IMU or gyroscope replacing the right encoder if in use.
+     */
+    public static String IMU = "imu";
 
     /**
      * The ticks per revolution of the internal encoder inside your drive motors. This should come from the motor's specsheet or a similar specification document. For example, the Strafer v5's motors run count 537.7 ticks per revolution.

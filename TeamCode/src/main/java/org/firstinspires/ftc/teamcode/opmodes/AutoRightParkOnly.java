@@ -206,11 +206,11 @@ public class AutoRightParkOnly extends OperationMode implements AutonomousOperat
                 FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH);
                 break;
             case OPEN:
-                hand.requestOpen();
+                Hand.manualOpen();
                 handTimer.reset();
                 break;
             case CLOSE:
-                hand.requestClose();
+                Hand.manualClose();
                 handTimer.reset();
                 break;
             case ALIGN:

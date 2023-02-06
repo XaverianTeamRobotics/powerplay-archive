@@ -42,6 +42,7 @@ public class OdometrySettingsDashboardConfiguration {
         }
     }
 
+    public static LocalizationType LOCALIZATION_TYPE = OdometrySettingStore.getType("LOCALIZATION_TYPE");
     public static MotorConfig DRIVE_FRONT_RIGHT = OdometrySettingStore.getMotor("DRIVE_FRONT_RIGHT");
     public static MotorConfig DRIVE_BACK_RIGHT = OdometrySettingStore.getMotor("DRIVE_BACK_RIGHT");
     public static MotorConfig DRIVE_FRONT_LEFT = OdometrySettingStore.getMotor("DRIVE_FRONT_LEFT");
@@ -49,6 +50,7 @@ public class OdometrySettingsDashboardConfiguration {
     public static EncoderConfig ENCODER_RIGHT = OdometrySettingStore.getEncoder("ENCODER_RIGHT");
     public static EncoderConfig ENCODER_LEFT = OdometrySettingStore.getEncoder("ENCODER_LEFT");
     public static EncoderConfig ENCODER_MIDDLE = OdometrySettingStore.getEncoder("ENCODER_MIDDLE");
+    public static String IMU = OdometrySettingStore.getIMU("IMU");
     public static double TICKS_PER_REV = OdometrySettingStore.getDouble("TICKS_PER_REV");
     public static double MAX_RPM = OdometrySettingStore.getDouble("MAX_RPM");
     public static double WHEEL_RADIUS = OdometrySettingStore.getDouble("WHEEL_RADIUS");
