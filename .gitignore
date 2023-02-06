@@ -93,3 +93,4 @@ lint/tmp/
 *.hprof
 *hprof*/
 !.idea/scopes
+.idea/deploymentTargetDropDown.xml
