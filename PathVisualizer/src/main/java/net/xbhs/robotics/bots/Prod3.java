@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
+import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 import net.xbhs.robotics.utils.Bot;
 import net.xbhs.robotics.utils.Environment;
 
@@ -12,28 +13,39 @@ public class Prod3 extends Bot {
 
     @Override
     public RoadRunnerBotEntity bot() {
+
         return new DefaultBotBuilder(Environment.MEEP)
             .setColorScheme(new ColorSchemeBlueDark())
             .setConstraints(30, 30, 3, 3, 13.90)
-            .setDimensions(14, 14)
-            .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(39.25, 61.50, Math.toRadians(-90.00)))
-                    .splineTo(new Vector2d(36.96, 56.48), Math.toRadians(250.00))
-                    .splineTo(new Vector2d(35.62, 23.94), Math.toRadians(-88.75))
-                    .splineTo(new Vector2d(32.00, 13.00), Math.toRadians(230.00))
-                    .splineTo(new Vector2d(29.50, 10.00), Math.toRadians(230.00))
-                    .splineToLinearHeading(new Pose2d(32, 13.00, Math.toRadians(230)), Math.toRadians(230))
-                    .lineToLinearHeading(new Pose2d(59.00, 10.00, Math.toRadians(354)))
-                    .lineToSplineHeading(new Pose2d(32, 13.00, Math.toRadians(230)))
-                    .splineToConstantHeading(new Vector2d(29.50, 10.00), Math.toRadians(230.00))
-                    .splineToLinearHeading(new Pose2d(32, 13.00, Math.toRadians(230)), Math.toRadians(230))
-                    .lineToSplineHeading(new Pose2d(36, 25, Math.toRadians(-90)))
-                    // 2
-                    .splineToConstantHeading(new Vector2d(36, 35),  Math.toRadians(60))
-                    // 3
-                    .lineToLinearHeading(new Pose2d(12.04, 35, Math.toRadians(90)))
-                    // 1
-                    .lineToLinearHeading(new Pose2d(58.04, 35, Math.toRadians(180)))
-                    .build());
+            .setDimensions(14, 18)
+            .followTrajectorySequence(drive -> {
+                TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(36.29, 61.50, Math.toRadians(-90.00)))
+                    // leave wall
+                    .lineToConstantHeading(new Vector2d(36.29, 58))
+                    // to straight
+                    .lineToConstantHeading(new Vector2d(14.5, 58))
+                    // to middle, turn
+                    .lineToConstantHeading(new Vector2d(14.5, 0))
+                    .turn(Math.toRadians(90))
+                    // dropoff
+                    .lineToConstantHeading(new Vector2d(19.11, 0.00))
+                    // go to straight to pickup
+                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
+                    // to pickup
+                    .lineToConstantHeading(new Vector2d(59.5, 12.50))
+                    // leave pickup
+                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
+                    // dropoff
+                    .lineToConstantHeading(new Vector2d(19.11, 0.00))
+                    // leave dropoff, to park 3
+                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
+                    // park 2
+                    .lineToConstantHeading(new Vector2d(36, 12.50))
+                    // park 1
+                    .lineToConstantHeading(new Vector2d(56, 12.50))
+                    .build();
+                return untitled0;
+            });
     }
 
 }

@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.rrqs;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.PodLocalizer;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -59,7 +60,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
  * slightly but your heading will still be fine. This does not affect your overall tracking
  * precision. The heading should still line up.
  */
-
+@Disabled
 @TeleOp(group = "drive")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     public static int NUM_TURNS = 10;
@@ -68,7 +69,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         AutonomousDrivetrain drive = new AutonomousDrivetrain(hardwareMap);
 
-        if (!(drive.getLocalizer() instanceof AutonomousLocalizer)) {
+        if (!(drive.getLocalizer() instanceof PodLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
                     + "(hardwareMap));\" is called in SampleMecanumDrive.java");
@@ -119,7 +120,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
         telemetry.clearAll();
         telemetry.addLine("Localizer's total heading: " + Math.toDegrees(headingAccumulator) + "°");
         telemetry.addLine("Effective LATERAL_DISTANCE: " +
-                (headingAccumulator / (NUM_TURNS * Math.PI * 2)) * AutonomousLocalizer.LATERAL_DISTANCE);
+                (headingAccumulator / (NUM_TURNS * Math.PI * 2)) * PodLocalizer.LATERAL_DISTANCE);
 
         telemetry.update();
 

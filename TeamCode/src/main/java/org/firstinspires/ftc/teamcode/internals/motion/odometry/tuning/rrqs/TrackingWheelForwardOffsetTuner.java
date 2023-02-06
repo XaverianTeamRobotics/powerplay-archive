@@ -5,13 +5,14 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.PodLocalizer;
 
 /**
  * This routine determines the effective forward offset for the lateral tracking wheel.
@@ -33,7 +34,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
  * satisfactory result is produced.
  */
 
-
+@Disabled
 @Autonomous(group="drive")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
@@ -46,7 +47,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
 
         AutonomousDrivetrain drive = new AutonomousDrivetrain(hardwareMap);
 
-        if (!(drive.getLocalizer() instanceof AutonomousLocalizer)) {
+        if (!(drive.getLocalizer() instanceof PodLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
                     + "(hardwareMap));\" is called in SampleMecanumDrive.java");
@@ -82,7 +83,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
                 drive.update();
             }
 
-            double forwardOffset = AutonomousLocalizer.FORWARD_OFFSET +
+            double forwardOffset = PodLocalizer.FORWARD_OFFSET +
                     drive.getPoseEstimate().getY() / headingAccumulator;
             forwardOffsetStats.add(forwardOffset);
 

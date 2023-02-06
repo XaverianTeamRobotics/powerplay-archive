@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 public class EncoderConfig {
 
     public String NAME;
-    public Encoder.Direction DIRECTION;
+    public OdoEncoder.Direction DIRECTION;
 
-    public EncoderConfig(String name, Encoder.Direction direction) {
+    public EncoderConfig(String name, OdoEncoder.Direction direction) {
         NAME = name;
         DIRECTION = direction;
     }

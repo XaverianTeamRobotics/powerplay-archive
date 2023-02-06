@@ -10,7 +10,7 @@ public class SmallbotProduction extends OperationMode implements TeleOperation {
 
     @Override
     public void construct() {
-        registerFeature(new MecanumDrivetrain(false, false));
+        registerFeature(new MecanumDrivetrain(false, true));
         registerFeature(new FourMotorArm());
         registerFeature(new Hand());
     }

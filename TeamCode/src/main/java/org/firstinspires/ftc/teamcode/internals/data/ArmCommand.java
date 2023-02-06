@@ -9,5 +9,6 @@ public enum ArmCommand {
     CONE_MED,
     CONE_HIGH,
     OPEN,
-    CLOSE
+    CLOSE,
+    ALIGN
 }

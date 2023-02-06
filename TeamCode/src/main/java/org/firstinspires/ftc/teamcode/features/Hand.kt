@@ -14,17 +14,11 @@ class Hand() : Feature(), Buildable {
         manualClose()
     }
 
-    fun requestOpen() {
-        manualOpen()
-    }
-
-    fun requestClose() {
-        manualClose()
-    }
-
     override fun build() {
-        Devices.servo1.position = homePosLeft
-        Devices.servo0.position = homePosRight
+        if(!auto) {
+            Devices.servo1.position = homePosLeft
+            Devices.servo0.position = homePosRight
+        }
     }
 
     override fun loop() {

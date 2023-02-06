@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.rrqs;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.Autonomo
  * is recommended that you use the FollowerPIDTuner opmode for further fine tuning.
  */
 
-
+@Disabled
 @Autonomous(group = "drive")
 public class BackAndForth extends LinearOpMode {
 

@@ -118,10 +118,10 @@ public class SettingLoader {
 
             EncoderConfig config = (EncoderConfig) field.get(null);
             if(config == null) throw new IllegalAccessException("Entry creation of " + field + " with a type of " + type + " failed; field value was null.");
-            Encoder.Direction direction = config.DIRECTION;
+            OdoEncoder.Direction direction = config.DIRECTION;
             str.append("EncoderConfig").append(System.lineSeparator()).append(config.NAME).append(System.lineSeparator());
 
-            if(direction == Encoder.Direction.FORWARD) {
+            if(direction == OdoEncoder.Direction.FORWARD) {
                 str.append("Forward");
             }else{
                 str.append("Reverse");
@@ -136,6 +136,27 @@ public class SettingLoader {
 
             str.append("PIDCoefficents").append(System.lineSeparator()).append(coefficients.kP).append(System.lineSeparator()).append(coefficients.kI).append(System.lineSeparator()).append(coefficients.kD).append(System.lineSeparator());
 
+        }else if(type == String.class) {
+
+            String data = (String) field.get(null);
+            if(data == null) throw new IllegalAccessException("Entry creation of " + field + " with a type of " + type + " failed; field value was null.");
+
+            str.append("IMU").append(System.lineSeparator()).append(data).append(System.lineSeparator());
+
+        }
+        else if(type == LocalizationType.class) {
+
+            LocalizationType option = (LocalizationType) field.get(null);
+            if(option == null) throw new IllegalAccessException("Entry creation of " + field + " with a type of " + type + " failed; field value was null.");
+
+            str.append("LocalizationType").append(System.lineSeparator());
+            if(option == LocalizationType.POD) {
+                str.append("pod");
+            }else{
+                str.append("imu");
+            }
+            str.append(System.lineSeparator());
+
         }else{
             throw new IllegalAccessException("Entry creation of " + field + " with a type of " + type + " failed.");
         }
@@ -145,9 +166,11 @@ public class SettingLoader {
         // kinda like this:
         //
         //      ;
-        //      someSpeedValueIdk
-        //      Double
-        //      0.0
+        //      someSpeedValueIdk           // name of field
+        //      DoubleArray                 // type
+        //      0.0                         // first piece of data
+        //      0.0                         // second piece of data
+        //      0.0                         // third piece of data, etc...
         //      ;
         //
         return str.toString();
@@ -209,7 +232,9 @@ public class SettingLoader {
 
                 switch(trimmedPieces.get(1)) {
                     case "Double":
+
                         value = new Value(Double.parseDouble(trimmedPieces.get(2)), Double.class);
+
                         break;
                     case "MotorConfig":
 
@@ -223,15 +248,33 @@ public class SettingLoader {
                     case "EncoderConfig":
 
                         if(trimmedPieces.get(3).equals("Forward")) {
-                            value = new Value(new EncoderConfig(trimmedPieces.get(2), Encoder.Direction.FORWARD), EncoderConfig.class);
+                            value = new Value(new EncoderConfig(trimmedPieces.get(2), OdoEncoder.Direction.FORWARD), EncoderConfig.class);
                         }else{
-                            value = new Value(new EncoderConfig(trimmedPieces.get(2), Encoder.Direction.REVERSE), EncoderConfig.class);
+                            value = new Value(new EncoderConfig(trimmedPieces.get(2), OdoEncoder.Direction.REVERSE), EncoderConfig.class);
                         }
 
                         break;
                     case "PIDCoefficents":
 
                         value = new Value(new PIDCoefficients(Double.parseDouble(trimmedPieces.get(2)), Double.parseDouble(trimmedPieces.get(3)), Double.parseDouble(trimmedPieces.get(4))), PIDCoefficients.class);
+
+                        break;
+                    case "IMU":
+
+                        if(trimmedPieces.get(2) != null) {
+                            value = new Value(trimmedPieces.get(2), String.class);
+                        }else{
+                            value = new Value("", String.class);
+                        }
+
+                        break;
+                    case "LocalizationType":
+
+                        if(trimmedPieces.get(2).equals("pod")) {
+                            value = new Value(LocalizationType.POD, LocalizationType.class);
+                        }else{
+                            value = new Value(LocalizationType.IMU, LocalizationType.class);
+                        }
 
                         break;
                     default:
