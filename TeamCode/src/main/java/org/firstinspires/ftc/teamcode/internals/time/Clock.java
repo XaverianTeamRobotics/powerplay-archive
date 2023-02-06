@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
- * Manages {@link Timer}s.
+ * Manages time.
  */
 public class Clock {
-
-    private static final Timer internalTimer = new Timer("");
 
     private static final HashMap<String, Timer> timers = new HashMap<>();
 
@@ -29,7 +27,9 @@ public class Clock {
     }
 
     /**
-     * Sleeps the current thread synchronously. Avoid this unless your goal is specifically to sleep synchronously. If you can use a timer to do it asynchronously, please do.
+     * Sleeps the current thread synchronously. This is different than the blocking methods because this actually sleeps the thread rather than just blocking it. Avoid this unless your goal is specifically to sleep synchronously. If you can use a timer to do it asynchronously, please do.
+     * @see #block(long)
+     * @see #block(Supplier)
      */
     public static void sleep(long milliseconds) {
         try {
@@ -41,9 +41,19 @@ public class Clock {
 
     /**
      * Blocks the current thread until the given supplier returns true. Avoid this unless your goal is specifically to block synchronously. If you can use a timer to do it asynchronously, please do.
+     * @see #sleep(long)
      */
     public static void block(Supplier<Boolean> until) {
         while(!until.get());
+    }
+
+    /**
+     * Blocks the current thread. Avoid this unless your goal is specifically to block synchronously. If you can use a timer to do it asynchronously, please do.
+     * @see #sleep(long)
+     */
+    public static void block(long milliseconds) {
+        long time = System.currentTimeMillis() + milliseconds;
+        while(System.currentTimeMillis() <= time);
     }
 
 }

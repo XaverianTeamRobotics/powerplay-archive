@@ -11,9 +11,12 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.*;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LocalizationType;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceBuilder;
@@ -50,6 +53,8 @@ public class AutonomousDrivetrain extends MecanumDrive {
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
     private VoltageSensor batteryVoltageSensor;
+    private IMU imu;
+    private boolean useIMU;
 
 
     /*
@@ -94,8 +99,19 @@ public class AutonomousDrivetrain extends MecanumDrive {
         leftRear.setDirection(OdometrySettingsDashboardConfiguration.DRIVE_BACK_LEFT.DIRECTION);
         rightRear.setDirection(OdometrySettingsDashboardConfiguration.DRIVE_BACK_RIGHT.DIRECTION);
         rightFront.setDirection(OdometrySettingsDashboardConfiguration.DRIVE_FRONT_RIGHT.DIRECTION);
-        setLocalizer(new AutonomousLocalizer(hardwareMap));
+        useIMU = OdometrySettingsDashboardConfiguration.LOCALIZATION_TYPE == LocalizationType.IMU;
+        if(useIMU) {
+            imu = hardwareMap.get(IMU.class, OdometrySettingsDashboardConfiguration.IMU);
+            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+            imu.initialize(parameters);
+            setLocalizer(new IMULocalizer(hardwareMap, this));
+        }else{
+            setLocalizer(new PodLocalizer(hardwareMap));
+        }
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+        PoseBucket.forceSetPose(new Pose2d(0, 0, 0));
         setPoseEstimate(PoseBucket.getPose());
     }
 
@@ -154,11 +170,17 @@ public class AutonomousDrivetrain extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
+        if(useIMU) {
+            return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        }
         return 0;
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
+        if(useIMU) {
+            return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        }
         return 0.0;
     }
 

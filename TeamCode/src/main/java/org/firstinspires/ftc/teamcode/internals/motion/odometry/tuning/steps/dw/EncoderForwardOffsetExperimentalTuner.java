@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.PodLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -98,7 +98,7 @@ public class EncoderForwardOffsetExperimentalTuner extends Feature implements Co
                         lastHeading = heading;
                         driver.update();
                     }
-                    double forwardOffset = AutonomousLocalizer.FORWARD_OFFSET +
+                    double forwardOffset = PodLocalizer.FORWARD_OFFSET +
                         driver.getPoseEstimate().getY() / headingAccumulator;
                     forwardOffsetStats.add(forwardOffset);
                     Clock.sleep(delay);

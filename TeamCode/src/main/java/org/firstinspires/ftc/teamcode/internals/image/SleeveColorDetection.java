@@ -68,7 +68,6 @@ public class SleeveColorDetection extends OpenCvPipeline {
         printOutcome();
         // add the number of the color to the image
         Imgproc.putText(processedMat, String.valueOf(detection), new Point(10, 50), FONT_HERSHEY_SIMPLEX, 2, new Scalar(255, 255, 255), 2);
-        input = processedMat.clone();
         processedMat.release();
         return input; // Useful for previewing the final output
     }

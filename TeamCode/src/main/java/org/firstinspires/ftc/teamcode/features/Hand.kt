@@ -14,14 +14,6 @@ class Hand() : Feature(), Buildable {
         manualClose()
     }
 
-    fun requestOpen() {
-        manualOpen()
-    }
-
-    fun requestClose() {
-        manualClose()
-    }
-
     override fun build() {
         if(!auto) {
             Devices.servo1.position = homePosLeft

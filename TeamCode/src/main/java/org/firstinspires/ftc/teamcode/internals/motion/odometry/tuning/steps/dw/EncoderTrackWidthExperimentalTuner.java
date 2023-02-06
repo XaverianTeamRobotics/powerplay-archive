@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousLocalizer;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.PodLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
@@ -109,7 +109,7 @@ public class EncoderTrackWidthExperimentalTuner extends Feature implements Condi
                 Item answer1 = menuManager.runOnce();
                 // once we're done, we move on to the next step
                 if(answer1 != null && answer1.equals("Ok")) {
-                    width = (headingAccumulator / (turns * Math.PI * 2)) * AutonomousLocalizer.LATERAL_DISTANCE;
+                    width = (headingAccumulator / (turns * Math.PI * 2)) * PodLocalizer.LATERAL_DISTANCE;
                     menuManager = null;
                     driver.setMotorPowers(0, 0, 0, 0);
                     driver = null;

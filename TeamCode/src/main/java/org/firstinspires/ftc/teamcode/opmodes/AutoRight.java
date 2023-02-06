@@ -77,7 +77,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
 
 
 
-        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(new Pose2d(-36.29, 61.50, Math.toRadians(-90.00)))
+        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
             // to straight
             .lineToConstantHeading(new Vector2d(-14.5, 58))
             .addDisplacementMarker(() -> {
@@ -110,7 +110,11 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
             currentArmCommand = armCommands.poll();
         }));
         driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-
+        driveCommands.add(new DriveCommand.Do(() -> {
+            lastArmCommand = currentArmCommand;
+            currentArmCommand = armCommands.poll();
+        }));
+        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 
 
         TrajectorySequence seq2 = drivetrain.trajectorySequenceBuilder(seq1.end())
@@ -119,11 +123,6 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
             .turn(Math.toRadians(45))
             .build();
         driveCommands.add(new DriveCommand.Drive(seq2));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 // end
 
 
@@ -213,11 +212,11 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
                 FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH);
                 break;
             case OPEN:
-                hand.requestOpen();
+                Hand.manualOpen();
                 handTimer.reset();
                 break;
             case CLOSE:
-                hand.requestClose();
+                Hand.manualClose();
                 handTimer.reset();
                 break;
             case ALIGN:

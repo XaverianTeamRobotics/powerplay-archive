@@ -6,12 +6,12 @@ import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Encoder;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdoEncoder;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
+public class PodLocalizer extends ThreeTrackingWheelLocalizer {
 
 
     /*
@@ -28,7 +28,7 @@ public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
     public static double GEAR_RATIO = OdometrySettingsDashboardConfiguration.ENCODER_GEAR_RATIO;
     public static double LATERAL_DISTANCE = OdometrySettingsDashboardConfiguration.ENCODER_TRACK_WIDTH;
     public static double FORWARD_OFFSET = OdometrySettingsDashboardConfiguration.ENCODER_FORWARD_OFFSET;
-    private Encoder leftEncoder, rightEncoder, frontEncoder;
+    private OdoEncoder leftEncoder, rightEncoder, frontEncoder;
 
 
     /*
@@ -40,16 +40,16 @@ public class AutonomousLocalizer extends ThreeTrackingWheelLocalizer {
      */
 
 
-    public AutonomousLocalizer(HardwareMap hardwareMap) {
+    public PodLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
                 new Pose2d(0, LATERAL_DISTANCE / 2, 0), // left
                 new Pose2d(0, -LATERAL_DISTANCE / 2, 0), // right
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_LEFT.NAME));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_RIGHT.NAME));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_MIDDLE.NAME));
+        leftEncoder = new OdoEncoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_LEFT.NAME));
+        rightEncoder = new OdoEncoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_RIGHT.NAME));
+        frontEncoder = new OdoEncoder(hardwareMap.get(DcMotorEx.class, OdometrySettingsDashboardConfiguration.ENCODER_MIDDLE.NAME));
 
         leftEncoder.setDirection(OdometrySettingsDashboardConfiguration.ENCODER_LEFT.DIRECTION);
         rightEncoder.setDirection(OdometrySettingsDashboardConfiguration.ENCODER_RIGHT.DIRECTION);

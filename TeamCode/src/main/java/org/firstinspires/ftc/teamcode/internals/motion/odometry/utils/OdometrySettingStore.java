@@ -79,6 +79,16 @@ public class OdometrySettingStore {
         return (PIDCoefficients) Objects.requireNonNull(vals.get(name)).obj;
     }
 
+    public static String getIMU(String name) {
+        makeConfig();
+        return (String) Objects.requireNonNull(vals.get(name)).obj;
+    }
+
+    public static LocalizationType getType(String name) {
+        makeConfig();
+        return (LocalizationType) Objects.requireNonNull(vals.get(name)).obj;
+    }
+
     public static boolean isOkay() {
         return isOkay;
     }
