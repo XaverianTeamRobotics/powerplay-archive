@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.internals.motion.path_creator
 import android.os.Environment
 import android.util.Xml
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.qualcomm.robotcore.hardware.HardwareMap
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Serializer
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.PodLocalizer
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode
 import org.firstinspires.ftc.teamcode.internals.registration.TeleOperation
 import java.io.File
@@ -21,24 +23,24 @@ import java.util.*
  * Exports data in XML format to the sdcard.
  */
 class PushbotAutoPathCreator : OperationMode(), TeleOperation {
-    private lateinit var drivetrain: AutonomousDrivetrain
+    private lateinit var localizer: PodLocalizer
     private val poses = ArrayList<Pose2d>()
     override fun construct() {
-        // Initialize drivetrain
-        drivetrain = AutonomousDrivetrain()
+        // Initialize localizer
+        localizer = PodLocalizer(hardwareMap)
         // Set the initial pose of the robot to start on the side of the field specified in the config
-        drivetrain.poseEstimate =   if (PathCreatorConfig.startOnLeft)  Pose2d( 39.25, 61.50, Math.toRadians(-90.00))
+        localizer.poseEstimate =    if (PathCreatorConfig.startOnLeft)  Pose2d( 39.25, 61.50, Math.toRadians(-90.00))
                                     else                                Pose2d(-39.25, 61.50, Math.toRadians(-90.00))
 
-        poses.add(drivetrain.poseEstimate)
+        poses.add(localizer.poseEstimate)
     }
 
     override fun run() {
         // Update the robot's position
-        drivetrain.update()
+        localizer.update()
         // If the user presses the A button, save the current position to a list
         if (Devices.controller1.a) {
-            poses.add(drivetrain.poseEstimate)
+            poses.add(localizer.poseEstimate)
         }
         // If the user presses the B button, then export the list of positions to a file
         if (Devices.controller1.b) {
