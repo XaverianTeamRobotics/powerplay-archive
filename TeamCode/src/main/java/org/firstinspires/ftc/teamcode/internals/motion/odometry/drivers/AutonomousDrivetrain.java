@@ -16,12 +16,12 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LocalizationType;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LocalizationType;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.PoseBucket;
 
 import java.util.ArrayList;
@@ -179,7 +179,7 @@ public class AutonomousDrivetrain extends MecanumDrive {
     @Override
     public Double getExternalHeadingVelocity() {
         if(useIMU) {
-            return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+            return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
         }
         return 0.0;
     }

@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers;
 
 import androidx.annotation.NonNull;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdoEncoder;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySettingsDashboardConfiguration;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Config
 public class PodLocalizer extends ThreeTrackingWheelLocalizer {
 
 
