@@ -19,32 +19,45 @@ public class Prod3 extends Bot {
             .setConstraints(30, 30, 3, 3, 13.90)
             .setDimensions(14, 18)
             .followTrajectorySequence(drive -> {
-                TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(36.29, 61.50, Math.toRadians(-90.00)))
-                    // leave wall
-                    .lineToConstantHeading(new Vector2d(36.29, 58))
-                    // to straight
-                    .lineToConstantHeading(new Vector2d(14.5, 58))
-                    // to middle, turn
-                    .lineToConstantHeading(new Vector2d(14.5, 0))
-                    .turn(Math.toRadians(90))
-                    // dropoff
-                    .lineToConstantHeading(new Vector2d(19.11, 0.00))
-                    // go to straight to pickup
-                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
-                    // to pickup
-                    .lineToConstantHeading(new Vector2d(59.5, 12.50))
-                    // leave pickup
-                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
-                    // dropoff
-                    .lineToConstantHeading(new Vector2d(19.11, 0.00))
-                    // leave dropoff, to park 3
-                    .lineToConstantHeading(new Vector2d(8.26, 12.50))
-                    // park 2
-                    .lineToConstantHeading(new Vector2d(36, 12.50))
-                    // park 1
-                    .lineToConstantHeading(new Vector2d(56, 12.50))
+                TrajectorySequence Three = drive.trajectorySequenceBuilder(new Pose2d(35.84, 61.50, Math.toRadians(-90.00)))
+                    // init hand (closes), init cam
+                    // cam detect
+                    .splineTo(new Vector2d(35.84, 59.00), Math.toRadians(-90.00))
+                    // arm from floor to reset
+                    // arm from reset to jnct high
+                    .splineTo(new Vector2d(35.14, 44.05), Math.toRadians(268.63))
+                    .splineTo(new Vector2d(30.58, 6.38), Math.toRadians(221.32))
+                    .waitSeconds(0.1)
+                    // hand open
+                    // arm from jnct high to cone high
+                    .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
+                    .splineToConstantHeading(new Vector2d(57.52, 9.55), Math.toRadians(2.46))
+                    .waitSeconds(0.1)
+                    // hand close
+                    // arm from cone high to jnct high
+                    // wait 500ms
+                    .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
+                    .splineToConstantHeading(new Vector2d(28.55, 7.35), Math.toRadians(232.36))
+                    .waitSeconds(0.1)
+                    // hand open
+                    // arm from jnct high to cone high
+                    .lineToSplineHeading(new Pose2d(37.68, 9.26, Math.toRadians(1.30)))
+                    .splineTo(new Vector2d(57.46, 9.13), Math.toRadians(359.18))
+                    .waitSeconds(0.1)
+                    // hand close
+                    // arm from cone high to jnct high
+                    // wait 500ms
+                    .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
+                    .splineToConstantHeading(new Vector2d(28.98, 5.97), Math.toRadians(228.78))
+                    .waitSeconds(0.1)
+                    // hand open
+                    // arm from jnct high to reset
+                    .lineToSplineHeading(new Pose2d(34.28, 11.20, Math.toRadians(267.34))) // two
+                    .lineToConstantHeading(new Vector2d(57.77, 8.17)) // one
+                    .lineToSplineHeading(new Pose2d(11.21, 17.25, Math.toRadians(258.89))) // three pt.1
+                    .lineTo(new Vector2d(13.96, 35.43)) // three pt.2
                     .build();
-                return untitled0;
+                return Three;
             });
     }
 

@@ -67,7 +67,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         TrajectorySequence seq0 = drivetrain.trajectorySequenceBuilder(new Pose2d(36.29, 61.50, Math.toRadians(-90.00)))
             // leave wall
             .lineToConstantHeading(new Vector2d(36.29, 58))
-            .build();
+            .completeTrajectory();
         driveCommands.add(new DriveCommand.Drive(seq0));
         driveCommands.add(new DriveCommand.Do(() -> {
             lastArmCommand = currentArmCommand;
@@ -89,7 +89,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .lineToConstantHeading(new Vector2d(17, 9))
             .turn(Math.toRadians(50))
             .forward(5)
-            .build();
+            .completeTrajectory();
         driveCommands.add(new DriveCommand.Drive(seq1));
         driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
 
@@ -117,7 +117,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             // go to straight to pickup
             .lineToConstantHeading(new Vector2d(14, 12.50))
             .turn(Math.toRadians(45))
-            .build();
+            .completeTrajectory();
         driveCommands.add(new DriveCommand.Drive(seq2));
         driveCommands.add(new DriveCommand.Do(() -> {
             lastArmCommand = currentArmCommand;
@@ -143,10 +143,10 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
 
         TrajectorySequence sleeveOne = drivetrain.trajectorySequenceBuilder(seq2.end())
             .lineToConstantHeading(new Vector2d(61, 12.50))
-            .build();
+            .completeTrajectory();
         TrajectorySequence sleeveTwo = drivetrain.trajectorySequenceBuilder(seq2.end())
             .lineToConstantHeading(new Vector2d(37, 12.50))
-            .build();
+            .completeTrajectory();
          processSleeve(sleeveOne, sleeveTwo);
 
 
