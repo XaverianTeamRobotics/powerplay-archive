@@ -32,8 +32,8 @@ class PushbotAutoPathCreator : OperationMode(), TeleOperation {
         // Initialize localizer
         localizer = PodLocalizer(hardwareMap)
         // Set the initial pose of the robot to start on the side of the field specified in the config
-        localizer.poseEstimate =    if (PathCreatorConfig.startOnLeft)  Pose2d( 39.25, 61.50, Math.toRadians(-90.00))
-                                    else                                Pose2d(-39.25, 61.50, Math.toRadians(-90.00))
+        localizer.poseEstimate =    if (PathCreatorConfig.startOnLeft)  Pose2d( 35.84375, 61.50, Math.toRadians(-90.00))
+                                    else                                Pose2d(-35.84375, 61.50, Math.toRadians(-90.00))
 
         poses.add(localizer.poseEstimate)
     }
