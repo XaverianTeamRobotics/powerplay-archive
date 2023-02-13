@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.features.FourMotorArm;
 import org.firstinspires.ftc.teamcode.features.Hand;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunner;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
@@ -92,6 +93,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .lineToSplineHeading(new Pose2d(34.28, 11.20, Math.toRadians(267.34)))
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
+            .appendAction(Devices.encoder5::save)
+            .appendAction(Devices.encoder6::save)
             .complete();
         // if the signal was at position 2, we're all done now! otherwise though, we need to either go to the 1st parking spot, or the 3rd spot
         Auto one = new Auto(auto.end())
