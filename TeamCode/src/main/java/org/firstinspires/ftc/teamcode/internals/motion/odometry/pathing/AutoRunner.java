@@ -18,6 +18,7 @@ public class AutoRunner {
         this.drivetrain = drivetrain;
         this.one = one;
         this.three = three;
+        this.currentDriveCommand = driveCommands.poll();
     }
 
     public void processSleeve(int result) {

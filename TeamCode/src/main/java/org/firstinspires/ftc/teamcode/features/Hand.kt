@@ -56,7 +56,7 @@ class Hand() : Feature(), Buildable {
         }
         @JvmStatic
         fun complete(): Boolean {
-            return timer.elapsed(0.1)
+            return timer.elapsed(0.2)
         }
         @JvmStatic
         fun manualOpen() {

@@ -788,6 +788,7 @@ class Devices {
         @JvmStatic lateinit var camera: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
+        @JvmStatic lateinit var armDistanceSensor: LaserDistanceSensor
         @JvmStatic lateinit var encoder5: Encoder
         @JvmStatic lateinit var encoder6: Encoder
     }

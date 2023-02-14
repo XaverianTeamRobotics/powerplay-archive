@@ -22,10 +22,11 @@ public class Prod3 extends Bot {
                 TrajectorySequence Three = drive.trajectorySequenceBuilder(new Pose2d(35.84, 61.50, Math.toRadians(-90.00)))
                     // init hand (closes), init cam
                     // cam detect
-                    .splineTo(new Vector2d(35.84, 59.00), Math.toRadians(-90.00))
+//                    .splineTo(new Vector2d(35.84, 59.00), Math.toRadians(-90.00))
                     // arm from floor to reset
                     // arm from reset to jnct high
-                    .splineTo(new Vector2d(35.14, 44.05), Math.toRadians(268.63))
+                    .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
+                    .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
                     .splineTo(new Vector2d(30.58, 6.38), Math.toRadians(221.32))
                     .waitSeconds(0.1)
                     // hand open

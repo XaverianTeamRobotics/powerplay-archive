@@ -34,22 +34,34 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
         registerFeature(sleeve);
         Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
         Auto auto = new Auto(start)
+
+            // FIRST CONE
+            // its preloaded, we do nothing :D
+
             .begin()
+
+            // FIRST JNCT
+
             // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
             .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
             // drive to the junction
-            .splineTo(new Vector2d(35.14, 44.05), Math.toRadians(268.63))
-            .splineTo(new Vector2d(30.58, 6.38), Math.toRadians(221.32))
+            .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
+            .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
+            .splineTo(new Vector2d(30.58, 7.38), Math.toRadians(221.32))
             .completeTrajectory()
             // once the arm reaches the correct height, open the hand and then lower the arm to cone_high
             .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> Clock.sleep(1000))
             .appendAction(Hand::autoOpen)
             .appendWait(Hand::complete)
+
+            // SECOND CONE
+
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH))
             .appendTrajectory()
             // drive to the cone stack
             .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
-            .splineToConstantHeading(new Vector2d(57.52, 9.55), Math.toRadians(2.46))
+            .splineToConstantHeading(new Vector2d(57.52, 8.00), Math.toRadians(2.46))
             .completeTrajectory()
             // once the arm is at the right position, close in on the top cone and begin raising the arm. we also wait a fraction of a second so the arm has enough time to raise above the stack so when we drive backwards, the cone we've picked up doesnt knock over the whole stack
             .appendWait(FourMotorArm::autoComplete)
@@ -58,14 +70,21 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
             .appendWait(500)
             .appendTrajectory()
+
+            // SECOND JNCT
+
             // drive back to the junction
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(28.55, 7.35), Math.toRadians(232.36))
+            .splineToConstantHeading(new Vector2d(27.58, 10.00), Math.toRadians(232.36))
             .completeTrajectory()
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> Clock.sleep(1000))
             .appendAction(Hand::autoOpen)
             .appendWait(Hand::complete)
+
+            // THIRD CONE
+
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH))
             .appendTrajectory()
             // we drive to the cone stack
@@ -79,14 +98,21 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
             .appendWait(500)
             .appendTrajectory()
+
+            // THIRD JNCT
+
             // drive back to the junction for the last time
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(28.98, 5.97), Math.toRadians(228.78))
+            .splineToConstantHeading(new Vector2d(28.98, 9.38), Math.toRadians(228.78))
             .completeTrajectory()
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> Clock.sleep(1000))
             .appendAction(Hand::autoOpen)
             .appendWait(Hand::complete)
+
+            // PARKING --- SPOT 2
+
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
             .appendTrajectory()
             // we drive to the second parking position and then wait for the arm to be at the reset position
@@ -118,9 +144,10 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
         if(!findingSleeve) {
             runner.run();
         }else{
-            Clock.block(this::findSleeve);
-            runner.processSleeve(spot);
-            findingSleeve = false;
+            if(findSleeve()) {
+                runner.processSleeve(spot);
+                findingSleeve = false;
+            }
         }
     }
 
