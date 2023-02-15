@@ -7,16 +7,17 @@ import java.util.Queue;
 
 public class AutoRunner {
 
-    private final Auto auto, one, three;
+    private final Auto auto, one, two, three;
     private final Queue<DriveCommand> driveCommands;
     private final AutonomousDrivetrain drivetrain;
     private DriveCommand currentDriveCommand = null;
 
-    public AutoRunner(Auto auto, AutonomousDrivetrain drivetrain, Auto one, Auto three) {
+    public AutoRunner(Auto auto, AutonomousDrivetrain drivetrain, Auto one, Auto two, Auto three) {
         this.auto = auto;
         driveCommands = this.auto.path();
         this.drivetrain = drivetrain;
         this.one = one;
+        this.two = two;
         this.three = three;
         this.currentDriveCommand = driveCommands.poll();
     }
@@ -29,6 +30,9 @@ public class AutoRunner {
         switch(spot) {
             case 1:
                 driveCommands.addAll(one.path());
+                break;
+            case 2:
+                driveCommands.addAll(two.path());
                 break;
             case 3:
                 driveCommands.addAll(three.path());
