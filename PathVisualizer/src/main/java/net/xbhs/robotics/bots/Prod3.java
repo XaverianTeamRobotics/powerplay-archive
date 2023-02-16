@@ -19,14 +19,14 @@ public class Prod3 extends Bot {
             .setConstraints(30, 30, 3, 3, 13.90)
             .setDimensions(14, 18)
             .followTrajectorySequence(drive -> {
-                TrajectorySequence Three = drive.trajectorySequenceBuilder(new Pose2d(35.84, 61.50, Math.toRadians(-90.00)))
+                TrajectorySequence Three = drive.trajectorySequenceBuilder(new Pose2d(-35.84, 61.50, Math.toRadians(-90.00)))
                     // init hand (closes), init cam
                     // cam detect
 //                    .splineTo(new Vector2d(35.84, 59.00), Math.toRadians(-90.00))
                     // arm from floor to reset
                     // arm from reset to jnct high
-                    .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
-                    .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
+                    .splineToConstantHeading(new Vector2d(-35.14, 44.05), Math.toRadians(-90.00))
+                    .splineToConstantHeading(new Vector2d(-35.14, 30.00), Math.toRadians(-90.00))
                     .splineTo(new Vector2d(30.58, 6.38), Math.toRadians(221.32))
                     .waitSeconds(0.1)
                     // hand open
@@ -55,6 +55,7 @@ public class Prod3 extends Bot {
                     // arm from jnct high to reset
                     .lineToSplineHeading(new Pose2d(34.28, 11.20, Math.toRadians(267.34))) // two
                     .lineToConstantHeading(new Vector2d(57.77, 8.17)) // one
+                    .turn(Math.toRadians(90.00))
                     .lineToSplineHeading(new Pose2d(11.21, 17.25, Math.toRadians(258.89))) // three pt.1
                     .lineTo(new Vector2d(13.96, 35.43)) // three pt.2
                     .build();

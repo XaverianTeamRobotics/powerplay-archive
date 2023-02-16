@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.internals.time.Timer;
 
 import java.util.UUID;
 
-public class NewAutoLeft extends OperationMode implements AutonomousOperation {
+public class AutoRight extends OperationMode implements AutonomousOperation {
 
     Timer time;
     int spot = 0;
@@ -32,7 +32,7 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
         registerFeature(arm);
         sleeve = new SleeveDetector();
         registerFeature(sleeve);
-        Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
+        Pose2d start = new Pose2d(-35.84, 61.50, Math.toRadians(-90.00));
         Auto auto = new Auto(start)
 
             // FIRST CONE
@@ -45,9 +45,9 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
             .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
             // drive to the junction
-            .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
-            .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
-            .splineTo(new Vector2d(30.58, 7.38), Math.toRadians(221.32))
+            .splineToConstantHeading(new Vector2d(-35.14, 44.05), Math.toRadians(-90.00))
+            .splineToConstantHeading(new Vector2d(-35.14, 30.00), Math.toRadians(-90.00))
+            .splineTo(new Vector2d(-30.58, 6.00), Math.toRadians(221.32))
             .completeTrajectory()
             // once the arm reaches the correct height, open the hand and then lower the arm to cone_high
             .appendWait(FourMotorArm::autoComplete)
@@ -64,8 +64,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH))
             .appendTrajectory()
             // drive to the cone stack
-            .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
-            .splineToConstantHeading(new Vector2d(56.00, 8.00), Math.toRadians(2.46))
+            .lineToSplineHeading(new Pose2d(-38.92, 11.11, Math.toRadians(0.11)))
+            .splineToConstantHeading(new Vector2d(-57.00, 8.00), Math.toRadians(2.46))
             .completeTrajectory()
             // once the arm is at the right position, close in on the top cone and begin raising the arm. we also wait a fraction of a second so the arm has enough time to raise above the stack so when we drive backwards, the cone we've picked up doesnt knock over the whole stack
             .appendWait(FourMotorArm::autoComplete)
@@ -78,8 +78,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             // SECOND JNCT
 
             // drive back to the junction
-            .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(27.58, 10.00), Math.toRadians(232.36))
+            .lineToSplineHeading(new Pose2d(-37.38, 13.95, Math.toRadians(232.36)))
+            .splineToConstantHeading(new Vector2d(-27.58, 9.50), Math.toRadians(232.36))
             .completeTrajectory()
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendWait(FourMotorArm::autoComplete)
@@ -98,8 +98,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_MED))
             .appendTrajectory()
             // we drive to the cone stack
-            .lineToSplineHeading(new Pose2d(37.68, 9.26, Math.toRadians(1.30)))
-            .splineTo(new Vector2d(55.90, 9.13), Math.toRadians(359.18))
+            .lineToSplineHeading(new Pose2d(-37.68, 9.26, Math.toRadians(1.31)))
+            .splineTo(new Vector2d(-57.00, 9.13), Math.toRadians(359.18))
             .completeTrajectory()
             // same as last time: we wait for the arm to lower on the top of the stack, grab a cone, raise the arm, and then a fraction of a second later we begin driving back to the junction
             .appendWait(FourMotorArm::autoComplete)
@@ -112,8 +112,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             // THIRD JNCT
 
             // drive back to the junction for the last time
-            .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(27.23, 11.38), Math.toRadians(228.78))
+            .lineToSplineHeading(new Pose2d(-37.38, 13.95, Math.toRadians(232.36)))
+            .splineToConstantHeading(new Vector2d(-27.23, 9.70), Math.toRadians(228.78))
             .completeTrajectory()
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendWait(FourMotorArm::autoComplete)
@@ -130,7 +130,7 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
             .appendTrajectory()
             // we drive close to the second parking position
-            .lineToSplineHeading(new Pose2d(34.28, 11.20, Math.toRadians(267.34)))
+            .lineToSplineHeading(new Pose2d(-34.28, 11.20, Math.toRadians(267.34)))
             .completeTrajectory()
             .complete();
 
@@ -140,7 +140,7 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
 
         Auto one = new Auto(auto.end())
             .begin()
-            .lineToConstantHeading(new Vector2d(57.77, 10.17))
+            .lineToConstantHeading(new Vector2d(-57.77, 10.17))
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(Devices.encoder5::save)
@@ -148,7 +148,7 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .complete();
         Auto two = new Auto(auto.end())
             .begin()
-            .lineToConstantHeading(new Vector2d(34.28, 14.20))
+            .lineToConstantHeading(new Vector2d(-34.28, 14.20))
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(Devices.encoder5::save)
@@ -156,10 +156,8 @@ public class NewAutoLeft extends OperationMode implements AutonomousOperation {
             .complete();
         Auto three = new Auto(auto.end())
             .begin()
-            .lineToSplineHeading(new Pose2d(11.21, 17.25, Math.toRadians(258.89)))
-            // since all parking spots span two tiles, we attempt to drive to the closest tile to the substation for the third parking spot. we might not have enough time for this, but if we do, it just makes connor and mukes lives easier
-            // also, we dont do this for the first parking spot because connor and muke like cycling the stack of cones and the first tile we hit in the first spot is already closest to the stack
-            .lineTo(new Vector2d(13.96, 35.43))
+            .turn(Math.toRadians(90.00))
+            .lineToConstantHeading(new Vector2d(-9.00, 11.00))
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(Devices.encoder5::save)
