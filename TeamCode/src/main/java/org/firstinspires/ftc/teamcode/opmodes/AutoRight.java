@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.features.Hand;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunnerAlt;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
@@ -21,7 +21,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
     int spot = 0;
     SleeveDetector sleeve;
     boolean findingSleeve = true;
-    AutoRunner runner;
+    AutoRunnerAlt runner;
 
     @Override
     public void construct() {
@@ -43,7 +43,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
             // FIRST PARK
 
             // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
-            .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_LOW))
+            .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
             // drive to spot 2
             .splineToConstantHeading(new Vector2d(-35.50, 43.93), Math.toRadians(270.65))
             .splineToConstantHeading(new Vector2d(-35.00, 11.70), Math.toRadians(270.45))
@@ -63,7 +63,8 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
 
         Auto one = new Auto(auto.end())
             .begin()
-            .lineTo(new Vector2d(-14.21, 8.28)) // one
+            .turn(Math.toRadians(90.00))
+            .lineTo(new Vector2d(-59.33, 11.27)) // one
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
@@ -73,8 +74,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
             .complete();
         Auto three = new Auto(auto.end())
             .begin()
-            .turn(Math.toRadians(90.00))
-            .lineTo(new Vector2d(-59.33, 11.27)) // three
+            .lineTo(new Vector2d(-12.21, 7.28)) // three
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
@@ -82,7 +82,7 @@ public class AutoRight extends OperationMode implements AutonomousOperation {
             .appendAction(Devices.encoder5::save)
             .appendAction(Devices.encoder6::save)
             .complete();
-        runner = new AutoRunner(auto, auto.getDrivetrain(), one, null, three);
+        runner = new AutoRunnerAlt(auto, auto.getDrivetrain(), three, one);
     }
 
     @Override
