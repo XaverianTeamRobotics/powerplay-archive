@@ -29,13 +29,19 @@ public class AutoRunner {
     private void beeeeekaaaayhaveityourway(int spot) {
         switch(spot) {
             case 1:
-                driveCommands.addAll(one.path());
+                if(one != null) {
+                    driveCommands.addAll(one.path());
+                }
                 break;
             case 2:
-                driveCommands.addAll(two.path());
+                if(two != null) {
+                    driveCommands.addAll(two.path());
+                }
                 break;
             case 3:
-                driveCommands.addAll(three.path());
+                if(three != null) {
+                    driveCommands.addAll(three.path());
+                }
         }
     }
 
