@@ -5,236 +5,96 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.features.FourMotorArm;
 import org.firstinspires.ftc.teamcode.features.Hand;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
-import org.firstinspires.ftc.teamcode.internals.data.ArmCommand;
-import org.firstinspires.ftc.teamcode.internals.data.ArmHeight;
-import org.firstinspires.ftc.teamcode.internals.data.DriveCommand;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunnerAlt;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 import org.firstinspires.ftc.teamcode.internals.time.Timer;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.UUID;
 
 public class AutoRight extends OperationMode implements AutonomousOperation {
 
-    private AutonomousDrivetrain drivetrain;
-    private ArmCommand currentArmCommand = null;
-    private ArmCommand lastArmCommand = null;
-    private DriveCommand currentDriveCommand = null;
-    private Queue<DriveCommand> driveCommands = new LinkedList<>();
-    private Queue<ArmCommand> armCommands = new LinkedList<>();
-    private Hand hand;
-    private Timer handTimer;
-    private SleeveDetector sleeve;
-    private int spot;
+    Timer time;
+    int spot = 0;
+    SleeveDetector sleeve;
+    boolean findingSleeve = true;
+    AutoRunnerAlt runner;
 
     @Override
     public void construct() {
-
-        // inits
-        String clockStr = UUID.randomUUID().toString();
-        handTimer = Clock.make(clockStr);
-        hand = new Hand(true);
+        time = Clock.make(UUID.randomUUID().toString());
+        Hand hand = new Hand(true);
         registerFeature(hand);
-        registerFeature(new FourMotorArm());
+        FourMotorArm arm = new FourMotorArm();
+        registerFeature(arm);
         sleeve = new SleeveDetector();
         registerFeature(sleeve);
-        armCommands.add(ArmCommand.CONE_LOW);
-        armCommands.add(ArmCommand.JNCT_HIGH);
-        armCommands.add(ArmCommand.OPEN);
-        armCommands.add(ArmCommand.ALIGN);
-        armCommands.add(ArmCommand.CONE_LOW);
-        armCommands.add(ArmCommand.CLOSE);
-        armCommands.add(ArmCommand.JNCT_HIGH);
-        armCommands.add(ArmCommand.OPEN);
-        armCommands.add(ArmCommand.ALIGN);
-        armCommands.add(ArmCommand.CONE_LOW);
-        armCommands.add(ArmCommand.ALIGN);
-        drivetrain = new AutonomousDrivetrain();
-        drivetrain.setPoseEstimate(new Pose2d(-39.25, 61.50, Math.toRadians(-90.00)));
+        Pose2d start = new Pose2d(-35.84, 61.50, Math.toRadians(-90.00));
+        Auto auto = new Auto(start)
 
+            // FIRST CONE
+            // its preloaded, we do nothing :D
 
+            .begin()
 
-        driveCommands.add(new DriveCommand.Wait(this::findSleeve));
+            // FIRST PARK
 
-
-
-        TrajectorySequence seq0 = drivetrain.trajectorySequenceBuilder(new Pose2d(-36.29, 61.50, Math.toRadians(-90.00)))
-            // leave wall
-            .lineToConstantHeading(new Vector2d(-36.29, 58))
-            .build();
-        driveCommands.add(new DriveCommand.Drive(seq0));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-
-
-
-        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
-            // to straight
-            .lineToConstantHeading(new Vector2d(-14.5, 58))
-            .addDisplacementMarker(() -> {
-                lastArmCommand = currentArmCommand;
-                currentArmCommand = armCommands.poll();
+            // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
+            .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
+            // drive to spot 2
+            .splineToConstantHeading(new Vector2d(-35.50, 43.93), Math.toRadians(270.65))
+            .splineToConstantHeading(new Vector2d(-35.00, 11.70), Math.toRadians(270.45))
+            .splineTo(new Vector2d(-38.01, 10.30), Math.toRadians(177.99)) // two
+            .completeTrajectory()
+            // once the arm reaches the correct height, park
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> {
+                if(spot == 2) {
+                    FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET);
+                }
             })
-            .turn(Math.toRadians(5))
-            // to middle, turn
-            .lineToConstantHeading(new Vector2d(-17, 9))
-            .turn(Math.toRadians(50))
-            .forward(5)
-            .build();
-        driveCommands.add(new DriveCommand.Drive(seq1));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(Devices.encoder5::save)
+            .appendAction(Devices.encoder6::save)
+            .complete();
 
-
-
-//        TrajectorySequence seq1 = drivetrain.trajectorySequenceBuilder(seq0.end())
-//            // dropoff
-//            .lineToConstantHeading(new Vector2d(13, 0))
-//            .build();
-//        driveCommands.add(new DriveCommand.Drive(seq1));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(() -> handTimer.elapsed(1)));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            lastArmCommand = currentArmCommand;
-            currentArmCommand = armCommands.poll();
-        }));
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-
-
-        TrajectorySequence seq2 = drivetrain.trajectorySequenceBuilder(seq1.end())
-            // go to straight to pickup
-            .lineToConstantHeading(new Vector2d(-14, 12.50))
-            .turn(Math.toRadians(45))
-            .build();
-        driveCommands.add(new DriveCommand.Drive(seq2));
-// end
-
-
-
-
-
-
-
-//        TrajectorySequence seq5 = drivetrain.trajectorySequenceBuilder(seq2.end())
-//            // park 3
-//            .lineToConstantHeading(new Vector2d(14, 12.50))
-//            .turn(Math.toRadians(50))
-//            .build();
-//        driveCommands.add(new DriveCommand.Drive(seq5));
-
-
-
-        TrajectorySequence sleeveOne = drivetrain.trajectorySequenceBuilder(seq2.end())
-            .lineToConstantHeading(new Vector2d(-61, 12.50))
-            .build();
-        TrajectorySequence sleeveTwo = drivetrain.trajectorySequenceBuilder(seq2.end())
-            .lineToConstantHeading(new Vector2d(-37, 12.50))
-            .build();
-         processSleeve(sleeveOne, sleeveTwo);
-
-
-
-        driveCommands.add(new DriveCommand.Wait(FourMotorArm::autoComplete));
-        driveCommands.add(new DriveCommand.Do(() -> {
-            ArmHeight.setHeight(new double[] { Devices.encoder5.getPosition(), Devices.encoder6.getPosition() });
-        }));
-
-
-
-        currentDriveCommand = driveCommands.poll();
-
-
-
+        Auto one = new Auto(auto.end())
+            .begin()
+            .turn(Math.toRadians(90.00))
+            .lineTo(new Vector2d(-59.33, 11.27)) // one
+            .completeTrajectory()
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(Devices.encoder5::save)
+            .appendAction(Devices.encoder6::save)
+            .complete();
+        Auto three = new Auto(auto.end())
+            .begin()
+            .lineTo(new Vector2d(-12.21, 7.28)) // three
+            .completeTrajectory()
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.RESET))
+            .appendWait(FourMotorArm::autoComplete)
+            .appendAction(Devices.encoder5::save)
+            .appendAction(Devices.encoder6::save)
+            .complete();
+        runner = new AutoRunnerAlt(auto, auto.getDrivetrain(), three, one);
     }
 
     @Override
     public void run() {
-        if(!drivetrain.isBusy()) {
-            try {
-                DriveCommand.Drive command = (DriveCommand.Drive) currentDriveCommand;
-                drivetrain.followTrajectorySequenceAsync(command.getSequence());
-                currentDriveCommand = driveCommands.poll();
-            } catch(ClassCastException e) {
-                try {
-                    DriveCommand.Do command = (DriveCommand.Do) currentDriveCommand;
-                    command.getAction().run();
-                    currentDriveCommand = driveCommands.poll();
-                } catch(ClassCastException ex) {
-                    DriveCommand.Wait command = (DriveCommand.Wait) currentDriveCommand;
-                    if(command.getSupplier().get()) {
-                        currentDriveCommand = driveCommands.poll();
-                    }
-                }
+        if(!findingSleeve) {
+            runner.run();
+        }else{
+            if(findSleeve()) {
+                runner.processSleeve(spot);
+                findingSleeve = false;
             }
         }
-        drivetrain.update();
-        processArmCommand();
-    }
-
-    private void processArmCommand() {
-        if(currentArmCommand == null || lastArmCommand == currentArmCommand) return;
-        switch(currentArmCommand) {
-            case JNCT_GND:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_GND);
-                break;
-            case JNCT_LOW:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_LOW);
-                break;
-            case JNCT_MED:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_MED);
-                break;
-            case JNCT_HIGH:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH);
-                break;
-            case CONE_LOW:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_LOW);
-                break;
-            case CONE_MED:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_MED);
-                break;
-            case CONE_HIGH:
-                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH);
-                break;
-            case OPEN:
-                Hand.manualOpen();
-                handTimer.reset();
-                break;
-            case CLOSE:
-                Hand.manualClose();
-                handTimer.reset();
-                break;
-            case ALIGN:
-                FourMotorArm.autoLevelArm();
-        }
-        lastArmCommand = currentArmCommand;
-    }
-
-    private void processSleeve(TrajectorySequence one, TrajectorySequence two) {
-        driveCommands.add(new DriveCommand.Do(() -> {
-            switch(spot) {
-                case 1:
-                    driveCommands.add(new DriveCommand.Drive(one));
-                    break;
-                case 2:
-                    driveCommands.add(new DriveCommand.Drive(two));
-            }
-        }));
     }
 
     private boolean findSleeve() {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers;
 
 import androidx.annotation.NonNull;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.OdometrySe
 import java.util.Arrays;
 import java.util.List;
 
+@Config
 public class IMULocalizer extends TwoTrackingWheelLocalizer {
 
 
