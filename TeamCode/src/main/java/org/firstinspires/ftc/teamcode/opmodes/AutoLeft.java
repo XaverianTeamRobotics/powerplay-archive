@@ -65,7 +65,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendTrajectory()
             // drive to the cone stack
             .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
-            .splineToConstantHeading(new Vector2d(57.00, 8.00), Math.toRadians(2.46))
+            .splineToConstantHeading(new Vector2d(58.00, 8.00), Math.toRadians(2.46))
             .completeTrajectory()
             // once the arm is at the right position, close in on the top cone and begin raising the arm. we also wait a fraction of a second so the arm has enough time to raise above the stack so when we drive backwards, the cone we've picked up doesnt knock over the whole stack
             .appendWait(FourMotorArm::autoComplete)
@@ -99,7 +99,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendTrajectory()
             // we drive to the cone stack
             .lineToSplineHeading(new Pose2d(37.68, 9.26, Math.toRadians(1.30)))
-            .splineTo(new Vector2d(57.00, 9.13), Math.toRadians(359.18))
+            .splineTo(new Vector2d(58.00, 9.13), Math.toRadians(359.18))
             .completeTrajectory()
             // same as last time: we wait for the arm to lower on the top of the stack, grab a cone, raise the arm, and then a fraction of a second later we begin driving back to the junction
             .appendWait(FourMotorArm::autoComplete)
@@ -140,7 +140,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
 
         Auto one = new Auto(auto.end())
             .begin()
-            .lineToConstantHeading(new Vector2d(57.77, 10.17))
+            .lineToConstantHeading(new Vector2d(57.77, 12.17))
             .completeTrajectory()
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(Devices.encoder5::save)
