@@ -61,4 +61,12 @@ public class ImageProcessingConstants {
     public static double CANNY_2 = 200;
 
     public static double GAUSSIAN_BLUR_SIZE = 15;
+
+    public static double BLACK_R_MIN = 0;
+    public static double BLACK_G_MIN = 0;
+    public static double BLACK_B_MIN = 0;
+
+    public static double BLACK_R_MAX = 30;
+    public static double BLACK_G_MAX = 30;
+    public static double BLACK_B_MAX = 30;
 }
