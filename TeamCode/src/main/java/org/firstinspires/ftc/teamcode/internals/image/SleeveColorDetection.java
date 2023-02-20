@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.internals.image;
 
+import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.Logging;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.*;
 import static org.opencv.core.Core.inRange;
@@ -14,29 +17,18 @@ public class SleeveColorDetection extends OpenCvPipeline {
     private volatile int detection = 0;
     private volatile boolean debugEnabled = false;
 
+    private int debugCrossX = 0.0, debugCrossY = 0.0;
+
     @Override
     public void init(Mat mat) {}
 
     @Override
     public Mat processFrame(Mat input) {
-        //Logging.logData("Input Height", input.height());
-        //Logging.logData("Input Width", input.width());
-
-        Mat processedMat;
-
-        double cropRatio = CROP_RATIO;
-
-        // Crop part of the image to focus the center of the image
-        Rect roi = new Rect(    new Point(input.width()*cropRatio, input.height()*cropRatio),
-                                new Point(input.width()*(1-cropRatio), input.height()*(1-cropRatio)));
-
-        processedMat = input.submat(roi).clone();
-
         // Blur both the image to reduce noise
         Size blurSize = new Size(GAUSSIAN_BLUR_SIZE, GAUSSIAN_BLUR_SIZE);
-        GaussianBlur(processedMat, processedMat, blurSize, 0);
+        GaussianBlur(input, input, blurSize, 0);
 
-        cvtColor(processedMat, processedMat, Imgproc.COLOR_RGB2HSV);
+        cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
 
         // Define the colors needed
         Scalar magentaLowHSV = new Scalar(MAGENTA_H_MIN, MAGENTA_S_MIN, MAGENTA_V_MIN);
@@ -49,9 +41,9 @@ public class SleeveColorDetection extends OpenCvPipeline {
         Scalar greenHighHSV = new Scalar(GREEN2_H_MAX, GREEN2_S_MAX, GREEN2_V_MAX);
 
         // Find the average colors of the original image
-        double magentaAverage = processForColor(processedMat, magentaLowHSV, magentaHighHSV, "magenta");
-        double orangeAverage = processForColor(processedMat, orangeLowHSV, orangeHighHSV, "orange");
-        double greenAverage = processForColor(processedMat, greenLowHSV, greenHighHSV, "green");
+        double magentaAverage = processForColor(input, magentaLowHSV, magentaHighHSV, "magenta");
+        double orangeAverage = processForColor(input, orangeLowHSV, orangeHighHSV, "orange");
+        double greenAverage = processForColor(input, greenLowHSV, greenHighHSV, "green");
 
         double largestVal = Math.max(magentaAverage, Math.max(orangeAverage, greenAverage));
         if (largestVal == magentaAverage) {
@@ -64,12 +56,31 @@ public class SleeveColorDetection extends OpenCvPipeline {
             detection = 0;
         }
 
-        cvtColor(processedMat, processedMat, COLOR_HSV2RGB); // Convert back to RGB for display
+        // If debuggind is enabled, add a cross to the image where the color of the point can be retrieved
+        if (debugEnabled) {
+            double gamepadX = Devices.controller1.getLeftStickX();
+            double gamepadY = Devices.controller1.getLeftStickY();
+
+            debugCrossX += gamepadX / 25;
+            debugCrossY += gamepadY / 25;
+
+            debugCrossX = Math.max(debugCrossX, input.width());
+            debugCrossY = Math.max(debugCrossY, input.width());
+
+            double[] color = input.get(debugCrossX, debugCrossY);
+            Imgproc.putText(
+                    input,
+                    Arrays.toString(color),
+                    new Point(debugCrossX, debugCrossY),
+                    FONT_HERSHEY_SIMPLEX, 2,
+                    new Scalar(255, 255, 255));
+        }
+
+        cvtColor(input, input, COLOR_HSV2RGB); // Convert back to RGB for display
         printOutcome();
         // add the number of the color to the image
-        Imgproc.putText(processedMat, String.valueOf(detection), new Point(10, 50), FONT_HERSHEY_SIMPLEX, 2, new Scalar(255, 255, 255), 2);
-        processedMat.release();
-        return input; // Useful for previewing the final output
+        Imgproc.putText(input, String.valueOf(detection), new Point(10, 50), FONT_HERSHEY_SIMPLEX, 2, new Scalar(255, 255, 255), 2);
+        return input;
     }
 
     private void printOutcome() {
