@@ -17,7 +17,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
     private volatile int detection = 0;
     private volatile boolean debugEnabled = false;
 
-    private int debugCrossX = 0.0, debugCrossY = 0.0;
+    private int debugCrossX = 0, debugCrossY = 0;
 
     @Override
     public void init(Mat mat) {}
