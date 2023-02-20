@@ -64,8 +64,11 @@ public class SleeveColorDetection extends OpenCvPipeline {
             debugCrossX += gamepadX / 25;
             debugCrossY += gamepadY / 25;
 
-            debugCrossX = Math.max(debugCrossX, input.width());
-            debugCrossY = Math.max(debugCrossY, input.width());
+            debugCrossX = Math.min(debugCrossX, input.width());
+            debugCrossY = Math.min(debugCrossY, input.height());
+
+            debugCrossX = Math.max(debugCrossX, 0);
+            debugCrossY = Math.max(debugCrossY, 0);
 
             double[] color = input.get(debugCrossX, debugCrossY);
             Imgproc.putText(
