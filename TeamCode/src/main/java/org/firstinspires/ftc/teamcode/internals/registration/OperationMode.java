@@ -68,6 +68,12 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.initStdDevices();
             // tell user-defined code of the opmode to construct itself
             construct();
+            // init all buildable scripts to execute their build sequence
+            for(ScriptTemplate feature : runner.scripts) {
+                if(feature.needsInit) {
+                    feature.init(environment);
+                }
+            }
             // wait until the opmode is executed
             waitForStart();
             resetRuntime();
@@ -118,7 +124,7 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Call this whenever you need to reboot the robot.
+     * Call this whenever you need to reboot the robot. Sometimes it works.
      */
     public static void reboot(String reason) {
         throw new RobotRebootException(reason);
