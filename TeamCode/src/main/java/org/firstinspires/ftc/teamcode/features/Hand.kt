@@ -14,13 +14,14 @@ class Hand() : Feature(), Buildable {
 
     constructor(auto: Boolean) : this() {
         this.auto = auto
-        manualClose()
     }
 
     override fun build() {
         if(!auto) {
             Devices.servo1.position = homePosLeft
             Devices.servo0.position = homePosRight
+        }else{
+            manualClose()
         }
     }
 

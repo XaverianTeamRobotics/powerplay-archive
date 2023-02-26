@@ -37,6 +37,7 @@ public abstract class OperationMode extends LinearOpMode {
         try {
             // formatting for questions api
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+
             Loggers.init(telemetry);
             HardwareGetter.setEmulated(false);
             HardwareGetter.setHardwareMap(hardwareMap);

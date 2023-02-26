@@ -23,7 +23,8 @@ public class SleeveDetector extends Feature implements Buildable {
     private int averageSpot = 0;
     private boolean init = false;
 
-    public SleeveDetector() {
+    @Override
+    public void build() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId);
 
@@ -52,11 +53,6 @@ public class SleeveDetector extends Feature implements Buildable {
                 AdvancedLogging.update();
             }
         });
-    }
-
-    @Override
-    public void build() {
-
     }
 
     @Override
