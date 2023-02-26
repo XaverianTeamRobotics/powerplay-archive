@@ -68,12 +68,6 @@ public abstract class OperationMode extends LinearOpMode {
             HardwareGetter.initStdDevices();
             // tell user-defined code of the opmode to construct itself
             construct();
-            // init all buildable scripts to execute their build sequence
-            for(ScriptTemplate feature : runner.scripts) {
-                if(feature.needsInit) {
-                    feature.init(environment);
-                }
-            }
             // wait until the opmode is executed
             waitForStart();
             resetRuntime();
@@ -105,12 +99,15 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
+     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping and building it if necessary.
      * @param feature The feature to register.
      */
     public static void registerFeature(@NotNull Feature feature) {
         try {
             Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+            if(feature.needsInit) {
+                feature.init(HardwareGetter.getJloopingRunner().scriptParametersGlobal);
+            }
         } catch (ScriptRunner.DuplicateScriptException e) {
             e.printStackTrace();
         }
