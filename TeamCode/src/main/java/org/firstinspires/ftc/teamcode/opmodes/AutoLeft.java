@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.features.FourMotorArm;
 import org.firstinspires.ftc.teamcode.features.Hand;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
+import org.firstinspires.ftc.teamcode.internals.misc.PoleCenterer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunner;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
@@ -33,6 +34,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         sleeve = new SleeveDetector();
         registerFeature(sleeve);
         Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
+        PoleCenterer poleCenterer = new PoleCenterer();
         Auto auto = new Auto(start)
 
             // FIRST CONE
@@ -49,6 +51,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
             .splineTo(new Vector2d(30.58, 6.00), Math.toRadians(221.32))
             .completeTrajectory()
+            .appendAction(poleCenterer::center)
             // once the arm reaches the correct height, open the hand and then lower the arm to cone_high
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(() -> Clock.sleep(100))
@@ -81,6 +84,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
             .splineToConstantHeading(new Vector2d(27.58, 9.50), Math.toRadians(232.36))
             .completeTrajectory()
+            .appendAction(poleCenterer::center)
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(() -> Clock.sleep(300))
@@ -115,6 +119,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
             .splineToConstantHeading(new Vector2d(27.23, 9.70), Math.toRadians(228.78))
             .completeTrajectory()
+            .appendAction(poleCenterer::center)
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(() -> Clock.sleep(150))
@@ -163,6 +168,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(Devices.encoder5::save)
             .appendAction(Devices.encoder6::save)
             .complete();
+        poleCenterer.setDrivetrain(auto.getDrivetrain());
         runner = new AutoRunner(auto, auto.getDrivetrain(), one, two, three);
     }
 

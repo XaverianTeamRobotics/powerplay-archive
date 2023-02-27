@@ -20,8 +20,13 @@ import static org.opencv.core.Core.inRange;
 
 public class PoleNavigator extends OpenCvPipeline {
     private double poleDistanceX, poleDistanceY, poleDistance;
+    private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
     @Override
     public Mat processFrame(Mat input) {
+
+        width = input.width();
+        height = input.height();
+
         // Blur the image to reduce noise
         Size blurSize = new Size(55.0,55.0);
         Imgproc.GaussianBlur(input, input, blurSize, 0.0);
@@ -98,6 +103,11 @@ public class PoleNavigator extends OpenCvPipeline {
      * @return Get the overall distance from the center of the camera to the pole. Always positive.
      */
     public double getPoleDistance() { return poleDistance; }
+
+    /**
+     * @return An array containing the width and height (in that order) of the most recent {@link Mat} passed to {@link #processFrame(Mat)}.
+     */
+    public int[] getSize() { return new int[] { width, height }; }
 
     public void startStreaming() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());

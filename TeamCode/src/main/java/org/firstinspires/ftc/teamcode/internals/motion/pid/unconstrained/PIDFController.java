@@ -44,7 +44,7 @@ public class PIDFController {
      * Our errorVal represents the return of e(t) and prevErrorVal is the previous error.
      *
      * @param sp The setpoint of the pid control loop.
-     * @param pv The measured value of he pid control loop. We want sp = pv, or to the degree
+     * @param pv The measured value of the pid control loop. We want sp = pv, or to the degree
      *           such that sp - pv, or e(t) < tolerance.
      */
     public PIDFController(double kp, double ki, double kd, double kf, double sp, double pv) {
