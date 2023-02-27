@@ -50,9 +50,17 @@ public class ImageFeedbackController {
         double width = localizer.getSize()[0];
         double height = localizer.getSize()[1];
 
-        // normalize the coordinate to [0, 1]
-        x = Range.scale(x, 0 - width / 2.0, width - width / 2.0, 0, 1);
-        y = Range.scale(y, 0 - height / 2.0, height - height / 2.0, 0, 1);
+        // normalize the coordinate to [-1, 1]
+        double max, min;
+        if(height < width) {
+            min = 0 - width / 2.0;
+            max = width - width / 2.0;
+        }else{
+            min = 0 - height / 2.0;
+            max = height - height / 2.0;
+        }
+        x = Range.scale(x, min, max, -1, 1);
+        y = Range.scale(y, min, max, -1, 1);
 
         double vx = pidx.calculate(x);
         double vy = pidy.calculate(y);
