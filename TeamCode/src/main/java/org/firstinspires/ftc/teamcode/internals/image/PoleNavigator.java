@@ -40,6 +40,8 @@ public class PoleNavigator extends OpenCvPipeline {
         blobDetectorParams.set_minCircularity((float) minC);
         SimpleBlobDetector detector = SimpleBlobDetector.create(blobDetectorParams);
         MatOfKeyPoint detections = new MatOfKeyPoint();
+        Mat blurred = new Mat();
+//        Imgproc.GaussianBlur(input, blurred, new Size(11, 11), 2);
         detector.detect(input, detections);
 
         // TODO: For now, draw blobs. Might remove when done developing
@@ -117,7 +119,7 @@ public class PoleNavigator extends OpenCvPipeline {
         {
             @Override
             public void onOpened() {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode)
