@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.internals.image;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
@@ -15,10 +16,12 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.Objects;
 
-import static org.firstinspires.ftc.teamcode.internals.image.ImageProcessingConstants.*;
-import static org.opencv.core.Core.inRange;
-
+@Config
 public class PoleNavigator extends OpenCvPipeline {
+
+    public static int minArea = 50, maxArea = 100;
+    public static double minC = 0.75, maxC = 1;
+
     private double poleDistanceX, poleDistanceY, poleDistance;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
     @Override
@@ -27,30 +30,14 @@ public class PoleNavigator extends OpenCvPipeline {
         width = input.width();
         height = input.height();
 
-        // Blur the image to reduce noise
-        Size blurSize = new Size(55.0,55.0);
-        Imgproc.GaussianBlur(input, input, blurSize, 0.0);
-
-        // Get the area withing BLACK_MIN and BLACK_MAX
-        Mat filter = new Mat();
-        inRange(
-                input,
-                new Scalar(BLACK_R_MIN, BLACK_G_MIN, BLACK_B_MIN),
-                new Scalar(BLACK_R_MAX, BLACK_G_MAX, BLACK_B_MAX),
-                filter);
-
-        // Before the mask can be applied, we need to INVERT the image so that the black pole becomes white
-        Core.invert(input, input);
-
-        Core.bitwise_and(input, filter, input);
-        filter.release();
-
         // Detect white blobs
         SimpleBlobDetector_Params blobDetectorParams = new SimpleBlobDetector_Params();
-        blobDetectorParams.set_filterByColor(true);
+        blobDetectorParams.set_filterByCircularity(true);
         blobDetectorParams.set_filterByArea(true);
-        blobDetectorParams.set_minArea(25*25);
-        blobDetectorParams.set_maxArea(75*75);
+        blobDetectorParams.set_minArea(minArea*minArea);
+        blobDetectorParams.set_maxArea(maxArea*maxArea);
+        blobDetectorParams.set_maxCircularity((float) maxC);
+        blobDetectorParams.set_minCircularity((float) minC);
         SimpleBlobDetector detector = SimpleBlobDetector.create(blobDetectorParams);
         MatOfKeyPoint detections = new MatOfKeyPoint();
         detector.detect(input, detections);
@@ -84,6 +71,16 @@ public class PoleNavigator extends OpenCvPipeline {
             poleDistance = closestKPT_dist;
         }
 
+//        Mat gray = new Mat();
+//        Imgproc.cvtColor(input, gray, Imgproc.COLOR_BGR2GRAY);
+//        Mat output = new Mat();
+//        Imgproc.HoughCircles(gray, output, Imgproc.HOUGH_GRADIENT, 1.2, 100);
+//        for(int i = 0; i < output.cols(); i++) {
+//            double[] c = output.get(0, i);
+//            Imgproc.circle(input, new Point(c[0], c[1]), (int) c[2], new Scalar(0, 255, 0), 2);
+//            Imgproc.rectangle(input, new Point(c[0], c[1]), new Point(c[0], c[1]), new Scalar(0, 255, 0), 5);
+//        }
+
         return input;
     }
 
@@ -111,7 +108,7 @@ public class PoleNavigator extends OpenCvPipeline {
 
     public void startStreaming() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId); // TODO: Implement second camera
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId); // TODO: Implement second camera
 
         camera.setPipeline(this);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
@@ -130,6 +127,7 @@ public class PoleNavigator extends OpenCvPipeline {
                  */
 
                 AdvancedLogging.logData("Camera error", errorCode);
+                System.out.println("Camera error: " + errorCode);
                 AdvancedLogging.update();
             }
         });
