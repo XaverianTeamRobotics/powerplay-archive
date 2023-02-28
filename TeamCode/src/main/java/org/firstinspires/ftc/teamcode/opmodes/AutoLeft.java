@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.features.FourMotorArm;
 import org.firstinspires.ftc.teamcode.features.Hand;
+import org.firstinspires.ftc.teamcode.features.JCam;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.misc.PoleCenterer;
@@ -33,6 +34,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         registerFeature(arm);
         sleeve = new SleeveDetector();
         registerFeature(sleeve);
+        registerFeature(new JCam());
         Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
         PoleCenterer poleCenterer = new PoleCenterer();
         Auto auto = new Auto(start)
@@ -45,15 +47,24 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             // FIRST JNCT
 
             // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
-            .addDisplacementMarker(2, () -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
+            .addDisplacementMarker(2, () -> {
+                FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH);
+                JCam.toggle();
+            })
             // drive to the junction
             .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
             .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
             .splineTo(new Vector2d(30.58, 6.00), Math.toRadians(221.32))
             .completeTrajectory()
-            .appendAction(poleCenterer::center)
-            // once the arm reaches the correct height, open the hand and then lower the arm to cone_high
+            // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
+            .appendWait(JCam::complete)
+            .appendAction(poleCenterer::center)
+            .appendAction(JCam::toggle)
+            .appendTrajectory()
+            .forward(2)
+            .completeTrajectory()
+            // open the hand and then lower the arm to cone_high
             .appendAction(() -> Clock.sleep(100))
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH_LOWER))
             .appendWait(FourMotorArm::autoComplete)
@@ -84,9 +95,15 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
             .splineToConstantHeading(new Vector2d(27.58, 9.50), Math.toRadians(232.36))
             .completeTrajectory()
-            .appendAction(poleCenterer::center)
-            // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
+            // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
+            .appendWait(JCam::complete)
+            .appendAction(poleCenterer::center)
+            .appendAction(JCam::toggle)
+            .appendTrajectory()
+            .forward(2)
+            .completeTrajectory()
+            // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendAction(() -> Clock.sleep(300))
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH_LOWER))
             .appendWait(FourMotorArm::autoComplete)
@@ -119,9 +136,15 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
             .splineToConstantHeading(new Vector2d(27.23, 9.70), Math.toRadians(228.78))
             .completeTrajectory()
-            .appendAction(poleCenterer::center)
-            // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
+            // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
+            .appendWait(JCam::complete)
+            .appendAction(poleCenterer::center)
+            .appendAction(JCam::toggle)
+            .appendTrajectory()
+            .forward(2)
+            .completeTrajectory()
+            // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendAction(() -> Clock.sleep(150))
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH_LOWER))
             .appendWait(FourMotorArm::autoComplete)

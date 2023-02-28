@@ -20,7 +20,7 @@ import java.util.Objects;
 public class PoleNavigator extends OpenCvPipeline {
 
     public static int minArea = 50, maxArea = 100;
-    public static double minC = 0.75, maxC = 1;
+    public static double minC = 0, maxC = 1;
 
     private double poleDistanceX, poleDistanceY, poleDistance;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
@@ -49,7 +49,7 @@ public class PoleNavigator extends OpenCvPipeline {
                 detections.toArray()) {
             Imgproc.rectangle(
                     input,
-                    new Rect(kpt.pt, new Size(kpt.size, kpt.size)),
+                    new Rect(new Point(kpt.pt.x - 2, kpt.pt.y - 2), new Point(kpt.pt.x + 2, kpt.pt.y + 2)),
                     new Scalar(255, 255, 255));
         }
 
@@ -110,7 +110,7 @@ public class PoleNavigator extends OpenCvPipeline {
 
     public void startStreaming() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId); // TODO: Implement second camera
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId);
 
         camera.setPipeline(this);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
