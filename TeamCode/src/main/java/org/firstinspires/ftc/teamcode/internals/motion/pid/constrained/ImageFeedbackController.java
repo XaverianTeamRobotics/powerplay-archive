@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.internals.motion.pid.constrained;
 
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.internals.image.PoleNavigator;
+import org.firstinspires.ftc.teamcode.internals.telemetry.logging.DashboardLogging;
 
 /**
  * A profiled PID controller which attempts to center a specific pixel in an image.
@@ -47,6 +48,10 @@ public class ImageFeedbackController {
     public double[] calculate() {
         double x = localizer.getPoleDistanceX();
         double y = localizer.getPoleDistanceY();
+        // this sometimes works, sometimes not :((
+        if(x == Double.NaN || y == Double.NaN) {
+            return new double[] { 0, 0 };
+        }
         double width = localizer.getSize()[0];
         double height = localizer.getSize()[1];
 
@@ -59,11 +64,18 @@ public class ImageFeedbackController {
             min = 0 - height / 2.0;
             max = height - height / 2.0;
         }
-        x = Range.scale(x, min, max, -1, 1);
-        y = Range.scale(y, min, max, -1, 1);
+        x = -Range.scale(x, min, max, -1, 1);
+        y = -Range.scale(y, min, max, -1, 1);
 
         double vx = pidx.calculate(x);
         double vy = pidy.calculate(y);
+        DashboardLogging.log("x", x);
+        DashboardLogging.log("y", y);
+        DashboardLogging.log("width", width);
+        DashboardLogging.log("height", height);
+        DashboardLogging.log("vx", vx);
+        DashboardLogging.log("vy", vy);
+        DashboardLogging.update();
         return new double[] { vx, vy };
     }
 

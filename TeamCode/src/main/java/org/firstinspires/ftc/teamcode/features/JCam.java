@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.features;
 import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
-import org.firstinspires.ftc.teamcode.internals.time.Clock;
 
 /**
  * <blockquote>
@@ -15,10 +14,12 @@ public class JCam extends Feature implements Buildable {
 
     private static boolean down = false;
 
+    private static long time;
+
     @Override
     public void build() {
         Devices.servo2.setPosition(100);
-        Clock.make("jcam");
+        time = System.currentTimeMillis();
     }
 
     @Override
@@ -32,11 +33,11 @@ public class JCam extends Feature implements Buildable {
 
     public static void toggle() {
         down = !down;
-        Clock.get("jcam").reset();
+        time = System.currentTimeMillis() + 1000;
     }
 
     public static boolean complete() {
-        return Clock.get("jcam").elapsed(2);
+        return System.currentTimeMillis() > time;
     }
 
     public static boolean down() {
