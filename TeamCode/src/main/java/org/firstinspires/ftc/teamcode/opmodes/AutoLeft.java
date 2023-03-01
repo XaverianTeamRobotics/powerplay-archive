@@ -32,11 +32,11 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         registerFeature(hand);
         FourMotorArm arm = new FourMotorArm();
         registerFeature(arm);
-        sleeve = new SleeveDetector();
+        sleeve = new SleeveDetector(0);
         registerFeature(sleeve);
         registerFeature(new JCam());
         Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
-        PoleCenterer poleCenterer = new PoleCenterer();
+        PoleCenterer poleCenterer = new PoleCenterer(1);
         Auto auto = new Auto(start)
 
             // FIRST CONE

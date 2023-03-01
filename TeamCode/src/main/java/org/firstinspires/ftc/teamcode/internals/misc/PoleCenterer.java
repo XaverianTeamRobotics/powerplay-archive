@@ -22,6 +22,10 @@ public class PoleCenterer {
         controller = new ImageFeedbackController(new PoleNavigator(), kP, kI, kD, mV, mA, sp, ctol, etol);
     }
 
+    public PoleCenterer(int index) {
+        controller = new ImageFeedbackController(new PoleNavigator(index), kP, kI, kD, mV, mA, sp, ctol, etol);
+    }
+
     public boolean loop() {
         double[] xy = controller.calculate();
         Vector2d input = new Vector2d(

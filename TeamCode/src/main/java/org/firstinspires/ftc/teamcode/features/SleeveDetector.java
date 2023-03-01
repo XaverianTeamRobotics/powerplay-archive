@@ -22,11 +22,44 @@ public class SleeveDetector extends Feature implements Buildable {
     private final ArrayList<Integer> previousSpots = new ArrayList<>();
     private int averageSpot = 0;
     private boolean init = false;
+    private boolean indexed = false;
+    private int index = 0;
+
+    /**
+     * Use this when only using one camera at a time.
+     */
+    public SleeveDetector() {}
+
+    /**
+     * Use this when two cameras are streaming concurrently.
+     * @param index The index of the camera, either 0 or 1.
+     */
+    public SleeveDetector(int index) {
+        indexed = true;
+        this.index = index;
+    }
 
     @Override
     public void build() {
+
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
+
+        int[] viewportContainerIds = null;
+        if(indexed) {
+            viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                    cameraMonitorViewId, //The container we're splitting
+                    2, //The number of sub-containers to create
+                    OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+        }
+
+        OpenCvCamera camera;
+
+        if(indexed) {
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, viewportContainerIds[index]);
+        }else{
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
+        }
 
         detector = new SleeveColorDetection();
 

@@ -19,6 +19,19 @@ import java.util.Objects;
 @Config
 public class PoleNavigator extends OpenCvPipeline {
 
+    private final boolean indexed;
+    private final int index;
+
+    public PoleNavigator(int index) {
+        indexed = true;
+        this.index = index;
+    }
+
+    public PoleNavigator() {
+        indexed = false;
+        index = 0;
+    }
+
     public static int minArea = 50, maxArea = 100;
     public static double minC = 0, maxC = 1, threshMin = 100, threshMax = 255, alpha = 1, beta = 1;
 
@@ -48,7 +61,7 @@ public class PoleNavigator extends OpenCvPipeline {
         blobDetectorParams.set_filterByColor(true);
         SimpleBlobDetector detector = SimpleBlobDetector.create(blobDetectorParams);
         MatOfKeyPoint detections = new MatOfKeyPoint();
-        Mat blurred = new Mat();
+//        Mat blurred = new Mat();
 //        Imgproc.GaussianBlur(input, blurred, new Size(11, 11), 2);
         detector.detect(input, detections);
 
@@ -118,7 +131,23 @@ public class PoleNavigator extends OpenCvPipeline {
 
     public void startStreaming() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId);
+
+        int[] viewportContainerIds = null;
+        if(indexed) {
+            viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                    cameraMonitorViewId, //The container we're splitting
+                    2, //The number of sub-containers to create
+                    OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+        }
+
+        OpenCvCamera camera;
+
+        if(indexed) {
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, viewportContainerIds[index]);
+        }else{
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId);
+        }
 
         camera.setPipeline(this);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
