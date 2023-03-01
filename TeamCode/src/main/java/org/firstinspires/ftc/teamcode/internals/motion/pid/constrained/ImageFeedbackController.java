@@ -67,11 +67,19 @@ public class ImageFeedbackController {
             min = 0 - height / 2.0;
             max = height - height / 2.0;
         }
-        x = -Range.scale(x, min, max, -1, 1);
-        y = -Range.scale(y, min, max, -1, 1);
+        x = -Range.scale(x, min, max, -100, 100);
+        y = -Range.scale(y, min, max, -100, 100);
 
-        double vx = pidx.atGoal() ? 0 : pidx.calculate(x);
-        double vy = pidy.atGoal() ? 0 : pidy.calculate(y);
+        double vx = pidx.calculate(x);
+        double vy = pidy.calculate(y);
+        vx = Range.clip(vx, -0.13, 0.13);
+        vy = Range.clip(vy, -0.1, 0.1);
+        if(pidx.atSetpoint()) {
+            vx = 0;
+        }
+        if(pidy.atSetpoint()) {
+            vy = 0;
+        }
 
         DashboardLogging.log("x", x);
         DashboardLogging.log("y", y);

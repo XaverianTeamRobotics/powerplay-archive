@@ -13,17 +13,17 @@ import java.util.Objects;
 @Config
 public class PoleCenterer {
 
-    public static double kP = 0.35, kI = 0, kD = 0, mV = 0.00001, mA = 0.00001, sp = 0, ctol = 0.1, etol = 0.2;
+    public static double kPx = 1, kPy = 0.8, kIx = 0, kIy = 0, kDx = 0, kDy = 0, mV = 0.1, mA = 0.1, sp = 0, ctol = 5, etol = 5;
 
     private AutonomousDrivetrain drivetrain = null;
     private final ImageFeedbackController controller;
 
     public PoleCenterer() {
-        controller = new ImageFeedbackController(new PoleNavigator(), kP, kI, kD, mV, mA, sp, ctol, etol);
+        controller = new ImageFeedbackController(new PoleNavigator(), kPx, kIx, kDx, mV, mA, sp, ctol, etol, kPy, kIy, kDy, mV, mA, sp, ctol, etol);
     }
 
     public PoleCenterer(int index) {
-        controller = new ImageFeedbackController(new PoleNavigator(index), kP, kI, kD, mV, mA, sp, ctol, etol);
+        controller = new ImageFeedbackController(new PoleNavigator(index), kPx, kIx, kDx, mV, mA, sp, ctol, etol, kPy, kIy, kDy, mV, mA, sp, ctol, etol);
     }
 
     public boolean loop() {
@@ -39,7 +39,7 @@ public class PoleCenterer {
                 0
             )
         );
-        return xy[2] == 0;
+        return xy[2] == 1;
     }
 
     public void center() {

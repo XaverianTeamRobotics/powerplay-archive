@@ -14,26 +14,29 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Config
-public class PoleNavigator extends OpenCvPipeline {
+public class SidePoleNavigator extends OpenCvPipeline {
+
 
     private final boolean indexed;
     private final int index;
 
-    public PoleNavigator(int index) {
+    public SidePoleNavigator(int index) {
         indexed = true;
         this.index = index;
     }
 
-    public PoleNavigator() {
+    public SidePoleNavigator() {
         indexed = false;
         index = 0;
     }
 
-    public static int minArea = 30, maxArea = 70;
-    public static double minC = 0, maxC = 1, alpha = 5.25, beta = -560;
+    public static int minArea = 50, maxArea = 100;
+    public static double minC = 0, maxC = 1, alpha = 1, beta = 1;
 
     private double poleDistanceX, poleDistanceY, poleDistance;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
@@ -44,13 +47,10 @@ public class PoleNavigator extends OpenCvPipeline {
         height = input.height();
 
         // Detect white blobs
-//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
-//        List<Mat> mv = new ArrayList<>();
-//        Core.split(input, mv);
-//        mv.set(1, mv.get(1));
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
-        input.convertTo(input, -1, alpha, beta);
-//        Imgproc.threshold(input, input, threshMin, threshMax, Imgproc.THRESH_BINARY);
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+        Core.inRange(input, new Scalar(61, 0, 0), new Scalar(120, 255, 255), input);
+        List<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.findContours(input, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         SimpleBlobDetector_Params blobDetectorParams = new SimpleBlobDetector_Params();
         blobDetectorParams.set_filterByCircularity(true);
         blobDetectorParams.set_filterByArea(true);
@@ -67,11 +67,11 @@ public class PoleNavigator extends OpenCvPipeline {
 
         // TODO: For now, draw blobs. Might remove when done developing
         for (KeyPoint kpt :
-                detections.toArray()) {
+            detections.toArray()) {
             Imgproc.rectangle(
-                    input,
-                    new Rect(new Point(kpt.pt.x - 2, kpt.pt.y - 2), new Point(kpt.pt.x + 2, kpt.pt.y + 2)),
-                    new Scalar(255, 255, 255));
+                input,
+                new Rect(new Point(kpt.pt.x - 2, kpt.pt.y - 2), new Point(kpt.pt.x + 2, kpt.pt.y + 2)),
+                new Scalar(255, 255, 255));
         }
 
         // Find the keypoint closest to the center of the image
@@ -79,7 +79,7 @@ public class PoleNavigator extends OpenCvPipeline {
         double closestKPT_dist = 1000000000; // Really big number
         Point center = new Point(input.width()/2.0, input.height()/2.0);
         for (KeyPoint kpt :
-                detections.toArray()) {
+            detections.toArray()) {
             double dist = Math.sqrt(Math.pow(kpt.pt.x - center.x, 2) + Math.pow(kpt.pt.y - center.y, 2));
             if (dist < closestKPT_dist) {
                 closestKPT = kpt;
@@ -134,7 +134,11 @@ public class PoleNavigator extends OpenCvPipeline {
 
         int[] viewportContainerIds = null;
         if(indexed) {
-            viewportContainerIds = MultipleCameraManager.get(cameraMonitorViewId);
+            viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                    cameraMonitorViewId, //The container we're splitting
+                    2, //The number of sub-containers to create
+                    OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
         }
 
         OpenCvCamera camera;
@@ -167,4 +171,5 @@ public class PoleNavigator extends OpenCvPipeline {
             }
         });
     }
+
 }

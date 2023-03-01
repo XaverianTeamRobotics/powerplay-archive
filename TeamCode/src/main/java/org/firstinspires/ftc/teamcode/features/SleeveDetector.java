@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.image.MultipleCameraManager;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -46,11 +47,7 @@ public class SleeveDetector extends Feature implements Buildable {
 
         int[] viewportContainerIds = null;
         if(indexed) {
-            viewportContainerIds = OpenCvCameraFactory.getInstance()
-                .splitLayoutForMultipleViewports(
-                    cameraMonitorViewId, //The container we're splitting
-                    2, //The number of sub-containers to create
-                    OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+            viewportContainerIds = MultipleCameraManager.get(cameraMonitorViewId);
         }
 
         OpenCvCamera camera;
