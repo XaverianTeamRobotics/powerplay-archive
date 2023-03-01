@@ -124,6 +124,17 @@ public class PIDFController {
     }
 
     /**
+     * Returns true if the error is within the percentage of the total input range, determined by
+     * {@link #setTolerance}.
+     *
+     * @return Whether the error is within the acceptable bounds.
+     */
+    public boolean atSetPointWithSpecificTolerance(double positionTolerance, double velocityTolerance) {
+        return Math.abs(errorVal_p) < positionTolerance
+            && Math.abs(errorVal_v) < velocityTolerance;
+    }
+
+    /**
      * @return the PIDF coefficients
      */
     public double[] getCoefficients() {

@@ -14,15 +14,13 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Config
 public class PoleNavigator extends OpenCvPipeline {
 
     public static int minArea = 50, maxArea = 100;
-    public static double minC = 0, maxC = 1, threshMin = 100, threshMax = 255;
+    public static double minC = 0, maxC = 1, threshMin = 100, threshMax = 255, alpha = 1, beta = 1;
 
     private double poleDistanceX, poleDistanceY, poleDistance;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
@@ -33,11 +31,12 @@ public class PoleNavigator extends OpenCvPipeline {
         height = input.height();
 
         // Detect white blobs
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
-        List<Mat> mv = new ArrayList<>();
-        Core.split(input, mv);
-        mv.set(1, mv.get(1).setTo());
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+//        List<Mat> mv = new ArrayList<>();
+//        Core.split(input, mv);
+//        mv.set(1, mv.get(1));
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
+        input.convertTo(input, -1, alpha, beta);
 //        Imgproc.threshold(input, input, threshMin, threshMax, Imgproc.THRESH_BINARY);
         SimpleBlobDetector_Params blobDetectorParams = new SimpleBlobDetector_Params();
         blobDetectorParams.set_filterByCircularity(true);

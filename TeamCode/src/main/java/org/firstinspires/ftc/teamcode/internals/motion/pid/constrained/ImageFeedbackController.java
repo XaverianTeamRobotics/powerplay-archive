@@ -11,6 +11,7 @@ public class ImageFeedbackController {
 
     private final PoleNavigator localizer;
     private final ProfiledPIDController pidx, pidy;
+    private final double pos_tx, pos_ty;
 
     /**
      * @param localizer The image-based localizer which returns the XY coordinates of a pixel such that the center of the image is the origin.
@@ -20,23 +21,25 @@ public class ImageFeedbackController {
      * @param mV The maximum velocity of the controller.
      * @param mA The maximum acceleration of the controller.
      * @param sp The setpoint or goal.
-     * @param tol The tolerance of the setpoint.
+     * @param cTol The tolerance of the setpoint.
      */
-    public ImageFeedbackController(PoleNavigator localizer, double kP, double kI, double kD, double mV, double mA, double sp, double tol) {
-        this(localizer, kP, kI, kD, mV, mA, sp, tol, kP, kI, kD, mV, mA, sp, tol);
+    public ImageFeedbackController(PoleNavigator localizer, double kP, double kI, double kD, double mV, double mA, double sp, double cTol, double eTol) {
+        this(localizer, kP, kI, kD, mV, mA, sp, cTol, eTol, kP, kI, kD, mV, mA, sp, cTol, eTol);
     }
 
     public ImageFeedbackController(PoleNavigator localizer,
-                                   double kPx, double kIx, double kDx, double mVx, double mAx, double spx, double tolx,
-                                   double kPy, double kIy, double kDy, double mVy, double mAy, double spy, double toly) {
+                                   double kPx, double kIx, double kDx, double mVx, double mAx, double spx, double cTolX, double eTolX,
+                                   double kPy, double kIy, double kDy, double mVy, double mAy, double spy, double cTolY, double eTolY) {
         this.localizer = localizer;
+        pos_tx = eTolX;
+        pos_ty = eTolY;
         pidx = new ProfiledPIDController(kPx, kIx, kDx, new TrapezoidProfile.Constraints(mVx, mAx));
         pidx.setGoal(spx);
-        pidx.setTolerance(tolx);
+        pidx.setTolerance(cTolX);
         pidx.reset();
         pidy = new ProfiledPIDController(kPy, kIy, kDy, new TrapezoidProfile.Constraints(mVy, mAy));
         pidy.setGoal(spy);
-        pidy.setTolerance(toly);
+        pidy.setTolerance(cTolY);
         pidy.reset();
         this.localizer.startStreaming();
     }
@@ -67,8 +70,9 @@ public class ImageFeedbackController {
         x = -Range.scale(x, min, max, -1, 1);
         y = -Range.scale(y, min, max, -1, 1);
 
-        double vx = pidx.calculate(x);
-        double vy = pidy.calculate(y);
+        double vx = pidx.atGoal() ? 0 : pidx.calculate(x);
+        double vy = pidy.atGoal() ? 0 : pidy.calculate(y);
+
         DashboardLogging.log("x", x);
         DashboardLogging.log("y", y);
         DashboardLogging.log("width", width);
@@ -76,7 +80,8 @@ public class ImageFeedbackController {
         DashboardLogging.log("vx", vx);
         DashboardLogging.log("vy", vy);
         DashboardLogging.update();
-        return new double[] { vx, vy };
+
+        return new double[] { vx, vy, pidx.atGoalWithSpecificTolerance(pos_tx, Double.POSITIVE_INFINITY) && pidy.atGoalWithSpecificTolerance(pos_ty, Double.POSITIVE_INFINITY) ? 1 : 0 };
     }
 
 }

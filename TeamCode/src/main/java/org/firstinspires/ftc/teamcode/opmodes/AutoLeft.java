@@ -54,7 +54,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             // drive to the junction
             .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
             .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
-            .splineTo(new Vector2d(30.58, 6.00), Math.toRadians(221.32))
+            .splineTo(new Vector2d(34.58, 10.00), Math.toRadians(221.32))
             .completeTrajectory()
             // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
@@ -62,7 +62,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(poleCenterer::center)
             .appendAction(JCam::toggle)
             .appendTrajectory()
-            .forward(2)
+            .forward(6)
             .completeTrajectory()
             // open the hand and then lower the arm to cone_high
             .appendAction(() -> Clock.sleep(100))
@@ -101,7 +101,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(poleCenterer::center)
             .appendAction(JCam::toggle)
             .appendTrajectory()
-            .forward(2)
+            .forward(6)
             .completeTrajectory()
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendAction(() -> Clock.sleep(300))
@@ -142,7 +142,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(poleCenterer::center)
             .appendAction(JCam::toggle)
             .appendTrajectory()
-            .forward(2)
+            .forward(6)
             .completeTrajectory()
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendAction(() -> Clock.sleep(150))
