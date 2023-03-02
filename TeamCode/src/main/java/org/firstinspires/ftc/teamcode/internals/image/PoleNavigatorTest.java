@@ -16,5 +16,6 @@ public class PoleNavigatorTest extends OperationMode implements TeleOperation {
         Logging.log("X dist", navigator.getPoleDistanceX());
         Logging.log("Y dist", navigator.getPoleDistanceY());
         Logging.log("Dist", navigator.getPoleDistance());
+        Logging.update();
     }
 }

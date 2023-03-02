@@ -11,12 +11,15 @@ import org.firstinspires.ftc.teamcode.internals.image.PoleLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunner;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
 import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 import org.firstinspires.ftc.teamcode.internals.time.Timer;
 
 import java.util.UUID;
+
+import static org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain.SLOW_VEL_CONSTRAINT;
 
 public class AutoLeft extends OperationMode implements AutonomousOperation {
 
@@ -61,10 +64,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(FourMotorArm::autoComplete)
             .appendWait(JCam::complete)
             .appendWait(1000)
-            .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .completeTrajectory()
+            .appendAction(() -> this.driveToPole(poleLocalizer))
             .appendAction(JCam::toggle)
             // open the hand and then lower the arm to cone_high
             .appendAction(() -> Clock.sleep(100))
@@ -102,10 +102,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(FourMotorArm::autoComplete)
             .appendWait(JCam::complete)
             .appendWait(3000)
-            .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .completeTrajectory()
+            .appendAction(() -> this.driveToPole(poleLocalizer))
             .appendAction(JCam::toggle)
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendAction(() -> Clock.sleep(300))
@@ -144,11 +141,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
             .appendWait(JCam::complete)
-            .appendWait(1000)
-            .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .completeTrajectory()
+            .appendAction(() -> this.driveToPole(poleLocalizer))
             .appendAction(JCam::toggle)
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
             .appendAction(() -> Clock.sleep(150))
@@ -220,6 +213,25 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
     @Override
     public Class<? extends OperationMode> getNext() {
         return SmallbotProduction.class;
+    }
+
+    private Vector2d generateVectorToPole(PoleLocalizer poleLocalizer) {
+        double[] d = null;
+        while(d == null) {
+            d = poleLocalizer.getData();
+            Clock.sleep(10);
+        }
+        return new Vector2d(d[1], d[0]);
+    }
+
+    public void driveToPole(PoleLocalizer poleLocalizer) {
+        poleLocalizer.invalidate();
+        AutonomousDrivetrain d = new AutonomousDrivetrain();
+        TrajectorySequence t = d.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+            .lineToConstantHeading(generateVectorToPole(poleLocalizer), SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .forward(4.5, SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .completeTrajectory();
+        d.followTrajectorySequence(t);
     }
 
 }

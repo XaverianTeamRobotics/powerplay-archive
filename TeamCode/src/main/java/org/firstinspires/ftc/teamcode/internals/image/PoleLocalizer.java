@@ -21,6 +21,7 @@ public class PoleLocalizer extends OpenCvPipeline {
 
     private final boolean indexed;
     private final int index;
+    private long time = 0;
 
     public PoleLocalizer(int index) {
         indexed = true;
@@ -36,13 +37,16 @@ public class PoleLocalizer extends OpenCvPipeline {
     public static double minC = 0, maxC = 1, alpha = 5.25, beta = -560, lasagna = 1;
 
     private double poleDistanceX, poleDistanceY, poleDistance;
+    private boolean data = false;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
+
     @Override
     public Mat processFrame(Mat input) {
 
         width = input.width();
         height = input.height();
 
+        // contrast & brightness
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
         input.convertTo(input, -1, alpha, beta);
 
@@ -58,6 +62,7 @@ public class PoleLocalizer extends OpenCvPipeline {
         MatOfKeyPoint detections = new MatOfKeyPoint();
         detector.detect(input, detections);
 
+        // draw found detections for debugging purposes
         for (KeyPoint kpt :
                 detections.toArray()) {
             Imgproc.rectangle(
@@ -85,9 +90,9 @@ public class PoleLocalizer extends OpenCvPipeline {
             poleDistanceX = dists[0];
             poleDistanceY = dists[1];
             poleDistance = closestKPT_dist;
+            data = true;
         }else{
-            poleDistanceX = 4;
-            poleDistanceY = 2;
+//            poleDistNotFound();
         }
 
         return input;
@@ -114,6 +119,29 @@ public class PoleLocalizer extends OpenCvPipeline {
      * @return An array containing the width and height (in that order) of the most recent {@link Mat} passed to {@link #processFrame(Mat)}.
      */
     public int[] getSize() { return new int[] { width, height }; }
+
+    /**
+     * @return An array containing the X, Y, width, and height (in that order) of the most recent frame processed.
+     */
+    public double[] getData() {
+        if(data) {
+            return new double[] { poleDistanceX, poleDistanceY, width, height, };
+        }else{
+            return null;
+        }
+//        if(data) {
+//            return new double[] { poleDistanceX, poleDistanceY, width, height, };
+//        }else{
+//            return null;
+//        }
+    }
+
+    /**
+     * Forcefully invalidate the cache. By default, the cache is invalidated every time new data is received or 1 second passes with no new data (in which case the cached data becomes filler). This method forces the cache to be invalidated and new data to be retrived, if possible.
+     */
+    public void invalidate() {
+        data = false;
+    }
 
     public void startStreaming() {
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
@@ -158,4 +186,17 @@ public class PoleLocalizer extends OpenCvPipeline {
         return new double[] { (kpt.pt.x - center.x) / kpt.size * lasagna, (kpt.pt.y - center.y) / kpt.size * lasagna };
     }
 
+    private void poleDistNotFound() {
+        if(poleDistanceX != 4 || poleDistanceY != 2) {
+            time = System.currentTimeMillis() + 1000;
+        }
+        if(System.currentTimeMillis() > time) {
+            poleDistanceX = 4;
+            poleDistanceY = 2;
+            data = true;
+        }
+    }
+
 }
+
+
