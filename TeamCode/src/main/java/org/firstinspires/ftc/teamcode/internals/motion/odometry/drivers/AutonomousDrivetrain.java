@@ -49,6 +49,8 @@ public class AutonomousDrivetrain extends MecanumDrive {
     public static double OMEGA_WEIGHT = OdometrySettingsDashboardConfiguration.OMEGA_WEIGHT;
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(OdometrySettingsDashboardConfiguration.MAX_VEL, OdometrySettingsDashboardConfiguration.MAX_ANG_VEL, OdometrySettingsDashboardConfiguration.TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(OdometrySettingsDashboardConfiguration.MAX_ACCEL);
+    public static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(OdometrySettingsDashboardConfiguration.MAX_VEL / 3.0, OdometrySettingsDashboardConfiguration.MAX_ANG_VEL / 3.0, OdometrySettingsDashboardConfiguration.TRACK_WIDTH);
+    public static final TrajectoryAccelerationConstraint SLOW_ACCEL_CONSTRAINT = getAccelerationConstraint(OdometrySettingsDashboardConfiguration.MAX_ACCEL / 3.0);
     private TrajectorySequenceRunner trajectorySequenceRunner;
     private TrajectoryFollower follower;
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;

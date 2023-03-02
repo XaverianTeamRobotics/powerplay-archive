@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.features.JCam;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.image.PoleLocalizer;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.AutoRunner;
 import org.firstinspires.ftc.teamcode.internals.registration.AutonomousOperation;
@@ -61,7 +62,8 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(JCam::complete)
             .appendWait(1000)
             .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()))
+            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
             .completeTrajectory()
             .appendAction(JCam::toggle)
             // open the hand and then lower the arm to cone_high
@@ -101,7 +103,8 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(JCam::complete)
             .appendWait(3000)
             .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()))
+            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
             .completeTrajectory()
             .appendAction(JCam::toggle)
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
@@ -143,7 +146,8 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(JCam::complete)
             .appendWait(1000)
             .appendTrajectory()
-            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()))
+            .lineToConstantHeading(new Vector2d(34.58 + poleLocalizer.getPoleDistanceX(), 10.00 + poleLocalizer.getPoleDistanceY()), AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .forward(4.5, AutonomousDrivetrain.SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
             .completeTrajectory()
             .appendAction(JCam::toggle)
             // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
