@@ -125,7 +125,7 @@ public class PoleLocalizer extends OpenCvPipeline {
      */
     public double[] getData() {
         if(data) {
-            return new double[] { poleDistanceX, poleDistanceY, width, height, };
+            return new double[] { poleDistanceX, poleDistanceY, width, height };
         }else{
             return null;
         }
