@@ -146,7 +146,7 @@ public class PoleLocalizer extends OpenCvPipeline {
     }
 
     private double[] findDistance(KeyPoint kpt, Point center) {
-        return new double[] { (kpt.pt.x - center.x) / kpt.size * lasagna, (kpt.pt.y - center.y) / kpt.size * lasagna };
+        return new double[] { (kpt.pt.x - center.x) / (Math.abs(kpt.size) * lasagna), (kpt.pt.y - center.y) / (Math.abs(kpt.size) * lasagna) };
     }
 
     private void cache(int iteration) {

@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.internals.time.Timer;
 import java.util.Objects;
 import java.util.UUID;
 
+import static org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT;
 import static org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain.SLOW_VEL_CONSTRAINT;
 
 public class AutoLeft extends OperationMode implements AutonomousOperation {
@@ -102,7 +103,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
 
             // drive back to the junction
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(34.58, 17.00), Math.toRadians(221.32))
+            .splineToConstantHeading(new Vector2d(34.58, 14.00), Math.toRadians(221.32))
             .completeTrajectory()
             // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
@@ -185,25 +186,31 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         return SmallbotProduction.class;
     }
 
-    private Vector2d generateVectorToPole(PoleLocalizer poleLocalizer, AutonomousDrivetrain drivetrain) {
+    private double[] generateVectorToPole(PoleLocalizer poleLocalizer, AutonomousDrivetrain drivetrain) {
         double[] d = null;
         while(d == null) {
             d = poleLocalizer.getData();
             Clock.sleep(10);
         }
-        return new Vector2d(drivetrain.getPoseEstimate().getX() + d[1], drivetrain.getPoseEstimate().getY() + d[0]);
+        vec = new double[] { -d[1], -d[0] };
+        return vec;
     }
+
+    private double[] vec = null;
 
     public void driveToPole(PoleLocalizer poleLocalizer) {
         poleLocalizer.invalidate();
         TrajectorySequence t = drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-            .lineToConstantHeading(generateVectorToPole(poleLocalizer, drivetrain), SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
-            .forward(4.5, SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+            .forward(generateVectorToPole(poleLocalizer, drivetrain)[0], SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+            .strafeLeft(vec[1], SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
+            .forward(6, SLOW_VEL_CONSTRAINT, SLOW_ACCEL_CONSTRAINT)
             .completeTrajectory();
         drivetrain.followTrajectorySequenceAsync(t);
         while(drivetrain.isBusy() && Objects.requireNonNull(HardwareGetter.getOpMode()).opModeIsActive()) {
             drivetrain.update();
         }
+        vec = null;
+//        drivetrain.setPoseEstimate(t.end());
     }
 
 }
