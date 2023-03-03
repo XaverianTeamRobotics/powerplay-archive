@@ -13,6 +13,10 @@ public class MultipleCameraManager {
         return arr;
     }
 
+    public static void reset() {
+        arr = null;
+    }
+
     private static int[] i_get(int id) {
         return OpenCvCameraFactory.getInstance()
             .splitLayoutForMultipleViewports(
