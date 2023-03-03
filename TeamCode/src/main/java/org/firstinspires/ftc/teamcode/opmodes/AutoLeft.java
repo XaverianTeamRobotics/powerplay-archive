@@ -44,6 +44,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         registerFeature(new JCam());
         Pose2d start = new Pose2d(35.84, 61.50, Math.toRadians(-90.00));
         PoleLocalizer poleLocalizer = new PoleLocalizer(1);
+        poleLocalizer.startStreaming();
         Auto auto = new Auto(start)
 
             // FIRST CONE
@@ -99,7 +100,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
 
             // drive back to the junction
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(34.58, 10.00), Math.toRadians(221.32))
+            .splineToConstantHeading(new Vector2d(34.58, 17.00), Math.toRadians(221.32))
             .completeTrajectory()
             // center ourselves on the pole
             .appendWait(FourMotorArm::autoComplete)
@@ -117,43 +118,6 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendWait(FourMotorArm::autoComplete)
             .appendAction(FourMotorArm::autoLevelArm)
             .appendAction(FourMotorArm::autoComplete)
-
-            // THIRD CONE
-
-            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_MED))
-            .appendTrajectory()
-            // we drive to the cone stack
-            .lineToSplineHeading(new Pose2d(37.68, 9.26, Math.toRadians(1.30)))
-            .splineTo(new Vector2d(58.00, 9.13), Math.toRadians(359.18))
-            .completeTrajectory()
-            // same as last time: we wait for the arm to lower on the top of the stack, grab a cone, raise the arm, and then a fraction of a second later we begin driving back to the junction
-            .appendWait(FourMotorArm::autoComplete)
-            .appendAction(Hand::autoClose)
-            .appendWait(Hand::complete)
-            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
-            .appendWait(500)
-            .appendAction(JCam::toggle)
-            .appendTrajectory()
-
-            // THIRD JNCT
-
-            // drive back to the junction for the last time
-            .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(34.58, 10.00), Math.toRadians(228.78))
-            .completeTrajectory()
-            // center ourselves on the pole
-            .appendWait(FourMotorArm::autoComplete)
-            .appendWait(JCam::complete)
-            .appendAction(() -> this.driveToPole(poleLocalizer))
-            .appendAction(JCam::toggle)
-            // once the arm is at the correct height, we open the hand and then lower the arm to the reset position; we're done cycling at this point and need to park
-            .appendAction(() -> Clock.sleep(150))
-            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH_LOWER))
-            .appendWait(FourMotorArm::autoComplete)
-            .appendAction(Hand::autoOpen)
-            .appendWait(Hand::complete)
-            .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH))
-            .appendWait(FourMotorArm::autoComplete)
 
             // PARKING --- SPOT 2 PART 1
 

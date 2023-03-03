@@ -161,6 +161,7 @@ public class PoleLocalizer extends OpenCvPipeline {
     }
 
     public void startStreaming() {
+        System.out.println("we here");
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
 
         int[] viewportContainerIds = null;
@@ -170,11 +171,15 @@ public class PoleLocalizer extends OpenCvPipeline {
 
         OpenCvCamera camera;
 
+        System.out.println("viewport got");
+
         if(indexed) {
             camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, viewportContainerIds[index]);
         }else{
             camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera1, cameraMonitorViewId);
         }
+
+        System.out.println("cam get");
 
         camera.setPipeline(this);
         FtcDashboard.getInstance().startCameraStream(camera, 0);

@@ -18,6 +18,6 @@ public class MultipleCameraManager {
             .splitLayoutForMultipleViewports(
                 id, //The container we're splitting
                 2, //The number of sub-containers to create
-                OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+                OpenCvCameraFactory.ViewportSplitMethod.HORIZONTALLY); //Whether to split the container vertically or horizontally
     }
 }
