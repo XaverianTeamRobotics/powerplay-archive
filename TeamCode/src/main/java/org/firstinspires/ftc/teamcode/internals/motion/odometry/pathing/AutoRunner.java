@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing;
 
 import org.firstinspires.ftc.teamcode.internals.data.DriveCommand;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 
+import java.util.Objects;
 import java.util.Queue;
 
 public class AutoRunner {
@@ -40,7 +42,7 @@ public class AutoRunner {
     }
 
     public void run() {
-        if(!drivetrain.isBusy()) {
+        if(!drivetrain.isBusy() && Objects.requireNonNull(HardwareGetter.getOpMode()).opModeIsActive()) {
             try {
                 DriveCommand.Drive command = (DriveCommand.Drive) currentDriveCommand;
                 drivetrain.followTrajectorySequenceAsync(command.getSequence());

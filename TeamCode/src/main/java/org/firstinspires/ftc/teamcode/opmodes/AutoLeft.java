@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.features.Hand;
 import org.firstinspires.ftc.teamcode.features.JCam;
 import org.firstinspires.ftc.teamcode.features.SleeveDetector;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
+import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.image.PoleLocalizer;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing.Auto;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.internals.registration.OperationMode;
 import org.firstinspires.ftc.teamcode.internals.time.Clock;
 import org.firstinspires.ftc.teamcode.internals.time.Timer;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain.SLOW_VEL_CONSTRAINT;
@@ -28,6 +30,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
     SleeveDetector sleeve;
     boolean findingSleeve = true;
     AutoRunner runner;
+    AutonomousDrivetrain drivetrain = null;
 
     @Override
     public void construct() {
@@ -190,7 +193,8 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(Devices.encoder5::save)
             .appendAction(Devices.encoder6::save)
             .complete();
-        runner = new AutoRunner(auto, auto.getDrivetrain(), one, two, three);
+        drivetrain = auto.getDrivetrain();
+        runner = new AutoRunner(auto, drivetrain, one, two, three);
     }
 
     @Override
@@ -215,23 +219,25 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
         return SmallbotProduction.class;
     }
 
-    private Vector2d generateVectorToPole(PoleLocalizer poleLocalizer) {
+    private Vector2d generateVectorToPole(PoleLocalizer poleLocalizer, AutonomousDrivetrain drivetrain) {
         double[] d = null;
         while(d == null) {
             d = poleLocalizer.getData();
             Clock.sleep(10);
         }
-        return new Vector2d(d[1], d[0]);
+        return new Vector2d(drivetrain.getPoseEstimate().getX() + d[1], drivetrain.getPoseEstimate().getY() + d[0]);
     }
 
     public void driveToPole(PoleLocalizer poleLocalizer) {
         poleLocalizer.invalidate();
-        AutonomousDrivetrain d = new AutonomousDrivetrain();
-        TrajectorySequence t = d.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-            .lineToConstantHeading(generateVectorToPole(poleLocalizer), SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
+        TrajectorySequence t = drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+            .lineToConstantHeading(generateVectorToPole(poleLocalizer, drivetrain), SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
             .forward(4.5, SLOW_VEL_CONSTRAINT, AutonomousDrivetrain.SLOW_ACCEL_CONSTRAINT)
             .completeTrajectory();
-        d.followTrajectorySequence(t);
+        drivetrain.followTrajectorySequenceAsync(t);
+        while(drivetrain.isBusy() && Objects.requireNonNull(HardwareGetter.getOpMode()).opModeIsActive()) {
+            drivetrain.update();
+        }
     }
 
 }

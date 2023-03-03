@@ -36,9 +36,10 @@ public class PoleLocalizer extends OpenCvPipeline {
     public static int minArea = 30, maxArea = 70;
     public static double minC = 0, maxC = 1, alpha = 5.25, beta = -560, lasagna = 1;
 
-    private double poleDistanceX, poleDistanceY, poleDistance;
+    private double poleDistanceX = 0, poleDistanceY = 0, poleDistance = 0;
     private boolean data = false;
     private int width = 0, height = 0; // Is set after first run of #processFrame(Mat), call that before accessing these!
+    private int iteration = 0;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -85,14 +86,14 @@ public class PoleLocalizer extends OpenCvPipeline {
         }
 
         // Put the distance from the center in a global static variable
-        if (closestKPT != null) {
+        if(closestKPT != null) {
             double[] dists = findDistance(closestKPT, center);
             poleDistanceX = dists[0];
             poleDistanceY = dists[1];
             poleDistance = closestKPT_dist;
             data = true;
         }else{
-//            poleDistNotFound();
+            cache(iteration);
         }
 
         return input;
@@ -141,6 +142,22 @@ public class PoleLocalizer extends OpenCvPipeline {
      */
     public void invalidate() {
         data = false;
+        iteration = 0;
+    }
+
+    private double[] findDistance(KeyPoint kpt, Point center) {
+        return new double[] { (kpt.pt.x - center.x) / kpt.size * lasagna, (kpt.pt.y - center.y) / kpt.size * lasagna };
+    }
+
+    private void cache(int iteration) {
+        if(iteration == 0) {
+            time = System.currentTimeMillis() + 1000;
+        }
+        if(System.currentTimeMillis() > time) {
+            poleDistanceX = 4;
+            poleDistanceY = 2;
+            data = true;
+        }
     }
 
     public void startStreaming() {
@@ -180,21 +197,6 @@ public class PoleLocalizer extends OpenCvPipeline {
                 AdvancedLogging.update();
             }
         });
-    }
-
-    private double[] findDistance(KeyPoint kpt, Point center) {
-        return new double[] { (kpt.pt.x - center.x) / kpt.size * lasagna, (kpt.pt.y - center.y) / kpt.size * lasagna };
-    }
-
-    private void poleDistNotFound() {
-        if(poleDistanceX != 4 || poleDistanceY != 2) {
-            time = System.currentTimeMillis() + 1000;
-        }
-        if(System.currentTimeMillis() > time) {
-            poleDistanceX = 4;
-            poleDistanceY = 2;
-            data = true;
-        }
     }
 
 }
