@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.internals.data;
+package org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing;
 
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 
@@ -57,5 +57,10 @@ public class DriveCommand {
         }
 
     }
+
+    /**
+     * <a href="https://www.youtube.com/watch?v=dyIilW_eBjc"><strong>KILL</strong></a>
+     */
+    protected static class Kill extends DriveCommand {}
 
 }

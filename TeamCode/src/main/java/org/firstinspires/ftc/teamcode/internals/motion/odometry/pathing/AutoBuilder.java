@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.internals.motion.odometry.pathing;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import org.firstinspires.ftc.teamcode.internals.data.DriveCommand;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
 
 import java.util.LinkedList;
