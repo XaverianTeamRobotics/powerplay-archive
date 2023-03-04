@@ -58,7 +58,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             // FIRST JNCT
 
             // when we're 2 inches into the path, raise the arm. we do ths 2 inches into the path to provide adequate clearance with the wall
-            .addDisplacementMarker(2, () -> {
+            .addDisplacementMarker(4, () -> {
                 FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.JNCT_HIGH);
                 JCam.toggle();
             })
@@ -88,7 +88,7 @@ public class AutoLeft extends OperationMode implements AutonomousOperation {
             .appendTrajectory()
             // drive to the cone stack
             .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
-            .splineToConstantHeading(new Vector2d(58.00, 8.00), Math.toRadians(2.46))
+            .splineToConstantHeading(new Vector2d(59.00, 12.00), Math.toRadians(0))
             .completeTrajectory()
             // once the arm is at the right position, close in on the top cone and begin raising the arm. we also wait a fraction of a second so the arm has enough time to raise above the stack so when we drive backwards, the cone we've picked up doesnt knock over the whole stack
             .appendWait(FourMotorArm::autoComplete)
