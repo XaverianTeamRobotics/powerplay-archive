@@ -28,7 +28,7 @@ class FourMotorArm: Feature(), Buildable {
         @JvmStatic
         var permitAutonomous: Boolean = false
 
-        val basicPositionInputFilter = BasicPositionInputFilter(25.0, 100.0)
+        val basicPositionInputFilter = BasicPositionInputFilter(35.0, 75.0)
 
         @JvmStatic
         fun autoRunArm(height: Double) {
@@ -68,6 +68,7 @@ class FourMotorArm: Feature(), Buildable {
         JNCT_LOW    (840.0  ),
         JNCT_MED    (1410.0  ),
         JNCT_HIGH   (2000.0  ),
+        JNCT_HIGH_LOWER   (1600.0  ),
         CONE_LOW    (90.0   ),
         CONE_MED    (300.0   ),
         CONE_HIGH   (425.0  ),
@@ -120,6 +121,7 @@ class FourMotorArm: Feature(), Buildable {
         // Log the encoder values
         DSLogging.log("encoder2", Devices.encoder5.position)
         DSLogging.log("encoder1", -Devices.encoder6.position)
+//        DSLogging.log("armDistanceSensor", Devices.armDistanceSensor.distance)
         DSLogging.update()
     }
 }

@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.features;
 
-import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 
-public class TwoMotorArm extends Feature implements Buildable {
-
-    @Override
-    public void build() {
-
-    }
+public class TwoMotorArm extends Feature {
 
     @Override
     public void loop() {

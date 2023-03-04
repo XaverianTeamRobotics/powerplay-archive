@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.misc.Affair;
 import org.firstinspires.ftc.teamcode.internals.misc.AsyncQuestionExecutor;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.drivers.AutonomousDrivetrain;
-import org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.trajectories.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.tuning.State;
 import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.Compressor;
 import org.firstinspires.ftc.teamcode.internals.telemetry.Questions;
 import org.firstinspires.ftc.teamcode.internals.telemetry.graphics.Item;
@@ -208,7 +208,7 @@ public class FollowerTuner extends Feature implements Conditional {
                         .turn(Math.toRadians(90))
                         .forward(DISTANCE_HEAD)
                         .turn(Math.toRadians(90))
-                        .build();
+                        .completeTrajectory();
                 }
                 // toggle logic
                 if(Devices.controller1.getB() || Devices.controller2.getB()) {

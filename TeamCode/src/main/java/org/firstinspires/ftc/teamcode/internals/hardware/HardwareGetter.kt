@@ -785,9 +785,12 @@ class Devices {
         @JvmStatic lateinit var motor7: Motor
         @JvmStatic lateinit var servo0: Servo
         @JvmStatic lateinit var servo1: Servo
-        @JvmStatic lateinit var camera: WebcamName
+        @JvmStatic lateinit var servo2: Servo
+        @JvmStatic lateinit var camera0: WebcamName
+        @JvmStatic lateinit var camera1: WebcamName
         @JvmStatic lateinit var imu: IMU
         @JvmStatic lateinit var distanceSensor: LaserDistanceSensor
+        @JvmStatic lateinit var armDistanceSensor: LaserDistanceSensor
         @JvmStatic lateinit var encoder5: Encoder
         @JvmStatic lateinit var encoder6: Encoder
     }
