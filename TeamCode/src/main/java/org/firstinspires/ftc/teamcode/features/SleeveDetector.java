@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.internals.features.Buildable;
 import org.firstinspires.ftc.teamcode.internals.features.Feature;
 import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
+import org.firstinspires.ftc.teamcode.internals.image.MultipleCameraManager;
 import org.firstinspires.ftc.teamcode.internals.image.SleeveColorDetection;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -22,10 +23,40 @@ public class SleeveDetector extends Feature implements Buildable {
     private final ArrayList<Integer> previousSpots = new ArrayList<>();
     private int averageSpot = 0;
     private boolean init = false;
+    private boolean indexed = false;
+    private int index = 0;
 
-    public SleeveDetector() {
+    /**
+     * Use this when only using one camera at a time.
+     */
+    public SleeveDetector() {}
+
+    /**
+     * Use this when two cameras are streaming concurrently.
+     * @param index The index of the camera, either 0 or 1.
+     */
+    public SleeveDetector(int index) {
+        indexed = true;
+        this.index = index;
+    }
+
+    @Override
+    public void build() {
+
         int cameraMonitorViewId = Objects.requireNonNull(HardwareGetter.getHardwareMap()).appContext.getResources().getIdentifier("cameraMonitorViewId", "id", HardwareGetter.getHardwareMap().appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera, cameraMonitorViewId);
+
+        int[] viewportContainerIds = null;
+        if(indexed) {
+            viewportContainerIds = MultipleCameraManager.get(cameraMonitorViewId);
+        }
+
+        OpenCvCamera camera;
+
+        if(indexed) {
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, viewportContainerIds[index]);
+        }else{
+            camera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0, cameraMonitorViewId);
+        }
 
         detector = new SleeveColorDetection();
 
@@ -52,11 +83,6 @@ public class SleeveDetector extends Feature implements Buildable {
                 AdvancedLogging.update();
             }
         });
-    }
-
-    @Override
-    public void build() {
-
     }
 
     @Override

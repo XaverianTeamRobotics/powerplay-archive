@@ -67,7 +67,7 @@ class FourMotorArm: Feature(), Buildable {
         JNCT_GND    (209.0   ),
         JNCT_LOW    (840.0  ),
         JNCT_MED    (1410.0  ),
-        JNCT_HIGH   (1900.0  ),
+        JNCT_HIGH   (2000.0  ),
         JNCT_HIGH_LOWER   (1600.0  ),
         CONE_LOW    (90.0   ),
         CONE_MED    (300.0   ),

@@ -21,6 +21,7 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
 
 -->
 <Robot type="FirstInspires-FTC" name="Production">
+    <Webcam name="camera0" serialNumber="54DE4F40" />
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
             <goBILDA5202SeriesMotor name="motor0" port="0" />
@@ -30,8 +31,8 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <Servo name="servo0" port="0" />
             <Servo name="servo1" port="1" />
-            <REV_VL53L0X_RANGE_SENSOR name="distanceSensor" port="0" bus="1" />
-<!--            <REV_VL53L0X_RANGE_SENSOR name="armDistanceSensor" port="0" bus="3" />-->
+            <Servo name="servo2" port="2" />
+<!--            <REV_VL53L0X_RANGE_SENSOR name="distanceSensor" port="0" bus="1" />-->
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">
             <goBILDA5202SeriesMotor name="motor4" port="0" />
@@ -41,5 +42,4 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
             <LynxEmbeddedIMU name="imu1" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>
-    <Webcam name="camera" serialNumber="54DE4F40" />
 </Robot>

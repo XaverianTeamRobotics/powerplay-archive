@@ -103,7 +103,7 @@ class ConeStackTracker(val isBlueTeam: Boolean, val enableDisplayOfAngles: Boole
             "id",
             hardwareMap!!.appContext.packageName
         )
-        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera,
+        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(Devices.camera0,
             cameraMonitorViewId!!
         )
 

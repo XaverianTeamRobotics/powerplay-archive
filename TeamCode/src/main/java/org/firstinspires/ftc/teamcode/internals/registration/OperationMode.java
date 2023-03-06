@@ -37,6 +37,7 @@ public abstract class OperationMode extends LinearOpMode {
         try {
             // formatting for questions api
             telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+
             Loggers.init(telemetry);
             HardwareGetter.setEmulated(false);
             HardwareGetter.setHardwareMap(hardwareMap);
@@ -99,12 +100,15 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping.
+     * Registers a {@link Feature}, appending it to the runner's script queue to be ran by jlooping and building it if necessary.
      * @param feature The feature to register.
      */
     public static void registerFeature(@NotNull Feature feature) {
         try {
             Objects.requireNonNull(HardwareGetter.getJloopingRunner()).addScript(feature);
+            if(feature.needsInit) {
+                feature.init(HardwareGetter.getJloopingRunner().scriptParametersGlobal);
+            }
         } catch (ScriptRunner.DuplicateScriptException e) {
             e.printStackTrace();
         }
@@ -118,7 +122,7 @@ public abstract class OperationMode extends LinearOpMode {
     }
 
     /**
-     * Call this whenever you need to reboot the robot.
+     * Call this whenever you need to reboot the robot. Sometimes it works.
      */
     public static void reboot(String reason) {
         throw new RobotRebootException(reason);

@@ -14,13 +14,14 @@ class Hand() : Feature(), Buildable {
 
     constructor(auto: Boolean) : this() {
         this.auto = auto
-        manualClose()
     }
 
     override fun build() {
         if(!auto) {
             Devices.servo1.position = homePosLeft
             Devices.servo0.position = homePosRight
+        }else{
+            manualClose()
         }
     }
 
@@ -29,7 +30,7 @@ class Hand() : Feature(), Buildable {
         Pressing x on either controller releases the hand
          */
         if(!auto) {
-            if ((open && Devices.distanceSensor.distance < 40 && NanoClock.system().seconds() > second) || (open && Devices.controller1.y)) {
+            if ((open && Devices.controller1.y)) {
                 manualClose()
             } else if (!open && Devices.controller1.a) {
                 manualOpen()
