@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'net.xbhs.robotics'
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //noinspection GradleDependency
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    //noinspection GradleDependency
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
