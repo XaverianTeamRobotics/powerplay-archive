@@ -6,8 +6,6 @@ import org.firstinspires.ftc.teamcode.internals.hardware.Devices;
 import org.firstinspires.ftc.teamcode.internals.hardware.HardwareGetter;
 import org.firstinspires.ftc.teamcode.internals.telemetry.logging.AdvancedLogging;
 import org.opencv.core.*;
-import org.opencv.features2d.SimpleBlobDetector;
-import org.opencv.features2d.SimpleBlobDetector_Params;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -33,8 +31,8 @@ public class PoleLocalizer extends OpenCvPipeline {
         index = 0;
     }
 
-    public static int minArea = 30, maxArea = 70;
-    public static double minC = 0, maxC = 1, alpha = 5.25, beta = -560, lasagna = 1;
+    public static int minR = 30, maxR = 70;
+    public static double minC = 0, maxC = 1, alpha = 1, beta = 0, lasagna = 1, minDist = 100, dp = 1.2, blurSize = 3.0;
 
     private double poleDistanceX = 0, poleDistanceY = 0, poleDistance = 0;
     private boolean data = false;
@@ -51,36 +49,41 @@ public class PoleLocalizer extends OpenCvPipeline {
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
         input.convertTo(input, -1, alpha, beta);
 
-        SimpleBlobDetector_Params blobDetectorParams = new SimpleBlobDetector_Params();
-        blobDetectorParams.set_filterByCircularity(true);
-        blobDetectorParams.set_filterByArea(true);
-        blobDetectorParams.set_minArea(minArea*minArea);
-        blobDetectorParams.set_maxArea(maxArea*maxArea);
-        blobDetectorParams.set_maxCircularity((float) maxC);
-        blobDetectorParams.set_minCircularity((float) minC);
-        blobDetectorParams.set_filterByColor(true);
-        SimpleBlobDetector detector = SimpleBlobDetector.create(blobDetectorParams);
-        MatOfKeyPoint detections = new MatOfKeyPoint();
-        detector.detect(input, detections);
 
-        // draw found detections for debugging purposes
-        for (KeyPoint kpt :
-                detections.toArray()) {
-            Imgproc.rectangle(
-                    input,
-                    new Rect(new Point(kpt.pt.x - 2, kpt.pt.y - 2), new Point(kpt.pt.x + 2, kpt.pt.y + 2)),
-                    new Scalar(255, 255, 255));
+        Size _blurSize = new Size(blurSize, blurSize);
+        Imgproc.GaussianBlur(input, input, _blurSize, 0.0);
+
+        // find circles
+        Mat output = new Mat();
+        Imgproc.HoughCircles(input, output, Imgproc.HOUGH_GRADIENT, dp, minDist);
+
+        // draw for debugging
+        for(int i = 0; i < output.cols(); i++) {
+            double[] c = output.get(0, i);
+            double r = c[2];
+            if(r < minR || r > maxR) {
+                continue;
+            }
+            Imgproc.circle(input, new Point(c[0], c[1]), (int) c[2], new Scalar(0, 255, 0), 2);
+            Imgproc.rectangle(input, new Point(c[0], c[1]), new Point(c[0], c[1]), new Scalar(0, 255, 0), 5);
         }
 
         // Find the keypoint closest to the center of the image
         KeyPoint closestKPT = null;
         double closestKPT_dist = 1000000000; // Really big number
-        Point center = new Point(input.width()/2.0, input.height()/2.0);
-        for (KeyPoint kpt :
-                detections.toArray()) {
-            double dist = Math.sqrt(Math.pow(kpt.pt.x - center.x, 2) + Math.pow(kpt.pt.y - center.y, 2));
+        Point center = new Point(output.width()/2.0, output.height()/2.0);
+        for(int i = 0; i < output.cols(); i++) {
+            double[] c = output.get(0, i);
+            double x = c[0];
+            double y = c[1];
+            double r = c[2];
+            if(r < minR || r > maxR) {
+                continue;
+            }
+            Point p = new Point(x, y);
+            double dist = Math.sqrt(Math.pow(p.x - center.x, 2) + Math.pow(p.y - center.y, 2));
             if (dist < closestKPT_dist) {
-                closestKPT = kpt;
+                closestKPT = new KeyPoint((float) p.x, (float) p.y, (float) r * 2);
                 closestKPT_dist = dist;
             }
         }
@@ -95,6 +98,8 @@ public class PoleLocalizer extends OpenCvPipeline {
         }else{
             cache(iteration);
         }
+
+        output.release();
 
         return input;
     }

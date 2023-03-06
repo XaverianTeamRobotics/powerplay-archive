@@ -22,7 +22,6 @@ If you want to, you can learn the config syntax by digging through the SDK. Expl
 -->
 <Robot type="FirstInspires-FTC" name="Production">
     <Webcam name="camera0" serialNumber="54DE4F40" />
-    <Webcam name="camera1" serialNumber="FD6D2950" />
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
             <goBILDA5202SeriesMotor name="motor0" port="0" />

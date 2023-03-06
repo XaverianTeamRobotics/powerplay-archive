@@ -47,7 +47,7 @@ public class OldAutoLeft extends OperationMode implements AutonomousOperation {
             // drive to the junction
             .splineToConstantHeading(new Vector2d(35.14, 44.05), Math.toRadians(-90.00))
             .splineToConstantHeading(new Vector2d(35.14, 30.00), Math.toRadians(-90.00))
-            .splineTo(new Vector2d(30.58, 6.00), Math.toRadians(221.32))
+            .splineTo(new Vector2d(33.00, 6.50), Math.toRadians(221.32))
             .completeTrajectory()
             // once the arm reaches the correct height, open the hand and then lower the arm to cone_high
             .appendWait(FourMotorArm::autoComplete)
@@ -64,8 +64,8 @@ public class OldAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_HIGH))
             .appendTrajectory()
             // drive to the cone stack
-            .lineToSplineHeading(new Pose2d(38.92, 11.11, Math.toRadians(0.11)))
-            .splineToConstantHeading(new Vector2d(57.00, 8.00), Math.toRadians(2.46))
+            .lineToSplineHeading(new Pose2d(38.92, 10.11, Math.toRadians(0.11)))
+            .splineToConstantHeading(new Vector2d(59.00, 11.00), Math.toRadians(2.46))
             .completeTrajectory()
             // once the arm is at the right position, close in on the top cone and begin raising the arm. we also wait a fraction of a second so the arm has enough time to raise above the stack so when we drive backwards, the cone we've picked up doesnt knock over the whole stack
             .appendWait(FourMotorArm::autoComplete)
@@ -79,7 +79,7 @@ public class OldAutoLeft extends OperationMode implements AutonomousOperation {
 
             // drive back to the junction
             .lineToSplineHeading(new Pose2d(37.38, 13.95, Math.toRadians(232.36)))
-            .splineToConstantHeading(new Vector2d(27.58, 9.50), Math.toRadians(232.36))
+            .splineToConstantHeading(new Vector2d(30.58, 9.50), Math.toRadians(232.36))
             .completeTrajectory()
             // when the arm reaches the correct height, we open the hand again and then lower the arm back down to cone_high for another cycle
             .appendWait(FourMotorArm::autoComplete)
@@ -98,8 +98,8 @@ public class OldAutoLeft extends OperationMode implements AutonomousOperation {
             .appendAction(() -> FourMotorArm.autoRunArm(FourMotorArm.ArmPosition.CONE_MED))
             .appendTrajectory()
             // we drive to the cone stack
-            .lineToSplineHeading(new Pose2d(37.68, 9.26, Math.toRadians(1.30)))
-            .splineTo(new Vector2d(57.00, 9.13), Math.toRadians(359.18))
+            .lineToSplineHeading(new Pose2d(37.68, 10.26, Math.toRadians(1.30)))
+            .splineTo(new Vector2d(59.00, 11.13), Math.toRadians(0.00))
             .completeTrajectory()
             // same as last time: we wait for the arm to lower on the top of the stack, grab a cone, raise the arm, and then a fraction of a second later we begin driving back to the junction
             .appendWait(FourMotorArm::autoComplete)
