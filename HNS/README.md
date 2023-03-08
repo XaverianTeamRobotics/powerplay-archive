@@ -15,3 +15,8 @@ The following sensors can be used in an HNS:
 - Cameras
 - Distance Sensors
 - Motor encoders
+
+## How Will This Be Implemented?
+There will be one core class: `NavigationSystem`. This class will be extended by other classes that implement one specific sensor system.
+For example, `OdometerNavigationSystem` will be a class that implements navigation using only an odometer.
+`HybridNavigationSystem` will be a class that takes in many `NavigationSystem`s and combines them to provide a more accurate navigation system.
