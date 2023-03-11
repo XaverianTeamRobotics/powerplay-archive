@@ -1,3 +1,5 @@
+package net.xbhs.robotics.HNS;
+
 import com.michaell.looping.ScriptParameters;
 import com.michaell.looping.ScriptTemplate;
 

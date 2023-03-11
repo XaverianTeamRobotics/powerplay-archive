@@ -1,3 +1,5 @@
+package net.xbhs.robotics.HNS;
+
 public class Localizer {
     public double x, y, azimuth, vX, vY, vAzimuth, aX = 0, aY = 0, aAzimuth = 0;
 
