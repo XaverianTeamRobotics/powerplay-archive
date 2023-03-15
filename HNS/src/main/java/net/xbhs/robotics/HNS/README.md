@@ -17,6 +17,8 @@ The following sensors can be used in an HNS:
 - Motor encoders
 
 ## How Will This Be Implemented?
-There will be one core class: `net.xbhs.robotics.HNS.NavigationSystem`. This class will be extended by other classes that implement one specific sensor system.
+There will be one core class: `NavigationSystem`. This class will be extended by other classes that implement one specific sensor system.
 For example, `OdometerNavigationSystem` will be a class that implements navigation using only an odometer.
-`HybridNavigationSystem` will be a class that takes in many `net.xbhs.robotics.HNS.NavigationSystem`s and combines them to provide a more accurate navigation system.
+`HybridNavigationSystem` will be a class that takes in many `NavigationSystem`s and combines them to provide a more accurate navigation system.
+To use a `NavigationSystem` with the `HybridNavigationSystem`, the `NavigationSystem` must add the `HNSCompatible` annotation.
+It must also have any of the `HNSRole` annotations that it can provide.

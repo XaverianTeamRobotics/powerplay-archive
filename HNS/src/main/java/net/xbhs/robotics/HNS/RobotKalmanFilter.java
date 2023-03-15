@@ -134,9 +134,6 @@ public class RobotKalmanFilter extends NavigationFilter {
         filterAZ.predict(uAzimuth);
 
         // Correct
-//        filterX.correct(H.operate(A.operate(new ArrayRealVector(new double[] {sensorLocalizer.x, sensorLocalizer.vX})).add(B.operate(uX))));
-//        filterY.correct(H.operate(A.operate(new ArrayRealVector(new double[] {sensorLocalizer.y, sensorLocalizer.vY})).add(B.operate(uY))));
-//        filterAZ.correct(H.operate(A.operate(new ArrayRealVector(new double[] {sensorLocalizer.azimuth, sensorLocalizer.vAzimuth})).add(B.operate(uAzimuth))));
         filterX.correct(new ArrayRealVector(new double[] { sensorLocalizer.x }));
         filterY.correct(new ArrayRealVector(new double[] { sensorLocalizer.y }));
         filterAZ.correct(new ArrayRealVector(new double[] { sensorLocalizer.azimuth }));

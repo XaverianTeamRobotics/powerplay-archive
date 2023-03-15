@@ -1,20 +1,12 @@
 package net.xbhs.robotics.HNS;
 
 import com.michaell.looping.ScriptParameters;
+import com.michaell.looping.ScriptRunner;
 import com.michaell.looping.ScriptTemplate;
 
 public abstract class NavigationSystem extends ScriptTemplate {
-    public NavigationSystem(String name, boolean needsInit) {
-        super(name, needsInit);
-    }
-
-    @Override
-    public void init(ScriptParameters parameters) {
-        try {
-            start();
-        } catch (NavigationSystemException e) {
-            throw new RuntimeException(e);
-        }
+    public NavigationSystem(String name) {
+        super(name, false);
     }
 
     @Override
@@ -26,11 +18,15 @@ public abstract class NavigationSystem extends ScriptTemplate {
         }
     }
 
-    private Localizer localizer = new Localizer();
+    protected Localizer localizer = new Localizer();
 
     public static class NavigationSystemException extends Exception {
         public NavigationSystemException(String message) {
             super(message);
+        }
+
+        public NavigationSystemException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 
@@ -41,11 +37,13 @@ public abstract class NavigationSystem extends ScriptTemplate {
 
     public abstract void update() throws NavigationSystemException;
 
-    public abstract void reset() throws NavigationSystemException;
-
-    public abstract void stop() throws NavigationSystemException;
+    public void reset() throws NavigationSystemException {
+        this.localizer = new Localizer();
+    }
 
     public abstract void start() throws NavigationSystemException;
+
+    public abstract void correct(Localizer localizer) throws NavigationSystemException;
 
     public Localizer getLocalizer() {
         return localizer;
@@ -53,5 +51,10 @@ public abstract class NavigationSystem extends ScriptTemplate {
 
     public void setLocalizer(Localizer localizer) {
         this.localizer = localizer;
+    }
+
+    public void register(ScriptRunner runner) throws ScriptRunner.DuplicateScriptException, NavigationSystemException {
+        start();
+        runner.addScript(this);
     }
 }
