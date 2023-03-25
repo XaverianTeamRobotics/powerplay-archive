@@ -1,4 +1,4 @@
-package net.xbhs.robotics.HNS;
+package net.xbhs.robotics.HNS.limitations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

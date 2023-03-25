@@ -20,7 +20,7 @@ public class KalmanFilterTest {
         // Create a KalmanFilter
         RobotKalmanFilter kalmanFilter = new RobotKalmanFilter(new Localizer());
 
-        // Find the number of ticks to get 30 seconds
+        // Find the number of ticks to get 10 seconds
         int ticks = (int) (30 / kalmanFilter.dt);
 
         // Estimate the expected final position of the robot
@@ -31,9 +31,27 @@ public class KalmanFilterTest {
         // Run the test
         Localizer pos = new Localizer();
 
+        boolean isSlowingDown = false;
+
         for (int i = 0; i < ticks; i++) {
-            // Add noise to the acceleration between -0.5 and 0.5
-            double noise = Math.random() - 0.5;
+            // Update the expected values
+            expectedX = expectedX + expectedVX * kalmanFilter.dt + 0.5 * accel * kalmanFilter.dt * kalmanFilter.dt;
+            expectedVX = expectedVX + accel * kalmanFilter.dt;
+
+            // If velocity is greater than max velocity, set accel to 0
+            if (pos.vX >= 0.762 && !isSlowingDown) {
+                accel = -1/2 * kalmanFilter.maxAccel;
+                isSlowingDown = true;
+            }
+
+            // If velocity is at or less than 0, set accel to max accel
+            if (pos.vX <= 0 && isSlowingDown) {
+                accel = kalmanFilter.maxAccel;
+                isSlowingDown = false;
+            }
+
+            // Add noise to the acceleration between -0.2 and 0.2
+            double noise = Math.random() * 0.4 - 0.2;
             // Update the KalmanFilter
             double noisyAccel = accel + noise;
             //double noisyAccel = accel;
@@ -44,21 +62,10 @@ public class KalmanFilterTest {
 
             // Update our pos to be the new values
             pos.setPose(x, pos.y, pos.azimuth, vX, pos.vY, pos.vAzimuth);
-
-            // Update the KalmanFilter
             kalmanFilter.update(pos, kalmanFilter.dt);
 
             // Correct the KalmanFilter
             pos = kalmanFilter.correct();
-
-            // Update the expected values
-            expectedVX += accel * kalmanFilter.dt;
-            expectedX += expectedVX * kalmanFilter.dt + 0.5 * accel * kalmanFilter.dt * kalmanFilter.dt;
-
-            // If the velocity is at or above our max velociity, set the acceleration to 0
-            if (pos.vX >= 0.762) {
-                accel = 0;
-            }
         }
 
         if (printResults) {

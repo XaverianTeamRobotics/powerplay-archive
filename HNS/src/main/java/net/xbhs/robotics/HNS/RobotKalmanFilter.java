@@ -21,15 +21,14 @@ import java.util.ArrayList;
 public class RobotKalmanFilter extends NavigationFilter {
     // Measurement noise
     // TODO: Calibrate
-    public double measurementNoise = 0.0001;
+    public static double measurementNoise = 0.000001;
 
     // Acceleration noise
     // TODO: Calibrate
-    public double accelNoise = 1;
+    public static double accelNoise = 5000;
 
     // Time between iterations (seconds)
-    // TODO: Calibrate
-    public double dt = 0.05;
+    public double dt = 0.100;
 
     // Maximum acceleration (meters per second squared)
     public double maxAccel = 0.762;
@@ -63,6 +62,10 @@ public class RobotKalmanFilter extends NavigationFilter {
     KalmanFilter filterY = new KalmanFilter(pm, mm);
     KalmanFilter filterAZ = new KalmanFilter(pm, mm);
 
+    public double xOffset = 0;
+    public double yOffset = 0;
+    public double azimuthOffset = 0;
+
     public RobotKalmanFilter(Localizer localizer) {
         super(localizer);
     }
@@ -80,6 +83,7 @@ public class RobotKalmanFilter extends NavigationFilter {
         if (accelHistory.size() > 10) {
             accelHistory.remove(0);
         }
+        this.dt = dt;
     }
 
     /**
@@ -90,6 +94,20 @@ public class RobotKalmanFilter extends NavigationFilter {
      */
     @Override
     public Localizer correct(Localizer sensorLocalizer, double dt) {
+        if (currentLocalizer.vX == 0 && currentLocalizer.vY == 0 && currentLocalizer.vAzimuth == 0 && currentLocalizer.aX == 0 && currentLocalizer.aY == 0 && currentLocalizer.aAzimuth == 0) {
+            // If we have no velocity or accel, we need to recorrect the KalmanFilters
+
+            xOffset = currentLocalizer.x;
+            yOffset = currentLocalizer.y;
+            azimuthOffset = currentLocalizer.azimuth;
+
+            // System.out.println("[KALMAN] DEBUG - Recorrecting Kalman Filters");
+            filterX = new KalmanFilter(pm, mm);
+            filterY = new KalmanFilter(pm, mm);
+            filterAZ = new KalmanFilter(pm, mm);
+
+            return currentLocalizer;
+        }
         // System.out.println("[KALMAN] DEBUG - dt: " + dt);
 
         // Compute the average acceleration over all the history we have
@@ -139,9 +157,9 @@ public class RobotKalmanFilter extends NavigationFilter {
         filterAZ.correct(new ArrayRealVector(new double[] { sensorLocalizer.azimuth }));
 
         Localizer correctedLocalizer = new Localizer();
-        correctedLocalizer.x = filterX.getStateEstimation()[0];
-        correctedLocalizer.y = filterY.getStateEstimation()[0];
-        correctedLocalizer.azimuth = filterAZ.getStateEstimation()[0];
+        correctedLocalizer.x = filterX.getStateEstimation()[0] + xOffset;
+        correctedLocalizer.y = filterY.getStateEstimation()[0] + yOffset;
+        correctedLocalizer.azimuth = filterAZ.getStateEstimation()[0] + azimuthOffset;
 
         correctedLocalizer.vX = filterX.getStateEstimation()[1];
         correctedLocalizer.vY = filterY.getStateEstimation()[1];

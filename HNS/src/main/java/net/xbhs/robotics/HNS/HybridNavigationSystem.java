@@ -51,6 +51,25 @@ public class HybridNavigationSystem extends NavigationSystem {
             navSystem.update();
         }
 
+        // Get all zero providers and correct the classes that require a zero provider
+        ArrayList<NavigationSystem> zeroProviders = new ArrayList<>();
+        for (NavigationSystem navSystem : navSystems) {
+            if (navSystem.getClass().isAnnotationPresent(HNSRole_ZeroProvider.class)) {
+                zeroProviders.add(navSystem);
+            }
+        }
+
+        // If half of the zeroProviders agree that the robot is at zero velocity and acceleration, then run the 'correct' method
+        int zeroCount = 0;
+        for (NavigationSystem navSystem : zeroProviders) {
+            if (isZeroAccelAndVel(navSystem.getLocalizer())) {
+                zeroCount++;
+            }
+        }
+        if (zeroCount >= 1) {
+            correct(new Localizer(localizer.x, localizer.y, localizer.azimuth));
+        }
+
         // If we have not found a primary navigator, throw an exception
         if (!primaryNavigatorFound) {
             throw new NavigationSystemException("No primary navigator has been added to the Hybrid Navigation System.");
@@ -62,24 +81,6 @@ public class HybridNavigationSystem extends NavigationSystem {
                 setLocalizer(navSystem.getLocalizer());
                 break;
             }
-        }
-
-        // Get all zero providers and correct the classes that require a zero provider
-        ArrayList<NavigationSystem> zeroProviders = new ArrayList<>();
-        for (NavigationSystem navSystem : navSystems) {
-            if (navSystem.getClass().isAnnotationPresent(HNSRole_ZeroProvider.class)) {
-                zeroProviders.add(navSystem);
-            }
-        }
-        // If half of the zeroProviders agree that the robot is at zero velocity and acceleration, then run the 'correct' method
-        int zeroCount = 0;
-        for (NavigationSystem navSystem : zeroProviders) {
-            if (isZeroAccelAndVel(navSystem.getLocalizer())) {
-                zeroCount++;
-            }
-        }
-        if (zeroCount >= zeroProviders.size() / 2) {
-            correct(new Localizer(localizer.x, localizer.y, localizer.azimuth));
         }
     }
 

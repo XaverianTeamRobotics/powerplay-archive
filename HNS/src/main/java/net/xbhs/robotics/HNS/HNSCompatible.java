@@ -13,6 +13,8 @@ import static java.lang.annotation.RetentionPolicy.*;
  * This annotation is used to mark classes that are compatible with a Hybrid Navigation System.
  * <p>
  * Note that this must be accompanied by either {@link HNSRole_ZeroProvider} or {@link HNSRole_PrimaryNavigator}
+ * <p>
+ * EXTREMELY IMPORTANT: THERE MUST BE A CONSTRUCTOR WITH 0 PARAMETERS!!!!
  */
 @Retention(RUNTIME)
 @Target({TYPE})

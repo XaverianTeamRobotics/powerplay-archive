@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.internals.motion.HNS;
 
+import com.acmerobotics.dashboard.DashboardCore;
+import com.acmerobotics.dashboard.FtcDashboard;
 import net.xbhs.robotics.HNS.*;
+import net.xbhs.robotics.HNS.limitations.HNSRequiresZero;
 import net.xbhs.robotics.HNS.roles.HNSRole_PrimaryNavigator;
 import org.firstinspires.ftc.teamcode.internals.misc.Vector3;
+import org.firstinspires.ftc.teamcode.internals.motion.odometry.utils.DashboardUtil;
 
 import static org.firstinspires.ftc.teamcode.internals.hardware.Devices.getImu;
 
@@ -22,6 +26,14 @@ public class InertialNavigationSystem extends NavigationSystem {
         this.dt = dt;
     }
 
+    public InertialNavigationSystem(ControlHubOrientation orientation) {
+        this(orientation, 0.100);
+    }
+
+    public InertialNavigationSystem() {
+        this(ControlHubOrientation.UPRIGHT);
+    }
+
     @Override
     public void update() throws NavigationSystemException {
         // Get the acceleration data from the IMU
@@ -30,11 +42,11 @@ public class InertialNavigationSystem extends NavigationSystem {
         Vector3 orientation = getImu().getOrientation();
 
         // Get aX and aY from the acceleration data, depending on the orientation of the control hub
-        double aX = this.orientation == ControlHubOrientation.FLAT ? acceleration.getX() : acceleration.getY();
-        double aY = this.orientation == ControlHubOrientation.FLAT ? acceleration.getY() : acceleration.getX();
+        double aX = this.orientation == ControlHubOrientation.FLAT ? acceleration.component2() : acceleration.component1();
+        double aY = this.orientation == ControlHubOrientation.FLAT ? acceleration.component1() : acceleration.component2();
 
         // Get the azimuth from the orientation data, depending on the orientation of the control hub
-        double azimuth = this.orientation == ControlHubOrientation.FLAT ? orientation.getZ() : orientation.getY();
+        double azimuth = this.orientation == ControlHubOrientation.FLAT ? orientation.component3() : orientation.component2();
 
         // Get the angular velocity of the azimuth by calculating using dt
         double azimuthVelocity = (azimuth - previousAZ) / dt;
