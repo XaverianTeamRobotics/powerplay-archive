@@ -4,7 +4,8 @@
 *.ap_
 *.aab
 
-!HelpPage/apk/bin/*.apk
+#!HelpPage/apk/bin/*.apk
+#!HelpPage/apk
 
 !libs/*.aar
 
@@ -94,3 +95,7 @@ lint/tmp/
 *hprof*/
 !.idea/scopes
 .idea/deploymentTargetDropDown.xml
+
+# node
+node_modules
+package-lock.json
