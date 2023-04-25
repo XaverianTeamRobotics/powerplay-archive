@@ -66,6 +66,11 @@ public class RobotKalmanFilter extends NavigationFilter {
     public double yOffset = 0;
     public double azimuthOffset = 0;
 
+    public double vxOffset = 0;
+    public double vyOffset = 0;
+    public double vazimuthOffset = 0;
+
+
     public RobotKalmanFilter(Localizer localizer) {
         super(localizer);
     }
@@ -100,6 +105,9 @@ public class RobotKalmanFilter extends NavigationFilter {
             xOffset = currentLocalizer.x;
             yOffset = currentLocalizer.y;
             azimuthOffset = currentLocalizer.azimuth;
+            vxOffset = currentLocalizer.vX;
+            vyOffset = currentLocalizer.vY;
+            vazimuthOffset = currentLocalizer.vAzimuth;
 
             // System.out.println("[KALMAN] DEBUG - Recorrecting Kalman Filters");
             filterX = new KalmanFilter(pm, mm);
@@ -127,17 +135,10 @@ public class RobotKalmanFilter extends NavigationFilter {
         avgAccelY /= totalDt;
         avgAccelAZ /= totalDt;
 
-        // System.out.println("[KALMAN] DEBUG - avgAccelX: " + avgAccelX);
-        // System.out.println("[KALMAN] DEBUG - avgAccelY: " + avgAccelY);
-        // System.out.println("[KALMAN] DEBUG - avgAccelAZ: " + avgAccelAZ);
-
         // control input: our current acceleration
         RealVector uX = new ArrayRealVector(new double[] { avgAccelX });
         RealVector uY = new ArrayRealVector(new double[] { avgAccelY });
-        RealVector uAzimuth = new ArrayRealVector(new double[] { avgAccelY });
-//        RealVector uX = new ArrayRealVector(new double[] { sensorLocalizer.aX });
-//        RealVector uY = new ArrayRealVector(new double[] { sensorLocalizer.aY });
-//        RealVector uAzimuth = new ArrayRealVector(new double[] { sensorLocalizer.aAzimuth });
+        RealVector uAzimuth = new ArrayRealVector(new double[] { avgAccelAZ });
 
         // If dt is not 1, we need to change the control input
         if (dt != 1) {
@@ -161,9 +162,9 @@ public class RobotKalmanFilter extends NavigationFilter {
         correctedLocalizer.y = filterY.getStateEstimation()[0] + yOffset;
         correctedLocalizer.azimuth = filterAZ.getStateEstimation()[0] + azimuthOffset;
 
-        correctedLocalizer.vX = filterX.getStateEstimation()[1];
-        correctedLocalizer.vY = filterY.getStateEstimation()[1];
-        correctedLocalizer.vAzimuth = filterAZ.getStateEstimation()[1];
+        correctedLocalizer.vX = filterX.getStateEstimation()[1] + vxOffset;
+        correctedLocalizer.vY = filterY.getStateEstimation()[1] + vyOffset;
+        correctedLocalizer.vAzimuth = filterAZ.getStateEstimation()[1] + vazimuthOffset;
 
         correctedLocalizer.aX = sensorLocalizer.aX;
         correctedLocalizer.aY = sensorLocalizer.aY;
